@@ -10,9 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)  # False للإنتاج على Render
+DEBUG = config('DEBUG', default=False, cast=bool)  # False للإنتاج على PythonAnywhere
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.onrender.com'], cast=lambda v: [s.strip() for s in v.split(',')])
+# إعداد ALLOWED_HOSTS لتضمين نطاق PythonAnywhere
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.pythonanywhere.com'], cast=lambda v: [s.strip() for s in v.split(',')])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,12 +39,12 @@ INSTALLED_APPS = [
     # 'cloudinary.storage',  # معطل في التطوير المحلي
 ]
 
-ASGI_APPLICATION = 'Eduvia.asgi.application'
+ASGI_APPLICATION = 'EduVIA.asgi.application'
 
 # إعداد Channels مع Redis للإنتاج
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'BACKEND': 'channels_redis.core RedisChannelLayer',
         'CONFIG': {
             "hosts": [config('REDIS_URL', default='redis://localhost:6379')],
         },
@@ -63,7 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Eduvia.urls'
+ROOT_URLCONF = 'EduVIA.urls'
 AUTH_USER_MODEL = 'accounts.User'
 
 # إعدادات اللغة والتدويل
@@ -94,14 +95,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Eduvia.wsgi.application'
+WSGI_APPLICATION = 'EduVIA.wsgi.application'
 
-# إعداد قاعدة البيانات
+# إعداد قاعدة البيانات باستخدام SQLite للخطة المجانية
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='postgres://postgres:ELAHLYclub@1907@localhost:5432/eduvia'),
+        default=config('DATABASE_URL', default='sqlite:////home/yourusername/eduvia/db.sqlite3'),
         conn_max_age=600,
-        ssl_require=config('DATABASE_SSL', default=not config('DEBUG', default=False, cast=bool), cast=bool)  # SSL معطل في التطوير المحلي
+        ssl_require=False  # PythonAnywhere مش بيحتاج SSL لـ SQLite
     )
 }
 
@@ -142,7 +143,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # إعدادات CSRF وSession للأمان
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default=['http://127.0.0.1:8000', 'https://*.onrender.com'])
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default=['http://127.0.0.1:8000', 'https://*.pythonanywhere.com'])
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
 
@@ -187,8 +188,3 @@ LOGGING = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# تعليق CRONJOBS لأن Render يستخدم Cron Jobs منفصلة
-# CRONJOBS = [
-#     ('0 18 * * 6', 'performance_analysis.tasks.send_dashboard_report_to_all'),  # Every Saturday at 6 PM
-# ]
