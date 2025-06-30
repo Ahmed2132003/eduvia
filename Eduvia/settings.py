@@ -12,8 +12,8 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-# إعداد ALLOWED_HOSTS لتضمين نطاق PythonAnywhere
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,Eduvia.pythonanywhere.com', cast=lambda v: [s.strip() for s in v.split(',')])
+# إعداد ALLOWED_HOSTS لتضمين نطاق Railway
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,*.railway.app', cast=lambda v: [s.strip() for s in v.split(',')])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -50,6 +50,13 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# إعدادات Celery للمهام المجدولة
+CELERY_BROKER_URL = config('REDIS_URL')
+CELERY_RESULT_BACKEND = config('REDIS_URL')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 LOGIN_URL = '/accounts/login/'
 
@@ -100,7 +107,7 @@ WSGI_APPLICATION = 'Eduvia.wsgi.application'
 # إعداد قاعدة البيانات باستخدام SQLite للخطة المجانية
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='sqlite:////home/Eduvia/eduvia/db.sqlite3'),
+        default=config('DATABASE_URL', default='sqlite:////app/db.sqlite3'),
         conn_max_age=600,
         ssl_require=False
     )
@@ -132,7 +139,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # إعدادات ملفات الوسائط
 DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE', default='django.core.files.storage.FileSystemStorage')
-# إعدادات Cloudinary (للإنتاج فقط)
 if not config('DEBUG', default=False, cast=bool):
     CLOUDINARY_STORAGE = {
         'CLOUDINARY_URL': config('CLOUDINARY_URL')
@@ -143,7 +149,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # إعدادات CSRF وSession للأمان
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://127.0.0.1:8000,https://Eduvia.pythonanywhere.com', cast=lambda v: [s.strip() for s in v.split(',')])
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://127.0.0.1:8000,https://*.railway.app', cast=lambda v: [s.strip() for s in v.split(',')])
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
 
