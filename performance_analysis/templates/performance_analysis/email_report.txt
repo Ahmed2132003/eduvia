@@ -1,0 +1,20 @@
+Performance Report for {{ user.username }}
+
+Performance Summary
+------------------
+Total Courses: {{ performance_data.total_courses }}
+Completed Videos: {{ performance_data.completed_videos }}
+Total Coins: {{ performance_data.total_coins }}
+Strength Areas: {{ performance_data.strength_areas|join:", " }}
+Weakness Areas: {{ performance_data.weakness_areas|join:", " }}
+
+Recommendations
+--------------
+{% for rec in recommendations %}
+- {{ rec.course.title }}: {{ rec.reason }}
+{% empty %}
+No recommendations at this time.
+{% endfor %}
+
+Keep learning with Creativity Code!
+Contact us at: {{ platform_email }}

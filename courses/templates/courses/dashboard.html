@@ -1,0 +1,696 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="page-title">Instructor Dashboard - Eduvia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- SEO Meta Tags (English) -->
+    <meta name="description" data-translate="meta-desc" content="Manage your courses and videos on Eduvia's Instructor Dashboard. Create, edit, and organize your educational content with ease.">
+    <meta name="keywords" data-translate="meta-keywords" content="Eduvia, instructor dashboard, online teaching, course management, educational platform">
+    <meta name="author" content="Eduvia">
+    <!-- SEO Meta Tags (Arabic) -->
+    <meta http-equiv="content-language" content="ar, en">
+    <meta name="description" lang="ar" data-translate="meta-desc-ar" content="إدارة دوراتك وفيديوهاتك على لوحة تحكم المدربين في إدوفيا. أنشئ، حرر، ونظم محتواك التعليمي بسهولة.">
+    <meta name="keywords" lang="ar" data-translate="meta-keywords-ar" content="إدوفيا، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الدورات، منصة تعليمية">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" data-translate="og-title" content="Instructor Dashboard - Eduvia">
+    <meta property="og:description" data-translate="og-desc" content="Take control of your teaching with Eduvia's Instructor Dashboard. Manage courses and engage with students.">
+    <meta property="og:image" content="{% static 'images/dashboard.jpg' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" data-translate="twitter-title" content="Instructor Dashboard - Eduvia">
+    <meta name="twitter:description" data-translate="twitter-desc" content="Take control of your teaching with Eduvia's Instructor Dashboard. Manage courses and engage with students.">
+    <meta name="twitter:image" content="{% static 'images/dashboard.jpg' %}">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/dashboard.jpg" %}') no-repeat center center/cover;
+            --hero-text: #ffffff;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --card-text: #00a8cc;
+            --card-secondary-text: #444;
+            --card-tertiary-text: #666;
+            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
+            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --footer-text: #333;
+            --course-item-bg: #ffffff;
+            --course-item-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --link-color: #12d3cf;
+            --link-hover: #00a8cc;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/dashboard.jpg" %}') no-repeat center center/cover;
+            --hero-text: #e0e0e0;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --card-tertiary-text: #888;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+            --course-item-bg: #333;
+            --course-item-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            --link-color: #3498db;
+            --link-hover: #2980b9;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode and Language Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { margin: 10px 0; justify-content: center; }
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: var(--hero-text-shadow);
+            animation: slideInFromTop 1s ease-out forwards;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 20px 0 30px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: var(--hero-text-shadow);
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content Section */
+        .content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .overview-card, .courses-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .overview-card h2, .courses-card h2 {
+            color: var(--card-text);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .overview-card p, .courses-card p {
+            color: var(--card-secondary-text);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .overview-card a.btn {
+            background: var(--btn-bg);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .overview-card a.btn:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .course-item {
+            background: var(--course-item-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: var(--course-item-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .course-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-item h3 {
+            color: var(--card-text);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .course-item p {
+            color: var(--card-tertiary-text);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .course-item .links a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+        }
+
+        html[dir="rtl"] .course-item .links a {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        .course-item .links a:hover {
+            color: var(--link-hover);
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--footer-text);
+            margin-top: 40px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 18px; }
+            .overview-card h2, .courses-card h2 { font-size: 20px; }
+            .course-item h3 { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 data-translate="hero-title">Instructor Dashboard</h1>
+        <p data-translate="hero-desc">Manage your courses and videos with ease. Create, edit, and engage with your students.</p>
+    </section>
+
+    <!-- Content Section -->
+    <div class="content">
+        <!-- Summary -->
+        <div class="overview-card">
+            <h2 data-translate="overview-title">Overview</h2>
+            <p data-translate="total-courses">Total Courses: {{ total_courses }}</p>
+            <p data-translate="total-videos">Total Videos: {{ total_videos }}</p>
+            <a href="{% url 'courses:add_course' %}" class="btn" data-translate="add-course-btn">Add New Course</a>
+        </div>
+
+        <!-- Courses List -->
+        <div class="courses-card">
+            <h2 data-translate="courses-title">Your Courses</h2>
+            {% if courses %}
+                <div class="courses-grid">
+                    {% for course in courses %}
+                        <div class="course-item">
+                            <h3>{{ course.title }}</h3>
+                            <p>{{ course.description|truncatewords:20 }}</p>
+                            <p data-translate="category-label">Category: {{ course.get_category_display }}</p>
+                            <div class="links">
+                                <a href="{% url 'courses:course_videos' course.id %}" data-translate="view-videos">View Videos</a>
+                                <a href="{% url 'courses:edit_course' course.id %}" data-translate="edit-course">Edit</a>
+                                <!-- Add Task and Alternative Quiz Links -->
+                                {% if course.video_list.exists %}
+                                    <a href="{% url 'courses:add_task' course.id course.video_list.first.id %}" data-translate="add-task">Add Task</a>
+                                    <a href="{% url 'courses:add_alternative_quiz' course.id course.video_list.first.id %}" data-translate="add-alternative-quiz">Add Alternative Quiz</a>
+                                {% else %}
+                                    <p data-translate="no-videos">No videos available to add tasks or quizzes.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p data-translate="no-courses">No courses found. Create your first course!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "page-title": "Instructor Dashboard - Eduvia",
+                "meta-desc": "Manage your courses and videos on Eduvia's Instructor Dashboard. Create, edit, and organize your educational content with ease.",
+                "meta-keywords": "Eduvia, instructor dashboard, online teaching, course management, educational platform",
+                "meta-desc-ar": "إدارة دوراتك وفيديوهاتك على لوحة تحكم المدربين في إدوفيا. أنشئ، حرر، ونظم محتواك التعليمي بسهولة.",
+                "meta-keywords-ar": "إدوفيا، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الدورات، منصة تعليمية",
+                "og-title": "Instructor Dashboard - Eduvia",
+                "og-desc": "Take control of your teaching with Eduvia's Instructor Dashboard. Manage courses and engage with students.",
+                "twitter-title": "Instructor Dashboard - Eduvia",
+                "twitter-desc": "Take control of your teaching with Eduvia's Instructor Dashboard. Manage courses and engage with students.",
+                "hero-title": "Instructor Dashboard",
+                "hero-desc": "Manage your courses and videos with ease. Create, edit, and engage with your students.",
+                "overview-title": "Overview",
+                "total-courses": "Total Courses: {{ total_courses }}",
+                "total-videos": "Total Videos: {{ total_videos }}",
+                "add-course-btn": "Add New Course",
+                "courses-title": "Your Courses",
+                "category-label": "Category: {{ course.get_category_display }}",
+                "view-videos": "View Videos",
+                "edit-course": "Edit",
+                "no-courses": "No courses found. Create your first course!",
+                "add-task": "Add Task",
+                "add-alternative-quiz": "Add Alternative Quiz",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
+            },
+            ar: {
+                "page-title": "لوحة تحكم المدرب - إدوفيا",
+                "meta-desc": "إدارة دوراتك وفيديوهاتك على لوحة تحكم المدربين في إدوفيا. أنشئ، حرر، ونظم محتواك التعليمي بسهولة.",
+                "meta-keywords": "إدوفيا، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الدورات، منصة تعليمية",
+                "meta-desc-ar": "إدارة دوراتك وفيديوهاتك على لوحة تحكم المدربين في إدوفيا. أنشئ، حرر، ونظم محتواك التعليمي بسهولة.",
+                "meta-keywords-ar": "إدوفيا، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الدورات، منصة تعليمية",
+                "og-title": "لوحة تحكم المدرب - إدوفيا",
+                "og-desc": "تحكم في تدريسك مع لوحة تحكم المدربين في إدوفيا. إدارة الدورات والتفاعل مع الطلاب.",
+                "twitter-title": "لوحة تحكم المدرب - إدوفيا",
+                "twitter-desc": "تحكم في تدريسك مع لوحة تحكم المدربين في إدوفيا. إدارة الدورات والتفاعل مع الطلاب.",
+                "hero-title": "لوحة تحكم المدرب",
+                "hero-desc": "إدارة دوراتك وفيديوهاتك بسهولة. أنشئ، حرر، وتفاعل مع طلابك.",
+                "overview-title": "نظرة عامة",
+                "total-courses": "إجمالي الدورات: {{ total_courses }}",
+                "total-videos": "إجمالي الفيديوهات: {{ total_videos }}",
+                "add-course-btn": "إضافة دورة جديدة",
+                "courses-title": "دوراتك",
+                "category-label": "الفئة: {{ course.get_category_display }}",
+                "view-videos": "عرض الفيديوهات",
+                "edit-course": "تعديل",
+                "no-courses": "لم يتم العثور على دورات. أنشئ دورتك الأولى!",
+                "add-task": "إضافة مهمة",
+                "add-alternative-quiz": "إضافة اختبار بديل",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[newLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    element.setAttribute('content', text);
+                } else if (key === 'total-courses') {
+                    const count = element.textContent.match(/Total Courses: (\d+)/)?.[1] || '{{ total_courses }}';
+                    text = translations[newLang][key].replace('{{ total_courses }}', count);
+                    element.textContent = text;
+                } else if (key === 'total-videos') {
+                    const count = element.textContent.match(/Total Videos: (\d+)/)?.[1] || '{{ total_videos }}';
+                    text = translations[newLang][key].replace('{{ total_videos }}', count);
+                    element.textContent = text;
+                } else if (key === 'category-label') {
+                    const category = element.textContent.match(/Category: (.+)/)?.[1] || '{{ course.get_category_display }}';
+                    text = translations[newLang][key].replace('{{ course.get_category_display }}', category);
+                    element.textContent = text;
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update the title
+            document.title = translations[newLang]["page-title"];
+
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[savedLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    element.setAttribute('content', text);
+                } else if (key === 'total-courses') {
+                    const count = element.textContent.match(/Total Courses: (\d+)/)?.[1] || '{{ total_courses }}';
+                    text = translations[savedLang][key].replace('{{ total_courses }}', count);
+                    element.textContent = text;
+                } else if (key === 'total-videos') {
+                    const count = element.textContent.match(/Total Videos: (\d+)/)?.[1] || '{{ total_videos }}';
+                    text = translations[savedLang][key].replace('{{ total_videos }}', count);
+                    element.textContent = text;
+                } else if (key === 'category-label') {
+                    const category = element.textContent.match(/Category: (.+)/)?.[1] || '{{ course.get_category_display }}';
+                    text = translations[savedLang][key].replace('{{ course.get_category_display }}', category);
+                    element.textContent = text;
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Set the title on page load
+            document.title = translations[savedLang]["page-title"];
+        });
+    </script>
+</body>
+</html>

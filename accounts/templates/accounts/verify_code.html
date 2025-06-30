@@ -1,0 +1,351 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Verify your Eduvia account to complete registration.">
+    <meta name="keywords" content="Eduvia, verify, online courses, education platform">
+    <meta name="author" content="Eduvia Team">
+    <title data-translate="title">Verify Your Account - Eduvia</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --container-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --container-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --container-shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.2);
+            --heading-color: #00a8cc;
+            --label-color: #444;
+            --input-border: #d8f4ff;
+            --input-border-focus: #00a8cc;
+            --button-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --button-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --button-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
+            --button-shadow-hover: 0 6px 15px rgba(0, 201, 167, 0.7);
+            --alert-bg: #f8d7da;
+            --alert-text: #721c24;
+            --link-color: #00a8cc;
+            --link-color-hover: #0ec7c3;
+            --link-underline: #00a8cc;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --container-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --container-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            --container-shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.5);
+            --heading-color: #3498db;
+            --label-color: #b0b0b0;
+            --input-border: #34495e;
+            --input-border-focus: #3498db;
+            --button-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --button-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --button-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
+            --button-shadow-hover: 0 6px 15px rgba(52, 152, 219, 0.7);
+            --alert-bg: #4a2529;
+            --alert-text: #f5b7b1;
+            --link-color: #3498db;
+            --link-color-hover: #5dade2;
+            --link-underline: #3498db;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Toggle Buttons */
+        .toggle-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        html[dir="rtl"] .toggle-container {
+            right: unset;
+            left: 20px;
+        }
+
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--container-shadow);
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--container-shadow-hover);
+        }
+
+        h2 {
+            color: var(--heading-color);
+            font-size: 28px;
+            margin: 20px 0;
+        }
+
+        .logo {
+            width: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-align: left;
+            color: var(--label-color);
+        }
+
+        html[dir="rtl"] label {
+            text-align: right;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--input-border-focus);
+            outline: none;
+        }
+
+        button {
+            display: inline-block;
+            background: var(--button-bg);
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--button-shadow);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--button-bg-hover);
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: var(--button-shadow-hover);
+        }
+
+        .alert {
+            background-color: var(--alert-bg);
+            color: var(--alert-text);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        .footer a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .footer a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--link-underline);
+            left: 0;
+            bottom: -2px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .footer a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .footer a:hover::after {
+            width: 100%;
+        }
+
+        .footer a:hover {
+            color: var(--link-color-hover);
+        }
+
+        p {
+            font-size: 18px;
+            color: var(--text-color);
+            margin: 10px 0 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="toggle-container">
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <i class="fas fa-moon"></i>
+    </div>
+    <div class="language-toggle" onclick="toggleLanguage()">
+        <i class="fas fa-globe"></i>
+    </div>
+</div>
+
+<div class="container">
+    <img src="{% static 'images/logo_eduvia1.jpg' %}" alt="Eduvia Logo" class="logo">
+    <h2 data-translate="heading">Verify Your Account</h2>
+    <p data-translate="subheading">Enter the verification code sent to your email.</p>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <form method="post" action="{% url 'accounts:verify_code' %}">
+        {% csrf_token %}
+        <label for="verification_code" data-translate="label-verification_code">Enter Verification Code:</label>
+        <input type="text" id="verification_code" name="verification_code" required>
+        <button type="submit" data-translate="button-verify">Verify Code</button>
+    </form>
+    <div class="footer">
+        <p data-translate="footer-text">Didn't receive a code? <a href="{% url 'accounts:register' %}" data-translate="footer-link">Try again</a></p>
+    </div>
+</div>
+
+<script>
+    // Translation object
+    const translations = {
+        en: {
+            "title": "Verify Your Account - Eduvia",
+            "heading": "Verify Your Account",
+            "subheading": "Enter the verification code sent to your email.",
+            "button-verify": "Verify Code",
+            "footer-text": "Didn't receive a code?",
+            "footer-link": "Try again",
+            "label-verification_code": "Enter Verification Code:"
+        },
+        ar: {
+            "title": "تحقق من حسابك - إدوفيا",
+            "heading": "تحقق من حسابك",
+            "subheading": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني.",
+            "button-verify": "تحقق من الرمز",
+            "footer-text": "لم تتلق رمزًا؟",
+            "footer-link": "حاول مرة أخرى",
+            "label-verification_code": "أدخل رمز التحقق:"
+        }
+    };
+
+    // Dark Mode Toggle
+    function toggleDarkMode() {
+        const body = document.body;
+        const toggleIcon = document.querySelector('.dark-mode-toggle i');
+        body.classList.toggle('dark-mode');
+        
+        if (body.classList.contains('dark-mode')) {
+            toggleIcon.classList.remove('fa-moon');
+            toggleIcon.classList.add('fa-sun');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            toggleIcon.classList.remove('fa-sun');
+            toggleIcon.classList.add('fa-moon');
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    // Language Toggle
+    function toggleLanguage() {
+        const htmlRoot = document.getElementById('html-root');
+        const currentLang = htmlRoot.getAttribute('lang');
+        const newLang = currentLang === 'en' ? 'ar' : 'en';
+        
+        // Update lang and direction
+        htmlRoot.setAttribute('lang', newLang);
+        htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+        
+        // Update all translatable elements
+        document.querySelectorAll('[data-translate]').forEach(element => {
+            const key = element.getAttribute('data-translate');
+            element.textContent = translations[newLang][key];
+        });
+
+        // Update the title
+        document.title = translations[newLang]["title"];
+        
+        localStorage.setItem('language', newLang);
+    }
+
+    // Apply saved theme and language on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        // Apply Dark Mode
+        const savedTheme = localStorage.getItem('theme');
+        const toggleIcon = document.querySelector('.dark-mode-toggle i');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggleIcon.classList.remove('fa-moon');
+            toggleIcon.classList.add('fa-sun');
+        }
+
+        // Apply Language
+        const savedLang = localStorage.getItem('language') || 'en';
+        const htmlRoot = document.getElementById('html-root');
+        htmlRoot.setAttribute('lang', savedLang);
+        htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+        // Update static translatable elements
+        document.querySelectorAll('[data-translate]').forEach(element => {
+            const key = element.getAttribute('data-translate');
+            element.textContent = translations[savedLang][key];
+        });
+
+        document.title = translations[savedLang]["title"];
+    });
+</script>
+</body>
+</html>

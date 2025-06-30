@@ -1,0 +1,691 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="feed-title">Community Feed - Eduvia</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" data-translate="feed-meta-desc" content="Join the Eduvia community feed to share and engage with programming and job market discussions.">
+    <meta name="keywords" data-translate="feed-meta-keywords" content="community feed, Eduvia, programming, job market">
+    <meta name="author" content="Eduvia">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" data-translate="feed-og-title" content="Community Feed - Eduvia">
+    <meta property="og:description" data-translate="feed-og-desc" content="Join the Eduvia community feed to share and engage with programming and job market discussions.">
+    <meta property="og:image" content="{% static 'images/oppo3.jpg' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Cairo Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --card-bg: #ffffff;
+            --card-secondary-text: #444;
+            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
+            --border-color: #ddd;
+            --link-color: #00a8cc;
+            --link-hover-color: #00c9a7;
+            --comment-bg: #f0f2f5;
+            --alert-bg: #d1ecf1;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --card-bg: #2c2c2c;
+            --card-secondary-text: #b0b0b0;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
+            --border-color: #555;
+            --link-color: #3498db;
+            --link-hover-color: #2980b9;
+            --comment-bg: #3a3a3a;
+            --alert-bg: #2c3e50;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a, .menu .coins-display { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { display: flex; justify-content: center; }
+        }
+
+        /* Post Styling */
+        .post {
+            background: var(--card-bg);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: background 0.3s ease;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        html[dir="rtl"] .post-header {
+            flex-direction: row-reverse;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        html[dir="rtl"] .profile-pic {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        .post-content {
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+
+        .post-image {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .post-action-btn {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .post-action-btn:hover {
+            background-color: var(--comment-bg);
+        }
+
+        .comments-section {
+            display: none;
+            padding-top: 10px;
+        }
+
+        .comment {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 10px;
+        }
+
+        html[dir="rtl"] .comment {
+            flex-direction: row-reverse;
+        }
+
+        .comment .profile-pic {
+            margin-right: 10px;
+        }
+
+        html[dir="rtl"] .comment .profile-pic {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        .comment-content {
+            background: var(--comment-bg);
+            padding: 8px;
+            border-radius: 10px;
+            max-width: 80%;
+            transition: background 0.3s ease;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .alert {
+            background: var(--alert-bg);
+            color: var(--card-secondary-text);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .post {
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: #333;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .footer {
+            background: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Community Feed Section -->
+    <div class="container mt-4">
+        <h1 data-translate="feed-heading">Community Feed</h1>
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Form to create a new post -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <textarea name="post_content" class="form-control" rows="3" placeholder="Share something about programming or job market..." data-translate-placeholder="post-placeholder"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="image_file" class="form-control" accept="image/*,application/pdf">
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-translate="post-button">Post</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Display posts -->
+        {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture.url }}{% else %}{% static 'default-profile.jpg' %}{% endif %}" alt="{{ post.author.username }}'s profile" class="profile-pic">
+                    <strong>{{ post.author.username }}</strong>
+                    <small class="text-muted ms-2">{{ post.created_at }}</small>
+                </div>
+                <div class="post-content">
+                    {{ post.content }}
+                    {% if post.image_file %}
+                        <img src="{{ post.image_file.url }}" alt="Post image" class="post-image">
+                    {% endif %}
+                </div>
+                <div class="post-actions">
+                    <div class="post-action-btn">
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <input type="hidden" name="like_post" value="true">
+                            <button type="submit" class="btn btn-sm btn-{% if request.user in post.likes.all %}danger{% else %}success{% endif %}" data-translate-like="{% if request.user in post.likes.all %}unlike{% else %}like{% endif %}">
+                                {% if request.user in post.likes.all %}Unlike{% else %}Like{% endif %} ({{ post.likes.count }})
+                            </button>
+                        </form>
+                    </div>
+                    <div class="post-action-btn">
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <input type="hidden" name="dislike_post" value="true">
+                            <button type="submit" class="btn btn-sm btn-{% if request.user in post.dislikes.all %}danger{% else %}warning{% endif %}" data-translate-dislike="{% if request.user in post.dislikes.all %}remove-dislike{% else %}dislike{% endif %}">
+                                {% if request.user in post.dislikes.all %}Remove Dislike{% else %}Dislike{% endif %} ({{ post.dislikes.count }})
+                            </button>
+                        </form>
+                    </div>
+                    <div class="post-action-btn">
+                        <a href="{% url 'mentorship:post_comments' post_id=post.id %}" class="show-comments" data-translate="comments">Comments ({{ post.mentorship_comments.count }})</a>
+                    </div>
+                </div>
+                <div class="comments-section">
+                    {% for comment in post.mentorship_comments.all %}
+                        <div class="comment">
+                            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture.url }}{% else %}{% static 'default-profile.jpg' %}{% endif %}" alt="{{ comment.author.username }}'s profile" class="profile-pic">
+                            <div class="comment-content">
+                                <strong>{{ comment.author.username }}</strong>
+                                <p>{{ comment.content }}</p>
+                                <small class="text-muted">{{ comment.created_at }}</small>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted" data-translate="no-comments">No comments yet.</p>
+                    {% endfor %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value="{{ post.id }}">
+                        <div class="form-group">
+                            <textarea name="comment_content" class="form-control" rows="2" placeholder="Write a comment..." data-translate-placeholder="comment-placeholder"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-secondary" data-translate="comment-button">Comment</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center" data-translate="no-posts">No posts yet!</p>
+        {% endfor %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "feed-title": "Community Feed - Eduvia",
+                "feed-meta-desc": "Join the Eduvia community feed to share and engage with programming and job market discussions.",
+                "feed-meta-keywords": "community feed, Eduvia, programming, job market",
+                "feed-og-title": "Community Feed - Eduvia",
+                "feed-og-desc": "Join the Eduvia community feed to share and engage with programming and job market discussions.",
+                "feed-heading": "Community Feed",
+                "post-placeholder": "Share something about programming or job market...",
+                "post-button": "Post",
+                "like": "Like",
+                "unlike": "Unlike",
+                "dislike": "Dislike",
+                "remove-dislike": "Remove Dislike",
+                "comments": "Comments",
+                "no-comments": "No comments yet.",
+                "comment-placeholder": "Write a comment...",
+                "comment-button": "Comment",
+                "no-posts": "No posts yet!",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
+            },
+            ar: {
+                "feed-title": "تغذية المجتمع - إدوفيا",
+                "feed-meta-desc": "انضم إلى تغذية مجتمع إدوفيا لمشاركة النقاشات وتفاعلها حول البرمجة وسوق العمل.",
+                "feed-meta-keywords": "تغذية المجتمع, إدوفيا, البرمجة, سوق العمل",
+                "feed-og-title": "تغذية المجتمع - إدوفيا",
+                "feed-og-desc": "انضم إلى تغذية مجتمع إدوفيا لمشاركة النقاشات وتفاعلها حول البرمجة وسوق العمل.",
+                "feed-heading": "تغذية المجتمع",
+                "post-placeholder": "شارك شيئًا عن البرمجة أو سوق العمل...",
+                "post-button": "نشر",
+                "like": "إعجاب",
+                "unlike": "إلغاء الإعجاب",
+                "dislike": "عدم الإعجاب",
+                "remove-dislike": "إزالة عدم الإعجاب",
+                "comments": "تعليقات",
+                "no-comments": "لا توجد تعليقات بعد.",
+                "comment-placeholder": "اكتب تعليقًا...",
+                "comment-button": "تعليق",
+                "no-posts": "لا توجد منشورات بعد!",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate], [data-translate-placeholder], [data-translate-like], [data-translate-dislike]').forEach(element => {
+                const key = element.getAttribute('data-translate') || element.getAttribute('data-translate-placeholder') || element.getAttribute('data-translate-like') || element.getAttribute('data-translate-dislike');
+                let text = translations[newLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:')) {
+                        element.setAttribute('content', text);
+                    }
+                } else if (element.tagName.toLowerCase() === 'textarea' && element.hasAttribute('data-translate-placeholder')) {
+                    element.setAttribute('placeholder', text);
+                } else if (element.tagName.toLowerCase() === 'button' && (element.hasAttribute('data-translate-like') || element.hasAttribute('data-translate-dislike'))) {
+                    const action = element.hasAttribute('data-translate-like') ? element.getAttribute('data-translate-like') : element.getAttribute('data-translate-dislike');
+                    text = translations[newLang][action];
+                    if (element.textContent.includes('(')) {
+                        const count = element.textContent.match(/\(([^)]+)\)/)[1];
+                        text += ` (${count})`;
+                    }
+                    element.textContent = text;
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update the title
+            document.title = translations[newLang]["feed-title"];
+
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate], [data-translate-placeholder], [data-translate-like], [data-translate-dislike]').forEach(element => {
+                const key = element.getAttribute('data-translate') || element.getAttribute('data-translate-placeholder') || element.getAttribute('data-translate-like') || element.getAttribute('data-translate-dislike');
+                let text = translations[savedLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:')) {
+                        element.setAttribute('content', text);
+                    }
+                } else if (element.tagName.toLowerCase() === 'textarea' && element.hasAttribute('data-translate-placeholder')) {
+                    element.setAttribute('placeholder', text);
+                } else if (element.tagName.toLowerCase() === 'button' && (element.hasAttribute('data-translate-like') || element.hasAttribute('data-translate-dislike'))) {
+                    const action = element.hasAttribute('data-translate-like') ? element.getAttribute('data-translate-like') : element.getAttribute('data-translate-dislike');
+                    text = translations[savedLang][action];
+                    if (element.textContent.includes('(')) {
+                        const count = element.textContent.match(/\(([^)]+)\)/)[1];
+                        text += ` (${count})`;
+                    }
+                    element.textContent = text;
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Set the title on page load
+            document.title = translations[savedLang]["feed-title"];
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.show-comments').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    const commentsSection = this.closest('.post').querySelector('.comments-section');
+                    if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+                        commentsSection.style.display = 'block';
+                    } else {
+                        commentsSection.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

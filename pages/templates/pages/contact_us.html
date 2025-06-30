@@ -1,0 +1,611 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Eduvia for support and inquiries about our online courses. Our team is here to assist you anytime!">
+    <meta name="keywords" content="Eduvia, contact us, online courses, education platform, customer support">
+    <meta name="author" content="Eduvia Team">
+    <title data-translate="title">Contact Us - Eduvia</title>
+    <!-- Font Awesome for coins icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/about_us1.jpg" %}') no-repeat center center/cover;
+            --hero-text: #ffffff;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+            --content-text: #2c3e50;
+            --content-secondary-text: #444;
+            --social-btn-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --footer-text: #333;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/about_us1.jpg" %}') no-repeat center center/cover;
+            --hero-text: #e0e0e0;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --content-text: #3498db;
+            --content-secondary-text: #b0b0b0;
+            --social-btn-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after {
+            width: 100%;
+        }
+
+        .header a:hover {
+            color: #f0f8ff;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        /* Hamburger Menu for Mobile */
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active {
+                display: flex;
+            }
+
+            .menu a {
+                margin: 10px 0;
+                font-size: 20px;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .coins-display {
+                display: flex;
+                margin: 10px 0;
+                justify-content: center;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: var(--hero-text-shadow);
+            animation: slideInFromTop 1s ease-out forwards;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 28px;
+            font-weight: 400;
+            margin: 20px 0 30px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: var(--hero-text-shadow);
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideInFromTop {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h3 {
+            color: var(--content-text);
+            text-align: center;
+        }
+
+        .content {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--content-secondary-text);
+        }
+
+        .social-buttons {
+            text-align: center;
+            margin: 40px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-buttons a {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--social-btn-shadow);
+        }
+
+        .facebook { background: linear-gradient(90deg, #3b5998, #4c70ba); }
+        .instagram { background: linear-gradient(90deg, #e4405f, #f77737); }
+        .whatsapp { background: linear-gradient(90deg, #25d366, #30e67a); }
+        .linkedin { background: linear-gradient(90deg, #0077b5, #0099e6); }
+        .github { background: linear-gradient(90deg, #333, #555); }
+        .tiktok { background: linear-gradient(90deg, #010101, #333); }
+        .youtube { background: linear-gradient(90deg, #ff0000, #ff3333); }
+
+        .social-buttons a:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--footer-text);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .hero h1 {
+                font-size: 48px;
+            }
+            .hero p {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            .hero p {
+                font-size: 18px;
+            }
+            .social-buttons a {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 data-translate="hero-title">Contact Us</h1>
+        <p data-translate="hero-subtitle">Our team is ready to answer your questions and support your learning journey</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h3 data-translate="content-title">We are here to help you anytime</h3>
+        <div class="content">
+            <p data-translate="content-desc1">If you need any assistance, please feel free to contact us. Our support team is always available to answer all your queries.</p>
+            <p data-translate="content-desc2">You can reach us through the following channels or via social media.</p>
+        </div>
+        <div class="social-buttons">
+            <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" class="facebook" data-translate="social-facebook">Facebook</a>
+            <a href="https://www.instagram.com/eduv.ia/" target="_blank" class="instagram" data-translate="social-instagram">Instagram</a>
+            <a href="https://wa.me/201029102507" target="_blank" class="whatsapp" data-translate="social-whatsapp">WhatsApp</a>
+            <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" class="linkedin" data-translate="social-linkedin">LinkedIn</a>
+            <a href="https://l.facebook.com/l.php?u=https%3A%2F%2Fgithub.com%2Feduvia-ai%3Ffbclid%3DIwZXh0bgNhZW0CMTAAYnJpZBExZ1JGdENXQnRCWnp1dTBvSQEeExYWptACTRurlVFf_aDt77b-kcqFiHOP4UpmLlpIf7sXgzdHRSwVAJUFGGU_aem_R7-TPDlTJZWduv1h3nihaQ&h=AT2crUcDIDkTIw77hLwEly646D2dxOrbwPAJ3XbsJCUCO5WaX1niaa7siIKeZIqWpnVoU4WF1QzfX3QQl7qtrFChE9Yn_v2nzRKpvh-69-xDqxhsnnusUVG95uYzXOPNdXoc" target="_blank" class="github" data-translate="social-github">GitHub</a>
+            <a href="https://www.tiktok.com/@eduvia7?is_from_webapp=1&sender_device=pc" target="_blank" class="tiktok" data-translate="social-tiktok">TikTok</a>
+            <a href="https://www.youtube.com/@Eduvia-ai-creativitycode" target="_blank" class="youtube" data-translate="social-youtube">YouTube</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "title": "Contact Us - Eduvia",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "hero-title": "Contact Us",
+                "hero-subtitle": "Our team is ready to answer your questions and support your learning journey",
+                "content-title": "We are here to help you anytime",
+                "content-desc1": "If you need any assistance, please feel free to contact us. Our support team is always available to answer all your queries.",
+                "content-desc2": "You can reach us through the following channels or via social media.",
+                "social-facebook": "Facebook",
+                "social-instagram": "Instagram",
+                "social-whatsapp": "WhatsApp",
+                "social-linkedin": "LinkedIn",
+                "social-github": "GitHub",
+                "social-tiktok": "TikTok",
+                "social-youtube": "YouTube",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
+            },
+            ar: {
+                "title": "تواصل معنا - إدوفيا",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "hero-title": "تواصل معنا",
+                "hero-subtitle": "فريقنا جاهز للإجابة على أسئلتك ودعم رحلتك التعليمية",
+                "content-title": "نحن هنا لمساعدتك في أي وقت",
+                "content-desc1": "إذا كنت بحاجة إلى أي مساعدة، لا تتردد في التواصل معنا. فريق الدعم لدينا دائمًا متاح للإجابة على جميع استفساراتك.",
+                "content-desc2": "يمكنك الوصول إلينا من خلال القنوات التالية أو عبر وسائل التواصل الاجتماعي.",
+                "social-facebook": "فيسبوك",
+                "social-instagram": "إنستغرام",
+                "social-whatsapp": "واتساب",
+                "social-linkedin": "لينكدإن",
+                "social-github": "جيثب",
+                "social-tiktok": "تيك توك",
+                "social-youtube": "يوتيوب",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.textContent = translations[newLang][key];
+            });
+
+            // Update the title
+            document.title = translations[newLang]["title"];
+            
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.textContent = translations[savedLang][key];
+            });
+
+            document.title = translations[savedLang]["title"];
+        });
+    </script>
+</body>
+</html>

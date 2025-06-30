@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: auto; padding: 20px; }
+        h1, h2 { color: navy; }
+        .summary, .recommendations { margin-bottom: 20px; }
+        .footer { font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Performance Report</h1>
+        <p>Dear {{ user.username }},</p>
+        <div class="summary">
+            <h2>Performance Summary</h2>
+            <p><strong>Total Courses:</strong> {{ performance_data.total_courses }}</p>
+            <p><strong>Completed Videos:</strong> {{ performance_data.completed_videos }}</p>
+            <p><strong>Total Coins:</strong> {{ performance_data.total_coins }}</p>
+            <p><strong>Strength Areas:</strong> {{ performance_data.strength_areas|join:", " }}</p>
+            <p><strong>Weakness Areas:</strong> {{ performance_data.weakness_areas|join:", " }}</p>
+        </div>
+        <div class="recommendations">
+            <h2>Recommendations</h2>
+            {% for rec in recommendations %}
+                <p><strong>{{ rec.course.title }}</strong>: {{ rec.reason }}</p>
+            {% empty %}
+                <p>No recommendations at this time.</p>
+            {% endfor %}
+        </div>
+        <div class="footer">
+            <p>Keep learning with Creativity Code!</p>
+            <p>Contact us at: {{ platform_email }}</p>
+        </div>
+    </div>
+</body>
+</html>

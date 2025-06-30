@@ -1,0 +1,524 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="chat-title">Chat with {{ other_user.username }} - Eduvia</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Cairo Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --card-text: #00a8cc;
+            --card-secondary-text: #444;
+            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
+            --search-input-border: #d4af37;
+            --search-btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --search-btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --footer-text: #333;
+            --message-sent-bg: #00a8cc;
+            --message-received-bg: #d8f4ff;
+            --message-list-bg: #f9f9f9;
+            --message-list-border: #ddd;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
+            --search-input-border: #34495e;
+            --search-btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --search-btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+            --message-sent-bg: #3498db;
+            --message-received-bg: #3a3a3a;
+            --message-list-bg: #2c2c2c;
+            --message-list-border: #444;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { margin: 10px 0; justify-content: center; }
+        }
+
+        /* Chat Section */
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .chat-container h2 {
+            color: var(--card-text);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .message-list {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--message-list-border);
+            padding: 10px;
+            margin-bottom: 20px;
+            background: var(--message-list-bg);
+            border-radius: 5px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            background: var(--message-sent-bg);
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.received {
+            background: var(--message-received-bg);
+            color: var(--text-color);
+        }
+
+        .message .file a {
+            color: #00c9a7;
+            text-decoration: none;
+        }
+
+        body.dark-mode .message .file a {
+            color: #3498db;
+        }
+
+        .form-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-container input[type="file"] {
+            display: none;
+        }
+
+        .form-container label {
+            background: var(--btn-bg);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .form-container label:hover {
+            background: var(--btn-bg-hover);
+        }
+
+        .form-container textarea {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid var(--message-list-border);
+            border-radius: 5px;
+            resize: none;
+            background: var(--message-list-bg);
+            color: var(--text-color);
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .form-container button {
+            background: var(--btn-bg);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background: var(--btn-bg-hover);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--footer-text);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Chat Section -->
+    <div class="chat-container">
+        <h2 data-translate="chat-title">Chat with {{ other_user.username }}</h2>
+
+        <div class="message-list">
+            {% for message in messages %}
+                <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+                    <p>{{ message.content }}</p>
+                    {% if message.file %}
+                        <p class="file"><a href="{{ message.file.url }}" target="_blank">Download File</a></p>
+                    {% endif %}
+                    <small>{{ message.sent_at|date:"F d, Y H:i" }}</small>
+                </div>
+            {% empty %}
+                <p data-translate="chat-empty">No messages yet.</p>
+            {% endfor %}
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-container">
+                {{ form.content }}
+                {{ form.file.label_tag }}
+                {{ form.file }}
+                <button type="submit" data-translate="chat-send">Send</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "chat-title": "Chat with {{ other_user.username }}",
+                "chat-empty": "No messages yet.",
+                "chat-send": "Send",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
+            },
+            ar: {
+                "chat-title": "الدردشة مع {{ other_user.username }}",
+                "chat-empty": "لا توجد رسائل بعد.",
+                "chat-send": "إرسال",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.textContent = translations[newLang][key];
+            });
+
+            // Update the title (Note: Since title contains a dynamic part, we handle it separately)
+            const username = "{{ other_user.username }}";
+            document.title = translations[newLang]["chat-title"].replace("{{ other_user.username }}", username);
+            
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                const text = translations[savedLang][key];
+                element.textContent = text;
+            });
+
+            // Set the title on page load
+            const username = "{{ other_user.username }}";
+            document.title = translations[savedLang]["chat-title"].replace("{{ other_user.username }}", username);
+        });
+    </script>
+</body>
+</html>

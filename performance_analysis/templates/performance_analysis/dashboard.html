@@ -1,0 +1,1261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track your learning performance with Eduvia's Performance Dashboard. Analyze courses, videos, coins, and more with interactive charts." data-translate="meta-description">
+    <meta name="keywords" content="Eduvia, Performance Dashboard, Learning Analytics, Courses, Videos, Progress Tracking" data-translate="meta-keywords">
+    <meta name="author" content="Eduvia Team">
+    <meta name="robots" content="index, follow">
+    <meta name="description" lang="ar" content="تتبع أداء تعلمك مع لوحة الأداء في إدوفيا. حلل الدورات، الفيديوهات، النقاط والمزيد باستخدام الرسوم البيانية التفاعلية.">
+    <meta name="keywords" lang="ar" content="إدوفيا, لوحة الأداء, تحليلات التعلم, الدورات, الفيديوهات, تتبع التقدم">
+    <title data-translate="title">Eduvia - Performance Dashboard</title>
+    <meta property="og:title" content="Eduvia - Performance Dashboard">
+    <meta property="og:description" content="Analyze your learning performance with detailed charts and insights on Eduvia.">
+    <meta property="og:image" content="{% static 'images/performance.jpg' %}">
+    <meta property="og:url" content="https://eduvia.com/performance/dashboard/">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/reco1.jpeg" %}') no-repeat center center/cover;
+            --hero-text: #ffffff;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --card-text: #00a8cc;
+            --card-secondary-text: #444;
+            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
+            --search-input-border: #d4af37;
+            --search-btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --search-btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --footer-text: #333;
+        }
+
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/reco1.jpeg" %}') no-repeat center center/cover;
+            --hero-text: #e0e0e0;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
+            --search-input-border: #34495e;
+            --search-btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --search-btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { margin: 10px 0; justify-content: center; }
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: var(--hero-text-shadow);
+            animation: slideInFromTop 1s ease-out forwards;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 28px;
+            font-weight: 400;
+            margin: 20px 0 30px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: var(--hero-text-shadow);
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            background: var(--btn-bg);
+            color: white;
+            padding: 14px 40px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.4s ease;
+            animation: bounceIn 1s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+
+        .btn:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: var(--card-bg);
+            color: var(--card-text);
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            flex: 1 1 calc(33.33% - 20px);
+            box-sizing: border-box;
+            min-width: 280px;
+            max-width: 360px;
+            height: 500px;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-card h1 {
+            color: var(--card-text);
+            font-size: 28px;
+            margin: 10px 0;
+        }
+
+        .hero-card p {
+            font-size: 16px;
+            color: var(--card-secondary-text);
+            line-height: 1.5;
+            margin: 0 0 15px;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hero-card .chart-container {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 15px;
+        }
+
+        .hero-card canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .hero-card .btn {
+            background: var(--btn-bg);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            box-shadow: var(--btn-shadow);
+        }
+
+        .hero-card .btn:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1);
+        }
+
+        .recommendations-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: var(--card-bg);
+            color: var(--card-text);
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            flex: 1 1 calc(33.33% - 20px);
+            box-sizing: border-box;
+            min-width: 280px;
+            max-width: 360px;
+            height: auto;
+            min-height: 500px;
+        }
+
+        .recommendations-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .recommendations-card ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .recommendations-card li {
+            background: var(--card-bg);
+            color: var(--card-secondary-text);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        html[dir="rtl"] .recommendations-card li {
+            text-align: right;
+        }
+
+        .recommendations-card li:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .reports-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: var(--card-bg);
+            color: var(--card-text);
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            flex: 1 1 calc(33.33% - 20px);
+            box-sizing: border-box;
+            min-width: 280px;
+            max-width: 360px;
+            height: auto;
+            min-height: 500px;
+        }
+
+        .reports-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .reports-card ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .reports-card li {
+            background: var(--card-bg);
+            color: var(--card-secondary-text);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        html[dir="rtl"] .reports-card li {
+            text-align: right;
+        }
+
+        .reports-card li:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 900px) {
+            .hero-card, .recommendations-card, .reports-card { flex: 1 1 calc(50% - 20px); }
+            .hero h1 { font-size: 48px; }
+            .hero p { font-size: 22px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero-card, .recommendations-card, .reports-card { flex: 1 1 100%; }
+            .hero { height: 60vh; }
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 18px; }
+            .btn { padding: 12px 30px; font-size: 18px; }
+        }
+
+        .footer {
+            background: var(--footer-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--footer-text);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .search-form {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-form input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid var(--search-input-border);
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-form input:focus {
+            outline: none;
+            border-color: #00a8cc;
+        }
+
+        .search-form button {
+            background: var(--search-btn-bg);
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-form button:hover {
+            background: var(--search-btn-bg-hover);
+            transform: scale(1.05);
+        }
+
+        .user-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            padding: 10px;
+        }
+
+        .admin-actions {
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .admin-actions form {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1 data-translate="hero-title">Performance Dashboard</h1>
+        <p data-translate="hero-subtitle">Track and analyze your learning progress with powerful analytics tools</p>
+        <a href="#dashboard" class="btn" data-translate="hero-btn">Explore Now</a>
+    </section>
+
+    <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
+        <input type="text" name="q" placeholder="Search for a course..." data-translate="search-placeholder">
+        <button type="submit" class="btn" data-translate="search-btn">Search</button>
+    </form>
+
+    {% if user.is_authenticated %}
+    <div class="user-actions">
+        <form method="post" action="{% url 'performance_analysis:request_report_email' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn" data-translate="request-report-btn">Request Report via Email</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="cards-container" id="dashboard">
+        <!-- Total Courses Enrolled Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-total-courses-title">Total Courses Enrolled</h1>
+            <p data-translate="card-total-courses-desc">View the number of courses you are enrolled in.</p>
+            <div class="chart-container">
+                <canvas id="totalCoursesChart"></canvas>
+            </div>
+        </section>
+        <!-- Completed Videos Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-completed-videos-title">Completed Videos</h1>
+            <p data-translate="card-completed-videos-desc">See your progress on completed and remaining videos.</p>
+            <div class="chart-container">
+                <canvas id="completedVideosChart"></canvas>
+            </div>
+        </section>
+        <!-- Total Coins Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-total-coins-title">Total Coins</h1>
+            <p data-translate="card-total-coins-desc">Check your accumulated coins from learning activities.</p>
+            <div class="chart-container">
+                <canvas id="totalCoinsChart"></canvas>
+            </div>
+        </section>
+        <!-- Average Viewing Time Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-avg-viewing-time-title">Average Viewing Time</h1>
+            <p data-translate="card-avg-viewing-time-desc">Analyze your average video watching duration.</p>
+            <div class="chart-container">
+                <canvas id="avgViewingTimeChart"></canvas>
+            </div>
+        </section>
+        <!-- Interaction Rate Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-interaction-rate-title">Interaction Rate</h1>
+            <p data-translate="card-interaction-rate-desc">Measure your engagement level with the platform.</p>
+            <div class="chart-container">
+                <canvas id="interactionRateChart"></canvas>
+            </div>
+        </section>
+        <!-- Predicted Completion Rate Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-predicted-completion-title">Predicted Completion Rate</h1>
+            <p data-translate="card-predicted-completion-desc">Get an estimate of your course completion percentage.</p>
+            <div class="chart-container">
+                <canvas id="predictedCompletionChart"></canvas>
+            </div>
+        </section>
+        <!-- Strength Areas Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-strength-areas-title">Strength Areas</h1>
+            <p data-translate="card-strength-areas-desc">Identify your strongest learning areas.</p>
+            <div class="chart-container">
+                <canvas id="strengthAreasChart"></canvas>
+            </div>
+        </section>
+        <!-- Weakness Areas Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-weakness-areas-title">Weakness Areas</h1>
+            <p data-translate="card-weakness-areas-desc">Spot areas where you need improvement.</p>
+            <div class="chart-container">
+                <canvas id="weaknessAreasChart"></canvas>
+            </div>
+        </section>
+        <!-- Competition Performance Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-competition-stats-title">Competition Performance</h1>
+            <p data-translate="card-competition-stats-desc">Review your stats in competitions.</p>
+            <div class="chart-container">
+                <canvas id="competitionStatsChart"></canvas>
+            </div>
+        </section>
+        <!-- Course Completion Rates Chart -->
+        <section class="hero-card">
+            <h1 data-translate="card-course-completion-title">Course Completion Rates</h1>
+            <p data-translate="card-course-completion-desc">Check completion rates across your courses.</p>
+            <div class="chart-container">
+                <canvas id="courseCompletionChart"></canvas>
+            </div>
+        </section>
+        <!-- Recommended Courses Card -->
+        <section class="recommendations-card">
+            <h1 data-translate="card-recommended-courses-title">Recommended Courses</h1>
+            <ul>
+                {% for rec in recommendations %}
+                    <li>{{ rec.course.title }} - {{ rec.reason }}</li>
+                {% empty %}
+                    <li data-translate="no-recommendations">No recommendations available.</li>
+                {% endfor %}
+            </ul>
+            <a href="/courses/" class="btn" data-translate="card-view-all-btn">View All</a>
+        </section>
+        <!-- Previous Reports Card -->
+        <section class="reports-card">
+            <h1 data-translate="card-previous-reports-title">Previous Reports</h1>
+            <ul>
+                {% for report in user_reports %}
+                    <li>
+                        <a href="{% url 'performance_analysis:download_report' report.report_id %}" data-translate="download-report">
+                            Report from {{ report.generated_at|date:"Y-m-d H:i" }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li data-translate="no-reports">No previous reports available.</li>
+                {% endfor %}
+            </ul>
+            {% if user_reports %}
+                <a href="{% url 'performance_analysis:download_report' user_reports.0.report_id %}" class="btn" data-translate="download-latest-report">Download Latest Report</a>
+            {% endif %}
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                "title": "Eduvia - Performance Dashboard",
+                "meta-description": "Track your learning performance with Eduvia's Performance Dashboard. Analyze courses, videos, coins, and more with interactive charts.",
+                "meta-keywords": "Eduvia, Performance Dashboard, Learning Analytics, Courses, Videos, Progress Tracking",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "hero-title": "Performance Dashboard",
+                "hero-subtitle": "Track and analyze your learning progress with powerful analytics tools",
+                "hero-btn": "Explore Now",
+                "search-placeholder": "Search for a course...",
+                "search-btn": "Search",
+                "admin-send-all": "Send Report to All Users",
+                "footer-text": "© 2025 Eduvia. All rights reserved.",
+                "card-total-courses-title": "Total Courses Enrolled",
+                "card-total-courses-desc": "View the number of courses you are enrolled in.",
+                "card-completed-videos-title": "Completed Videos",
+                "card-completed-videos-desc": "See your progress on completed and remaining videos.",
+                "card-total-coins-title": "Total Coins",
+                "card-total-coins-desc": "Check your accumulated coins from learning activities.",
+                "card-avg-viewing-time-title": "Average Viewing Time",
+                "card-avg-viewing-time-desc": "Analyze your average video watching duration.",
+                "card-interaction-rate-title": "Interaction Rate",
+                "card-interaction-rate-desc": "Measure your engagement level with the platform.",
+                "card-predicted-completion-title": "Predicted Completion Rate",
+                "card-predicted-completion-desc": "Get an estimate of your course completion percentage.",
+                "card-strength-areas-title": "Strength Areas",
+                "card-strength-areas-desc": "Identify your strongest learning areas.",
+                "card-weakness-areas-title": "Weakness Areas",
+                "card-weakness-areas-desc": "Spot areas where you need improvement.",
+                "card-competition-stats-title": "Competition Performance",
+                "card-competition-stats-desc": "Review your stats in competitions.",
+                "card-course-completion-title": "Course Completion Rates",
+                "card-course-completion-desc": "Check completion rates across your courses.",
+                "card-recommended-courses-title": "Recommended Courses",
+                "card-view-all-btn": "View All",
+                "card-previous-reports-title": "Previous Reports",
+                "no-recommendations": "No recommendations available.",
+                "no-reports": "No previous reports available.",
+                "download-report": "Download",
+                "download-latest-report": "Download Latest Report",
+                "chart-label-total-courses": "Total Courses",
+                "chart-label-no-courses": "No Courses",
+                "chart-label-completed-videos": "Completed Videos",
+                "chart-label-remaining-videos": "Remaining Videos",
+                "chart-label-no-videos": "No Videos",
+                "chart-label-coins": "Coins",
+                "chart-label-no-coins": "No Coins",
+                "chart-label-avg-viewing-time": "Avg Viewing Time (min)",
+                "chart-label-remaining-time": "Remaining Time",
+                "chart-label-no-viewing-time": "No Viewing Time",
+                "chart-label-interaction-rate": "Interaction Rate (%)",
+                "chart-label-no-interaction": "No Interaction",
+                "chart-label-predicted-completion": "Predicted Completion (%)",
+                "chart-label-no-prediction": "No Prediction",
+                "chart-label-none": "None",
+                "chart-label-total-competitions": "Total Competitions",
+                "chart-label-total-xp": "Total XP",
+                "chart-label-total-coins": "Total Coins",
+                "chart-label-overall-rank": "Overall Rank",
+                "chart-label-no-competitions": "No Competitions",
+                "chart-label-completion-rate": "Completion Rate (%)",
+                "chart-label-courses": "Courses",
+                "request-report-btn": "Request Report via Email"
+            },
+            ar: {
+                "title": "إدوفيا - لوحة الأداء",
+                "meta-description": "تتبع أداء تعلمك مع لوحة الأداء في إدوفيا. حلل الدورات، الفيديوهات، النقاط والمزيد باستخدام الرسوم البيانية التفاعلية.",
+                "meta-keywords": "إدوفيا, لوحة الأداء, تحليلات التعلم, الدورات, الفيديوهات, تتبع التقدم",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "hero-title": "لوحة الأداء",
+                "hero-subtitle": "تتبع وتحليل تقدمك التعليمي بأدوات التحليل القوية",
+                "hero-btn": "استكشف الآن",
+                "search-placeholder": "ابحث عن دورة...",
+                "search-btn": "ابحث",
+                "admin-send-all": "إرسال التقرير لجميع المستخدمين",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة.",
+                "card-total-courses-title": "إجمالي الدورات المسجلة",
+                "card-total-courses-desc": "عرض عدد الدورات التي سجلت بها.",
+                "card-completed-videos-title": "الفيديوهات المكتملة",
+                "card-completed-videos-desc": "اطلع على تقدمك في الفيديوهات المكتملة والباقية.",
+                "card-total-coins-title": "إجمالي النقاط",
+                "card-total-coins-desc": "تحقق من النقاط المتراكمة من الأنشطة التعليمية.",
+                "card-avg-viewing-time-title": "متوسط وقت المشاهدة",
+                "card-avg-viewing-time-desc": "حلل متوسط مدة مشاهدة الفيديوهات.",
+                "card-interaction-rate-title": "معدل التفاعل",
+                "card-interaction-rate-desc": "قس مستوى تفاعلك مع المنصة.",
+                "card-predicted-completion-title": "معدل الإكمال المتوقع",
+                "card-predicted-completion-desc": "احصل على تقدير لنسبة إكمال الدورات.",
+                "card-strength-areas-title": "مجالات القوة",
+                "card-strength-areas-desc": "حدد أقوى مجالات تعلمك.",
+                "card-weakness-areas-title": "مجالات الضعف",
+                "card-weakness-areas-desc": "حدد المجالات التي تحتاج إلى تحسين.",
+                "card-competition-stats-title": "أداء المسابقات",
+                "card-competition-stats-desc": "راجع إحصائياتك في المسابقات.",
+                "card-course-completion-title": "معدلات إكمال الدورات",
+                "card-course-completion-desc": "تحقق من معدلات الإكمال عبر دوراتك.",
+                "card-recommended-courses-title": "الدورات الموصى بها",
+                "card-view-all-btn": "عرض الكل",
+                "card-previous-reports-title": "التقارير السابقة",
+                "no-recommendations": "لا توجد توصيات متاحة.",
+                "no-reports": "لا توجد تقارير سابقة متاحة.",
+                "download-report": "تحميل",
+                "download-latest-report": "تحميل أحدث تقرير",
+                "chart-label-total-courses": "إجمالي الدورات",
+                "chart-label-no-courses": "لا توجد دورات",
+                "chart-label-completed-videos": "الفيديوهات المكتملة",
+                "chart-label-remaining-videos": "الفيديوهات الباقية",
+                "chart-label-no-videos": "لا توجد فيديوهات",
+                "chart-label-coins": "النقاط",
+                "chart-label-no-coins": "لا توجد نقاط",
+                "chart-label-avg-viewing-time": "متوسط وقت المشاهدة (دقيقة)",
+                "chart-label-remaining-time": "الوقت المتبقي",
+                "chart-label-no-viewing-time": "لا يوجد وقت مشاهدة",
+                "chart-label-interaction-rate": "معدل التفاعل (%)",
+                "chart-label-no-interaction": "لا يوجد تفاعل",
+                "chart-label-predicted-completion": "الإكمال المتوقع (%)",
+                "chart-label-no-prediction": "لا يوجد توقع",
+                "chart-label-none": "لا يوجد",
+                "chart-label-total-competitions": "إجمالي المسابقات",
+                "chart-label-total-xp": "إجمالي النقاط التجربية",
+                "chart-label-total-coins": "إجمالي النقاط",
+                "chart-label-overall-rank": "الترتيب العام",
+                "chart-label-no-competitions": "لا توجد مسابقات",
+                "chart-label-completion-rate": "معدل الإكمال (%)",
+                "chart-label-courses": "الدورات",
+                "request-report-btn": "استلام تقرير عبر الإيميل"
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                const translation = translations[newLang][key] || element.textContent;
+                if (element.tagName.toLowerCase() === 'input' && element.getAttribute('type') === 'text') {
+                    element.setAttribute('placeholder', translation);
+                } else {
+                    element.textContent = translation;
+                }
+            });
+            document.title = translations[newLang]["title"];
+            localStorage.setItem('language', newLang);
+            updateChartLabels(newLang);
+        }
+
+        function updateChartLabels(lang) {
+            const strengthAreas = {{ performance_data.strength_areas|safe }}.length > 0 ? {{ performance_data.strength_areas|safe }} : [translations[lang]['chart-label-none']];
+            const weaknessAreas = {{ performance_data.weakness_areas|safe }}.length > 0 ? {{ performance_data.weakness_areas|safe }} : [translations[lang]['chart-label-none']];
+            const courseLabels = {{ course_labels|safe }}.length > 0 ? {{ course_labels|safe }} : [translations[lang]['chart-label-no-courses']];
+
+            const charts = [
+                {
+                    id: 'totalCoursesChart',
+                    type: 'bar',
+                    labels: () => [{{ performance_data.total_courses|default:0 }} > 0 ? translations[lang]['chart-label-total-courses'] : translations[lang]['chart-label-no-courses']],
+                    data: () => [{{ performance_data.total_courses|default:0 }}],
+                    datasetLabel: translations[lang]['chart-label-total-courses']
+                },
+                {
+                    id: 'completedVideosChart',
+                    type: 'pie',
+                    labels: () => {
+                        const totalVideos = {{ performance_data.total_minutes|default:0 }} / ({{ performance_data.avg_viewing_time|default:5 }} || 5);
+                        return totalVideos > 0 ? [translations[lang]['chart-label-completed-videos'], translations[lang]['chart-label-remaining-videos']] : [translations[lang]['chart-label-no-videos'], ''];
+                    },
+                    data: () => {
+                        const totalVideos = {{ performance_data.total_minutes|default:0 }} / ({{ performance_data.avg_viewing_time|default:5 }} || 5);
+                        return totalVideos > 0 ? [{{ performance_data.completed_videos|default:0 }}, Math.max(totalVideos - {{ performance_data.completed_videos|default:0 }}, 0)] : [0, 1];
+                    },
+                    datasetLabel: translations[lang]['chart-label-completed-videos']
+                },
+                {
+                    id: 'totalCoinsChart',
+                    type: 'bar',
+                    labels: () => [{{ performance_data.total_coins|default:0 }} > 0 ? translations[lang]['chart-label-coins'] : translations[lang]['chart-label-no-coins']],
+                    data: () => [{{ performance_data.total_coins|default:0 }}],
+                    datasetLabel: translations[lang]['chart-label-coins']
+                },
+                {
+                    id: 'avgViewingTimeChart',
+                    type: 'bar',
+                    labels: () => [{{ performance_data.avg_viewing_time|default:0 }} > 0 ? translations[lang]['chart-label-avg-viewing-time'] : translations[lang]['chart-label-no-viewing-time']],
+                    data: () => [{{ performance_data.avg_viewing_time|default:0 }}],
+                    datasetLabel: translations[lang]['chart-label-avg-viewing-time']
+                },
+                {
+                    id: 'interactionRateChart',
+                    type: 'bar',
+                    labels: () => [{{ performance_data.interaction_rate|default:0 }} > 0 ? translations[lang]['chart-label-interaction-rate'] : translations[lang]['chart-label-no-interaction']],
+                    data: () => [{{ performance_data.interaction_rate|default:0 }}],
+                    datasetLabel: translations[lang]['chart-label-interaction-rate']
+                },
+                {
+                    id: 'predictedCompletionChart',
+                    type: 'bar',
+                    labels: () => [{{ performance_data.predicted_completion_rate|default:0 }} > 0 ? translations[lang]['chart-label-predicted-completion'] : translations[lang]['chart-label-no-prediction']],
+                    data: () => [{{ performance_data.predicted_completion_rate|default:0 }}],
+                    datasetLabel: translations[lang]['chart-label-predicted-completion']
+                },
+                {
+                    id: 'strengthAreasChart',
+                    type: 'bar',
+                    labels: () => strengthAreas,
+                    data: () => strengthAreas.map(() => 1),
+                    datasetLabel: translations[lang]['card-strength-areas-title']
+                },
+                {
+                    id: 'weaknessAreasChart',
+                    type: 'bar',
+                    labels: () => weaknessAreas,
+                    data: () => weaknessAreas.map(() => 1),
+                    datasetLabel: translations[lang]['card-weakness-areas-title']
+                },
+                {
+                    id: 'competitionStatsChart',
+                    type: 'bar',
+                    labels: () => {{ performance_data.competition_stats.total_competitions|default:0 }} > 0 ? [
+                        translations[lang]['chart-label-total-competitions'],
+                        translations[lang]['chart-label-total-xp'],
+                        translations[lang]['chart-label-total-coins'],
+                        translations[lang]['chart-label-overall-rank']
+                    ] : [translations[lang]['chart-label-no-competitions']],
+                    data: () => {{ performance_data.competition_stats.total_competitions|default:0 }} > 0 ? [
+                        {{ performance_data.competition_stats.total_competitions|default:0 }},
+                        {{ performance_data.competition_stats.total_xp|default:0 }},
+                        {{ performance_data.competition_stats.total_coins|default:0 }},
+                        {{ performance_data.competition_stats.overall_rank|default:0 }}
+                    ] : [0],
+                    datasetLabel: translations[lang]['card-competition-stats-title']
+                },
+                {
+                    id: 'courseCompletionChart',
+                    type: 'bar',
+                    labels: () => courseLabels,
+                    data: () => {{ completion_rates|safe }},
+                    datasetLabel: translations[lang]['chart-label-completion-rate'],
+                    yAxisTitle: translations[lang]['chart-label-completion-rate'],
+                    xAxisTitle: translations[lang]['chart-label-courses']
+                }
+            ];
+
+            charts.forEach(chart => {
+                const chartInstance = Chart.getChart(chart.id);
+                if (chartInstance) {
+                    chartInstance.data.labels = chart.labels();
+                    chartInstance.data.datasets[0].label = chart.datasetLabel;
+                    chartInstance.data.datasets[0].data = chart.data();
+                    if (chart.yAxisTitle) {
+                        chartInstance.options.scales.y.title.text = chart.yAxisTitle;
+                        chartInstance.options.scales.x.title.text = chart.xAxisTitle;
+                    }
+                    chartInstance.update();
+                }
+            });
+        }
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', () => {
+            const lang = localStorage.getItem('language') || 'en';
+            if (lang === 'ar') {
+                toggleLanguage();
+            }
+
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                toggleDarkMode();
+            }
+
+            const strengthAreas = {{ performance_data.strength_areas|safe }}.length > 0 ? {{ performance_data.strength_areas|safe }} : [translations[lang]['chart-label-none']];
+            const weaknessAreas = {{ performance_data.weakness_areas|safe }}.length > 0 ? {{ performance_data.weakness_areas|safe }} : [translations[lang]['chart-label-none']];
+            const courseLabels = {{ course_labels|safe }}.length > 0 ? {{ course_labels|safe }} : [translations[lang]['chart-label-no-courses']];
+
+            // Total Courses Chart
+            new Chart(document.getElementById('totalCoursesChart'), {
+                type: 'bar',
+                data: {
+                    labels: [{{ performance_data.total_courses|default:0 }} > 0 ? translations[lang]['chart-label-total-courses'] : translations[lang]['chart-label-no-courses']],
+                    datasets: [{
+                        label: translations[lang]['chart-label-total-courses'],
+                        data: [{{ performance_data.total_courses|default:0 }}],
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: translations[lang]['chart-label-total-courses'] } }
+                    }
+                }
+            });
+
+            // Completed Videos Chart
+            const totalVideos = {{ performance_data.total_minutes|default:0 }} / ({{ performance_data.avg_viewing_time|default:5 }} || 5);
+            new Chart(document.getElementById('completedVideosChart'), {
+                type: 'pie',
+                data: {
+                    labels: totalVideos > 0 ? [translations[lang]['chart-label-completed-videos'], translations[lang]['chart-label-remaining-videos']] : [translations[lang]['chart-label-no-videos'], ''],
+                    datasets: [{
+                        label: translations[lang]['chart-label-completed-videos'],
+                        data: totalVideos > 0 ? [{{ performance_data.completed_videos|default:0 }}, Math.max(totalVideos - {{ performance_data.completed_videos|default:0 }}, 0)] : [0, 1],
+                        backgroundColor: ['#00c9a7', '#d8f4ff']
+                    }]
+                }
+            });
+
+            // Total Coins Chart
+            new Chart(document.getElementById('totalCoinsChart'), {
+                type: 'bar',
+                data: {
+                    labels: [{{ performance_data.total_coins|default:0 }} > 0 ? translations[lang]['chart-label-coins'] : translations[lang]['chart-label-no-coins']],
+                    datasets: [{
+                        label: translations[lang]['chart-label-coins'],
+                        data: [{{ performance_data.total_coins|default:0 }}],
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: translations[lang]['chart-label-coins'] } }
+                    }
+                }
+            });
+
+            // Average Viewing Time Chart
+            new Chart(document.getElementById('avgViewingTimeChart'), {
+                type: 'bar',
+                data: {
+                    labels: [{{ performance_data.avg_viewing_time|default:0 }} > 0 ? translations[lang]['chart-label-avg-viewing-time'] : translations[lang]['chart-label-no-viewing-time']],
+                    datasets: [{
+                        label: translations[lang]['chart-label-avg-viewing-time'],
+                        data: [{{ performance_data.avg_viewing_time|default:0 }}],
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: translations[lang]['chart-label-avg-viewing-time'] } }
+                    }
+                }
+            });
+
+            // Interaction Rate Chart
+            new Chart(document.getElementById('interactionRateChart'), {
+                type: 'bar',
+                data: {
+                    labels: [{{ performance_data.interaction_rate|default:0 }} > 0 ? translations[lang]['chart-label-interaction-rate'] : translations[lang]['chart-label-no-interaction']],
+                    datasets: [{
+                        label: translations[lang]['chart-label-interaction-rate'],
+                        data: [{{ performance_data.interaction_rate|default:0 }}],
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: translations[lang]['chart-label-interaction-rate'] } }
+                    }
+                }
+            });
+
+            // Predicted Completion Rate Chart
+            new Chart(document.getElementById('predictedCompletionChart'), {
+                type: 'bar',
+                data: {
+                    labels: [{{ performance_data.predicted_completion_rate|default:0 }} > 0 ? translations[lang]['chart-label-predicted-completion'] : translations[lang]['chart-label-no-prediction']],
+                    datasets: [{
+                        label: translations[lang]['chart-label-predicted-completion'],
+                        data: [{{ performance_data.predicted_completion_rate|default:0 }}],
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: translations[lang]['chart-label-predicted-completion'] } }
+                    }
+                }
+            });
+
+            // Strength Areas Chart
+            new Chart(document.getElementById('strengthAreasChart'), {
+                type: 'bar',
+                data: {
+                    labels: strengthAreas,
+                    datasets: [{
+                        label: translations[lang]['card-strength-areas-title'],
+                        data: strengthAreas.map(() => 1),
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, display: false }
+                    }
+                }
+            });
+
+            // Weakness Areas Chart
+            new Chart(document.getElementById('weaknessAreasChart'), {
+                type: 'bar',
+                data: {
+                    labels: weaknessAreas,
+                    datasets: [{
+                        label: translations[lang]['card-weakness-areas-title'],
+                        data: weaknessAreas.map(() => 1),
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, display: false }
+                    }
+                }
+            });
+
+            // Competition Stats Chart
+            new Chart(document.getElementById('competitionStatsChart'), {
+                type: 'bar',
+                data: {
+                    labels: {{ performance_data.competition_stats.total_competitions|default:0 }} > 0 ? [
+                        translations[lang]['chart-label-total-competitions'],
+                        translations[lang]['chart-label-total-xp'],
+                        translations[lang]['chart-label-total-coins'],
+                        translations[lang]['chart-label-overall-rank']
+                    ] : [translations[lang]['chart-label-no-competitions']],
+                    datasets: [{
+                        label: translations[lang]['card-competition-stats-title'],
+                        data: {{ performance_data.competition_stats.total_competitions|default:0 }} > 0 ? [
+                            {{ performance_data.competition_stats.total_competitions|default:0 }},
+                            {{ performance_data.completion_stats.total_xp|default:0 }},
+                            {{ performance_data.competition_stats.total_coins|default:0 }},
+                            {{ performance_data.competition_stats.overall_rank|default:0 }}
+                        ] : [0],
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Course Completion Rates Chart
+            new Chart(document.getElementById('courseCompletionChart'), {
+                type: 'bar',
+                data: {
+                    labels: courseLabels,
+                    datasets: [{
+                        label: translations[lang]['chart-label-completion-rate'],
+                        data: {{ completion_rates|safe }},
+                        backgroundColor: '#00c9a7'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: translations[lang]['chart-label-completion-rate'] }
+                        },
+                        x: {
+                            title: { display: true, text: translations[lang]['chart-label-courses'] }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

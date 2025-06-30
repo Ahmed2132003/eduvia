@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: auto; padding: 20px; }
+        h1, h2 { color: navy; }
+        .summary, .competitions, .recommendations { margin-bottom: 20px; }
+        .footer { font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Performance Dashboard Report</h1>
+        <p>Dear {{ user.username }},</p>
+        <div class="summary">
+            <h2>Course Performance Summary</h2>
+            <p><strong>Total Courses:</strong> {{ performance_data.total_courses }}</p>
+            <p><strong>Completed Videos:</strong> {{ performance_data.completed_videos }}</p>
+            <p><strong>Total Coins:</strong> {{ performance_data.total_coins }}</p>
+        </div>
+        <div class="summary">
+            <h2>Course Completion Rates</h2>
+            {% for course_title, rate in performance_data.course_completion_rates.items %}
+                <p>{{ course_title }}: {{ rate|floatformat:2 }}%</p>
+            {% empty %}
+                <p>No course data available.</p>
+            {% endfor %}
+        </div>
+        <div class="competitions">
+            <h2>Competition Performance</h2>
+            <p><strong>Total Competitions:</strong> {{ performance_data.competition_stats.total_competitions }}</p>
+            <p><strong>Total XP Earned:</strong> {{ performance_data.competition_stats.total_xp }}</p>
+            <p><strong>Total Coins Earned:</strong> {{ performance_data.competition_stats.total_coins }}</p>
+            <p><strong>Overall Ranking:</strong> {{ performance_data.competition_stats.overall_rank|default:"Not ranked" }}</p>
+        </div>
+        <div class="recommendations">
+            <h2>Recommendations</h2>
+            {% for rec in recommendations %}
+                <p><strong>{{ rec.course.title }}</strong>: {{ rec.reason }}</p>
+            {% empty %}
+                <p>No recommendations at this time.</p>
+            {% endfor %}
+        </div>
+        <div class="footer">
+            <p>Note: The course completion chart is available in the dashboard.</p>
+            <p>Keep learning with Creativity Code!</p>
+            <p>Contact us at: {{ platform_email }}</p>
+        </div>
+    </div>
+</body>
+</html>

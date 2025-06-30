@@ -1,0 +1,965 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="page-title">Courses - Eduvia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- SEO Meta Tags (English) -->
+    <meta name="description" data-translate="meta-desc" content="Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.">
+    <meta name="keywords" data-translate="meta-keywords" content="Eduvia, online courses, education platform, learning, course catalog">
+    <meta name="author" content="Eduvia">
+    <!-- SEO Meta Tags (Arabic) -->
+    <meta http-equiv="content-language" content="ar, en">
+    <meta name="description" lang="ar" data-translate="meta-desc-ar" content="استكشف مجموعة واسعة من الدورات التعليمية عبر الإنترنت على إدوفيا. ابحث عن دورات بقيادة خبراء تناسب اهتماماتك وابدأ التعلم اليوم.">
+    <meta name="keywords" lang="ar" data-translate="meta-keywords-ar" content="إدوفيا، دورات عبر الإنترنت، منصة تعليمية، تعليم، كتالوج الدورات">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" data-translate="og-title" content="Courses - Eduvia">
+    <meta property="og:description" data-translate="og-desc" content="Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.">
+    <meta property="og:image" content="{% static 'images/course_page1.jpg' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" data-translate="twitter-title" content="Courses - Eduvia">
+    <meta name="twitter:description" data-translate="twitter-desc" content="Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.">
+    <meta name="twitter:image" content="{% static 'images/course_page1.jpg' %}">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/course_page1.jpg" %}') no-repeat center center/cover;
+            --hero-text: #ffffff;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --card-text: #00a8cc;
+            --card-secondary-text: #444;
+            --card-title-text: #001a33;
+            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --purchase-bg: linear-gradient(to right, #ff6f61, #ff9f43);
+            --purchase-bg-hover: linear-gradient(to right, #e65a50, #e68a3a);
+            --btn-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
+            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --footer-text: #333;
+            --input-border: #00a8cc;
+            --input-focus-border: #12d3cf;
+            --input-focus-shadow: 0 0 8px rgba(0, 201, 167, 0.3);
+            --toast-error-bg: linear-gradient(145deg, #f8d7da, #f5c6cb);
+            --toast-error-text: #721c24;
+            --toast-success-bg: linear-gradient(145deg, #d4edda, #c3e6cb);
+            --toast-success-text: #155724;
+            --message-success-bg: #d4edda;
+            --message-success-text: #155724;
+            --message-error-bg: #f8d7da;
+            --message-error-text: #721c24;
+            --message-info-bg: #d1ecf1;
+            --message-info-text: #0c5460;
+            --disabled-btn-bg: #cccccc;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/course_page1.jpg" %}') no-repeat center center/cover;
+            --hero-text: #e0e0e0;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --card-title-text: #e0e0e0;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --purchase-bg: linear-gradient(to right, #e74c3c, #e67e22);
+            --purchase-bg-hover: linear-gradient(to right, #c0392b, #d35400);
+            --btn-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+            --input-border: #555;
+            --input-focus-border: #3498db;
+            --input-focus-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+            --toast-error-bg: linear-gradient(145deg, #4a2c2e, #5e373a);
+            --toast-error-text: #f5c6cb;
+            --toast-success-bg: linear-gradient(145deg, #2e4a2c, #375e36);
+            --toast-success-text: #c3e6cb;
+            --message-success-bg: #2e4a2c;
+            --message-success-text: #c3e6cb;
+            --message-error-bg: #4a2c2e;
+            --message-error-text: #f5c6cb;
+            --message-info-bg: #2c4a4e;
+            --message-info-text: #d1ecf1;
+            --disabled-btn-bg: #555;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode and Language Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { margin: 10px 0; justify-content: center; }
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: var(--hero-text-shadow);
+            animation: slideInFromTop 1s ease-out forwards;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 20px 0 30px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: var(--hero-text-shadow);
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Search Form */
+        .search-form {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .search-form input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+            background-color: #ffffff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        html[dir="rtl"] .search-form input {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        body.dark-mode .search-form input {
+            background-color: #333;
+            color: var(--text-color);
+        }
+
+        .search-form input:focus {
+            border-color: var(--input-focus-border);
+            box-shadow: var(--input-focus-shadow);
+            outline: none;
+        }
+
+        .search-form button {
+            background: var(--btn-bg);
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            animation: bounceIn 1s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+
+        .search-form button:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: var(--btn-shadow);
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Cards Container */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Course Card Styling */
+        .course-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: var(--card-bg);
+            color: var(--card-title-text);
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            flex: 1 1 calc(33.33% - 20px);
+            box-sizing: border-box;
+            min-width: 280px;
+            max-width: 360px;
+            height: 500px;
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-card h2 {
+            color: var(--card-text);
+            font-size: 24px;
+            margin: 10px 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .course-card p {
+            font-size: 16px;
+            color: var(--card-secondary-text);
+            line-height: 1.5;
+            margin: 0 0 10px;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 100px;
+        }
+
+        .course-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .course-card img:hover {
+            transform: scale(1.05);
+        }
+
+        .course-card a {
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            text-decoration: none;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.3s ease;
+            margin: 5px 10px;
+        }
+
+        .details-btn {
+            background: var(--btn-bg);
+        }
+
+        .details-btn:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1);
+        }
+
+        .purchase-btn, .purchase-link {
+            background: var(--purchase-bg);
+        }
+
+        .purchase-btn:hover, .purchase-link:hover {
+            background: var(--purchase-bg-hover);
+            transform: scale(1.1);
+        }
+
+        .disabled-btn {
+            background: var(--disabled-btn-bg);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .disabled-btn:hover {
+            background: var(--disabled-btn-bg);
+            transform: none;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--toast-error-bg);
+            color: var(--toast-error-text);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            animation: slideInRight 0.5s ease-out, fadeOut 0.5s ease-in 2.5s forwards;
+            font-size: 16px;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .toast.success {
+            background: var(--toast-success-bg);
+            color: var(--toast-success-text);
+        }
+
+        @keyframes slideInRight {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+
+        .toast i {
+            margin-right: 10px;
+        }
+
+        html[dir="rtl"] .toast i {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--footer-text);
+            margin-top: 40px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Messages Styling */
+        .messages {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .messages p {
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .messages .success {
+            background-color: var(--message-success-bg);
+            color: var(--message-success-text);
+        }
+
+        .messages .error {
+            background-color: var(--message-error-bg);
+            color: var(--message-error-text);
+        }
+
+        .messages .info {
+            background-color: var(--message-info-bg);
+            color: var(--message-info-text);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 20px; }
+            .course-card { flex: 1 1 calc(50% - 20px); }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 18px; }
+            .course-card { flex: 1 1 100%; }
+            .search-form input { width: 200px; }
+            .course-actions { display: flex; flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <form>{% csrf_token %}</form>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p class="{{ message.tags }}" data-translate="{{ message.tags }}-message">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 data-translate="hero-title">Discover Our Courses</h1>
+        <p data-translate="hero-desc">Explore a wide range of expert-led courses to enhance your skills and knowledge.</p>
+    </section>
+
+    <!-- Search Form -->
+    <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
+        <input 
+            type="text" 
+            name="q" 
+            data-translate-placeholder="search-placeholder"
+            placeholder="Search for a course..." 
+            value="{{ query|default:'' }}"
+        >
+        <button type="submit" class="btn" data-translate="search-button">Search</button>
+    </form>
+
+    <!-- Cards Container -->
+    <div class="cards-container">
+        {% for course in courses %}
+        <div class="course-card" id="course-{{ course.id }}">
+            <img src="{{ course.image.url }}" alt="{{ course.title }}">
+            <h2>{{ course.title }}</h2>
+            <p>{{ course.description|truncatewords:20 }}</p>
+            <p><strong data-translate="instructor-label">Instructor:</strong> {{ course.instructor }}</p>
+            <p><strong data-translate="rating-label">Rating:</strong> {{ course.average_rating }}</p>
+            <p><strong data-translate="category-label">Category:</strong> {{ course.get_category_display }}</p>
+            <div class="course-actions">
+                {% if user.is_authenticated %}
+                    {% if course.id in enrolled_course_ids %}
+                        <a href="{% url 'courses:course_details' course.id %}" class="details-btn" data-translate="details-btn">View Details</a>
+                    {% else %}
+                        <a href="#" class="details-btn disabled-btn" data-course-id="{{ course.id }}" data-translate="details-btn">View Details</a>
+                        <a href="#" class="purchase-link" data-course-id="{{ course.id }}" data-coins="{% if user.courses_profile %}{{ user.courses_profile.coins }}{% else %}0{% endif %}" data-translate="purchase-link">Purchase for 300 Coins</a>
+                    {% endif %}
+                {% else %}
+                    <a href="/accounts/register/?next={% url 'courses:courses' %}" class="enroll-btn" data-translate="login-btn">Login to Access</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i id="toast-icon" class="fas fa-exclamation-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "page-title": "Courses - Eduvia",
+                "meta-desc": "Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.",
+                "meta-keywords": "Eduvia, online courses, education platform, learning, course catalog",
+                "meta-desc-ar": "استكشف مجموعة واسعة من الدورات التعليمية عبر الإنترنت على إدوفيا. ابحث عن دورات بقيادة خبراء تناسب اهتماماتك وابدأ التعلم اليوم.",
+                "meta-keywords-ar": "إدوفيا، دورات عبر الإنترنت، منصة تعليمية، تعليم، كتالوج الدورات",
+                "og-title": "Courses - Eduvia",
+                "og-desc": "Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.",
+                "twitter-title": "Courses - Eduvia",
+                "twitter-desc": "Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.",
+                "hero-title": "Discover Our Courses",
+                "hero-desc": "Explore a wide range of expert-led courses to enhance your skills and knowledge.",
+                "search-placeholder": "Search for a course...",
+                "search-button": "Search",
+                "instructor-label": "Instructor:",
+                "rating-label": "Rating:",
+                "category-label": "Category:",
+                "details-btn": "View Details",
+                "purchase-link": "Purchase for 300 Coins",
+                "login-btn": "Login to Access",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved.",
+                "success-message": "", // Placeholder for dynamic messages
+                "error-message": "",
+                "info-message": ""
+            },
+            ar: {
+                "page-title": "الدورات - إدوفيا",
+                "meta-desc": "استكشف مجموعة واسعة من الدورات التعليمية عبر الإنترنت على إدوفيا. ابحث عن دورات بقيادة خبراء تناسب اهتماماتك وابدأ التعلم اليوم.",
+                "meta-keywords": "إدوفيا، دورات عبر الإنترنت، منصة تعليمية، تعليم، كتالوج الدورات",
+                "meta-desc-ar": "استكشف مجموعة واسعة من الدورات التعليمية عبر الإنترنت على إدوفيا. ابحث عن دورات بقيادة خبراء تناسب اهتماماتك وابدأ التعلم اليوم.",
+                "meta-keywords-ar": "إدوفيا، دورات عبر الإنترنت، منصة تعليمية، تعليم، كتالوج الدورات",
+                "og-title": "الدورات - إدوفيا",
+                "og-desc": "اكتشف وسجل في الدورات التعليمية عبر الإنترنت على إدوفيا لتعزيز مهاراتك ومعرفتك.",
+                "twitter-title": "الدورات - إدوفيا",
+                "twitter-desc": "اكتشف وسجل في الدورات التعليمية عبر الإنترنت على إدوفيا لتعزيز مهاراتك ومعرفتك.",
+                "hero-title": "اكتشف دوراتنا",
+                "hero-desc": "استكشف مجموعة واسعة من الدورات بقيادة خبراء لتعزيز مهاراتك ومعرفتك.",
+                "search-placeholder": "ابحث عن دورة...",
+                "search-button": "بحث",
+                "instructor-label": "المدرب:",
+                "rating-label": "التقييم:",
+                "category-label": "الفئة:",
+                "details-btn": "عرض التفاصيل",
+                "purchase-link": "الشراء مقابل 300 نقطة",
+                "login-btn": "تسجيل الدخول للوصول",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة.",
+                "success-message": "",
+                "error-message": "",
+                "info-message": ""
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[newLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    element.setAttribute('content', text);
+                } else if (key === 'search-placeholder') {
+                    element.setAttribute('placeholder', text);
+                } else if (key.includes('-message')) {
+                    // Skip dynamic messages to preserve server-side content
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update the title
+            document.title = translations[newLang]["page-title"];
+
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[savedLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    element.setAttribute('content', text);
+                } else if (key === 'search-placeholder') {
+                    element.setAttribute('placeholder', text);
+                } else if (key.includes('-message')) {
+                    // Skip dynamic messages to preserve server-side content
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Set the title on page load
+            document.title = translations[savedLang]["page-title"];
+        });
+
+        // Function to show toast notification
+        function showToast(message, isSuccess = false) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            toastMessage.textContent = message;
+            toast.className = 'toast' + (isSuccess ? ' success' : '');
+            toastIcon.className = 'fas fa-' + (isSuccess ? 'check-circle' : 'exclamation-circle');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Handle disabled View Details button
+        document.querySelectorAll('.details-btn.disabled-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const lang = document.getElementById('html-root').getAttribute('lang');
+                const message = lang === 'ar' ? 'يجب شراء هذه الدورة لعرض التفاصيل.' : 'You must purchase this course to view details.';
+                showToast(message);
+            });
+        });
+
+        // Handle Purchase Course link
+        document.querySelectorAll('.purchase-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const courseId = this.getAttribute('data-course-id');
+                const userCoins = parseInt(this.getAttribute('data-coins'));
+                const lang = document.getElementById('html-root').getAttribute('lang');
+                console.log(`Attempting to purchase course ID: ${courseId}, User coins (frontend): ${userCoins}`);
+                console.log(`Request URL: /courses/enroll/${courseId}/`);
+
+                // Send AJAX request to enroll
+                fetch(`/courses/enroll/${courseId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    console.log(`Response status: ${response.status}`);
+                    if (!response.ok) {
+                        console.log(`Response error: ${response.statusText}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Response data:', data);
+                    if (data.success) {
+                        // Update button to "View Details"
+                        const courseActions = link.closest('.course-actions');
+                        const detailsText = lang === 'ar' ? translations.ar['details-btn'] : translations.en['details-btn'];
+                        courseActions.innerHTML = `<a href="/courses/details/${courseId}/" class="details-btn">${detailsText}</a>`;
+                        // Update coins display
+                        const coinsDisplay = document.querySelector('.coins-display');
+                        if (coinsDisplay) {
+                            const coinsText = lang === 'ar' ? translations.ar['nav-coins'] : translations.en['nav-coins'];
+                            coinsDisplay.innerHTML = `<i class="fas fa-coins coins-icon"></i> <span>${coinsText}</span> ${data.new_coins || data.coins || 0}`;
+                        }
+                        showToast(data.message, true);
+                        // Redirect to course details
+                        if (data.redirect) {
+                            setTimeout(() => {
+                                window.location.href = data.redirect;
+                            }, 1000);
+                        }
+                    } else {
+                        console.log(`Purchase failed: ${data.message}`);
+                        showToast(data.message || (lang === 'ar' ? 'خطأ في شراء الدورة.' : 'Error purchasing course.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    const errorMessage = lang === 'ar' ? `فشل في شراء الدورة: ${error.message}` : `Failed to purchase course: ${error.message}`;
+                    showToast(errorMessage);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

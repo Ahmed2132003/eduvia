@@ -1,0 +1,842 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" data-translate="meta-desc" content="View details of {{ project.title }} on Eduvia. Explore tasks, submit solutions, and collaborate with the community.">
+    <meta name="keywords" data-translate="meta-keywords" content="{{ project.title }}, Eduvia project, open source tasks, coding collaboration, project details, {{ project.get_category_display }}">
+    <meta name="author" content="Eduvia Team">
+    <meta name="robots" content="index, follow">
+    <meta name="og:title" data-translate="og-title" content="{{ project.title }} - Eduvia">
+    <meta name="og:description" data-translate="og-desc" content="Explore {{ project.title }} on Eduvia. Join tasks, submit solutions, and engage with the open-source community.">
+    <meta name="og:image" content="{% static 'images/projects.jpg' %}">
+    <meta name="og:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <title data-translate="page-title">Project Details - {{ project.title }} - Eduvia</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Cairo Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/project2.jpg" %}') no-repeat center center/cover;
+            --hero-text: #ffffff;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --card-text: #00a8cc;
+            --card-secondary-text: #444;
+            --card-tertiary-text: #6c757d;
+            --task-card-bg: #ffffff;
+            --btn-primary-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-primary-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-primary-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
+            --btn-info-bg: linear-gradient(90deg, #17a2b8, #20c4d9);
+            --btn-info-bg-hover: linear-gradient(90deg, #138496, #1ab6cc);
+            --btn-success-bg: linear-gradient(90deg, #28a745, #34ce57);
+            --btn-success-bg-hover: linear-gradient(90deg, #218838, #2cb944);
+            --border-color: #d4af37;
+            --form-focus-border: #00a8cc;
+            --link-color: #00a8cc;
+            --link-hover-color: #0088a9;
+            --text-success: #28a745;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/project2.jpg" %}') no-repeat center center/cover;
+            --hero-text: #e0e0e0;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --card-tertiary-text: #8e8e8e;
+            --task-card-bg: #333333;
+            --btn-primary-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-primary-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-primary-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
+            --btn-info-bg: linear-gradient(90deg, #1abc9c, #16a085);
+            --btn-info-bg-hover: linear-gradient(90deg, #16a085, #138d75);
+            --btn-success-bg: linear-gradient(90deg, #2ecc71, #27ae60);
+            --btn-success-bg-hover: linear-gradient(90deg, #27ae60, #219653);
+            --border-color: #555;
+            --form-focus-border: #3498db;
+            --link-color: #3498db;
+            --link-hover-color: #2980b9;
+            --text-success: #2ecc71;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a, .menu .coins-display { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { display: flex; justify-content: center; }
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: var(--hero-text-shadow);
+            animation: slideInFromTop 1s ease-out forwards;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 28px;
+            font-weight: 400;
+            margin: 20px 0 30px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            background: var(--btn-primary-bg);
+            color: #ffffff;
+            padding: 14px 40px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: var(--btn-primary-shadow);
+            transition: all 0.4s ease;
+            animation: bounceIn 1s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+
+        .btn:hover {
+            background: var(--btn-primary-bg-hover);
+            color: #ffffff;
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Content Container */
+        .content-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out forwards;
+            transition: background 0.3s ease;
+        }
+
+        .content-container h1 {
+            color: var(--card-text);
+            font-size: 36px;
+            margin-bottom: 20px;
+            animation: slideInFromTop 0.8s ease-out forwards;
+            transition: color 0.3s ease;
+        }
+
+        .content-container h2 {
+            color: var(--card-text);
+            font-size: 28px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .content-container p {
+            font-size: 18px;
+            color: var(--card-secondary-text);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-out 0.2s forwards;
+            opacity: 0;
+            transition: color 0.3s ease;
+        }
+
+        .content-container a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .content-container a:hover {
+            color: var(--link-hover-color);
+            text-decoration: underline;
+        }
+
+        /* Task Cards */
+        .task-card {
+            background: var(--task-card-bg);
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.3s ease;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-card .card-body {
+            padding: 20px;
+        }
+
+        .task-card h3 {
+            color: var(--card-text);
+            font-size: 24px;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .task-card p {
+            font-size: 16px;
+            color: var(--card-secondary-text);
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .task-card .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 50px;
+            margin: 5px;
+            color: #ffffff;
+        }
+
+        .task-card .btn-info {
+            background: var(--btn-info-bg);
+        }
+
+        .task-card .btn-info:hover {
+            background: var(--btn-info-bg-hover);
+            transform: scale(1.1);
+            color: #ffffff;
+        }
+
+        .task-card .btn-primary {
+            background: var(--btn-primary-bg);
+            box-shadow: var(--btn-primary-shadow);
+        }
+
+        .task-card .btn-primary:hover {
+            background: var(--btn-primary-bg-hover);
+            transform: scale(1.1);
+            color: #ffffff;
+        }
+
+        .task-card .btn-success {
+            background: var(--btn-success-bg);
+        }
+
+        .task-card .btn-success:hover {
+            background: var(--btn-success-bg-hover);
+            transform: scale(1.1);
+            color: #ffffff;
+        }
+
+        .task-card .text-success {
+            color: var(--text-success);
+            transition: color 0.3s ease;
+        }
+
+        /* Comment Section */
+        .comment-card {
+            background: var(--task-card-bg);
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-out forwards;
+            transition: background 0.3s ease;
+        }
+
+        .comment-card .card-body {
+            padding: 15px;
+        }
+
+        .comment-card p {
+            font-size: 16px;
+            color: var(--card-secondary-text);
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .comment-card .text-muted {
+            font-size: 14px;
+            color: var(--card-tertiary-text);
+            transition: color 0.3s ease;
+        }
+
+        /* Form Styling */
+        .comment-form {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .comment-form .form-control {
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            font-size: 16px;
+            color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .comment-form .form-control:focus {
+            border-color: var(--form-focus-border);
+            box-shadow: 0 0 8px rgba(0, 168, 204, 0.3);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .comment-form .btn-primary {
+            background: var(--btn-primary-bg);
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            box-shadow: var(--btn-primary-shadow);
+            transition: all 0.4s ease;
+            color: #ffffff;
+        }
+
+        .comment-form .btn-primary:hover {
+            background: var(--btn-primary-bg-hover);
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
+            color: #ffffff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 48px; }
+            .hero p { font-size: 22px; }
+            .content-container { margin: 20px; }
+            .task-card h3 { font-size: 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 18px; }
+            .content-container h1 { font-size: 28px; }
+            .task-card .btn { font-size: 14px; padding: 8px 15px; }
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--card-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>{{ project.title }}</h1>
+        <p data-translate="hero-desc">Explore tasks and contribute to this open-source project!</p>
+        <a href="{% url 'projects:project_list' %}" class="btn" data-translate="back-btn">Back to Projects</a>
+    </section>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <h1>{{ project.title }}</h1>
+        <p>{{ project.description }}</p>
+        <p><strong data-translate="repo-label">Repository:</strong> <a href="{{ project.repository_url }}" target="_blank">{{ project.repository_url }}</a></p>
+        <p><strong data-translate="status-label">Status:</strong> {{ project.get_status_display }}</p>
+        <p><strong data-translate="category-label">Category:</strong> {{ project.get_category_display }}</p>
+
+        <h2 class="mt-5" data-translate="tasks-title">Tasks</h2>
+        {% for task in tasks %}
+            <div class="task-card card mb-3">
+                <div class="card-body">
+                    <h3 class="card-title">{{ task.title }}</h3>
+                    <p class="card-text">{{ task.description|truncatewords:20 }}</p>
+                    <p class="card-text"><strong data-translate="priority-label">Priority:</strong> {{ task.get_priority_display }}</p>
+                    <p class="card-text"><strong data-translate="xp-label">XP Points:</strong> {{ task.xp_reward }} | <strong data-translate="coins-label">Coins:</strong> {{ task.coins_reward }}</p>
+                    <p class="card-text"><strong data-translate="due-date-label">Due Date:</strong> {% if task.due_date %}{{ task.due_date }}{% else %}<span data-translate="not-specified">Not specified</span>{% endif %}</p>
+                    <a href="{% url 'projects:task_submissions' task.id %}" class="btn btn-info" data-translate="view-solutions">View Solutions</a>
+                    {% if user.courses_profile.role == 'student' %}
+                        {% if user not in task.assigned_to.all %}
+                            <form method="post" action="{% url 'projects:join_task' task.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary" data-translate="join-task">Join Task</button>
+                            </form>
+                        {% else %}
+                            <p class="text-success" data-translate="joined-task">You are joined to this task!</p>
+                            <a href="{% url 'projects:submit_task' task.id %}" class="btn btn-success" data-translate="submit-solution">Submit Solution</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p data-translate="no-tasks">No tasks available.</p>
+        {% endfor %}
+
+        {% if user.courses_profile.role == 'instructor' %}
+            <a href="{% url 'projects:add_task' project.id %}" class="btn btn-primary mb-3" data-translate="add-task">Add Task</a>
+        {% endif %}
+
+        <h2 class="mt-5" data-translate="comments-title">Comments</h2>
+        {% for comment in comments %}
+            <div class="comment-card card mb-2">
+                <div class="card-body">
+                    <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+                    <p class="text-muted"><span data-translate="comment-date">Date:</span> {{ comment.created_at }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <p data-translate="no-comments">No comments yet.</p>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+            <h3 class="mt-4" data-translate="add-comment-title">Add a Comment</h3>
+            <form method="post" action="{% url 'projects:add_project_comment' project.id %}" class="comment-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary" data-translate="submit-comment">Submit Comment</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "page-title": "Project Details - {{ project.title }} - Eduvia",
+                "meta-desc": "View details of {{ project.title }} on Eduvia. Explore tasks, submit solutions, and collaborate with the community.",
+                "meta-keywords": "{{ project.title }}, Eduvia project, open source tasks, coding collaboration, project details, {{ project.get_category_display }}",
+                "og-title": "{{ project.title }} - Eduvia",
+                "og-desc": "Explore {{ project.title }} on Eduvia. Join tasks, submit solutions, and engage with the open-source community.",
+                "hero-desc": "Explore tasks and contribute to this open-source project!",
+                "back-btn": "Back to Projects",
+                "repo-label": "Repository:",
+                "status-label": "Status:",
+                "category-label": "Category:",
+                "tasks-title": "Tasks",
+                "priority-label": "Priority:",
+                "xp-label": "XP Points:",
+                "coins-label": "Coins:",
+                "due-date-label": "Due Date:",
+                "not-specified": "Not specified",
+                "view-solutions": "View Solutions",
+                "join-task": "Join Task",
+                "joined-task": "You are joined to this task!",
+                "submit-solution": "Submit Solution",
+                "no-tasks": "No tasks available.",
+                "add-task": "Add Task",
+                "comments-title": "Comments",
+                "comment-date": "Date:",
+                "no-comments": "No comments yet.",
+                "add-comment-title": "Add a Comment",
+                "submit-comment": "Submit Comment",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
+            },
+            ar: {
+                "page-title": "تفاصيل المشروع - {{ project.title }} - إدوفيا",
+                "meta-desc": "عرض تفاصيل {{ project.title }} على إدوفيا. استكشف المهام، قدم الحلول، وتعاون مع المجتمع.",
+                "meta-keywords": "{{ project.title }}, مشروع إدوفيا, مهام مفتوحة المصدر, تعاون البرمجة, تفاصيل المشروع, {{ project.get_category_display }}",
+                "og-title": "{{ project.title }} - إدوفيا",
+                "og-desc": "استكشف {{ project.title }} على إدوفيا. انضم إلى المهام، قدم الحلول، وتفاعل مع مجتمع المصادر المفتوحة.",
+                "hero-desc": "استكشف المهام وساهم في هذا المشروع مفتوح المصدر!",
+                "back-btn": "العودة إلى المشاريع",
+                "repo-label": "المستودع:",
+                "status-label": "الحالة:",
+                "category-label": "الفئة:",
+                "tasks-title": "المهام",
+                "priority-label": "الأولوية:",
+                "xp-label": "نقاط الخبرة:",
+                "coins-label": "النقاط:",
+                "due-date-label": "تاريخ الاستحقاق:",
+                "not-specified": "غير محدد",
+                "view-solutions": "عرض الحلول",
+                "join-task": "الانضمام إلى المهمة",
+                "joined-task": "لقد انضممت إلى هذه المهمة!",
+                "submit-solution": "تقديم الحل",
+                "no-tasks": "لا توجد مهام متاحة.",
+                "add-task": "إضافة مهمة",
+                "comments-title": "التعليقات",
+                "comment-date": "التاريخ:",
+                "no-comments": "لا توجد تعليقات بعد.",
+                "add-comment-title": "إضافة تعليق",
+                "submit-comment": "إرسال التعليق",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[newLang][key].replace('{{ project.title }}', '{{ project.title }}').replace('{{ project.get_category_display }}', '{{ project.get_category_display }}');
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:')) {
+                        element.setAttribute('content', text);
+                    }
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update the title
+            document.title = translations[newLang]["page-title"].replace('{{ project.title }}', '{{ project.title }}');
+
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[savedLang][key].replace('{{ project.title }}', '{{ project.title }}').replace('{{ project.get_category_display }}', '{{ project.get_category_display }}');
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:')) {
+                        element.setAttribute('content', text);
+                    }
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Set the title on page load
+            document.title = translations[savedLang]["page-title"].replace('{{ project.title }}', '{{ project.title }}');
+        });
+    </script>
+</body>
+</html>

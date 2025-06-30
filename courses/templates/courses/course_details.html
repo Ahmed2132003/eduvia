@@ -1,0 +1,860 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="course-title">{{ course.title }} - Eduvia</title>
+    <!-- SEO Meta Tags (English) -->
+    <meta name="description" data-translate="course-meta-desc" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.">
+    <meta name="keywords" data-translate="course-meta-keywords" content="{{ course.title }}, Eduvia, online learning, course videos, education, e-learning">
+    <meta name="author" content="Eduvia">
+    <meta name="robots" content="index, follow">
+    <!-- SEO Meta Tags (Arabic) -->
+    <meta http-equiv="content-language" content="ar, en">
+    <meta name="description" lang="ar" data-translate="course-meta-desc-ar" content="استكشف {{ course.title }} على إدوفيا. شاهد فيديوهات الدورة، تابع تقدمك، وابدأ التعلم اليوم.">
+    <meta name="keywords" lang="ar" data-translate="course-meta-keywords-ar" content="{{ course.title }}، إدوفيا، التعلم عبر الإنترنت، فيديوهات الدورة، التعليم، التعلم الإلكتروني">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" data-translate="course-og-title" content="{{ course.title }} - Eduvia">
+    <meta property="og:description" data-translate="course-og-desc" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.">
+    <meta property="og:image" content="{% static 'images/course_details.jpg' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" data-translate="course-twitter-title" content="{{ course.title }} - Eduvia">
+    <meta name="twitter:description" data-translate="course-twitter-desc" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.">
+    <meta name="twitter:image" content="{% static 'images/course_details.jpg' %}">
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "name": "{{ course.title }}",
+        "description": "{{ course.description|truncatewords:30 }}",
+        "provider": {
+            "@type": "Organization",
+            "name": "Eduvia",
+            "sameAs": "{{ request.scheme }}://{{ request.get_host }}"
+        },
+        "url": "{{ request.build_absolute_uri }}",
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "{% trans 'Home' %}",
+                    "item": "{{ request.scheme }}://{{ request.get_host }}/home/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "{% trans 'Courses' %}",
+                    "item": "{{ request.scheme }}://{{ request.get_host }}/courses/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": "{{ course.title }}"
+                }
+            ]
+        }
+    }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/course_details.jpg" %}') no-repeat center center/cover;
+            --hero-text: #ffffff;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --card-text: #00a8cc;
+            --card-secondary-text: #444;
+            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
+            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --footer-text: #333;
+            --input-border: #d4af37;
+            --input-focus-border: #00a8cc;
+            --input-focus-shadow: 0 0 8px rgba(0, 168, 204, 0.3);
+            --video-item-bg: #ffffff;
+            --video-item-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --progress-bar-bg: #f0f0f0;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/course_details.jpg" %}') no-repeat center center/cover;
+            --hero-text: #e0e0e0;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+            --input-border: #555;
+            --input-focus-border: #3498db;
+            --input-focus-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+            --video-item-bg: #333;
+            --video-item-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            --progress-bar-bg: #555;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode and Language Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { margin: 10px 0; justify-content: center; }
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: var(--hero-text-shadow);
+            animation: slideInFromTop 1s ease-out forwards;
+        }
+
+        .hero p {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 20px 0 30px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: var(--hero-text-shadow);
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content Section */
+        .content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            animation: fadeIn 1.2s ease-out forwards;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .course-card h1 {
+            color: var(--card-text);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .course-card p.description {
+            color: var(--card-secondary-text);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .course-card h3 {
+            color: var(--card-text);
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 0 10px;
+        }
+
+        .course-card progress {
+            width: 100%;
+            height: 20px;
+            border-radius: 10px;
+            background-color: var(--progress-bar-bg);
+        }
+
+        .course-card progress::-webkit-progress-bar {
+            background-color: var(--progress-bar-bg);
+            border-radius: 10px;
+        }
+
+        .course-card progress::-webkit-progress-value {
+            background: var(--btn-bg);
+            border-radius: 10px;
+        }
+
+        .course-card progress::-moz-progress-bar {
+            background: var(--btn-bg);
+            border-radius: 10px;
+        }
+
+        .course-card p.progress-text {
+            color: var(--card-secondary-text);
+            font-size: 14px;
+            margin: 10px 0 20px;
+        }
+
+        .search-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .search-form input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            background-color: #ffffff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        html[dir="rtl"] .search-form input {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        body.dark-mode .search-form input {
+            background-color: #333;
+            color: var(--text-color);
+        }
+
+        .search-form input:focus {
+            border-color: var(--input-focus-border);
+            box-shadow: var(--input-focus-shadow);
+            outline: none;
+        }
+
+        .search-form button {
+            background: var(--btn-bg);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .search-form button:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
+        }
+
+        .video-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .video-item {
+            background: var(--video-item-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: var(--video-item-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-item a {
+            background: var(--btn-bg);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .video-item a:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1);
+        }
+
+        .video-item span {
+            color: var(--card-secondary-text);
+            font-size: 16px;
+        }
+
+        .video-item span.completed {
+            color: var(--card-text);
+            font-weight: 500;
+        }
+
+        .video-item span.locked {
+            color: #888;
+            font-style: italic;
+        }
+
+        .certificate-btn, .back-btn, .enroll-btn {
+            background: var(--btn-bg);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .certificate-btn:hover, .back-btn:hover, .enroll-btn:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--footer-text);
+            margin-top: 40px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 20px; }
+            .course-card h1 { font-size: 24px; }
+            .search-form input { width: 200px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 16px; }
+            .course-card { padding: 20px; }
+            .course-card h1 { font-size: 20px; }
+            .search-form { flex-direction: column; gap: 10px; }
+            .search-form input { width: 100%; margin-right: 0; }
+            .search-form button { width: 100%; }
+            .video-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>{{ course.title }}</h1>
+        <p data-translate="hero-desc">Embark on your learning journey with {{ course.title }} on Eduvia.</p>
+    </section>
+
+    <!-- Content Section -->
+    <main class="content">
+        <article class="course-card">
+            <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
+                <input type="text" name="q" data-translate-placeholder="search-placeholder" placeholder="Search for a course..." aria-label="Search courses">
+                <button type="submit" data-translate="search-button">Search</button>
+            </form>
+            <h1>{{ course.title }}</h1>
+            <p class="description">{{ course.description }}</p>
+            {% if not is_enrolled %}
+                <a href="{% url 'courses:enroll_course' course.id %}" class="enroll-btn" data-translate="enroll-btn">Enroll for 300 Coins</a>
+            {% else %}
+                <h3 data-translate="progress-title">Course Progress</h3>
+                <progress value="{{ completed_videos_count }}" max="{{ total_videos_count }}" aria-label="Course progress"></progress>
+                <p class="progress-text" data-translate="progress-text">{{ completed_videos_count }} of {{ total_videos_count }} videos completed</p>
+                
+                {% if completed_videos_count == total_videos_count %}
+                    <a href="{% url 'courses:download_certificate' course.id %}" class="certificate-btn" data-translate="certificate-btn">Download Certificate</a>
+                {% endif %}
+
+                <h3 data-translate="videos-title">Videos List</h3>
+                <ul class="video-list">
+                    {% for video in videos %}
+                        <li class="video-item">
+                            {% if video.unlocked %}
+                                <a href="{% url 'courses:watch_video' course.id video.id %}">{{ video.title }}</a>
+                                {% if video.completed %}
+                                    <span class="completed" data-translate="completed-label">(Completed ✅)</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="locked">{{ video.title }} <span data-translate="locked-label">(Locked 🔒)</span></span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <a href="{% url 'courses:courses' %}" class="back-btn" data-translate="back-btn">Back to Courses</a>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "course-title": "{{ course.title }} - Eduvia",
+                "course-meta-desc": "Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.",
+                "course-meta-keywords": "{{ course.title }}, Eduvia, online learning, course videos, education, e-learning",
+                "course-meta-desc-ar": "استكشف {{ course.title }} على إدوفيا. شاهد فيديوهات الدورة، تابع تقدمك، وابدأ التعلم اليوم.",
+                "course-meta-keywords-ar": "{{ course.title }}، إدوفيا، التعلم عبر الإنترنت، فيديوهات الدورة، التعليم، التعلم الإلكتروني",
+                "course-og-title": "{{ course.title }} - Eduvia",
+                "course-og-desc": "Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.",
+                "course-twitter-title": "{{ course.title }} - Eduvia",
+                "course-twitter-desc": "Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.",
+                "hero-desc": "Embark on your learning journey with {{ course.title }} on Eduvia.",
+                "search-placeholder": "Search for a course...",
+                "search-button": "Search",
+                "enroll-btn": "Enroll for 300 Coins",
+                "progress-title": "Course Progress",
+                "progress-text": "{{ completed_videos_count }} of {{ total_videos_count }} videos completed",
+                "certificate-btn": "Download Certificate",
+                "videos-title": "Videos List",
+                "completed-label": "(Completed ✅)",
+                "locked-label": "(Locked 🔒)",
+                "back-btn": "Back to Courses",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
+            },
+            ar: {
+                "course-title": "{{ course.title }} - إدوفيا",
+                "course-meta-desc": "استكشف {{ course.title }} على إدوفيا. شاهد فيديوهات الدورة، تابع تقدمك، وابدأ التعلم اليوم.",
+                "course-meta-keywords": "{{ course.title }}، إدوفيا، التعلم عبر الإنترنت، فيديوهات الدورة، التعليم، التعلم الإلكتروني",
+                "course-meta-desc-ar": "استكشف {{ course.title }} على إدوفيا. شاهد فيديوهات الدورة، تابع تقدمك، وابدأ التعلم اليوم.",
+                "course-meta-keywords-ar": "{{ course.title }}، إدوفيا، التعلم عبر الإنترنت، فيديوهات الدورة، التعليم، التعلم الإلكتروني",
+                "course-og-title": "{{ course.title }} - إدوفيا",
+                "course-og-desc": "استكشف {{ course.title }} على إدوفيا. شاهد فيديوهات الدورة، تابع تقدمك، وابدأ التعلم اليوم.",
+                "course-twitter-title": "{{ course.title }} - إدوفيا",
+                "course-twitter-desc": "استكشف {{ course.title }} على إدوفيا. شاهد فيديوهات الدورة، تابع تقدمك، وابدأ التعلم اليوم.",
+                "hero-desc": "ابدأ رحلة تعلمك مع {{ course.title }} على إدوفيا.",
+                "search-placeholder": "ابحث عن دورة...",
+                "search-button": "بحث",
+                "enroll-btn": "التسجيل مقابل 300 نقطة",
+                "progress-title": "تقدم الدورة",
+                "progress-text": "{{ completed_videos_count }} من {{ total_videos_count }} فيديو مكتمل",
+                "certificate-btn": "تحميل الشهادة",
+                "videos-title": "قائمة الفيديوهات",
+                "completed-label": "(مكتمل ✅)",
+                "locked-label": "(مقفل 🔒)",
+                "back-btn": "العودة إلى الدورات",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[newLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        const courseTitle = element.getAttribute('content').match(/Explore (.*?) on Eduvia/)?.[1] || '{{ course.title }}';
+                        text = translations[newLang][key].replace('{{ course.title }}', courseTitle);
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:') || element.getAttribute('name')?.startsWith('twitter:')) {
+                        const courseTitle = element.getAttribute('content').match(/(.*?)( - Eduvia|- إدوفيا)/)?.[1] || '{{ course.title }}';
+                        text = translations[newLang][key].replace('{{ course.title }}', courseTitle);
+                        element.setAttribute('content', text);
+                    }
+                } else if (key === 'hero-desc') {
+                    const courseTitle = element.textContent.match(/with (.*?) on Eduvia/)?.[1] || '{{ course.title }}';
+                    text = translations[newLang][key].replace('{{ course.title }}', courseTitle);
+                    element.textContent = text;
+                } else if (key === 'progress-text') {
+                    const match = element.textContent.match(/(\d+) of (\d+)/);
+                    if (match) {
+                        const completed = match[1];
+                        const total = match[2];
+                        text = translations[newLang][key].replace('{{ completed_videos_count }}', completed).replace('{{ total_videos_count }}', total);
+                    }
+                    element.textContent = text;
+                } else if (key === 'search-placeholder') {
+                    element.setAttribute('placeholder', text);
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update the title
+            const courseTitle = document.title.match(/(.*?)( - Eduvia|- إدوفيا)/)?.[1] || '{{ course.title }}';
+            document.title = translations[newLang]["course-title"].replace('{{ course.title }}', courseTitle);
+
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[savedLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        const courseTitle = element.getAttribute('content').match(/Explore (.*?) on Eduvia/)?.[1] || '{{ course.title }}';
+                        text = translations[savedLang][key].replace('{{ course.title }}', courseTitle);
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:') || element.getAttribute('name')?.startsWith('twitter:')) {
+                        const courseTitle = element.getAttribute('content').match(/(.*?)( - Eduvia|- إدوفيا)/)?.[1] || '{{ course.title }}';
+                        text = translations[savedLang][key].replace('{{ course.title }}', courseTitle);
+                        element.setAttribute('content', text);
+                    }
+                } else if (key === 'hero-desc') {
+                    const courseTitle = element.textContent.match(/with (.*?) on Eduvia/)?.[1] || '{{ course.title }}';
+                    text = translations[savedLang][key].replace('{{ course.title }}', courseTitle);
+                    element.textContent = text;
+                } else if (key === 'progress-text') {
+                    const match = element.textContent.match(/(\d+) of (\d+)/);
+                    if (match) {
+                        const completed = match[1];
+                        const total = match[2];
+                        text = translations[savedLang][key].replace('{{ completed_videos_count }}', completed).replace('{{ total_videos_count }}', total);
+                    }
+                    element.textContent = text;
+                } else if (key === 'search-placeholder') {
+                    element.setAttribute('placeholder', text);
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Set the title on page load
+            const courseTitle = document.title.match(/(.*?)( - Eduvia|- إدوفيا)/)?.[1] || '{{ course.title }}';
+            document.title = translations[savedLang]["course-title"].replace('{{ course.title }}', courseTitle);
+        });
+    </script>
+</body>
+</html>

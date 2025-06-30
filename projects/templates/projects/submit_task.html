@@ -1,0 +1,755 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="page-title">Submit Solution for Task: {{ task.title }} - Eduvia</title>
+    <meta name="description" data-translate="meta-desc" content="Submit your solution for task '{{ task.title }}' in project '{{ project.title }}' on Eduvia. Upload files, add links, and describe your work.">
+    <meta name="keywords" data-translate="meta-keywords" content="{{ task.title }}, {{ project.title }}, Eduvia, task submission, open source collaboration, project solutions">
+    <meta name="author" content="Eduvia Team">
+    <meta name="robots" content="index, follow">
+    <meta name="og:title" data-translate="og-title" content="Submit Solution for {{ task.title }} - Eduvia">
+    <meta name="og:description" data-translate="og-desc" content="Submit your solution for '{{ task.title }}' in '{{ project.title }}' on Eduvia. Upload files, add links, and describe your work.">
+    <meta name="og:image" content="{% static 'images/projects5.jpg' %}">
+    <meta name="og:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/projects5.jpg" %}') no-repeat center center/cover;
+            --hero-text: #ffffff;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --card-text: #00a8cc;
+            --card-secondary-text: #444;
+            --btn-primary-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-primary-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-primary-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
+            --btn-secondary-bg: linear-gradient(90deg, #6c757d, #868e96);
+            --btn-secondary-bg-hover: linear-gradient(90deg, #5a6268, #747b82);
+            --btn-secondary-shadow: 0 4px 12px rgba(108, 117, 125, 0.5);
+            --border-color: #d4af37;
+            --form-focus-border: #00a8cc;
+            --form-focus-shadow: 0 0 8px rgba(0, 168, 204, 0.3);
+            --form-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/projects5.jpg" %}') no-repeat center center/cover;
+            --hero-text: #e0e0e0;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --btn-primary-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-primary-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-primary-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
+            --btn-secondary-bg: linear-gradient(90deg, #4a4a4a, #5a5a5a);
+            --btn-secondary-bg-hover: linear-gradient(90deg, #3a3a3a, #4a4a4a);
+            --btn-secondary-shadow: 0 4px 12px rgba(90, 90, 90, 0.5);
+            --border-color: #555;
+            --form-focus-border: #3498db;
+            --form-focus-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+            --form-bg: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a, .menu .coins-display { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { display: flex; justify-content: center; }
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: var(--hero-text-shadow);
+            animation: slideInFromTop 1s ease-out forwards;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 28px;
+            font-weight: 400;
+            margin: 20px 0 30px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            background: var(--btn-primary-bg);
+            color: #ffffff;
+            padding: 14px 40px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: var(--btn-primary-shadow);
+            transition: all 0.4s ease;
+            animation: bounceIn 1s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+
+        .btn:hover {
+            background: var(--btn-primary-bg-hover);
+            color: #ffffff;
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Content Container */
+        .content-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out forwards;
+            transition: background 0.3s ease;
+        }
+
+        .content-container h1 {
+            color: var(--card-text);
+            font-size: 36px;
+            margin-bottom: 20px;
+            animation: slideInFromTop 0.8s ease-out forwards;
+            transition: color 0.3s ease;
+        }
+
+        .content-container p {
+            font-size: 18px;
+            color: var(--card-secondary-text);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-out 0.2s forwards;
+            opacity: 0;
+            transition: color 0.3s ease;
+        }
+
+        .content-container strong {
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        /* Form Styling */
+        .submission-form {
+            max-width: 600px;
+            margin: 20px 0;
+        }
+
+        .submission-form .form-control {
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            font-size: 16px;
+            color: var(--text-color);
+            background-color: var(--form-bg);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        .submission-form .form-control:focus {
+            border-color: var(--form-focus-border);
+            box-shadow: var(--form-focus-shadow);
+            background-color: var(--form-bg);
+            outline: none;
+        }
+
+        .submission-form .form-label {
+            font-weight: 600;
+            color: var(--card-text);
+            transition: color 0.3s ease;
+        }
+
+        .submission-form .form-text {
+            font-size: 14px;
+            color: var(--card-secondary-text);
+            transition: color 0.3s ease;
+        }
+
+        .submission-form .invalid-feedback {
+            font-size: 14px;
+            color: #dc3545;
+        }
+
+        /* Button Styling */
+        .submission-form .btn-primary {
+            background: var(--btn-primary-bg);
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 50px;
+            margin: 5px;
+            box-shadow: var(--btn-primary-shadow);
+            transition: all 0.4s ease;
+        }
+
+        .submission-form .btn-primary:hover {
+            background: var(--btn-primary-bg-hover);
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
+        }
+
+        .submission-form .btn-secondary {
+            background: var(--btn-secondary-bg);
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 50px;
+            margin: 5px;
+            box-shadow: var(--btn-secondary-shadow);
+            transition: all 0.4s ease;
+        }
+
+        .submission-form .btn-secondary:hover {
+            background: var(--btn-secondary-bg-hover);
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(108, 117, 125, 0.7);
+        }
+
+        /* Alert Styling */
+        .alert {
+            border-radius: 10px;
+            font-size: 16px;
+            color: var(--text-color);
+            background-color: var(--card-bg);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .alert-danger {
+            color: #dc3545;
+            background-color: var(--card-bg);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--card-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 48px; }
+            .hero p { font-size: 22px; }
+            .content-container { margin: 20px; }
+            .content-container h1 { font-size: 28px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 18px; }
+            .submission-form .btn { font-size: 14px; padding: 8px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 data-translate="hero-title">Submit Solution for Task: {{ task.title }}</h1>
+        <p data-translate="hero-desc">Submit your solution for the task in project '{{ project.title }}'.</p>
+        <a href="{% url 'projects:project_details' project.id %}" class="btn" data-translate="back-to-project">Back to Project Details</a>
+    </section>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <h1 data-translate="content-title">Submit Solution for Task: {{ task.title }}</h1>
+        <p><strong data-translate="project-label">Project:</strong> {{ project.title }}</p>
+
+        {% if messages %}
+            <div class="alert alert-info" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="submission-form needs-validation" novalidate>
+            {% csrf_token %}
+
+            <!-- Display form errors if any -->
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <!-- Solution URL field -->
+            <div class="mb-3">
+                <label for="{{ form.submission_url.id_for_label }}" class="form-label" data-translate="solution-link-label">Solution Link (e.g., Pull Request)</label>
+                {{ form.submission_url }}
+                <small class="form-text text-muted" data-translate="solution-link-help">Enter the solution link if available (optional).</small>
+            </div>
+
+            <!-- File upload field -->
+            <div class="mb-3">
+                <label for="{{ form.file.id_for_label }}" class="form-label" data-translate="upload-file-label">Upload File</label>
+                {{ form.file }}
+                <small class="form-text text-muted" data-translate="upload-file-help">You can upload one or more files (optional).</small>
+            </div>
+
+            <!-- Description field -->
+            <div class="mb-3">
+                <label for="{{ form.description.id_for_label }}" class="form-label" data-translate="description-label">Solution Description</label>
+                {{ form.description }}
+                <div class="invalid-feedback" data-translate="description-error">
+                    Please provide a description for the solution.
+                </div>
+            </div>
+
+            <!-- Submit and Cancel buttons -->
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary" data-translate="submit-btn">Submit Solution</button>
+                <a href="{% url 'projects:project_details' project.id %}" class="btn btn-secondary" data-translate="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "page-title": "Submit Solution for Task: {{ task.title }} - Eduvia",
+                "meta-desc": "Submit your solution for task '{{ task.title }}' in project '{{ project.title }}' on Eduvia. Upload files, add links, and describe your work.",
+                "meta-keywords": "{{ task.title }}, {{ project.title }}, Eduvia, task submission, open source collaboration, project solutions",
+                "og-title": "Submit Solution for {{ task.title }} - Eduvia",
+                "og-desc": "Submit your solution for '{{ task.title }}' in '{{ project.title }}' on Eduvia. Upload files, add links, and describe your work.",
+                "hero-title": "Submit Solution for Task: {{ task.title }}",
+                "hero-desc": "Submit your solution for the task in project '{{ project.title }}'.",
+                "back-to-project": "Back to Project Details",
+                "content-title": "Submit Solution for Task: {{ task.title }}",
+                "project-label": "Project:",
+                "solution-link-label": "Solution Link (e.g., Pull Request)",
+                "solution-link-help": "Enter the solution link if available (optional).",
+                "upload-file-label": "Upload File",
+                "upload-file-help": "You can upload one or more files (optional).",
+                "description-label": "Solution Description",
+                "description-error": "Please provide a description for the solution.",
+                "submit-btn": "Submit Solution",
+                "cancel-btn": "Cancel",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
+            },
+            ar: {
+                "page-title": "تقديم الحل لمهمة: {{ task.title }} - إدوفيا",
+                "meta-desc": "قدم حلك لمهمة '{{ task.title }}' في مشروع '{{ project.title }}' على إدوفيا. ارفع الملفات، أضف الروابط، وصف عملك.",
+                "meta-keywords": "{{ task.title }}, {{ project.title }}, إدوفيا, تقديم المهمة, التعاون مفتوح المصدر, حلول المشروع",
+                "og-title": "تقديم الحل لـ {{ task.title }} - إدوفيا",
+                "og-desc": "قدم حلك لـ '{{ task.title }}' في '{{ project.title }}' على إدوفيا. ارفع الملفات، أضف الروابط، وصف عملك.",
+                "hero-title": "تقديم الحل لمهمة: {{ task.title }}",
+                "hero-desc": "قدم حلك للمهمة في مشروع '{{ project.title }}'.",
+                "back-to-project": "العودة إلى تفاصيل المشروع",
+                "content-title": "تقديم الحل لمهمة: {{ task.title }}",
+                "project-label": "المشروع:",
+                "solution-link-label": "رابط الحل (مثال: طلب السحب)",
+                "solution-link-help": "أدخل رابط الحل إذا كان متاحًا (اختياري).",
+                "upload-file-label": "رفع ملف",
+                "upload-file-help": "يمكنك رفع ملف واحد أو أكثر (اختياري).",
+                "description-label": "وصف الحل",
+                "description-error": "يرجى تقديم وصف للحل.",
+                "submit-btn": "تقديم الحل",
+                "cancel-btn": "إلغاء",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[newLang][key].replace('{{ task.title }}', '{{ task.title }}').replace('{{ project.title }}', '{{ project.title }}');
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:')) {
+                        element.setAttribute('content', text);
+                    }
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update the title
+            document.title = translations[newLang]["page-title"].replace('{{ task.title }}', '{{ task.title }}');
+
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[savedLang][key].replace('{{ task.title }}', '{{ task.title }}').replace('{{ project.title }}', '{{ project.title }}');
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:')) {
+                        element.setAttribute('content', text);
+                    }
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Set the title on page load
+            document.title = translations[savedLang]["page-title"].replace('{{ task.title }}', '{{ task.title }}');
+        });
+
+        // Form Validation
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+</body>
+</html>

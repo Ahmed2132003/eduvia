@@ -1,0 +1,587 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="comments-title">Comments on {{ post.author.username }}'s Post - Eduvia</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" data-translate="comments-meta-desc" content="View and add comments on {{ post.author.username }}'s post in Eduvia's Community Feed.">
+    <meta name="keywords" data-translate="comments-meta-keywords" content="comments, {{ post.author.username }}, Eduvia, community feed">
+    <meta name="author" content="Eduvia">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" data-translate="comments-og-title" content="Comments on {{ post.author.username }}'s Post - Eduvia">
+    <meta property="og:description" data-translate="comments-og-desc" content="View and add comments on {{ post.author.username }}'s post in Eduvia's Community Feed.">
+    <meta property="og:image" content="{% static 'images/oppo3.jpg' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Cairo Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --card-bg: #ffffff;
+            --card-text: #333;
+            --card-secondary-text: #6c757d;
+            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
+            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --footer-text: #333;
+            --border-color: #ddd;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --card-bg: #2c2c2c;
+            --card-text: #e0e0e0;
+            --card-secondary-text: #b0b0b0;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+            --border-color: #555;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a, .menu .coins-display { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { display: flex; justify-content: center; }
+        }
+
+        /* Post and Comments Styling */
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .post-content {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .post-content p {
+            color: var(--card-text);
+            transition: color 0.3s ease;
+        }
+
+        .post-image {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .text-muted {
+            color: var(--card-secondary-text) !important;
+            transition: color 0.3s ease;
+        }
+
+        .comments {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .comment {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 10px;
+        }
+
+        html[dir="rtl"] .comment {
+            flex-direction: row-reverse;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        html[dir="rtl"] .profile-pic {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        .comment div {
+            flex: 1;
+        }
+
+        .comment strong {
+            color: var(--card-text);
+            transition: color 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--btn-bg);
+            outline: none;
+        }
+
+        .btn {
+            background: var(--btn-bg);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            box-shadow: var(--btn-shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--footer-text);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Comments Section -->
+    <div class="container">
+        <h1 data-translate="comments-heading">Comments on {{ post.author.username }}'s Post</h1>
+        <a href="{% url 'mentorship:community_feed' %}" class="btn" data-translate="back-to-feed">Back to Feed</a>
+        <div class="post-content">
+            <p>{{ post.content }}</p>
+            {% if post.image_file %}
+                <img src="{{ post.image_file.url }}" alt="Post image" class="post-image">
+            {% endif %}
+            <small class="text-muted" data-translate="posted-on-label">Posted on: {{ post.created_at }}</small>
+        </div>
+        <div class="comments">
+            {% for comment in comments %}
+                <div class="comment">
+                    <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture.url }}{% else %}{% static 'default-profile.jpg' %}{% endif %}" alt="{{ comment.author.username }}'s profile" class="profile-pic">
+                    <div>
+                        <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
+                        <small class="text-muted">({{ comment.created_at }})</small>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted" data-translate="no-comments">No comments yet.</p>
+            {% endfor %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <div class="form-group">
+                    <textarea name="comment_content" class="form-control" rows="2" placeholder="{% if request.session.language == 'ar' %}أضف تعليقًا...{% else %}Add a comment...{% endif %}"></textarea>
+                </div>
+                <button type="submit" class="btn" data-translate="comment-btn">Comment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "comments-title": "Comments on {{ post.author.username }}'s Post - Eduvia",
+                "comments-meta-desc": "View and add comments on {{ post.author.username }}'s post in Eduvia's Community Feed.",
+                "comments-meta-keywords": "comments, {{ post.author.username }}, Eduvia, community feed",
+                "comments-og-title": "Comments on {{ post.author.username }}'s Post - Eduvia",
+                "comments-og-desc": "View and add comments on {{ post.author.username }}'s post in Eduvia's Community Feed.",
+                "comments-heading": "Comments on {{ post.author.username }}'s Post",
+                "back-to-feed": "Back to Feed",
+                "posted-on-label": "Posted on:",
+                "no-comments": "No comments yet.",
+                "comment-btn": "Comment",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
+            },
+            ar: {
+                "comments-title": "تعليقات على منشور {{ post.author.username }} - إدوفيا",
+                "comments-meta-desc": "عرض وإضافة تعليقات على منشور {{ post.author.username }} في تغذية المجتمع بمنصة إدوفيا.",
+                "comments-meta-keywords": "تعليقات, {{ post.author.username }}, إدوفيا, تغذية المجتمع",
+                "comments-og-title": "تعليقات على منشور {{ post.author.username }} - إدوفيا",
+                "comments-og-desc": "عرض وإضافة تعليقات على منشور {{ post.author.username }} في تغذية المجتمع بمنصة إدوفيا.",
+                "comments-heading": "تعليقات على منشور {{ post.author.username }}",
+                "back-to-feed": "العودة إلى التغذية",
+                "posted-on-label": "نُشر في:",
+                "no-comments": "لا توجد تعليقات بعد.",
+                "comment-btn": "تعليق",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[newLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:')) {
+                        element.setAttribute('content', text);
+                    }
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update the title
+            document.title = translations[newLang]["comments-title"];
+
+            // Update the textarea placeholder
+            const textarea = document.querySelector('textarea[name="comment_content"]');
+            textarea.placeholder = newLang === 'ar' ? 'أضف تعليقًا...' : 'Add a comment...';
+
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[savedLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:')) {
+                        element.setAttribute('content', text);
+                    }
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Set the title on page load
+            document.title = translations[savedLang]["comments-title"];
+
+            // Set the textarea placeholder on page load
+            const textarea = document.querySelector('textarea[name="comment_content"]');
+            textarea.placeholder = savedLang === 'ar' ? 'أضف تعليقًا...' : 'Add a comment...';
+        });
+    </script>
+</body>
+</html>

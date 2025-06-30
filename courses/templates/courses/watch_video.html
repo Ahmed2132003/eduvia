@@ -1,0 +1,1360 @@
+{% load static %}
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="video-title">{{ video.title }} - Eduvia</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" data-translate="video-meta-desc" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
+    <meta name="keywords" data-translate="video-meta-keywords" content="{{ video.title }}, Eduvia, online learning, course video, video rating, file upload, tasks, comments">
+    <meta name="author" content="Eduvia">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph Tags for Social Media -->
+    <meta property="og:title" data-translate="video-og-title" content="{{ video.title }} - Eduvia">
+    <meta property="og:description" data-translate="video-og-desc" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
+    <meta property="og:image" content="{% static 'images/course_video.jpg' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="video.other">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" data-translate="video-twitter-title" content="{{ video.title }} - Eduvia">
+    <meta name="twitter:description" data-translate="video-twitter-desc" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
+    <meta name="twitter:image" content="{% static 'images/course_video.jpg' %}">
+    <!-- Schema Markup for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        "name": "{{ video.title }}",
+        "description": "{{ video.description|truncatewords:30 }}",
+        "thumbnailUrl": "{% static 'images/course_video.jpg' %}",
+        "uploadDate": "{{ video.created_at|date:'c' }}",
+        "contentUrl": "{{ video.video_url }}",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Eduvia",
+            "sameAs": "{{ request.scheme }}://{{ request.get_host }}"
+        },
+        "isPartOf": {
+            "@type": "Course",
+            "name": "{{ course.title }}",
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id %}"
+        },
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "{{ request.scheme }}://{{ request.get_host }}/home/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Courses",
+                    "item": "{{ request.scheme }}://{{ request.get_host }}/courses/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": "{{ course.title }}",
+                    "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id %}"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 4,
+                    "name": "{{ video.title }}"
+                }
+            ]
+        }
+    }
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Cairo Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
+            --text-color: #333;
+            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
+            --header-text: #ffffff;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/course_video.jpg" %}') no-repeat center center/cover;
+            --hero-text: #ffffff;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --card-text: #00a8cc;
+            --card-secondary-text: #444;
+            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
+            --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
+            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
+            --footer-text: #333;
+            --input-border: #d4af37;
+            --input-focus-border: #00a8cc;
+            --progress-bar-bg: #f0f0f0;
+            --progress-bar-fill: linear-gradient(90deg, #00c9a7, #12d3cf);
+            --alert-bg: #ffffff;
+            --file-item-bg: #ffffff;
+            --comment-item-bg: #ffffff;
+            --link-color: #00a8cc;
+            --link-hover-color: #12d3cf;
+            --task-container-bg: #ffffff;
+            --task-container-border: #d4af37;
+            --task-question-bg: #f9f9f9;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+            --header-text: #e0e0e0;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/course_video.jpg" %}') no-repeat center center/cover;
+            --hero-text: #e0e0e0;
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+            --input-border: #555;
+            --input-focus-border: #3498db;
+            --progress-bar-bg: #444;
+            --progress-bar-fill: linear-gradient(90deg, #3498db, #2980b9);
+            --alert-bg: #444;
+            --file-item-bg: #444;
+            --comment-item-bg: #444;
+            --link-color: #3498db;
+            --link-hover-color: #2980b9;
+            --task-container-bg: #444;
+            --task-container-border: #555;
+            --task-question-bg: #555;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            text-align: right;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .header a {
+            color: var(--header-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .header a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--header-text);
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        html[dir="rtl"] .header a::after {
+            left: unset;
+            right: 0;
+        }
+
+        .header a:hover::after { width: 100%; }
+        .header a:hover { color: #f0f8ff; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover { transform: scale(1.05); }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .menu {
+            flex-direction: row-reverse;
+        }
+
+        .coins-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--header-text);
+            background: var(--header-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="rtl"] .coins-display {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        .coins-icon {
+            font-size: 16px;
+            color: #ffd700;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle, .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .dark-mode-toggle i, .language-toggle i {
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--header-text);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            html[dir="rtl"] .menu {
+                flex-direction: column;
+                left: unset;
+                right: 0;
+            }
+
+            .menu.active { display: flex; }
+            .menu a { margin: 10px 0; font-size: 20px; }
+            .hamburger { display: block; }
+            .coins-display { margin: 10px 0; justify-content: center; }
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: var(--hero-text-shadow);
+            animation: slideInFromTop 1s ease-out forwards;
+        }
+
+        .hero p {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 20px 0 30px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: var(--hero-text-shadow);
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content Section */
+        .content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            animation: fadeIn 1.2s ease-out forwards;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .video-card h1 {
+            color: var(--card-text);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .video-card iframe {
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            transition: border-color 0.3s ease;
+        }
+
+        .video-card p.description {
+            color: var(--card-secondary-text);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .video-card h3 {
+            color: var(--card-text);
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .video-card progress {
+            width: 100%;
+            height: 20px;
+            border-radius: 10px;
+            background-color: var(--progress-bar-bg);
+            transition: background-color 0.3s ease;
+        }
+
+        .video-card progress::-webkit-progress-bar {
+            background-color: var(--progress-bar-bg);
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .video-card progress::-webkit-progress-value {
+            background: var(--progress-bar-fill);
+            border-radius: 10px;
+        }
+
+        .video-card progress::-moz-progress-bar {
+            background: var(--progress-bar-fill);
+            border-radius: 10px;
+        }
+
+        .video-card form {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .video-card button {
+            background: var(--btn-bg);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .video-card button:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1);
+            box-shadow: var(--btn-shadow);
+        }
+
+        .star-rating {
+            display: inline-flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        html[dir="rtl"] .star-rating {
+            flex-direction: row-reverse;
+        }
+
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2rem;
+            color: #ccc;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: color 0.3s ease;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input[type="radio"]:checked ~ label {
+            color: #ffd700;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .upload-form label {
+            color: var(--card-secondary-text);
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            text-align: left;
+            transition: color 0.3s ease;
+        }
+
+        html[dir="rtl"] .upload-form label {
+            text-align: right;
+        }
+
+        .upload-form input[type="file"],
+        .upload-form textarea {
+            padding: 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .upload-form input[type="file"],
+        body.dark-mode .upload-form textarea {
+            background-color: #444;
+            color: #e0e0e0;
+        }
+
+        .upload-form input[type="file"]:focus,
+        .upload-form textarea:focus {
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 8px rgba(0, 168, 204, 0.3);
+            outline: none;
+        }
+
+        .upload-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .alert {
+            background: var(--alert-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            color: var(--card-secondary-text);
+            animation: fadeIn 1s ease-out;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .file-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .file-item {
+            background: var(--file-item-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        .file-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-item a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .file-item a:hover {
+            color: var(--link-hover-color);
+            text-decoration: underline;
+        }
+
+        .file-item p {
+            color: var(--card-secondary-text);
+            font-size: 14px;
+            margin: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+        .comment-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .comment-item {
+            background: var(--comment-item-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        .comment-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-item strong {
+            color: var(--card-text);
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .comment-item p {
+            color: var(--card-secondary-text);
+            font-size: 14px;
+            margin: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        body.dark-mode .comment-form textarea {
+            background-color: #444;
+            color: #e0e0e0;
+        }
+
+        .comment-form textarea:focus {
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 8px rgba(0, 168, 204, 0.3);
+            outline: none;
+        }
+
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .task-item {
+            background: var(--file-item-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        .task-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* New Task Container Styling */
+        .task-container {
+            max-height: 400px; /* تحديد ارتفاع الإطار */
+            overflow-y: auto; /* تمكين التمرير العمودي */
+            background: var(--task-container-bg);
+            border: 1px solid var(--task-container-border);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .task-question {
+            background: var(--task-question-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            animation: slideInFromLeft 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        @keyframes slideInFromLeft {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .task-question p {
+            color: var(--card-text);
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .task-question select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .task-question select {
+            background-color: #444;
+            color: #e0e0e0;
+        }
+
+        .task-question select:focus {
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 8px rgba(0, 168, 204, 0.3);
+            outline: none;
+        }
+
+        .task-question select option {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        body.dark-mode .task-question select option {
+            background-color: #444;
+            color: #e0e0e0;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--footer-text);
+            margin-top: 40px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 20px; }
+            .video-card h1 { font-size: 24px; }
+            .video-card iframe { height: 300px; }
+            .task-container { max-height: 300px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 16px; }
+            .video-card { padding: 20px; }
+            .video-card h1 { font-size: 20px; }
+            .video-card iframe { height: 200px; }
+            .video-card form { flex-direction: column; align-items: center; }
+            .video-card button { width: 100%; }
+            .star-rating label { font-size: 1.5rem; }
+            .task-container { max-height: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% else %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> 0
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/login/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+            </div>
+        </nav>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 data-translate="hero-title">{{ video.title }}</h1>
+        <p data-translate="hero-desc">Enhance your learning with {{ video.title }} on Eduvia.</p>
+    </section>
+
+    <!-- Content Section -->
+    <main class="content">
+        <article class="video-card">
+            <h1 data-translate="video-card-title">{{ video.title }}</h1>
+            {% if video.video_url %}
+                <!-- تحويل الرابط تلقائيًا إذا كان من Google Drive -->
+                {% if video.video_url|contains:"drive.google.com" %}
+                    {% with video_id=video.video_url|drive_id %}
+                        <iframe src="https://drive.google.com/uc?export=embed&id={{ video_id }}" width="100%" height="450" frameborder="0" allowfullscreen aria-label="Video: {{ video.title }}"></iframe>
+                    {% endwith %}
+                {% else %}
+                    <iframe src="{{ video.video_url|safe }}" width="100%" height="450" frameborder="0" allowfullscreen aria-label="Video: {{ video.title }}"></iframe>
+                {% endif %}
+            {% else %}
+                <p>لا يوجد رابط فيديو متاح.</p>
+            {% endif %}
+            <p class="description">{{ video.description }}</p>
+            
+            <h3 data-translate="course-progress-heading">Course Progress</h3>
+            <progress value="{{ completed_videos_count }}" max="{{ total_videos_count }}" aria-label="Course progress"></progress>
+
+            <h3 data-translate="rate-video-heading">Rate this Video</h3>
+            <form method="post" action="{% url 'courses:rate_video' video.id %}" id="rating-form">
+                {% csrf_token %}
+                <div class="star-rating" id="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required {% if user_rating %}disabled{% endif %}/>
+                    <label for="star5" title="5 stars">☆</label>
+                    <input type="radio" id="star4" name="rating" value="4" {% if user_rating %}disabled{% endif %}/>
+                    <label for="star4" title="4 stars">☆</label>
+                    <input type="radio" id="star3" name="rating" value="3" {% if user_rating %}disabled{% endif %}/>
+                    <label for="star3" title="3 stars">☆</label>
+                    <input type="radio" id="star2" name="rating" value="2" {% if user_rating %}disabled{% endif %}/>
+                    <label for="star2" title="2 stars">☆</label>
+                    <input type="radio" id="star1" name="rating" value="1" {% if user_rating %}disabled{% endif %}/>
+                    <label for="star1" title="1 star">☆</label>
+                </div>
+                <button type="submit" data-translate="submit-rating-button" {% if user_rating %}disabled{% endif %}>Submit Rating</button>
+            </form>
+            {% if user_rating %}
+                <div class="alert alert-success" data-translate="rating-submitted">
+                    You have rated this video {{ user_rating }} stars. Rating is final.
+                </div>
+            {% endif %}
+
+            <h3 data-translate="upload-file-heading">Upload a File</h3>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <form method="post" enctype="multipart/form-data" class="upload-form">
+                {% csrf_token %}
+                <div>
+                    <label for="file" data-translate="file-label">File:</label>
+                    <input type="file" id="file" name="file" required aria-label="Upload file">
+                </div>
+                <div>
+                    <label for="description" data-translate="description-label">Description:</label>
+                    <textarea id="description" name="description" aria-label="File description"></textarea>
+                </div>
+                <button type="submit" name="upload_file" data-translate="upload-file-button">Upload File</button>
+            </form>
+
+            <h3 data-translate="uploaded-files-heading">Uploaded Files</h3>
+            {% if uploaded_files %}
+                <ul class="file-list">
+                    {% for file in uploaded_files %}
+                        <li class="file-item">
+                            <a href="{{ file.file.url }}" download>{{ file.file.name|cut:"media/video_files/" }}</a>
+                            <p>{{ file.description }}</p>
+                            <p data-translate="uploaded-by">Uploaded by: {{ file.user.username }} {% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}</p>
+                            <p data-translate="uploaded-at">Uploaded at: {{ file.uploaded_at }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p data-translate="no-files">No files uploaded yet.</p>
+            {% endif %}
+
+            <h3 data-translate="comments-heading">Comments</h3>
+            <ul class="comment-list">
+                {% for comment in video.comments.all %}
+                    <li class="comment-item">
+                        <strong>{{ comment.user.username }}</strong>
+                        <p>{{ comment.content }}</p>
+                    </li>
+                {% empty %}
+                    <li class="comment-item" data-translate="no-comments">No comments yet.</li>
+                {% endfor %}
+            </ul>
+
+            <form method="post" action="{% url 'courses:add_comment' video.id %}" class="comment-form">
+                {% csrf_token %}
+                <textarea name="content" rows="3" placeholder="Add your comment here..." required data-translate-placeholder="comment-placeholder" aria-label="Add comment"></textarea>
+                <button type="submit" data-translate="add-comment-button">Add Comment</button>
+            </form>
+
+            <h3 data-translate="tasks-heading">Tasks</h3>
+            {% if tasks %}
+                <ul class="task-list">
+                    {% for task in tasks %}
+                        <li class="task-item">
+                            <h4>{{ task.title }}</h4>
+                            {% if task.id in task_submissions %}
+                                {% with submission=task_submissions|lookup:task.id %}
+                                    {% with correct_count=submission.is_correct|count_true %}
+                                        {% with total_questions=task.questions|length %}
+                                            {% with score=correct_count|div:total_questions|mul:100 %}
+                                                <p data-translate="submission-status">Your score: {{ score|floatformat:0 }}%</p>
+                                                {% if score >= 50 %}
+                                                    <p data-translate="pass-message">You passed the task!</p>
+                                                {% else %}
+                                                    {% if show_main_task %}
+                                                        <p data-translate="fail-message">You need 50% to pass. Score: {{ score|floatformat:0 }}%. Retry the task.</p>
+                                                        <form method="post" action="{% url 'courses:watch_video' course.id video.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                                                            <div class="task-container">
+                                                                {% for question in task.questions %}
+                                                                    <div class="task-question" style="animation-delay: {{ forloop.counter0|mul:0.2 }}s;">
+                                                                        <p>{{ question.question }}</p>
+                                                                        <select name="answers[]" required aria-label="Select answer for {{ question.question }}">
+                                                                            {% for option in question.options %}
+                                                                                <option value="{{ option }}">{{ option }}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                {% endfor %}
+                                                            </div>
+                                                            <button type="submit" name="submit_task" data-translate="submit-task-button">Retry Task</button>
+                                                        </form>
+                                                    {% endif %}
+                                                    {% if show_alternative_quiz and alternative_quiz %}
+                                                        <h5 data-translate="alternative-quiz-heading">Alternative Quiz</h5>
+                                                        <form method="post" action="{% url 'courses:watch_video' course.id video.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="quiz_id" value="{{ alternative_quiz.id }}">
+                                                            <p>{{ alternative_quiz.question }}</p>
+                                                            <ul>
+                                                                {% for option in alternative_quiz.options %}
+                                                                    <li><label><input type="radio" name="answer" value="{{ option }}" required>{{ option }}</label></li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                            <button type="submit" name="submit_alternative_quiz" data-translate="submit-quiz-button">Submit Quiz</button>
+                                                        </form>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endwith %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% else %}
+                                {% if show_main_task %}
+                                    <form method="post" action="{% url 'courses:watch_video' course.id video.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="task_id" value="{{ task.id }}">
+                                        <div class="task-container">
+                                            {% for question in task.questions %}
+                                                <div class="task-question" style="animation-delay: {{ forloop.counter0|mul:0.2 }}s;">
+                                                    <p>{{ question.question }}</p>
+                                                    <select name="answers[]" required aria-label="Select answer for {{ question.question }}">
+                                                        {% for option in question.options %}
+                                                            <option value="{{ option }}">{{ option }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <button type="submit" name="submit_task" data-translate="submit-task-button">Submit Task</button>
+                                    </form>
+                                {% else %}
+                                    <p data-translate="no-tasks">No tasks available until you pass.</p>
+                                {% endif %}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p data-translate="no-tasks">No tasks available for this video.</p>
+            {% endif %}
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Translation object
+        const translations = {
+            en: {
+                "video-title": "{{ video.title }} - Eduvia",
+                "video-meta-desc": "Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.",
+                "video-meta-keywords": "{{ video.title }}, Eduvia, online learning, course video, video rating, file upload, tasks, comments",
+                "video-og-title": "{{ video.title }} - Eduvia",
+                "video-og-desc": "Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.",
+                "video-twitter-title": "{{ video.title }} - Eduvia",
+                "video-twitter-desc": "Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.",
+                "hero-title": "{{ video.title }}",
+                "hero-desc": "Enhance your learning with {{ video.title }} on Eduvia.",
+                "video-card-title": "{{ video.title }}",
+                "video-progress-heading": "Video Progress",
+                "course-progress-heading": "Course Progress",
+                "complete-video-button": "Complete Video",
+                "rate-video-heading": "Rate this Video",
+                "submit-rating-button": "Submit Rating",
+                "upload-file-heading": "Upload a File",
+                "file-label": "File:",
+                "description-label": "Description:",
+                "upload-file-button": "Upload File",
+                "uploaded-files-heading": "Uploaded Files",
+                "uploaded-by": "Uploaded by: {{ file.user.username }} {% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}",
+                "uploaded-at": "Uploaded at: {{ file.uploaded_at }}",
+                "no-files": "No files uploaded yet.",
+                "comments-heading": "Comments",
+                "no-comments": "No comments yet.",
+                "comment-placeholder": "Add your comment here...",
+                "add-comment-button": "Add Comment",
+                "tasks-heading": "Tasks",
+                "submit-task-button": "Submit Task",
+                "submission-status": "Your score: {{ score|floatformat:0 }}%",
+                "no-tasks": "No tasks available for this video.",
+                "alternative-quiz-heading": "Alternative Quiz",
+                "submit-quiz-button": "Submit Quiz",
+                "pass-message": "You passed the task!",
+                "fail-message": "You need 50% to pass. Score: {{ score|floatformat:0 }}%. Retry the task.",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved.",
+                "rating-submitted": "You have rated this video {{ user_rating }} stars. Rating is final."
+            },
+            ar: {
+                "video-title": "{{ video.title }} - إدوفيا",
+                "video-meta-desc": "شاهد {{ video.title }} على إدوفيا. تابع التقدم، قيم الفيديو، قم برفع الملفات، تفاعل مع المهام، وأضف تعليقات في تجربة تعليمية تفاعلية.",
+                "video-meta-keywords": "{{ video.title }}, إدوفيا, التعلم عبر الإنترنت, فيديو الدورة, تقييم الفيديو, رفع الملفات, المهام, التعليقات",
+                "video-og-title": "{{ video.title }} - إدوفيا",
+                "video-og-desc": "شاهد {{ video.title }} على إدوفيا. تابع التقدم، قيم الفيديو، قم برفع الملفات، تفاعل مع المهام، وأضف تعليقات في تجربة تعليمية تفاعلية.",
+                "video-twitter-title": "{{ video.title }} - إدوفيا",
+                "video-twitter-desc": "شاهد {{ video.title }} على إدوفيا. تابع التقدم، قيم الفيديو، قم برفع الملفات، تفاعل مع المهام، وأضف تعليقات في تجربة تعليمية تفاعلية.",
+                "hero-title": "{{ video.title }}",
+                "hero-desc": "عزز تعلمك مع {{ video.title }} على إدوفيا.",
+                "video-card-title": "{{ video.title }}",
+                "video-progress-heading": "تقدم الفيديو",
+                "course-progress-heading": "تقدم الدورة",
+                "complete-video-button": "إكمال الفيديو",
+                "rate-video-heading": "قيم هذا الفيديو",
+                "submit-rating-button": "إرسال التقييم",
+                "upload-file-heading": "رفع ملف",
+                "file-label": "الملف:",
+                "description-label": "الوصف:",
+                "upload-file-button": "رفع الملف",
+                "uploaded-files-heading": "الملفات المرفوعة",
+                "uploaded-by": "تم الرفع بواسطة: {{ file.user.username }} {% if file.is_instructor_upload %}(معلم){% else %}(طالب){% endif %}",
+                "uploaded-at": "تاريخ الرفع: {{ file.uploaded_at }}",
+                "no-files": "لا توجد ملفات مرفوعة بعد.",
+                "comments-heading": "التعليقات",
+                "no-comments": "لا توجد تعليقات بعد.",
+                "comment-placeholder": "أضف تعليقك هنا...",
+                "add-comment-button": "إضافة تعليق",
+                "tasks-heading": "المهام",
+                "submit-task-button": "إرسال المهمة",
+                "submission-status": "نقطتك: {{ score|floatformat:0 }}%",
+                "no-tasks": "لا توجد مهام متاحة لهذا الفيديو.",
+                "alternative-quiz-heading": "اختبار بديل",
+                "submit-quiz-button": "إرسال الاختبار",
+                "pass-message": "لقد نجحت في المهمة!",
+                "fail-message": "تحتاج إلى 50% للنجاح. النقاط: {{ score|floatformat:0 }}%. أعد المحاولة.",
+                "nav-home": "الرئيسية",
+                "nav-courses": "الدورات",
+                "nav-chatbot": "الدردشة الآلية",
+                "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء",
+                "nav-about": "معلومات عنا",
+                "nav-contact": "تواصل معنا",
+                "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي",
+                "nav-logout": "تسجيل الخروج",
+                "nav-coins": "النقاط:",
+                "nav-login": "تسجيل الدخول",
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة.",
+                "rating-submitted": "لقد قمت بتقييم هذا الفيديو {{ user_rating }} نجوم. التقييم نهائي."
+            }
+        };
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Language Toggle
+        function toggleLanguage() {
+            const htmlRoot = document.getElementById('html-root');
+            const currentLang = htmlRoot.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'ar' : 'en';
+            
+            // Update lang and direction
+            htmlRoot.setAttribute('lang', newLang);
+            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[newLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        text = text.replace('{{ video.title }}', '{{ video.title }}');
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:') || element.getAttribute('name')?.startsWith('twitter:')) {
+                        text = text.replace('{{ video.title }}', '{{ video.title }}');
+                        element.setAttribute('content', text);
+                    }
+                } else if (['hero-title', 'video-card-title', 'hero-desc', 'video-meta-desc', 'video-og-desc', 'video-twitter-desc'].includes(key)) {
+                    const videoTitle = element.textContent.match(/Enhance your learning with (.*) on Eduvia./)?.[1] || 
+                                      element.textContent || '{{ video.title }}';
+                    text = translations[newLang][key].replace('{{ video.title }}', videoTitle);
+                    element.textContent = text;
+                } else if (['uploaded-by', 'uploaded-at', 'submission-status'].includes(key)) {
+                    const username = element.textContent.match(/Uploaded by: (.*?) \(/)?.[1] || '{{ file.user.username }}';
+                    const role = element.textContent.includes('(Instructor)') ? '(Instructor)' : element.textContent.includes('(Student)') ? '(Student)' : '';
+                    const date = element.textContent.match(/Uploaded at: (.*)/)?.[1] || '{{ file.uploaded_at }}';
+                    const score = element.textContent.match(/Your score: (\d+)/)?.[1] || '{{ score|floatformat:0 }}';
+                    text = translations[newLang][key]
+                        .replace('{{ file.user.username }}', username)
+                        .replace('{% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}', role)
+                        .replace('{{ file.uploaded_at }}', date)
+                        .replace('{{ score|floatformat:0 }}', score);
+                    element.textContent = text;
+                } else if (element.hasAttribute('data-translate-placeholder')) {
+                    element.setAttribute('placeholder', text);
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update the title
+            document.title = translations[newLang]["video-title"].replace('{{ video.title }}', '{{ video.title }}');
+
+            localStorage.setItem('language', newLang);
+        }
+
+        // Apply saved theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply Dark Mode
+            const savedTheme = localStorage.getItem('theme');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            }
+
+            // Apply Language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', savedLang);
+            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                let text = translations[savedLang][key];
+                if (element.tagName.toLowerCase() === 'meta') {
+                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                        text = text.replace('{{ video.title }}', '{{ video.title }}');
+                        element.setAttribute('content', text);
+                    } else if (element.getAttribute('property')?.startsWith('og:') || element.getAttribute('name')?.startsWith('twitter:')) {
+                        text = text.replace('{{ video.title }}', '{{ video.title }}');
+                        element.setAttribute('content', text);
+                    }
+                } else if (['hero-title', 'video-card-title', 'hero-desc'].includes(key)) {
+                    const videoTitle = element.textContent.match(/Enhance your learning with (.*) on Eduvia./)?.[1] || 
+                                      element.textContent || '{{ video.title }}';
+                    text = translations[savedLang][key].replace('{{ video.title }}', videoTitle);
+                    element.textContent = text;
+                } else if (['uploaded-by', 'uploaded-at', 'submission-status'].includes(key)) {
+                    const username = element.textContent.match(/Uploaded by: (.*?) \(/)?.[1] || '{{ file.user.username }}';
+                    const role = element.textContent.includes('(Instructor)') ? '(Instructor)' : element.textContent.includes('(Student)') ? '(Student)' : '';
+                    const date = element.textContent.match(/Uploaded at: (.*)/)?.[1] || '{{ file.uploaded_at }}';
+                    const score = element.textContent.match(/Your score: (\d+)/)?.[1] || '{{ score|floatformat:0 }}';
+                    text = translations[savedLang][key]
+                        .replace('{{ file.user.username }}', username)
+                        .replace('{% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}', role)
+                        .replace('{{ file.uploaded_at }}', date)
+                        .replace('{{ score|floatformat:0 }}', score);
+                    element.textContent = text;
+                } else if (element.hasAttribute('data-translate-placeholder')) {
+                    element.setAttribute('placeholder', text);
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Set the title on page load
+            document.title = translations[savedLang]["video-title"].replace('{{ video.title }}', '{{ video.title }}');
+        });
+
+        // Video Progress Tracking
+        const iframe = document.querySelector('iframe');
+        const progressBar = document.querySelector('progress');
+
+        iframe.addEventListener('load', () => {
+            const video = iframe.contentWindow.document.querySelector('video');
+            if (video) {
+                // استرجاع التقدم السابق
+                fetch(`/courses/update_progress/${video.id}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.progress > 0) {
+                            progressBar.value = data.progress;
+                        }
+                    });
+
+                // منع التسريع أو التقديم اليدوي
+                video.addEventListener('seeking', (e) => {
+                    if (video.currentTime > progressBar.value / 100 * video.duration + 1) {
+                        e.preventDefault();
+                        video.currentTime = progressBar.value / 100 * video.duration;
+                        alert('Fast forwarding is not allowed. Please watch the video in real-time.');
+                    }
+                });
+
+                // تحديث التقدم أثناء التشغيل
+                video.addEventListener('timeupdate', () => {
+                    const duration = video.duration;
+                    const currentTime = video.currentTime;
+                    const progress = (currentTime / duration) * 100;
+                    progressBar.value = progress;
+                });
+
+                // تعيين التقدم إلى 100% عند اكتمال الفيديو
+                video.addEventListener('ended', () => {
+                    progressBar.value = 100;
+
+                    // إرسال إشعار بأن الفيديو اكتمل إلى الخادم
+                    fetch(`/courses/update_progress/${video.id}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': getCookie('csrftoken'),
+                        },
+                        body: `current_time=${video.duration}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.completed) {
+                            alert('Video completed! You earned 50 coins.');
+                            location.reload(); // تحديث الصفحة لإظهار التقدم
+                        }
+                    })
+                    .catch(error => console.error('Error updating progress:', error));
+                });
+            }
+        });
+
+        // Function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // تحميل التقييم السابق عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch(`/courses/get_rating/${video.id}/?user_id=${user.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.rating) {
+                        const ratingForm = document.getElementById('rating-form');
+                        const starRating = document.getElementById('star-rating');
+                        ratingForm.querySelector('button').disabled = true;
+                        starRating.querySelectorAll('input[type="radio"]').forEach(radio => {
+                            radio.disabled = true;
+                        });
+                        const ratingValue = data.rating;
+                        for (let i = 1; i <= 5; i++) {
+                            const starLabel = document.querySelector(`#star${i} + label`);
+                            if (i <= ratingValue) {
+                                starLabel.style.color = '#ffd700';
+                            }
+                        }
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success';
+                        alertDiv.setAttribute('data-translate', 'rating-submitted');
+                        alertDiv.textContent = `You have rated this video ${ratingValue} stars. Rating is final.`;
+                        ratingForm.insertAdjacentElement('afterend', alertDiv);
+                    }
+                })
+                .catch(error => console.error('Error fetching rating:', error));
+        });
+
+        // معالجة الإرسال لمنع التكرار
+        document.getElementById('rating-form').addEventListener('submit', (e) => {
+            const ratingForm = document.getElementById('rating-form');
+            const starRating = document.getElementById('star-rating');
+            ratingForm.querySelector('button').disabled = true;
+            starRating.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.disabled = true;
+            });
+        });
+    </script>
+</body>
+</html>
