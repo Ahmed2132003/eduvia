@@ -1,1 +1,3 @@
-web: python manage.py migrate --noinput > migrate.log && python manage.py collectstatic --noinput && gunicorn Eduvia.wsgi:application --bind 0.0.0.0:$PORT --log-file -
+web: gunicorn Eduvia.wsgi:application --bind 0.0.0.0:$PORT --log-file -
+worker: celery -A Eduvia worker --loglevel=info
+beat: celery -A Eduvia beat --loglevel=info
