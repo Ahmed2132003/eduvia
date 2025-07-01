@@ -18,7 +18,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '*.railway.app',
     'eduvia.up.railway.app',
-    'web-production-0dbb.up.railway.app'
 ]
 
 INSTALLED_APPS = [
@@ -139,7 +138,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # إعدادات ملفات الوسائط
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
@@ -151,7 +150,6 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'https://*.railway.app',
     'https://eduvia.up.railway.app',
-    'https://web-production-0dbb.up.railway.app'
 ]
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
