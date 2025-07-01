@@ -12,8 +12,14 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-# إعداد ALLOWED_HOSTS لتضمين نطاق Railway
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*.railway.app', 'eduvia.up.railway.app']
+# إعداد ALLOWED_HOSTS لتضمين نطاقات Railway صراحةً
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '*.railway.app',
+    'eduvia.up.railway.app',
+    'web-production-0dbb.up.railway.app'
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -35,8 +41,8 @@ INSTALLED_APPS = [
     'skills_market',
     'mentorship',
     'workshops',
-    # 'cloudinary',  # معطل في التطوير المحلي
-    # 'cloudinary.storage',  # معطل في التطوير المحلي
+    'cloudinary',
+    'cloudinary.storage',
 ]
 
 ASGI_APPLICATION = 'Eduvia.asgi.application'
@@ -104,10 +110,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Eduvia.wsgi.application'
 
-# إعداد قاعدة البيانات باستخدام SQLite للخطة المجانية
+# إعداد قاعدة البيانات
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='sqlite:////app/db.sqlite3'),
+        default=config('DATABASE_URL', default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')),
         conn_max_age=600,
         ssl_require=False
     )
@@ -133,23 +139,28 @@ USE_TZ = True
 
 # إعدادات الملفات الثابتة
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # إعدادات ملفات الوسائط
 DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE', default='django.core.files.storage.FileSystemStorage')
+CLOUDINARY_STORAGE = {
+    'CLOUDINARY_URL': config('CLOUDINARY_URL', default=None)
+}
 if not config('DEBUG', default=False, cast=bool):
-    CLOUDINARY_STORAGE = {
-        'CLOUDINARY_URL': config('CLOUDINARY_URL')
-    }
     DEFAULT_FILE_STORAGE = 'cloudinary.storage.MediaCloudinaryStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # إعدادات CSRF وSession للأمان
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://127.0.0.1:8000,https://*.railway.app', cast=lambda v: [s.strip() for s in v.split(',')])
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'https://*.railway.app',
+    'https://eduvia.up.railway.app',
+    'https://web-production-0dbb.up.railway.app'
+]
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
 
