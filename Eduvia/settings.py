@@ -55,11 +55,11 @@ ASGI_APPLICATION = 'Eduvia.asgi.application'
 # }
 
 # إعدادات Celery للمهام المجدولة (معطل مؤقتًا)
-# CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379')
-# CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379')
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379')
+CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 LOGIN_URL = '/accounts/login/'
 
@@ -110,9 +110,9 @@ WSGI_APPLICATION = 'Eduvia.wsgi.application'
 # إعداد قاعدة البيانات
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='postgres://postgres:postgres@localhost:5432/eduvia'),
+        default=config('DATABASE_URL'),
         conn_max_age=600,
-        ssl_require=config('SSL_REQUIRE', default=True, cast=bool)  # SSL لـ PostgreSQL في الإنتاج
+        ssl_require=True  # PostgreSQL على Railway يطلب SSL
     )
 }
 
