@@ -44,22 +44,22 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = 'Eduvia.asgi.application'
 
-# إعداد Channels مع Redis للإنتاج
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [config('REDIS_URL', default='redis://localhost:6379')],
-        },
-    },
-}
+# إعداد Channels مع Redis للإنتاج (معطل مؤقتًا لتجنب خطأ REDIS_URL)
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [config('REDIS_URL', default='redis://localhost:6379')],
+#         },
+#     },
+# }
 
-# إعدادات Celery للمهام المجدولة
-CELERY_BROKER_URL = config('REDIS_URL')
-CELERY_RESULT_BACKEND = config('REDIS_URL')
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+# إعدادات Celery للمهام المجدولة (معطل مؤقتًا)
+# CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379')
+# CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379')
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
 
 LOGIN_URL = '/accounts/login/'
 
@@ -112,7 +112,7 @@ DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
         conn_max_age=600,
-        ssl_require=False
+        ssl_require=config('SSL_REQUIRE', default=True, cast=bool)  # SSL لـ PostgreSQL في الإنتاج، معطل لـ SQLite محليًا
     )
 }
 
