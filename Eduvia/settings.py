@@ -157,10 +157,11 @@ SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not config('DEBU
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
 
 # إعدادات HTTPS للإنتاج
-SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=not config('DEBUG', default=False, cast=bool), cast=bool)
+SECURE_SSL_REDIRECT = False  # تعطيل مؤقت لإصلاح مشكلة إعادة التوجيه
 SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000, cast=int)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # إعدادات مفتاح Gemini API
 GEMINI_API_KEY = config('GEMINI_API_KEY', default=None)
