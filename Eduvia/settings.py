@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     'skills_market',
     'mentorship',
     'workshops',
-    'cloudinary',
-    'cloudinary.storage',
 ]
 
 ASGI_APPLICATION = 'Eduvia.asgi.application'
@@ -113,7 +111,7 @@ WSGI_APPLICATION = 'Eduvia.wsgi.application'
 # إعداد قاعدة البيانات
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')),
+        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
         conn_max_age=600,
         ssl_require=False
     )
@@ -144,13 +142,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # إعدادات ملفات الوسائط
-DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE', default='django.core.files.storage.FileSystemStorage')
-CLOUDINARY_STORAGE = {
-    'CLOUDINARY_URL': config('CLOUDINARY_URL', default=None)
-}
-if not config('DEBUG', default=False, cast=bool):
-    DEFAULT_FILE_STORAGE = 'cloudinary.storage.MediaCloudinaryStorage'
-
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
