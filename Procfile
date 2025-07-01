@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn Eduvia.wsgi:application --bind 0.0.0.0:$PORT --log-file -
+web: mkdir -p /app && chmod -R 777 /app && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn Eduvia.wsgi:application --bind 0.0.0.0:$PORT --log-file -
