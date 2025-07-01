@@ -110,9 +110,9 @@ WSGI_APPLICATION = 'Eduvia.wsgi.application'
 # إعداد قاعدة البيانات
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
+        default=config('DATABASE_URL', default='postgres://postgres:postgres@localhost:5432/eduvia'),
         conn_max_age=600,
-        ssl_require=config('SSL_REQUIRE', default=True, cast=bool)  # SSL لـ PostgreSQL في الإنتاج، معطل لـ SQLite محليًا
+        ssl_require=config('SSL_REQUIRE', default=True, cast=bool)  # SSL لـ PostgreSQL في الإنتاج
     )
 }
 
