@@ -6,8 +6,7 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
-
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-hfxyoz#%!ei3v1zfmj5km20vkx$$tvm$)7$0r_79h2k+wbuki^')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)  # True محليًا، False على Fly.io
 
