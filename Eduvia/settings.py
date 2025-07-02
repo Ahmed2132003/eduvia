@@ -112,11 +112,15 @@ TEMPLATES = [
 # إعدادات WSGI
 WSGI_APPLICATION = 'Eduvia.wsgi.application'
 
-# إعداد قاعدة البيانات (SQLite)
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join('/data', 'db.sqlite3'),
+        'NAME': '/data/db.sqlite3',
     }
 }
 # إعدادات التحقق من كلمة المرور
