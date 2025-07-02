@@ -112,15 +112,18 @@ TEMPLATES = [
 # إعدادات WSGI
 WSGI_APPLICATION = 'Eduvia.wsgi.application'
 
-import os
 from pathlib import Path
+from decouple import config
+import os
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# إعدادات قاعدة البيانات
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/data/db.sqlite3',
+        'NAME': config('DATABASE_PATH', default=str(BASE_DIR / 'db.sqlite3')),
     }
 }
 # إعدادات التحقق من كلمة المرور
