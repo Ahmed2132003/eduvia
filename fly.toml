@@ -1,0 +1,31 @@
+app = "eduvia-ai"  # تأكد إنه مطابق لاسم التطبيق
+primary_region = "ams"  # أو "cdg" لو اخترت باريس
+
+[build]
+  builder = "docker"
+
+[deploy]
+  release_command = "python manage.py migrate"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[[statics]]
+  guest_path = "/app/staticfiles"
+  url_prefix = "/static/"
+
+[env]
+  DISABLE_COLLECTSTATIC = "0"
+  DEBUG = "False"
+  SESSION_COOKIE_SECURE = "True"
+  CSRF_COOKIE_SECURE = "True"
+  SECURE_SSL_REDIRECT = "True"
+
+[mounts]
+  source = "eduvia_data"
+  destination = "/app"

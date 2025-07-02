@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 from decouple import config
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -10,16 +9,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)  # True محليًا، False على Fly.io
 
-# إعداد ALLOWED_HOSTS لتضمين نطاقات Railway صراحةً
+# إعدادات المضيفين المسموح بهم
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '*.railway.app',
-    'eduvia.up.railway.app',
+    '*.fly.dev',
+    'eduvia-ai.fly.dev',  # اسم تطبيقك على Fly.io
 ]
 
+# إعدادات التطبيقات
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,9 +42,10 @@ INSTALLED_APPS = [
     'workshops',
 ]
 
+# إعدادات ASGI لـ Channels
 ASGI_APPLICATION = 'Eduvia.asgi.application'
 
-# إعداد Channels مع Redis للإنتاج (معطل مؤقتًا لتجنب خطأ REDIS_URL)
+# إعدادات Channels (معطلة مؤقتًا لأننا مش بنستخدم Redis دلوقتي)
 # CHANNEL_LAYERS = {
 #     'default': {
 #         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -54,15 +55,17 @@ ASGI_APPLICATION = 'Eduvia.asgi.application'
 #     },
 # }
 
-# إعدادات Celery للمهام المجدولة (معطل مؤقتًا)
+# إعدادات Celery (معطلة مؤقتًا)
 CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379')
 CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+# رابط تسجيل الدخول
 LOGIN_URL = '/accounts/login/'
 
+# إعدادات Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -74,6 +77,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# إعدادات URL
 ROOT_URLCONF = 'Eduvia.urls'
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -89,6 +93,7 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
+# إعدادات القوالب
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -105,17 +110,18 @@ TEMPLATES = [
     },
 ]
 
+# إعدادات WSGI
 WSGI_APPLICATION = 'Eduvia.wsgi.application'
 
-# إعداد قاعدة البيانات
+# إعداد قاعدة البيانات (SQLite)
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True  # PostgreSQL على Railway يطلب SSL
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
+# إعدادات التحقق من كلمة المرور
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -131,6 +137,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# إعدادات المنطقة الزمنية
 TIME_ZONE = 'Africa/Cairo'
 USE_TZ = True
 
@@ -145,20 +152,21 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# إعدادات CSRF وSession للأمان
+# إعدادات CSRF وSession
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
-    'https://*.railway.app',
-    'https://eduvia.up.railway.app',
+    'http://localhost:8000',
+    'https://*.fly.dev',
+    'https://eduvia-ai.fly.dev',
 ]
-SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
-CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not config('DEBUG', default=False, cast=bool), cast=bool)
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)  # False محليًا
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)  # False محليًا
 
-# إعدادات HTTPS للإنتاج
-SECURE_SSL_REDIRECT = False  # تعطيل مؤقت لإصلاح مشكلة إعادة التوجيه
-SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000, cast=int)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# إعدادات HTTPS للإنتاج (معطلة محليًا)
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)  # False محليًا
+SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=0, cast=int)  # 0 محليًا
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # إعدادات مفتاح Gemini API
