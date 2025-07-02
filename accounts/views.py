@@ -54,10 +54,11 @@ def verify_code_form_view(request):
 
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User, Profile  # أضف Profile
-from courses.models import UserProfile
+from .models import User, Profile
 from django.contrib import messages
 from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_protect
+
 @csrf_protect
 def verify_code_view(request):
     if request.method == 'POST':
@@ -70,18 +71,21 @@ def verify_code_view(request):
                 messages.error(request, 'Verification code has expired.')
                 return redirect('accounts:register')
             if entered_code == temp_data['verification_code']:
-                user = User.objects.create_user(
-                    username=temp_data['username'],
-                    email=temp_data['email'],
-                    password=temp_data['password'],
-                    role=temp_data['role']
-                )
-                UserProfile.objects.get_or_create(user=user)  # احتفظ بـ UserProfile
-                Profile.objects.get_or_create(user=user)  # أضف Profile
-                login(request, user)
-                del request.session['temp_user_data']
-                messages.success(request, 'Registration successful! Your profile has been created.')
-                return redirect('home')
+                try:
+                    user = User.objects.create_user(
+                        username=temp_data['username'],
+                        email=temp_data['email'],
+                        password=temp_data['password'],
+                        role=temp_data['role']
+                    )
+                    Profile.objects.get_or_create(user=user)  # إنشاء Profile فقط
+                    login(request, user)
+                    del request.session['temp_user_data']
+                    messages.success(request, 'Registration successful! Your profile has been created.')
+                    return redirect('home')
+                except Exception as e:
+                    messages.error(request, f'Error: {str(e)}')
+                    return redirect('accounts:verify_code_form')
             else:
                 messages.error(request, 'Invalid verification code.')
                 return redirect('accounts:verify_code_form')
@@ -92,8 +96,7 @@ def verify_code_view(request):
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .models import User, Profile  
-from courses.models import UserProfile
+from .models import User, Profile
 from django.contrib import messages
 
 def login_view(request):
@@ -102,8 +105,7 @@ def login_view(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            UserProfile.objects.get_or_create(user=user)  
-            Profile.objects.get_or_create(user=user)  
+            Profile.objects.get_or_create(user=user)  # إنشاء Profile فقط
             login(request, user)
             return redirect('home')
         else:
