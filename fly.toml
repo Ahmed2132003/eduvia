@@ -28,4 +28,4 @@ primary_region = "ams"
 
 [mounts]
   source = "eduvia_data"
-  destination = "/app"
+  destination = "/data"
