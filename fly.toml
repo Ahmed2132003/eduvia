@@ -1,8 +1,8 @@
-app = "eduvia-ai"  # تأكد إنه مطابق لاسم التطبيق
-primary_region = "ams"  # أو "cdg" لو اخترت باريس
+app = "eduvia-ai"
+primary_region = "ams"
 
 [build]
-  builder = "docker"
+  dockerfile = "Dockerfile"
 
 [deploy]
   release_command = "python manage.py migrate"

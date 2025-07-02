@@ -1,23 +1,18 @@
- # إعداد البيئة
- ENV PYTHONDONTWRITEBYTECODE=1
- ENV PYTHONUNBUFFERED=1
+FROM python:3.10-slim
 
- # إنشاء مجلد العمل
- WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
- # تثبيت التبعيات
- RUN pip install --upgrade pip
- COPY requirements.txt .
- RUN pip install -r requirements.txt
+WORKDIR /app
 
- # نسخ ملفات المشروع
- COPY . .
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
- # جمع الملفات الثابتة
- RUN python manage.py collectstatic --noinput
+COPY . .
 
- # تعريض المنفذ
- EXPOSE 8000
+RUN python manage.py collectstatic --noinput
 
- # تشغيل Gunicorn
- CMD ["gunicorn", "--bind", "0.0.0.0:8000", "Eduvia.wsgi"]
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "Eduvia.wsgi"]
