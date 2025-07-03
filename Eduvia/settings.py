@@ -155,8 +155,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 # إعدادات ملفات الوسائط
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
+MEDIA_ROOT = '/data/media'
 # إعدادات CSRF وSession
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
