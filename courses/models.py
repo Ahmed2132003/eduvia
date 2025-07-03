@@ -49,7 +49,7 @@ class Course(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='programming')
     created_at = models.DateTimeField(auto_now_add=True)
     average_rating = models.FloatField(default=0)
-    image = models.ImageField(upload_to='media/course_images/')
+    image = models.ImageField(upload_to='course_images/', null=True, blank=True)
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default='beginner')  
     total_lessons = models.PositiveIntegerField(default=0)
     
