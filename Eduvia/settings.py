@@ -7,15 +7,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-hfxyoz#%!ei3v1zfmj5km20vkx$$tvm$)7$0r_79h2k+wbuki^')
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)  # True محليًا، False على Fly.io
+DEBUG = config('DEBUG', default=True, cast=bool)  # True مؤقتًا للتطوير
 
 # إعدادات المضيفين المسموح بهم
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '*.fly.dev',
-    'eduvia-ai.fly.dev',  # اسم تطبيقك على Fly.io
+    'eduvia-ai.fly.dev',
 ]
 
 # إعدادات التطبيقات
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
 # إعدادات ASGI لـ Channels
 ASGI_APPLICATION = 'Eduvia.asgi.application'
 
-# إعدادات Channels (معطلة مؤقتًا لأننا مش بنستخدم Redis دلوقتي)
+# إعدادات Channels (معطلة مؤقتًا)
 # CHANNEL_LAYERS = {
 #     'default': {
 #         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -54,7 +55,7 @@ ASGI_APPLICATION = 'Eduvia.asgi.application'
 #     },
 # }
 
-# إعدادات Celery (معطلة مؤقتًا)
+# إعدادات Celery
 CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379')
 CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379')
 CELERY_ACCEPT_CONTENT = ['json']
@@ -112,13 +113,6 @@ TEMPLATES = [
 # إعدادات WSGI
 WSGI_APPLICATION = 'Eduvia.wsgi.application'
 
-from pathlib import Path
-from decouple import config
-import os
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 # إعدادات قاعدة البيانات
 DATABASES = {
     'default': {
@@ -126,6 +120,7 @@ DATABASES = {
         'NAME': config('DATABASE_PATH', default=str(BASE_DIR / 'db.sqlite3')),
     }
 }
+
 # إعدادات التحقق من كلمة المرور
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -156,6 +151,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/data/media'
+
 # إعدادات CSRF وSession
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
@@ -163,12 +159,12 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.fly.dev',
     'https://eduvia-ai.fly.dev',
 ]
-SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)  # False محليًا
-CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)  # False محليًا
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
 
-# إعدادات HTTPS للإنتاج (معطلة محليًا)
-SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)  # False محليًا
-SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=0, cast=int)  # 0 محليًا
+# إعدادات HTTPS للإنتاج
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
+SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=0, cast=int)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

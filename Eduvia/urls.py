@@ -9,15 +9,13 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('courses/', include('courses.urls')),
     path("chatbot/", include("chatbot.urls")),
-    path("competitions/",include("competitions.urls")),
+    path("competitions/", include("competitions.urls")),
     path('performance/', include('performance_analysis.urls')),
     path('projects/', include('projects.urls')),
-    path('skills_market/', include('skills_market.urls')), 
-    path("mentorship/",include("mentorship.urls")),
+    path('skills_market/', include('skills_market.urls')),
+    path("mentorship/", include("mentorship.urls")),
     path('workshops/', include('workshops.urls')),
-
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    
+# خدمة ملفات الـ media في الإنتاج والتطوير
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
