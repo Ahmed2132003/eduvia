@@ -35,7 +35,6 @@ import os
 from django.db import models
 
 def course_image_path(instance, filename):
-    # الاحتفاظ باسم الملف الأصلي بدون تغيير
     return os.path.join('course_images', filename)
 
 class Course(models.Model):
