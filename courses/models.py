@@ -171,7 +171,7 @@ class CourseRating(models.Model):
 class VideoFile(models.Model):
     video = models.ForeignKey('Video', on_delete=models.CASCADE, related_name='files')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    file = models.FileField(upload_to='media/video_files/')
+    file = models.FileField(upload_to='video_files/')
     description = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     is_instructor_upload = models.BooleanField(default=False)

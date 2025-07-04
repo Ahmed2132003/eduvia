@@ -381,13 +381,15 @@ from django.db.models import Max
 from .models import Course, Video, VideoProgress, CourseEnrollment, Task, AlternativeQuiz, UserTaskSubmission, VideoRating
 from .decorators import instructor_required
 
+from .models import VideoFile  # تأكد من استيراد نموذج VideoFile
+
 @login_required
 def watch_video(request, course_id, video_id):
     course = get_object_or_404(Course, id=course_id)
     video = get_object_or_404(Video, id=video_id, course=course)
     
     if not CourseEnrollment.objects.filter(user=request.user, course=course).exists():
-        messages.error(request, 'You must purchase this course to watch its videos.')
+        messages.error(request, 'يجب شراء هذه الدورة لمشاهدة الفيديوهات.')
         return redirect('courses:courses')
 
     videos = course.videos.order_by('order')
@@ -419,17 +421,43 @@ def watch_video(request, course_id, video_id):
             try:
                 user_profile = request.user.courses_profile
                 user_profile.add_coins(50)
-                messages.success(request, f'Video completed! You earned 50 coins. Your score: {success_rate:.0f}%')
+                messages.success(request, f'تم إكمال الفيديو! لقد حصلت على 50 نقطة. نسبة نجاحك: {success_rate:.0f}%')
             except UserProfile.DoesNotExist:
-                messages.error(request, 'Error: User profile not found.')
+                messages.error(request, 'خطأ: لم يتم العثور على ملف المستخدم.')
 
+    # معالجة رفع الملف
+    if request.method == 'POST' and 'upload_file' in request.POST:
+        file = request.FILES.get('file')
+        description = request.POST.get('description', '')
+        
+        if not file:
+            messages.error(request, 'يرجى اختيار ملف للرفع.')
+            return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
+
+        try:
+            # إنشاء سجل جديد للملف المرفوع
+            video_file = VideoFile(
+                video=video,
+                user=request.user,
+                file=file,
+                description=description,
+                is_instructor_upload=(request.user.courses_profile.role == 'instructor')
+            )
+            video_file.save()
+            messages.success(request, 'تم رفع الملف بنجاح!')
+        except Exception as e:
+            messages.error(request, f'فشل رفع الملف: {str(e)}')
+        
+        return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
+
+    # معالجة إرسال المهمة
     if request.method == 'POST' and 'submit_task' in request.POST:
         task_id = request.POST.get('task_id')
         task = get_object_or_404(Task, id=task_id, video=video)
         submitted_answers = request.POST.getlist('answers[]')
 
         if len(submitted_answers) != len(task.questions):
-            messages.error(request, 'You must answer all questions.')
+            messages.error(request, 'يجب الإجابة على جميع الأسئلة.')
             return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
 
         max_attempt = UserTaskSubmission.objects.filter(user=request.user, task=task).aggregate(Max('attempt_number'))['attempt_number__max'] or 0
@@ -452,16 +480,17 @@ def watch_video(request, course_id, video_id):
             try:
                 user_profile = request.user.courses_profile
                 user_profile.add_coins(50)
-                messages.success(request, f'Video completed! You earned 50 coins. Your score: {success_rate:.0f}%')
+                messages.success(request, f'تم إكمال الفيديو! لقد حصلت على 50 نقطة. نسبة نجاحك: {success_rate:.0f}%')
             except UserProfile.DoesNotExist:
-                messages.error(request, 'Error: User profile not found.')
+                messages.error(request, 'خطأ: لم يتم العثور على ملف المستخدم.')
         else:
             show_main_task = False
             show_alternative_quiz = True
-            messages.info(request, f'Your score: {success_rate:.0f}%. You need 50% to pass. The alternative quiz is now available.')
+            messages.info(request, f'نسبة نجاحك: {success_rate:.0f}%. تحتاج إلى 50% للنجاح. الاختبار البديل متاح الآن.')
 
         return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
 
+    # معالجة إرسال الاختبار البديل
     if request.method == 'POST' and 'submit_alternative_quiz' in request.POST:
         quiz_id = request.POST.get('quiz_id')
         submitted_answer = request.POST.get('answer')
@@ -483,7 +512,7 @@ def watch_video(request, course_id, video_id):
             try:
                 user_profile = request.user.courses_profile
                 user_profile.add_coins(50)
-                messages.success(request, 'Alternative quiz passed! Video completed. You earned 50 coins.')
+                messages.success(request, 'تم اجتياز الاختبار البديل! تم إكمال الفيديو. لقد حصلت على 50 نقطة.')
             except UserProfile.DoesNotExist:
                 pass
         else:
@@ -491,7 +520,7 @@ def watch_video(request, course_id, video_id):
             quiz.save()
             show_main_task = True
             show_alternative_quiz = False
-            messages.error(request, 'Incorrect answer. You can retry the main task.')
+            messages.error(request, 'إجابة غير صحيحة. يمكنك إعادة محاولة المهمة الرئيسية.')
 
         return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
 
