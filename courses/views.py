@@ -183,11 +183,12 @@ def instructor_dashboard(request):
     return render(request, 'courses/dashboard.html', context)
 
 # Add new course
+# courses/views.py
 @login_required
 @instructor_required
 def add_course(request):
     if request.method == 'POST':
-        form = CourseForm(request.POST, request.FILES)
+        form = CourseForm(request.POST)  # إزالة request.FILES
         if form.is_valid():
             course = form.save(commit=False)
             course.instructor = request.user.username
@@ -199,14 +200,14 @@ def add_course(request):
     else:
         form = CourseForm()
     return render(request, 'courses/add_course.html', {'form': form})
-
 # Edit existing course
+# courses/views.py
 @login_required
 @instructor_required
 def edit_course(request, course_id):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
     if request.method == 'POST':
-        form = CourseForm(request.POST, request.FILES, instance=course)
+        form = CourseForm(request.POST, instance=course)  # إزالة request.FILES
         if form.is_valid():
             form.save()
             messages.success(request, 'Course updated successfully!')

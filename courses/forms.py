@@ -71,3 +71,31 @@ class AlternativeQuizForm(forms.ModelForm):
         options = self.cleaned_data['options'].split(',')
         return [option.strip() for option in options if option.strip()]
     
+# courses/forms.py
+from django import forms
+from .models import Course, Video, Task, AlternativeQuiz
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['title', 'description', 'category', 'image']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+            'category': forms.Select(choices=Course.CATEGORY_CHOICES),
+            'image': forms.URLInput(attrs={'placeholder': 'Enter image URL (e.g., Google Drive link)'}),  # تغيير إلى URLInput
+        }
+        labels = {
+            'title': 'Course Title',
+            'description': 'Description',
+            'category': 'Category',
+            'image': 'Image URL',
+        }
+
+    def clean_image(self):
+        image_url = self.cleaned_data.get('image')
+        if image_url:
+            # تحقق اختياري: تأكد إن الرابط صالح (مثلًا يبدأ بـ http أو https)
+            if not image_url.startswith(('http://', 'https://')):
+                raise forms.ValidationError("Please enter a valid URL starting with http:// or https://")
+        return image_url
+    

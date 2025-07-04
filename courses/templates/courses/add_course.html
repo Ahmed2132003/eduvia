@@ -481,7 +481,6 @@
     <div class="content">
         <div class="form-card">
             <h1 data-translate="form-title">Add New Course</h1>
-            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="buttons">

@@ -32,12 +32,9 @@ class UserProfile(models.Model):
             return True
         return False
 
+# courses/models.py
 import os
 from django.db import models
-
-def course_image_path(instance, filename):
-    # الاحتفاظ باسم الملف الأصلي
-    return os.path.join('course_images', filename)
 
 class Course(models.Model):
     CATEGORY_CHOICES = [
@@ -56,12 +53,16 @@ class Course(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='programming')
     created_at = models.DateTimeField(auto_now_add=True)
     average_rating = models.FloatField(default=0)
-    image = models.ImageField(upload_to=course_image_path, null=True, blank=True)
+    image = models.URLField(max_length=500, null=True, blank=True)  # تغيير إلى URLField
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default='beginner')
     total_lessons = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return self.title
+    
+    def get_image_url(self):
+        # إرجاع رابط الصورة أو صورة افتراضية إذا كان الحقل فاضي
+        return self.image if self.image else 'https://via.placeholder.com/300x200?text=No+Image'
 
 class CourseEnrollment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
