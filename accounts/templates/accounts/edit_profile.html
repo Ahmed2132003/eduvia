@@ -500,6 +500,7 @@
     </section>
 
     <!-- Edit Profile Content -->
+    <!-- Edit Profile Content -->
     {% block content %}
     <div class="edit-profile-container">
         <h1 data-translate="edit-profile-title">Edit Profile</h1>
@@ -508,7 +509,7 @@
                 <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert{% endif %}">{{ message }}</div>
             {% endfor %}
         {% endif %}
-        <form method="post" enctype="multipart/form-data">
+        <form method="post">
             {% csrf_token %}
             <p>
                 <label for="{{ form.full_name.id_for_label }}" data-translate="label-fullname">Full Name:</label>
@@ -519,8 +520,9 @@
                 {{ form.date_of_birth }}
             </p>
             <p>
-                <label for="{{ form.profile_picture.id_for_label }}" data-translate="label-profile-picture">Profile Picture:</label>
+                <label for="{{ form.profile_picture.id_for_label }}" data-translate="label-profile-picture">Profile Picture URL:</label>
                 {{ form.profile_picture }}
+                <small data-translate="image-upload-instruction">Upload your image to <a href="https://postimg.cc/" target="_blank">PostImage</a> and paste the direct link here.</small>
             </p>
             <button type="submit" class="btn" data-translate="btn-save">Save Changes</button>
             <a href="{% url 'accounts:profile' %}" class="btn" data-translate="btn-cancel">Cancel</a>

@@ -154,10 +154,12 @@ def profile_view(request, username=None):
         'form': form
     })
 
-from django.shortcuts import render, redirect
+
+
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Profile  
+from .models import Profile
 from courses.models import UserProfile
 from .forms import ProfileForm
 
@@ -169,15 +171,14 @@ def edit_profile_view(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=user_profile)
+        form = ProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             # احفظ UserProfile
             user_profile = form.save()
             # حدّث حقول Profile بنفس البيانات
             profile.full_name = form.cleaned_data['full_name']
             profile.date_of_birth = form.cleaned_data['date_of_birth']
-            if 'profile_picture' in request.FILES:
-                profile.profile_picture = request.FILES['profile_picture']
+            profile.profile_picture = form.cleaned_data['profile_picture']  # حفظ رابط URL
             profile.save()
             messages.success(request, 'Profile updated successfully!')
             return redirect('accounts:profile')

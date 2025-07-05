@@ -563,6 +563,7 @@
     </section>
 
     <!-- Profile Content -->
+    <!-- Profile Content -->
     {% block content %}
     <div class="profile-container">
         <h1 data-translate="profile-title">User Profile</h1>
@@ -573,7 +574,7 @@
         {% endif %}
         <div class="profile-picture">
             {% if profile.profile_picture %}
-                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+                <img src="{{ profile.profile_picture }}" alt="Profile Picture" onerror="this.src='{% static 'images/default_profile.jpg' %}'">
             {% else %}
                 <p data-translate="no-picture">No profile picture uploaded.</p>
             {% endif %}

@@ -17,7 +17,7 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     full_name = models.CharField(max_length=200, blank=True)
-    profile_picture = models.ImageField(upload_to='media/profile_pictures/', blank=True, null=True)
+    profile_picture = models.URLField(blank=True, null=True)  
     date_of_birth = models.DateField(blank=True, null=True)
     xp = models.PositiveIntegerField(default=0)  # Total XP across all competitions
     coins = models.PositiveIntegerField(default=0)  # Total coins across all competitions

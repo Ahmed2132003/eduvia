@@ -18,6 +18,7 @@ class ProfileForm(forms.ModelForm):
         fields = ['full_name', 'profile_picture', 'date_of_birth']
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'profile_picture': forms.URLInput(attrs={'placeholder': 'Enter image URL (e.g., https://i.postimg.cc/...)'}),
         }
 from django import forms
 from .models import UserMessage
