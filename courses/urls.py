@@ -6,6 +6,7 @@ app_name = 'courses'  # Namespace for the courses app
 urlpatterns = [
     # Course listing
     path('', views.courses_view, name='courses'),
+    path('search/', views.search_courses, name='search_courses'),
     # Course enrollment
     path('enroll/<int:course_id>/', views.enroll_course, name='enroll_course'),
     # Course details
