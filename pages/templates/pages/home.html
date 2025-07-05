@@ -41,7 +41,17 @@
             --header-text: #e0e0e0;
             --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/eduvia_home_1.jpg" %}') no-repeat center center/cover;
             --hero-text: #e0e0e0;
-            --hero-text-shadow:  Hopper
+            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --card-text: #3498db;
+            --card-secondary-text: #b0b0b0;
+            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --search-btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+            --search-btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
+            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+            --footer-text: #e0e0e0;
+            --search-input-border: #555;
         }
 
         body {
@@ -171,20 +181,27 @@
             font-size: 24px;
             background: none;
             border: none;
-            color: varಸ
+            color: var(--header-text);
+            cursor: pointer;
+            z-index: 101; /* Ensure hamburger is above menu */
         }
 
         @media (max-width: 768px) {
             .menu {
                 display: none;
                 flex-direction: column;
-                position: absolute;
+                position: fixed; /* Changed from absolute to fixed for better mobile behavior */
                 top: 60px;
                 left: 0;
                 width: 100%;
                 background: var(--header-bg);
                 padding: 20px 0;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                z-index: 100; /* Ensure menu is below hamburger but above content */
+            }
+
+            .menu.active {
+                display: flex; /* Ensure menu is displayed when active */
             }
 
             html[dir="rtl"] .menu {
@@ -193,11 +210,17 @@
                 right: 0;
             }
 
-            .menu.active { display: flex; }
-            .menu a { margin: 10px 0; font-size: 20px; }
-           enca
-            .hamburger { display: block; }
-            .coins-display { margin: 10px 0; justify-content: center; }
+            .menu a, .menu .dark-mode-toggle, .menu .language-toggle, .menu .coins-display {
+                margin: 10px 0;
+                font-size: 20px;
+                justify-content: center;
+                width: 100%;
+                text-align: center;
+            }
+
+            .hamburger {
+                display: block;
+            }
         }
 
         /* Hero Section */
@@ -439,7 +462,7 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="logo">Eduvia</div>
+        <div class="logo" data-translate="title">Eduvia</div>
         <button class="hamburger" onclick="toggleMenu()">☰</button>
         <nav class="menu">
             <a href="/" data-translate="nav-home">Home</a>
@@ -487,7 +510,7 @@
 
     <!-- Search Form -->
     <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
-        <input type="text" name="q" placeholder="Search for a course..." data-translate="search-placeholder">
+        <input type="text" name="q" data-translate-placeholder="search-placeholder" placeholder="Search for a course...">
         <button type="submit" class="btn" data-translate="search-btn">Search</button>
     </form>
 
@@ -682,6 +705,7 @@
         function toggleMenu() {
             const menu = document.querySelector('.menu');
             menu.classList.toggle('active');
+            console.log('Menu toggled:', menu.classList.contains('active')); // Debugging
         }
 
         // Dark Mode Toggle
