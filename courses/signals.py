@@ -1,4 +1,3 @@
-# courses/signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
@@ -9,7 +8,10 @@ User = get_user_model()
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        profile = UserProfile.objects.create(user=instance, role='student', coins=300)
+        profile, profile_created = UserProfile.objects.get_or_create(
+            user=instance,
+            defaults={'role': 'student', 'coins': 300}
+        )
         # إذا كان المستخدم إنستراكتور، فعّل is_staff
         if hasattr(instance, 'role') and instance.role == 'instructor':
             instance.is_staff = True
