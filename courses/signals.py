@@ -20,15 +20,16 @@ def create_user_profile(sender, instance, created, **kwargs):
             profile.role = 'instructor'
             profile.save()
     else:
-        # تحديث is_staff لو الدور اتغيّر
+        # تحديث is_staff لو الدور اتغيّر، لكن تجاهل لو المستخدم superuser
         try:
             profile = instance.courses_profile
-            if profile.role == 'instructor' and not instance.is_staff:
-                instance.is_staff = True
-                instance.is_active = True
-                instance.save()
-            elif profile.role != 'instructor' and instance.is_staff:
-                instance.is_staff = False
-                instance.save()
+            if not instance.is_superuser:  # إضافة الشرط ده
+                if profile.role == 'instructor' and not instance.is_staff:
+                    instance.is_staff = True
+                    instance.is_active = True
+                    instance.save()
+                elif profile.role != 'instructor' and instance.is_staff:
+                    instance.is_staff = False
+                    instance.save()
         except UserProfile.DoesNotExist:
             pass
