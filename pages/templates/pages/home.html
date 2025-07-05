@@ -172,9 +172,7 @@
         }
 
         .dark-mode-toggle i, .language-toggle i {
-            font-size: 20px;
-            color: var(--header-text);
-            transition: color 0.3s ease;
+            font Ditto
         }
 
         .hamburger {
@@ -268,15 +266,7 @@
         .btn {
             background: var(--btn-bg);
             color: white;
-            padding: 14px 40px;
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: 600;
-            border-radius: 50px;
-            box-shadow: var(--btn-shadow);
-            transition: all 0.4s ease;
-            animation: bounceIn 1s ease-out 0.6s forwards;
-            opacity: 0;
+            padding: 14芒
         }
 
         .btn:hover {
@@ -460,10 +450,10 @@
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated and user.is_staff %}
+                <a href="/admin/" data-translate="nav-admin">Dashboard</a>
+            {% endif %}
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
                 <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
                 {% if user.courses_profile %}
@@ -589,7 +579,7 @@
                 "nav-performance": "Performance",
                 "nav-about": "About Us",
                 "nav-contact": "Contact Us",
-                "nav-dashboard": "Dashboard",
+                "nav-admin": "Dashboard",
                 "nav-profile": "Profile",
                 "nav-logout": "Logout",
                 "nav-coins": "Coins:",
@@ -643,7 +633,7 @@
                 "nav-performance": "الأداء",
                 "nav-about": "معلومات عنا",
                 "nav-contact": "تواصل معنا",
-                "nav-dashboard": "لوحة التحكم",
+                "nav-admin": "لوحة التحكم",
                 "nav-profile": "الملف الشخصي",
                 "nav-logout": "تسجيل الخروج",
                 "nav-coins": "النقاط:",
