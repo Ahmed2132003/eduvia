@@ -41,18 +41,7 @@
             --header-text: #e0e0e0;
             --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/eduvia_home_1.jpg" %}') no-repeat center center/cover;
             --hero-text: #e0e0e0;
-            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
-            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            --card-text: #3498db;
-            --card-secondary-text: #b0b0b0;
-            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
-            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-            --search-input-border: #34495e;
-            --search-btn-bg: linear-gradient(90deg, #3498db, #2980b9);
-            --search-btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            --footer-text: #e0e0e0;
+            --hero-text-shadow:  Hopper
         }
 
         body {
@@ -172,7 +161,9 @@
         }
 
         .dark-mode-toggle i, .language-toggle i {
-            font Ditto
+            font-size: 20px;
+            color: var(--header-text);
+            transition: color 0.3s ease;
         }
 
         .hamburger {
@@ -180,8 +171,7 @@
             font-size: 24px;
             background: none;
             border: none;
-            color: var(--header-text);
-            cursor: pointer;
+            color: varಸ
         }
 
         @media (max-width: 768px) {
@@ -205,6 +195,7 @@
 
             .menu.active { display: flex; }
             .menu a { margin: 10px 0; font-size: 20px; }
+           enca
             .hamburger { display: block; }
             .coins-display { margin: 10px 0; justify-content: center; }
         }
@@ -266,7 +257,15 @@
         .btn {
             background: var(--btn-bg);
             color: white;
-            padding: 14芒
+            padding: 14px 40px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.4s ease;
+            animation: bounceIn 1s ease-out 0.6s forwards;
+            opacity: 0;
         }
 
         .btn:hover {
