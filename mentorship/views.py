@@ -174,11 +174,9 @@ def community_feed(request):
     if request.method == 'POST':
         if 'post_content' in request.POST:
             content = request.POST['post_content']
-            if content or request.FILES.get('image_file'):
-                post = Post.objects.create(author=request.user, content=content)
-                if request.FILES.get('image_file'):
-                    post.image_file = request.FILES['image_file']
-                    post.save()
+            image_file = request.POST.get('image_file', '')  
+            if content or image_file:
+                post = Post.objects.create(author=request.user, content=content, image_file=image_file)
                 messages.success(request, "Post created successfully!")
             return redirect('mentorship:community_feed')
         elif 'comment_content' in request.POST and 'post_id' in request.POST:

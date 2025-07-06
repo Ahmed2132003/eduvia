@@ -409,13 +409,14 @@
         <!-- Form to create a new post -->
         <div class="card mb-4">
             <div class="card-body">
-                <form method="post" enctype="multipart/form-data">
+                <form method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <textarea name="post_content" class="form-control" rows="3" placeholder="Share something about programming or job market..." data-translate-placeholder="post-placeholder"></textarea>
                     </div>
                     <div class="form-group">
-                        <input type="file" name="image_file" class="form-control" accept="image/*,application/pdf">
+                        <input type="url" name="image_file" class="form-control" placeholder="Enter image URL (e.g., https://i.postimg.cc/...)" data-translate-placeholder="image-placeholder">
+                        <small data-translate="image-upload-instruction">Upload your image to <a href="https://postimg.cc/" target="_blank">PostImage</a> and paste the direct link here.</small>
                     </div>
                     <button type="submit" class="btn btn-primary" data-translate="post-button">Post</button>
                 </form>
@@ -426,14 +427,14 @@
         {% for post in posts %}
             <div class="post">
                 <div class="post-header">
-                    <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture.url }}{% else %}{% static 'default-profile.jpg' %}{% endif %}" alt="{{ post.author.username }}'s profile" class="profile-pic">
+                    <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture }}{% else %}https://i.postimg.cc/T360VPF0/logo-eduvia1.png{% endif %}" alt="{{ post.author.username }}'s profile" class="profile-pic">
                     <strong>{{ post.author.username }}</strong>
                     <small class="text-muted ms-2">{{ post.created_at }}</small>
                 </div>
                 <div class="post-content">
-                    {{ post.content }}
+                    {{ post.content|urlize }}
                     {% if post.image_file %}
-                        <img src="{{ post.image_file.url }}" alt="Post image" class="post-image">
+                        <img src="{{ post.image_file }}" alt="Post image" class="post-image" onerror="this.src='https://i.postimg.cc/T360VPF0/logo-eduvia1.png'">
                     {% endif %}
                 </div>
                 <div class="post-actions">
@@ -464,10 +465,10 @@
                 <div class="comments-section">
                     {% for comment in post.mentorship_comments.all %}
                         <div class="comment">
-                            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture.url }}{% else %}{% static 'default-profile.jpg' %}{% endif %}" alt="{{ comment.author.username }}'s profile" class="profile-pic">
+                            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture }}{% else %}https://i.postimg.cc/T360VPF0/logo-eduvia1.png{% endif %}" alt="{{ comment.author.username }}'s profile" class="profile-pic">
                             <div class="comment-content">
                                 <strong>{{ comment.author.username }}</strong>
-                                <p>{{ comment.content }}</p>
+                                <p>{{ comment.content|urlize }}</p>
                                 <small class="text-muted">{{ comment.created_at }}</small>
                             </div>
                         </div>

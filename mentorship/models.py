@@ -94,7 +94,7 @@ from django.conf import settings
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='mentorship_posts')
     content = models.TextField()
-    image_file = models.FileField(upload_to='media/posts/', blank=True, null=True)  # حقل جديد للصورة/الملف
+    image_file = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='mentorship_liked_posts', blank=True)
     dislikes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='mentorship_disliked_posts', blank=True)
