@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
-
+@login_required
 def skills_list(request):
     skills = Skill.objects.all()
     return render(request, 'skills_market/skills_list.html', {'skills': skills})
