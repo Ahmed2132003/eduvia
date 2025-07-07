@@ -11,6 +11,25 @@ from django.conf import settings
 def skills_list(request):
     skills = Skill.objects.all()
     return render(request, 'skills_market/skills_list.html', {'skills': skills})
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Skill
+@login_required
+
+def skills_list(request):
+    query = request.POST.get('search_query', '')
+    if query:
+        skills = Skill.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
+    else:
+        skills = Skill.objects.all()
+    
+    context = {
+        'skills': skills,
+        'search_query': query,
+    }
+    return render(request, 'skills_market/skills_list.html', context)
 @login_required
 def application_detail(request, application_id):
     application = get_object_or_404(OpportunityApplication, id=application_id)
