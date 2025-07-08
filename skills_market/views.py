@@ -53,11 +53,30 @@ def add_skill(request):
         form = SkillForm()
     return render(request, 'skills_market/add_skill.html', {'form': form})
 
-def services_list(request):
-    services = Service.objects.filter(is_active=True)
-    return render(request, 'skills_market/services_list.html', {'services': services})
-
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Service
 @login_required
+
+def services_list(request):
+    query = request.POST.get('search_query', '')
+    skill_id = request.GET.get('skill')  # دعم فلترة الخدمات حسب المهارة
+    services = Service.objects.all()
+
+    if query:
+        services = services.filter(
+            Q(title__icontains=query) | Q(skill__name__icontains=query)
+        )
+    if skill_id:
+        services = services.filter(skill__id=skill_id)
+
+    context = {
+        'services': services,
+        'search_query': query,
+    }
+    return render(request, 'skills_market/services_list.html', context)
+@login_required
+
 def add_service(request):
     if request.method == 'POST':
         form = ServiceForm(request.POST, user=request.user)
