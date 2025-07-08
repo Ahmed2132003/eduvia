@@ -21,7 +21,7 @@ primary_region = "ams"
   [[http_service.checks]]
     interval = "10s"
     timeout = "2s"
-    grace_period = "30s"
+    grace_period = "60s"
     method = "GET"
     path = "/healthcheck/"
 
@@ -35,6 +35,7 @@ primary_region = "ams"
   SESSION_COOKIE_SECURE = "True"
   CSRF_COOKIE_SECURE = "True"
   SECURE_SSL_REDIRECT = "True"
+  DATABASE_PATH = "/data/db.sqlite3"
 
 [mounts]
   source = "eduvia_data"
