@@ -18,12 +18,6 @@ primary_region = "ams"
     type = "requests"
     soft_limit = 20
     hard_limit = 50
-  [[http_service.checks]]
-    interval = "10s"
-    timeout = "2s"
-    grace_period = "60s"
-    method = "GET"
-    path = "/healthcheck/"
 
 [[statics]]
   guest_path = "/app/staticfiles"
@@ -31,12 +25,12 @@ primary_region = "ams"
 
 [env]
   DISABLE_COLLECTSTATIC = "0"
-  DEBUG = "True"  # مؤقتًا للتجربة
+  DEBUG = "False"
   SESSION_COOKIE_SECURE = "True"
   CSRF_COOKIE_SECURE = "True"
   SECURE_SSL_REDIRECT = "True"
-  DATABASE_PATH = "/data/db.sqlite3"
 
 [mounts]
   source = "eduvia_data"
   destination = "/data"
+
