@@ -219,29 +219,32 @@ def applicant_messages(request):
     orders = ServiceOrder.objects.filter(buyer=request.user).order_by('-created_at')
     return render(request, 'skills_market/applicant_messages.html', {'orders': orders})
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import ServiceOrder, Message
+from .forms import MessageForm
+
 @login_required
 def applicant_chat(request, order_id):
-    order = get_object_or_404(ServiceOrder, id=order_id, buyer=request.user)
-    messages_list = order.messages.all().order_by('sent_at')
-
+    order = ServiceOrder.objects.get(id=order_id)
+    messages = Message.objects.filter(order=order).order_by('sent_at')
     if request.method == 'POST':
         form = MessageForm(request.POST, request.FILES)
         if form.is_valid():
             message = form.save(commit=False)
-            message.order = order
             message.sender = request.user
+            message.order = order
+            if message.file:
+                message.file.name = message.file.name.encode('utf-8').decode('utf-8')  # دعم الأسماء العربية
             message.save()
-            messages.success(request, "Message sent successfully!")
             return redirect('skills_market:applicant_chat', order_id=order.id)
     else:
         form = MessageForm()
-
     return render(request, 'skills_market/applicant_chat.html', {
         'order': order,
-        'messages': messages_list,
-        'form': form
+        'messages': messages,
+        'form': form,
     })
-
 @login_required
 def track_service(request, order_id):
     order = get_object_or_404(ServiceOrder, id=order_id, buyer=request.user)

@@ -2,10 +2,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponse
+
+def health_check(request):
+    return HttpResponse("OK")
 
 urlpatterns = [
     path('admin/', admin.site.urls , name='admin_dashboard'),
     path('accounts/', include('accounts.urls')),
+    path('healthcheck/', health_check),
     path('', include('pages.urls')),
     path('courses/', include('courses.urls')),
     path("chatbot/", include("chatbot.urls")),
