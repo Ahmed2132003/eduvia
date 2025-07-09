@@ -7,11 +7,20 @@ User = get_user_model()
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'description', 'repository_url', 'category', 'image']
+        fields = ['title', 'description', 'repository_url', 'category', 'image_url']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'category': forms.Select(choices=Project._meta.get_field('category').choices),
+            'image_url': forms.URLInput(attrs={'placeholder': 'https://example.com/image.jpg'}),
         }
+    def clean_image_url(self):
+        image_url = self.cleaned_data.get('image_url')
+        if image_url:
+            # تحقق اختياري: التأكد من أن الرابط ينتهي بامتداد صورة
+            valid_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.bmp')
+            if not any(image_url.lower().endswith(ext) for ext in valid_extensions):
+                raise forms.ValidationError('Please enter a valid image URL (e.g., ending with .jpg, .png, .gif).')
+        return image_url
 
 class TaskForm(forms.ModelForm):
     assigned_to = forms.ModelMultipleChoiceField(

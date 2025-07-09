@@ -517,7 +517,7 @@
             </div>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <form method="post" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="mb-3">
                 <label for="{{ form.title.id_for_label }}" class="form-label" data-translate="title-label">Project Title</label>
@@ -543,9 +543,10 @@
                 {{ form.status }}
             </div>
             <div class="mb-3">
-                <label for="{{ form.image.id_for_label }}" class="form-label" data-translate="image-label">Project Image</label>
-                {{ form.image }}
-                <small class="form-text text-muted" data-translate="image-hint">Upload an image for your project (optional).</small>
+                <label for="{{ form.image_url.id_for_label }}" class="form-label" data-translate="image-label">Project Image URL</label>
+                {{ form.image_url }}
+                <small class="form-text text-muted" data-translate="image-hint">Enter the URL of an image for your project (e.g., from PostImage, optional).</small>
+                <div class="invalid-feedback" data-translate="image-invalid">Please enter a valid image URL (e.g., ending with .jpg, .png, .gif).</div>
             </div>
             <div class="mb-3 text-center">
                 <button type="submit" class="btn btn-primary" data-translate="submit-btn">Create Project</button>
@@ -582,8 +583,9 @@
                 "url-invalid": "Please enter a valid URL.",
                 "category-label": "Category",
                 "status-label": "Status",
-                "image-label": "Project Image",
-                "image-hint": "Upload an image for your project (optional).",
+                "image-label": "Project Image URL",
+                "image-hint": "Enter the URL of an image for your project (e.g., from PostImage, optional).",
+                "image-invalid": "Please enter a valid image URL (e.g., ending with .jpg, .png, .gif).",
                 "submit-btn": "Create Project",
                 "cancel-btn": "Cancel",
                 "nav-home": "Home",
@@ -618,8 +620,9 @@
                 "url-invalid": "يرجى إدخال رابط صالح.",
                 "category-label": "الفئة",
                 "status-label": "الحالة",
-                "image-label": "صورة المشروع",
-                "image-hint": "رفع صورة لمشروعك (اختياري).",
+                "image-label": "رابط صورة المشروع",
+                "image-hint": "أدخل رابط صورة لمشروعك (مثلًا من PostImage، اختياري).",
+                "image-invalid": "يرجى إدخال رابط صورة صالح (ينتهي بـ .jpg، .png، .gif).",
                 "submit-btn": "إنشاء المشروع",
                 "cancel-btn": "إلغاء",
                 "nav-home": "الرئيسية",
@@ -697,6 +700,18 @@
             var forms = document.querySelectorAll('.needs-validation');
             Array.prototype.slice.call(forms).forEach(function (form) {
                 form.addEventListener('submit', function (event) {
+                    const imageUrlInput = form.querySelector('#id_image_url');
+                    if (imageUrlInput && imageUrlInput.value) {
+                        const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp'];
+                        const isValidImage = validExtensions.some(ext => imageUrlInput.value.toLowerCase().endsWith(ext));
+                        if (!isValidImage) {
+                            imageUrlInput.classList.add('is-invalid');
+                            event.preventDefault();
+                            event.stopPropagation();
+                        } else {
+                            imageUrlInput.classList.remove('is-invalid');
+                        }
+                    }
                     if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();

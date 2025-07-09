@@ -18,7 +18,7 @@ class Project(models.Model):
         related_name='created_projects',
         limit_choices_to={'courses_profile__role': 'instructor'}
     )
-    repository_url = models.URLField(blank=True, null=True)  # e.g., GitHub repo link
+    repository_url = models.URLField(blank=True, null=True)  
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -28,7 +28,7 @@ class Project(models.Model):
         ('ai_ml', 'AI/ML'),
         ('other', 'Other'),
     ], default='other')
-    image = models.ImageField(upload_to='media/project_images/', blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True) 
 
     def __str__(self):
         return self.title
