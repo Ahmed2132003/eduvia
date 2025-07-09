@@ -134,9 +134,9 @@ class OpportunityAdmin(BaseModelAdmin):
 
 @admin.register(OpportunityApplication)
 class OpportunityApplicationAdmin(BaseModelAdmin):
-    list_display = ('full_name', 'opportunity', 'status', 'applied_at')
+    list_display = ('full_name', 'opportunity', 'status', 'cv_url', 'applied_at')
     list_filter = ('status', 'applied_at')
-    search_fields = ('full_name', 'opportunity__title', 'applicant__username')
+    search_fields = ('full_name', 'opportunity__title', 'applicant__username', 'cv_url')
     actions = [accept_opportunity_applications]
     raw_id_fields = ('opportunity', 'applicant')
     list_per_page = 25
@@ -165,9 +165,9 @@ class OpportunityApplicationAdmin(BaseModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(BaseModelAdmin):
-    list_display = ('sender', 'content_preview', 'sent_at')
+    list_display = ('sender', 'content_preview', 'file_url', 'sent_at')
     list_filter = ('sent_at',)
-    search_fields = ('sender__username', 'content')
+    search_fields = ('sender__username', 'content', 'file_url')
     raw_id_fields = ('order', 'opportunity_application', 'sender')
     list_per_page = 25
 

@@ -21,7 +21,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Light Mode Colors */
             --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
             --text-color: #333;
             --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
@@ -42,7 +41,6 @@
             --border-color: #ddd;
         }
 
-        /* Dark Mode Colors */
         body.dark-mode {
             --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
             --text-color: #e0e0e0;
@@ -76,7 +74,6 @@
             text-align: right;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -219,7 +216,6 @@
             .coins-display { display: flex; justify-content: center; }
         }
 
-        /* Hero Section */
         .hero {
             display: flex;
             flex-direction: column;
@@ -283,7 +279,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Messages Container */
         .messages-container {
             width: 90%;
             max-width: 1200px;
@@ -310,7 +305,6 @@
             transition: color 0.3s ease;
         }
 
-        /* Order Item Styling */
         .order-item {
             padding: 15px;
             border-bottom: 1px solid var(--border-color);
@@ -347,7 +341,6 @@
             transition: color 0.3s ease;
         }
 
-        /* Messages */
         .messages {
             max-width: 1200px;
             margin: 20px auto;
@@ -367,7 +360,6 @@
             color: var(--alert-warning-text);
         }
 
-        /* Action Buttons */
         .action-buttons {
             text-align: center;
             margin: 30px 0;
@@ -398,7 +390,6 @@
             transform: scale(1.1);
         }
 
-        /* Responsive Design */
         @media (max-width: 900px) {
             .hero h1 { font-size: 48px; }
             .hero p { font-size: 22px; }
@@ -411,7 +402,6 @@
             .messages-container { width: 95%; padding: 10px; }
         }
 
-        /* Footer */
         .footer {
             background: var(--card-bg);
             text-align: center;
@@ -423,7 +413,6 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="logo">Eduvia</div>
         <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -465,13 +454,11 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <h1 data-translate="hero-title">My Messages</h1>
         <p data-translate="hero-desc">View and manage your messages in Eduvia's Skills Market</p>
     </section>
 
-    <!-- Messages -->
     {% if messages %}
         <div class="messages">
             {% for message in messages %}
@@ -480,7 +467,6 @@
         </div>
     {% endif %}
 
-    <!-- Messages Container -->
     <div class="messages-container">
         <h2 data-translate="messages-title">My Messages</h2>
         {% if orders %}
@@ -490,7 +476,11 @@
                         {% if order.service %}
                             <span data-translate="order-chat-service">Chat with {{ order.buyer.username }} (Order: {{ order.service.title }})</span>
                         {% else %}
-                            <span data-translate="order-chat-opportunity">Chat with {{ order.buyer.username }} (Opportunity: {{ order.details|slice:"11:" }})</span>
+                            {% if order.opportunity_application and order.opportunity_application.opportunity %}
+                                <span data-translate="order-chat-opportunity">Chat with {{ order.buyer.username }} (Opportunity: {{ order.opportunity_application.opportunity.title|slice:"0:50" }})</span>
+                            {% else %}
+                                <span data-translate="order-chat-opportunity">Chat with {{ order.buyer.username }} (Opportunity: {{ order.details|default:"No details available"|slice:"0:50" }})</span>
+                            {% endif %}
                         {% endif %}
                     </a>
                     <p><span data-translate="order-status">Status:</span> {{ order.get_status_display }}</p>
@@ -502,13 +492,11 @@
         {% endif %}
     </div>
 
-    <!-- Action Buttons -->
     <div class="action-buttons">
         <a href="{% url 'skills_market:services_list' %}" class="btn" data-translate="btn-back-services">Back to Services</a>
         <a href="{% url 'skills_market:opportunities_list' %}" class="btn" data-translate="btn-back-opportunities">Back to Opportunities</a>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
     </footer>
@@ -526,7 +514,7 @@
                 "hero-desc": "View and manage your messages in Eduvia's Skills Market",
                 "messages-title": "My Messages",
                 "order-chat-service": "Chat with {{ order.buyer.username }} (Order: {{ order.service.title }})",
-                "order-chat-opportunity": "Chat with {{ order.buyer.username }} (Opportunity: {{ order.details|slice:\"11:\" }})",
+                "order-chat-opportunity": "Chat with {{ order.buyer.username }} (Opportunity: {{ order.opportunity_application.opportunity.title|slice:\"0:50\" }})",
                 "order-status": "Status:",
                 "order-created": "Created At:",
                 "messages-empty": "No messages yet.",
@@ -557,7 +545,7 @@
                 "hero-desc": "عرض وإدارة رسائلك في سوق المهارات بإدوفيا",
                 "messages-title": "رسائلي",
                 "order-chat-service": "الدردشة مع {{ order.buyer.username }} (الطلب: {{ order.service.title }})",
-                "order-chat-opportunity": "الدردشة مع {{ order.buyer.username }} (الفرصة: {{ order.details|slice:\"11:\" }})",
+                "order-chat-opportunity": "الدردشة مع {{ order.buyer.username }} (الفرصة: {{ order.opportunity_application.opportunity.title|slice:\"0:50\" }})",
                 "order-status": "الحالة:",
                 "order-created": "تاريخ الإنشاء:",
                 "messages-empty": "لا توجد رسائل بعد.",
@@ -619,6 +607,9 @@
                         element.setAttribute('content', text);
                     }
                 } else {
+                    if (key === 'order-chat-opportunity' && !text.includes('No details available')) {
+                        text = text.replace('{{ order.opportunity_application.opportunity.title|slice:"0:50" }}', element.textContent.match(/Opportunity: (.*)\)/)?.[1] || 'No details available');
+                    }
                     element.textContent = text;
                 }
             });
@@ -651,6 +642,9 @@
                         element.setAttribute('content', text);
                     }
                 } else {
+                    if (key === 'order-chat-opportunity' && !text.includes('No details available')) {
+                        text = text.replace('{{ order.opportunity_application.opportunity.title|slice:"0:50" }}', element.textContent.match(/Opportunity: (.*)\)/)?.[1] || 'No details available');
+                    }
                     element.textContent = text;
                 }
             });

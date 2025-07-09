@@ -24,12 +24,21 @@ class ServiceOrderForm(forms.ModelForm):
 
         
 from django import forms
-from .models import OpportunityApplication, Opportunity
+from .models import OpportunityApplication
 
 class OpportunityApplicationForm(forms.ModelForm):
     class Meta:
         model = OpportunityApplication
-        fields = ['full_name', 'phone_number', 'address', 'age', 'skills', 'experience', 'cv', 'linkedin','github', 'email']
+        fields = ['full_name', 'phone_number', 'address', 'age', 'skills', 'experience', 'cv_url', 'linkedin', 'github', 'email']
+        widgets = {
+            'cv_url': forms.URLInput(attrs={'placeholder': 'أدخل رابط السيرة الذاتية'}),
+        }
+
+    def clean_opportunity(self):
+        opportunity = self.cleaned_data.get('opportunity')
+        if not opportunity:
+            raise forms.ValidationError("يجب اختيار فرصة.")
+        return opportunity
 
 class OpportunityForm(forms.ModelForm):
     class Meta:
@@ -54,9 +63,10 @@ from .models import Message
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ['content', 'file']
+        fields = ['content', 'file_url']
         widgets = {
             'content': forms.Textarea(attrs={'rows': 3}),
+            'file_url': forms.URLInput(attrs={'placeholder': 'Enter file URL'}),
         }
         
         
