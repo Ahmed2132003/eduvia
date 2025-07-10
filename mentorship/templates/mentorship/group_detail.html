@@ -391,7 +391,7 @@
             align-items: center;
         }
 
-        .message-form textarea {
+        .message-form textarea, .message-form input[type="url"] {
             width: 100%;
             max-width: 500px;
             padding: 10px;
@@ -402,7 +402,7 @@
             transition: border-color 0.3s ease;
         }
 
-        .message-form textarea:focus {
+        .message-form textarea:focus, .message-form input[type="url"]:focus {
             border-color: var(--link-color);
             outline: none;
         }
@@ -420,10 +420,6 @@
         .message-form label:hover {
             background: var(--btn-bg-hover);
             transform: scale(1.05);
-        }
-
-        .message-form input[type="file"] {
-            display: none;
         }
 
         .message-form button {
@@ -485,7 +481,7 @@
             .hero p { font-size: 18px; }
             .action-buttons .btn { display: block; margin: 10px auto; }
             .chat-container { width: 95%; padding: 10px; }
-            .message-form textarea { max-width: 100%; }
+            .message-form textarea, .message-form input[type="url"] { max-width: 100%; }
         }
 
         /* Footer */
@@ -561,8 +557,8 @@
                 <div class="message">
                     <p class="sender">{{ message.sender.username }} ({{ message.sent_at|date:"F d, Y H:i" }}):</p>
                     <p>{{ message.content }}</p>
-                    {% if message.file %}
-                        <p><a href="{{ message.file.url }}" class="file" target="_blank" data-translate="view-attachment">View Attachment</a></p>
+                    {% if message.file_url %}
+                        <p><a href="{{ message.file_url }}" class="file" target="_blank" data-translate="view-attachment">View Attachment</a></p>
                     {% endif %}
                 </div>
             {% empty %}
@@ -571,11 +567,11 @@
         </div>
 
         <div class="message-form">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post">
                 {% csrf_token %}
                 {{ form.content }}
-                {{ form.file.label_tag }}
-                {{ form.file }}
+                {{ form.file_url.label_tag }}
+                {{ form.file_url }}
                 <button type="submit" data-translate="send-message">Send Message</button>
             </form>
         </div>

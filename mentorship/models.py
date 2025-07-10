@@ -65,7 +65,7 @@ class GroupMessage(models.Model):
     chat = models.ForeignKey(GroupChat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
-    file = models.FileField(upload_to='group_messages/', blank=True, null=True)
+    file_url = models.URLField(blank=True, null=True)
     sent_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -132,9 +132,13 @@ class GroupChatAdmin(BaseModelAdmin):
 
 @admin.register(GroupMessage)
 class GroupMessageAdmin(BaseModelAdmin):
-    list_display = ('chat', 'sender', 'sent_at')
+    list_display = ('chat', 'sender', 'content_preview', 'file_url', 'sent_at')
     list_filter = ('sent_at',)
-    search_fields = ('chat__group__name', 'sender__username', 'content')
+    search_fields = ('chat__group__name', 'sender__username', 'content', 'file_url')
+
+    def content_preview(self, obj):
+        return obj.content[:50] + ('...' if len(obj.content) > 50 else '')
+    content_preview.short_description = "معاينة الرسالة"
 
 @admin.register(MentorRating)
 class MentorRatingAdmin(BaseModelAdmin):

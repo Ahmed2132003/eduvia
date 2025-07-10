@@ -18,10 +18,10 @@ class MentorshipGroupForm(forms.ModelForm):
 class GroupMessageForm(forms.ModelForm):
     class Meta:
         model = GroupMessage
-        fields = ['content', 'file']
+        fields = ['content', 'file_url']
         widgets = {
             'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'file': forms.FileInput(attrs={'class': 'form-control'}),
+            'file_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Enter file URL'}),
         }
 
 class MentorRatingForm(forms.ModelForm):

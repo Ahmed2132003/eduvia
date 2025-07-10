@@ -96,7 +96,7 @@ def group_detail(request, group_id):
     messages_list = GroupMessage.objects.filter(chat=chat).order_by('sent_at')
     
     if request.method == 'POST':
-        form = GroupMessageForm(request.POST, request.FILES)
+        form = GroupMessageForm(request.POST)
         if form.is_valid():
             message = form.save(commit=False)
             message.chat = chat
