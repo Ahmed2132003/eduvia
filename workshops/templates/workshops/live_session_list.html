@@ -456,6 +456,9 @@
                         {% endif %}
                         {% if user == session.instructor %}
                             <a href="{% url 'workshops:upload_recording' session.id %}" class="btn" data-translate="upload-recording">Upload Recording</a>
+                            {% if session.recordings.exists %}
+                                <a href="{% url 'workshops:watch_recording' session.recordings.first.id %}" class="btn" data-translate="watch-recording">Watch Recording</a>
+                            {% endif %}
                         {% endif %}
                     </section>
                 {% endfor %}
@@ -570,6 +573,7 @@
                 "start-live": "Start Live",
                 "session-active": "Session is active!",
                 "upload-recording": "Upload Recording",
+                "watch-recording": "Watch Recording",
                 "no-sessions": "You have no live sessions.",
                 "active-sessions": "Active Live Sessions",
                 "join-live": "Join Live",
@@ -605,6 +609,7 @@
                 "start-live": "بدء مباشر",
                 "session-active": "الجلسة نشطة!",
                 "upload-recording": "رفع التسجيل",
+                "watch-recording": "مشاهدة التسجيل",
                 "no-sessions": "ليس لديك جلسات مباشرة.",
                 "active-sessions": "الجلسات المباشرة النشطة",
                 "join-live": "انضم مباشرة",

@@ -18,8 +18,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Original CSS remains unchanged */
         :root {
-            /* Light Mode Colors */
             --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
             --text-color: #333;
             --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
@@ -451,7 +451,7 @@
 
     <div class="container" id="create-session-form">
         <h1 data-translate="form-title">Create Live Session</h1>
-        <form method="post" enctype="multipart/form-data">
+        <form method="post">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="title" class="form-label" data-translate="form-title-label">Title</label>
@@ -466,8 +466,8 @@
                 <input type="url" class="form-control" id="meet_link" name="meet_link" required>
             </div>
             <div class="mb-3">
-                <label for="session_image" class="form-label" data-translate="form-image-label">Session Image</label>
-                <input type="file" class="form-control" id="session_image" name="session_image">
+                <label for="session_image" class="form-label" data-translate="form-image-label">Session Image URL</label>
+                <input type="url" class="form-control" id="session_image" name="session_image" placeholder="e.g., https://postimg.cc/xxxx">
             </div>
             <div class="mb-3">
                 <label for="start_time" class="form-label" data-translate="form-start-label">Start Time</label>
@@ -547,7 +547,7 @@
                 "form-title-label": "Title",
                 "form-desc-label": "Description",
                 "form-meet-label": "Google Meet Link",
-                "form-image-label": "Session Image",
+                "form-image-label": "Session Image URL",
                 "form-start-label": "Start Time",
                 "form-end-label": "End Time",
                 "form-submit": "Create Session",
@@ -568,17 +568,17 @@
             ar: {
                 "page-title": "إنشاء جلسة مباشرة - إدوفيا",
                 "meta-desc": "أنشئ جلسة مباشرة على إدوفيا للتفاعل مع المتعلمين. قم بجدولة جلساتك، أضف التفاصيل، وشارك رابط Google Meet الخاص بك.",
-                "meta-keywords": "إدوفيا, جلسة مباشرة, التعلم الإلكتروني, منصة تعليمية, Google Meet, لوحة تحكم المدرب, ورش عمل",
+                "meta-keywords": "إدوفيا, جلسة مباشرة, تعلم إلكتروني, منصة تعليمية, Google Meet, لوحة تحكم المدرب, ورش عمل",
                 "og-title": "إنشاء جلسة مباشرة - إدوفيا",
                 "og-desc": "جدولة وإنشاء جلسات مباشرة على إدوفيا لتعليم الطلاب وتوصيلهم من جميع أنحاء العالم.",
                 "hero-title": "أنشئ ورشتك المباشرة",
-                "hero-desc": "تفاعل مع المتعلمين في جميع أنحاء العالم من خلال جدولة جلسات مباشرة تفاعلية على إدوفيا.",
+                "hero-desc": "تفاعل مع المتعلمين حول العالم من خلال جدولة جلسات مباشرة تفاعلية على إدوفيا.",
                 "hero-btn": "ابدأ الآن",
                 "form-title": "إنشاء جلسة مباشرة",
                 "form-title-label": "العنوان",
                 "form-desc-label": "الوصف",
                 "form-meet-label": "رابط Google Meet",
-                "form-image-label": "صورة الجلسة",
+                "form-image-label": "رابط صورة الجلسة",
                 "form-start-label": "وقت البدء",
                 "form-end-label": "وقت الانتهاء",
                 "form-submit": "إنشاء الجلسة",

@@ -10,7 +10,7 @@ class LiveSession(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         related_name='live_sessions',
-        limit_choices_to={'role': 'instructor'}
+        limit_choices_to={'courses_profile__role': 'instructor'}
     )
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -18,7 +18,7 @@ class LiveSession(models.Model):
         blank=True
     )
     meet_link = models.URLField(max_length=500, blank=True, help_text="Google Meet link for the live session")
-    session_image = models.ImageField(upload_to='media/live_session_images/', blank=True, null=True, help_text="Upload an image for the session")
+    session_image = models.URLField(max_length=500, blank=True, null=True, help_text="Enter the image url (example: PostImage)")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     is_active = models.BooleanField(default=False)
@@ -28,7 +28,7 @@ class LiveSession(models.Model):
 
 class LiveRecording(models.Model):
     live_session = models.ForeignKey(LiveSession, on_delete=models.CASCADE, related_name='recordings')
-    video_file = models.FileField(upload_to='media/live_recordings/', help_text="Upload the recorded video after the live session")
+    video_file = models.URLField(max_length=500, help_text="enter the recorded url video after the live session")
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

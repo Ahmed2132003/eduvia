@@ -74,14 +74,35 @@ def start_live(request, session_id):
         return redirect(session.meet_link)
     return render(request, 'workshops/start_live.html', {'session': session})
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import LiveSession, LiveRecording
+
 @login_required(login_url='/')
 @user_passes_test(is_instructor, login_url='/')
 def upload_recording(request, session_id):
     session = get_object_or_404(LiveSession, id=session_id, instructor=request.user)
-    if request.method == 'POST' and request.FILES.get('video_file'):
-        LiveRecording.objects.create(
-            live_session=session,
-            video_file=request.FILES['video_file']
-        )
-        return redirect('workshops:live_session_list')
+    if request.method == 'POST':
+        video_file = request.POST.get('video_file')  # استخدام request.POST بدل request.FILES
+        if video_file:
+            try:
+                # تحويل رابط Google Drive إلى صيغة /preview لو لازم
+                if 'drive.google.com' in video_file and '/view' in video_file:
+                    video_file = video_file.replace('/view', '/preview').replace('?usp=sharing', '')
+                LiveRecording.objects.create(
+                    live_session=session,
+                    video_file=video_file
+                )
+                return redirect('workshops:live_session_list')
+            except Exception as e:
+                print(f"Error saving recording: {e}")  # للتصحيح
+                return render(request, 'workshops/upload_recording.html', {
+                    'session': session,
+                    'error': f'Error saving recording: {str(e)}'
+                })
+        else:
+            return render(request, 'workshops/upload_recording.html', {
+                'session': session,
+                'error': 'Please provide a valid video URL.'
+            })
     return render(request, 'workshops/upload_recording.html', {'session': session})

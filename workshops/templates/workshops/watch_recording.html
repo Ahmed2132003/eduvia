@@ -331,14 +331,16 @@
             line-height: 1.6;
         }
 
-        video {
+        /* Iframe Styling */
+        .video-iframe {
             max-width: 100%;
             width: 100%;
-            height: auto;
+            height: 500px;
             border-radius: 10px;
             background: black;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
+            border: none;
         }
 
         .btn-secondary {
@@ -396,6 +398,7 @@
             .hero h1 { font-size: 36px; }
             .hero p { font-size: 20px; }
             .container { max-width: 100%; padding: 20px; }
+            .video-iframe { height: 400px; }
         }
 
         @media (max-width: 600px) {
@@ -406,6 +409,7 @@
             .container h1 { font-size: 28px; }
             .container p { font-size: 16px; }
             .btn-secondary { padding: 10px 25px; font-size: 16px; }
+            .video-iframe { height: 300px; }
         }
     </style>
 </head>
@@ -463,10 +467,8 @@
         <h1 data-translate="container-title">Recording: {{ recording.live_session.title }}</h1>
         <p><strong data-translate="uploaded-label">Uploaded:</strong> {{ recording.uploaded_at }}</p>
         <p><strong data-translate="instructor-label">Instructor:</strong> {{ recording.live_session.instructor.user.username }}</p>
-        <video controls>
-            <source src="{{ recording.video_file.url }}" type="video/mp4">
-            <p data-translate="video-error">Your browser does not support the video tag.</p>
-        </video>
+        <iframe class="video-iframe" src="{{ recording.video_file }}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" onerror="this.style.display='none'; document.querySelector('#video-error').style.display='block';"></iframe>
+        <p id="video-error" style="color: red; display: none;" data-translate="video-error">Failed to load the video. Please check the URL or try again later.</p>
         <a href="{% url 'workshops:live_session_list' %}" class="btn btn-secondary mt-3" data-translate="back-btn">Back to Sessions</a>
     </div>
 
@@ -502,7 +504,7 @@
                 "container-title": "Recording: {{ recording.live_session.title }}",
                 "uploaded-label": "Uploaded:",
                 "instructor-label": "Instructor:",
-                "video-error": "Your browser does not support the video tag.",
+                "video-error": "Your browser does not support iframes.",
                 "back-btn": "Back to Sessions",
                 "footer-text": "© 2025 Eduvia. All rights reserved."
             },
@@ -530,12 +532,20 @@
                 "container-title": "التسجيل: {{ recording.live_session.title }}",
                 "uploaded-label": "تم الرفع:",
                 "instructor-label": "المدرب:",
-                "video-error": "متصفحك لا يدعم تشغيل الفيديو.",
+                "video-error": "متصفحك لا يدعم إطارات العرض (iframes).",
                 "back-btn": "العودة إلى الجلسات",
                 "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
             }
         };
-
+        /*
+        // Function to convert Google Drive URL to embeddable format
+        function convertToEmbedUrl(url) {
+            if (url.includes('drive.google.com/file/d/')) {
+                return url.replace('/view', '/preview');
+            }
+            return url;
+        }
+        */
         function toggleMenu() {
             const menu = document.querySelector('.menu');
             menu.classList.toggle('active');
@@ -621,6 +631,12 @@
             });
 
             document.title = translations[savedLang]["title"];
+
+            // Convert Google Drive URL to embeddable format
+            const iframe = document.querySelector('.video-iframe');
+            if (iframe) {
+                iframe.src = convertToEmbedUrl(iframe.src);
+            }
         });
     </script>
 </body>

@@ -358,6 +358,13 @@
             outline: none;
         }
 
+        .form-error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
         .btn-primary {
             background: var(--btn-primary-bg);
             color: white;
@@ -493,11 +500,12 @@
     <!-- Form Container -->
     <div class="container" id="upload-form">
         <h1 data-translate="container-title">Upload Recording for {{ session.title }}</h1>
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" id="upload-form-element">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="video_file" class="form-label" data-translate="form-label">Video File</label>
-                <input type="file" class="form-control" id="video_file" name="video_file" accept="video/*" required>
+                <label for="video_file" class="form-label" data-translate="form-label">Video URL</label>
+                <input type="url" class="form-control" id="video_file" name="video_file" placeholder="Enter Google Drive video URL" required>
+                <p class="form-error" id="url-error">Please enter a valid Google Drive URL (e.g., https://drive.google.com/file/d/...).</p>
             </div>
             <button type="submit" class="btn btn-primary" data-translate="submit-btn">Upload Recording</button>
             <a href="{% url 'workshops:live_session_list' %}" class="btn btn-secondary" data-translate="back-btn">Back to Sessions</a>
@@ -534,7 +542,7 @@
                 "hero-subtitle": "Share your session recording with learners to enhance their educational experience.",
                 "hero-btn": "Upload Now",
                 "container-title": "Upload Recording for {{ session.title }}",
-                "form-label": "Video File",
+                "form-label": "Video URL",
                 "submit-btn": "Upload Recording",
                 "back-btn": "Back to Sessions",
                 "footer-text": "© 2025 Eduvia. All rights reserved."
@@ -561,7 +569,7 @@
                 "hero-subtitle": "شارك تسجيل جلستك مع المتعلمين لتحسين تجربتهم التعليمية.",
                 "hero-btn": "ارفع الآن",
                 "container-title": "رفع تسجيل لـ {{ session.title }}",
-                "form-label": "ملف الفيديو",
+                "form-label": "رابط الفيديو",
                 "submit-btn": "رفع التسجيل",
                 "back-btn": "العودة إلى الجلسات",
                 "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
@@ -653,6 +661,21 @@
             });
 
             document.title = translations[savedLang]["title"];
+
+            // Validate Google Drive URL
+            const form = document.getElementById('upload-form-element');
+            const urlInput = document.getElementById('video_file');
+            const errorMessage = document.getElementById('url-error');
+
+            form.addEventListener('submit', (event) => {
+                const url = urlInput.value;
+                if (!url.startsWith('https://drive.google.com/file/d/')) {
+                    event.preventDefault();
+                    errorMessage.style.display = 'block';
+                } else {
+                    errorMessage.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>

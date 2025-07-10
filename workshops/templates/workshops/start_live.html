@@ -353,6 +353,11 @@
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .container a.meet-link:hover {
@@ -443,6 +448,10 @@
             .container h1 { font-size: 28px; }
             .container p { font-size: 16px; }
             .btn-primary, .btn-secondary { padding: 10px 25px; font-size: 16px; }
+            .container a.meet-link {
+                white-space: normal; /* Allow wrapping on small screens */
+                word-break: break-all; /* Break long URLs */
+            }
         }
     </style>
 </head>
@@ -502,7 +511,7 @@
         <p><strong data-translate="instructor-label">Instructor:</strong> {{ session.instructor.username }}</p>
         <p><strong data-translate="time-label">Time:</strong> {{ session.start_time }} - {{ session.end_time }}</p>
         {% if session.session_image %}
-            <img src="{{ session.session_image.url }}" alt="{{ session.title }}">
+            <img src="{{ session.session_image }}" alt="{{ session.title }}">
         {% endif %}
         {% if session.meet_link %}
             <p><strong data-translate="meet-link-label">Meet Link:</strong> <a href="{{ session.meet_link }}" target="_blank" class="meet-link">{{ session.meet_link }}</a></p>
@@ -514,6 +523,9 @@
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary" data-translate="start-btn">Start Live Stream</button>
             </form>
+        {% endif %}
+        {% if session.recordings.exists %}
+            <a href="{% url 'workshops:watch_recording' session.recordings.first.id %}" class="btn btn-primary mt-3" data-translate="watch-recording-btn">Watch Recording</a>
         {% endif %}
         <a href="{% url 'workshops:live_session_list' %}" class="btn btn-secondary mt-3" data-translate="back-btn">Back to Sessions</a>
     </div>
@@ -553,6 +565,7 @@
                 "meet-link-label": "Meet Link:",
                 "session-active": "Session is already active!",
                 "start-btn": "Start Live Stream",
+                "watch-recording-btn": "Watch Recording",
                 "back-btn": "Back to Sessions",
                 "footer-text": "© 2025 Eduvia. All rights reserved."
             },
@@ -583,6 +596,7 @@
                 "meet-link-label": "رابط الاجتماع:",
                 "session-active": "الجلسة نشطة بالفعل!",
                 "start-btn": "بدء البث المباشر",
+                "watch-recording-btn": "مشاهدة التسجيل",
                 "back-btn": "العودة إلى الجلسات",
                 "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
             }
