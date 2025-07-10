@@ -162,7 +162,7 @@ class RoomMessage(models.Model):
 
 class RoomFile(models.Model):
     room = models.ForeignKey(CollaborationRoom, on_delete=models.CASCADE, related_name='files')
-    file = models.FileField(upload_to='room_files/')
+    file_url = models.URLField(blank=True, null=True)
     uploaded_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE

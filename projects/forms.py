@@ -97,9 +97,9 @@ class MessageForm(forms.ModelForm):
 class FileForm(forms.ModelForm):
     class Meta:
         model = RoomFile
-        fields = ['file']
+        fields = ['file_url']
         widgets = {
-            'file': forms.FileInput(attrs={'class': 'form-control'}),
+            'file_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com/file'}),
         }
 
 class RoomTaskForm(forms.ModelForm):

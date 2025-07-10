@@ -690,20 +690,20 @@
                 </form>
             </section>
             
-            <!-- File Upload -->
+            <!-- File URL Section -->
             <section class="file-section">
                 <h4 data-translate="files-title">Files</h4>
                 <ul>
                     {% for file in room.files.all %}
-                        <li><a href="{{ file.file.url }}">{{ file.file.name }}</a> (<span data-translate="uploaded-by">Uploaded by:</span> {{ file.uploaded_by.username }})</li>
+                        <li><a href="{{ file.file_url }}" target="_blank">{{ file.file_url }}</a> (<span data-translate="shared-by">Shared by:</span> {{ file.uploaded_by.username }})</li>
                     {% empty %}
                         <p data-translate="no-files">No files yet.</p>
                     {% endfor %}
                 </ul>
-                <form method="post" class="submission-form" enctype="multipart/form-data">
+                <form method="post" class="submission-form">
                     {% csrf_token %}
                     {{ file_form.as_p }}
-                    <button type="submit" name="file_submit" class="btn btn-primary" data-translate="upload-file">Upload File</button>
+                    <button type="submit" name="file_submit" class="btn btn-primary" data-translate="share-file">Share File URL</button>
                 </form>
             </section>
             
@@ -817,9 +817,9 @@
                 "no-messages": "No messages yet.",
                 "send-btn": "Send",
                 "files-title": "Files",
-                "uploaded-by": "Uploaded by:",
+                "shared-by": "Shared by:",
                 "no-files": "No files yet.",
-                "upload-file": "Upload File",
+                "share-file": "Share File URL",
                 "tasks-title": "Tasks",
                 "todo-title": "To Do",
                 "in-progress-title": "In Progress",
@@ -866,9 +866,9 @@
                 "no-messages": "لا توجد رسائل بعد.",
                 "send-btn": "إرسال",
                 "files-title": "الملفات",
-                "uploaded-by": "تم الرفع بواسطة:",
+                "shared-by": "تم المشاركة بواسطة:",
                 "no-files": "لا توجد ملفات بعد.",
-                "upload-file": "رفع ملف",
+                "share-file": "مشاركة رابط الملف",
                 "tasks-title": "المهام",
                 "todo-title": "للقيام",
                 "in-progress-title": "قيد التنفيذ",

@@ -247,9 +247,9 @@ class RoomMessageAdmin(BaseModelAdmin):
 
 @admin.register(RoomFile)
 class RoomFileAdmin(BaseModelAdmin):
-    list_display = ('room', 'uploaded_by', 'file', 'uploaded_at')
+    list_display = ('room', 'uploaded_by', 'file_url', 'uploaded_at')
     list_filter = ('uploaded_at',)
-    search_fields = ('room__title', 'uploaded_by__username', 'file')
+    search_fields = ('room__title', 'uploaded_by__username', 'file_url')
     raw_id_fields = ('room', 'uploaded_by')
     list_per_page = 25
 
