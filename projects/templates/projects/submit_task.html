@@ -6,12 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-translate="page-title">Submit Solution for Task: {{ task.title }} - Eduvia</title>
-    <meta name="description" data-translate="meta-desc" content="Submit your solution for task '{{ task.title }}' in project '{{ project.title }}' on Eduvia. Upload files, add links, and describe your work.">
+    <meta name="description" data-translate="meta-desc" content="Submit your solution for task '{{ task.title }}' in project '{{ project.title }}' on Eduvia. Provide links and describe your work.">
     <meta name="keywords" data-translate="meta-keywords" content="{{ task.title }}, {{ project.title }}, Eduvia, task submission, open source collaboration, project solutions">
     <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
     <meta name="og:title" data-translate="og-title" content="Submit Solution for {{ task.title }} - Eduvia">
-    <meta name="og:description" data-translate="og-desc" content="Submit your solution for '{{ task.title }}' in '{{ project.title }}' on Eduvia. Upload files, add links, and describe your work.">
+    <meta name="og:description" data-translate="og-desc" content="Submit your solution for '{{ task.title }}' in '{{ project.title }}' on Eduvia. Provide links and describe your work.">
     <meta name="og:image" content="{% static 'images/projects5.jpg' %}">
     <meta name="og:url" content="{{ request.build_absolute_uri }}">
     <meta name="twitter:card" content="summary_large_image">
@@ -524,7 +524,7 @@
             </div>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data" class="submission-form needs-validation" novalidate>
+        <form method="post" class="submission-form needs-validation" novalidate>
             {% csrf_token %}
 
             <!-- Display form errors if any -->
@@ -547,11 +547,14 @@
                 <small class="form-text text-muted" data-translate="solution-link-help">Enter the solution link if available (optional).</small>
             </div>
 
-            <!-- File upload field -->
+            <!-- File URL field -->
             <div class="mb-3">
-                <label for="{{ form.file.id_for_label }}" class="form-label" data-translate="upload-file-label">Upload File</label>
-                {{ form.file }}
-                <small class="form-text text-muted" data-translate="upload-file-help">You can upload one or more files (optional).</small>
+                <label for="{{ form.file_url.id_for_label }}" class="form-label" data-translate="file-url-label">File URL</label>
+                {{ form.file_url }}
+                <small class="form-text text-muted" data-translate="file-url-help">Enter the URL for your file (e.g., Google Drive, GitHub, etc.) (optional).</small>
+                <div class="invalid-feedback" data-translate="file-url-error">
+                    Please provide a valid file URL.
+                </div>
             </div>
 
             <!-- Description field -->
@@ -582,10 +585,10 @@
         const translations = {
             en: {
                 "page-title": "Submit Solution for Task: {{ task.title }} - Eduvia",
-                "meta-desc": "Submit your solution for task '{{ task.title }}' in project '{{ project.title }}' on Eduvia. Upload files, add links, and describe your work.",
+                "meta-desc": "Submit your solution for task '{{ task.title }}' in project '{{ project.title }}' on Eduvia. Provide links and describe your work.",
                 "meta-keywords": "{{ task.title }}, {{ project.title }}, Eduvia, task submission, open source collaboration, project solutions",
                 "og-title": "Submit Solution for {{ task.title }} - Eduvia",
-                "og-desc": "Submit your solution for '{{ task.title }}' in '{{ project.title }}' on Eduvia. Upload files, add links, and describe your work.",
+                "og-desc": "Submit your solution for '{{ task.title }}' in '{{ project.title }}' on Eduvia. Provide links and describe your work.",
                 "hero-title": "Submit Solution for Task: {{ task.title }}",
                 "hero-desc": "Submit your solution for the task in project '{{ project.title }}'.",
                 "back-to-project": "Back to Project Details",
@@ -593,8 +596,9 @@
                 "project-label": "Project:",
                 "solution-link-label": "Solution Link (e.g., Pull Request)",
                 "solution-link-help": "Enter the solution link if available (optional).",
-                "upload-file-label": "Upload File",
-                "upload-file-help": "You can upload one or more files (optional).",
+                "file-url-label": "File URL",
+                "file-url-help": "Enter the URL for your file (e.g., Google Drive, GitHub, etc.) (optional).",
+                "file-url-error": "Please provide a valid file URL.",
                 "description-label": "Solution Description",
                 "description-error": "Please provide a description for the solution.",
                 "submit-btn": "Submit Solution",
@@ -615,10 +619,10 @@
             },
             ar: {
                 "page-title": "تقديم الحل لمهمة: {{ task.title }} - إدوفيا",
-                "meta-desc": "قدم حلك لمهمة '{{ task.title }}' في مشروع '{{ project.title }}' على إدوفيا. ارفع الملفات، أضف الروابط، وصف عملك.",
+                "meta-desc": "قدم حلك لمهمة '{{ task.title }}' في مشروع '{{ project.title }}' على إدوفيا. قدم الروابط وصف عملك.",
                 "meta-keywords": "{{ task.title }}, {{ project.title }}, إدوفيا, تقديم المهمة, التعاون مفتوح المصدر, حلول المشروع",
                 "og-title": "تقديم الحل لـ {{ task.title }} - إدوفيا",
-                "og-desc": "قدم حلك لـ '{{ task.title }}' في '{{ project.title }}' على إدوفيا. ارفع الملفات، أضف الروابط، وصف عملك.",
+                "og-desc": "قدم حلك لـ '{{ task.title }}' في '{{ project.title }}' على إدوفيا. قدم الروابط وصف عملك.",
                 "hero-title": "تقديم الحل لمهمة: {{ task.title }}",
                 "hero-desc": "قدم حلك للمهمة في مشروع '{{ project.title }}'.",
                 "back-to-project": "العودة إلى تفاصيل المشروع",
@@ -626,8 +630,9 @@
                 "project-label": "المشروع:",
                 "solution-link-label": "رابط الحل (مثال: طلب السحب)",
                 "solution-link-help": "أدخل رابط الحل إذا كان متاحًا (اختياري).",
-                "upload-file-label": "رفع ملف",
-                "upload-file-help": "يمكنك رفع ملف واحد أو أكثر (اختياري).",
+                "file-url-label": "رابط الملف",
+                "file-url-help": "أدخل رابط الملف (مثل Google Drive، GitHub، إلخ) (اختياري).",
+                "file-url-error": "يرجى تقديم رابط ملف صالح.",
                 "description-label": "وصف الحل",
                 "description-error": "يرجى تقديم وصف للحل.",
                 "submit-btn": "تقديم الحل",

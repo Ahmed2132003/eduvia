@@ -91,7 +91,7 @@ def submit_task(request, task_id):
         return redirect('projects:project_details', project_id=task.project.id)
     
     if request.method == 'POST':
-        form = TaskSubmissionForm(request.POST, request.FILES)
+        form = TaskSubmissionForm(request.POST)
         if form.is_valid():
             submission = form.save(commit=False)
             submission.task = task

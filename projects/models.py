@@ -73,7 +73,7 @@ class TaskSubmission(models.Model):
         limit_choices_to={'courses_profile__role': 'student'}
     )
     submission_url = models.URLField(blank=True, null=True)
-    file = models.FileField(upload_to='media/task_submissions/', blank=True, null=True)
+    file_url = models.URLField(blank=True, null=True)
     description = models.TextField(blank=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)

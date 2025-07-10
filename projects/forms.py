@@ -40,9 +40,10 @@ class TaskForm(forms.ModelForm):
 class TaskSubmissionForm(forms.ModelForm):
     class Meta:
         model = TaskSubmission
-        fields = ['submission_url', 'file', 'description']
+        fields = ['submission_url', 'file_url', 'description']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
+            'file_url': forms.URLInput(attrs={'placeholder': 'https://example.com/file'}),
         }
 
 class ProjectCommentForm(forms.ModelForm):
