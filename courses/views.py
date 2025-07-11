@@ -354,11 +354,6 @@ def course_details_view(request, course_id):
         return redirect('courses:courses')
 
     videos = course.videos.all()
-    if videos.exists() and not videos.first().unlocked:
-        first_video = videos.first()
-        first_video.unlocked = True
-        first_video.save()
-
     completed_videos_count = 0
     total_videos_count = videos.count()
     if request.user.is_authenticated:
@@ -425,7 +420,7 @@ def watch_video(request, course_id, video_id):
             except UserProfile.DoesNotExist:
                 messages.error(request, 'خطأ: لم يتم العثور على ملف المستخدم.')
 
-    # معالجة رفع الملف
+    # File upload handling
     if request.method == 'POST' and 'upload_file' in request.POST:
         file = request.FILES.get('file')
         description = request.POST.get('description', '')
@@ -435,7 +430,6 @@ def watch_video(request, course_id, video_id):
             return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
 
         try:
-            # إنشاء سجل جديد للملف المرفوع
             video_file = VideoFile(
                 video=video,
                 user=request.user,
@@ -450,7 +444,7 @@ def watch_video(request, course_id, video_id):
         
         return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
 
-    # معالجة إرسال المهمة
+    # Task submission handling
     if request.method == 'POST' and 'submit_task' in request.POST:
         task_id = request.POST.get('task_id')
         task = get_object_or_404(Task, id=task_id, video=video)
@@ -490,7 +484,7 @@ def watch_video(request, course_id, video_id):
 
         return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
 
-    # معالجة إرسال الاختبار البديل
+    # Alternative quiz submission handling
     if request.method == 'POST' and 'submit_alternative_quiz' in request.POST:
         quiz_id = request.POST.get('quiz_id')
         submitted_answer = request.POST.get('answer')
@@ -523,12 +517,6 @@ def watch_video(request, course_id, video_id):
             messages.error(request, 'إجابة غير صحيحة. يمكنك إعادة محاولة المهمة الرئيسية.')
 
         return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
-
-    if video_progress.completed:
-        next_video = videos.filter(order__gt=video.order).first()
-        if next_video and not next_video.unlocked:
-            next_video.unlocked = True
-            next_video.save()
 
     completed_videos_count = VideoProgress.objects.filter(user=request.user, video__course=course, completed=True).count()
     total_videos_count = videos.count()

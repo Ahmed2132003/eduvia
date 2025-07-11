@@ -100,7 +100,6 @@ class Video(models.Model):
     video_url = models.URLField()  # حقل إلزامي للرابط
     description = models.TextField()
     order = models.IntegerField()
-    unlocked = models.BooleanField(default=False)
     duration = models.FloatField(
         default=10,
         help_text="Duration of the video in minutes (to be entered manually by the instructor)"

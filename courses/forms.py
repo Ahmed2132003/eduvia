@@ -11,20 +11,18 @@ logger = logging.getLogger(__name__)
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
-        fields = ['title', 'description', 'video_url', 'order', 'unlocked']
+        fields = ['title', 'description', 'video_url', 'order', ]
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter video title'}),
             'description': forms.Textarea(attrs={'placeholder': 'Enter video description'}),
             'video_url': forms.URLInput(attrs={'placeholder': 'Enter video URL (e.g., Google Drive link)'}),
             'order': forms.NumberInput(attrs={'placeholder': 'Enter video order'}),
-            'unlocked': forms.CheckboxInput(),
         }
         labels = {
             'title': 'Video Title',
             'description': 'Description',
             'video_url': 'Video URL',
             'order': 'Order',
-            'unlocked': 'Unlocked',
         }
 
     def clean(self):

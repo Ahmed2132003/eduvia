@@ -1,4 +1,5 @@
 {% load static %}
+{% load course_tags %}
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -632,9 +633,9 @@
                 <ul class="video-list">
                     {% for video in videos %}
                         <li class="video-item">
-                            {% if video.unlocked %}
+                            {% if video|is_video_unlocked:request.user %}
                                 <a href="{% url 'courses:watch_video' course.id video.id %}">{{ video.title }}</a>
-                                {% if video.completed %}
+                                {% if video.id|in_video_progress:request.user %}
                                     <span class="completed" data-translate="completed-label">(Completed ✅)</span>
                                 {% endif %}
                             {% else %}

@@ -254,13 +254,13 @@ class CourseAdmin(BaseModelAdmin):
 
 @admin.register(Video)
 class VideoAdmin(BaseModelAdmin):
-    list_display = ('title', 'course', 'order', 'unlocked')
-    list_filter = ('course', 'unlocked')
+    list_display = ('title', 'course', 'order')
+    list_filter = ('course',)
     search_fields = ('title', 'description')
     list_per_page = 25
 
 @admin.register(Comment)
-class CommentAdmin(BaseModelAdmin):
+class VideoCommentAdmin(BaseModelAdmin):
     list_display = ('user', 'video', 'created_at')
     list_filter = ('created_at',)
     search_fields = ('content', 'user__username')
