@@ -93,8 +93,9 @@ def competition_detail(request, competition_id):
 def edit_competition(request, competition_id):
     if not check_instructor(request.user):
         raise PermissionDenied("Only instructors can edit competitions.")
-    
     competition = get_object_or_404(Competition, id=competition_id)
+    if competition.instructor != request.user:
+        raise PermissionDenied("You can only edit competitions you created.")
     
     if request.method == 'POST':
         form = CompetitionForm(request.POST, instance=competition)
@@ -108,6 +109,7 @@ def edit_competition(request, competition_id):
         form = CompetitionForm(instance=competition)
     
     return render(request, 'competitions/edit_competition.html', {'form': form, 'competition': competition})
+
 
 @login_required
 def join_competition(request, competition_id):

@@ -492,7 +492,7 @@
         <p data-translate="end-label">End: {{ competition.end_time|localtime }}</p>
         <p data-translate="status-label">Status: {% if competition.is_ongoing %}<span data-translate="status-ongoing">Ongoing</span>{% else %}<span data-translate="status-not-active">Not Active</span>{% endif %}</p>
 
-        {% if is_instructor %}
+        {% if is_instructor and competition.instructor == user %}
             <h2 data-translate="questions-heading">Questions</h2>
             <ul>
                 {% for question in competition.questions.all %}
