@@ -519,9 +519,6 @@
             {% if mentees %}
                 {% for mentorship in mentees %}
                     <div class="item">
-                        <a href="{% url 'accounts:chat_with_user' user_id=mentorship.mentee.id %}" data-translate="chat-with">
-                            Chat with {{ mentorship.mentee.username }}
-                        </a>
                         <p data-translate="started">Started: {{ mentorship.created_at|date:"F d, Y H:i" }}</p>
                         <a href="{% url 'mentorship:rate_mentor' mentorship_id=mentorship.id %}" class="btn btn-sm" data-translate="rate-mentor">Rate Mentor</a>
                     </div>
