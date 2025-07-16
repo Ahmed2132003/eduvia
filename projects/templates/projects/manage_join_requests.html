@@ -572,6 +572,14 @@
             <p class="no-requests" data-translate="no-requests">No pending join requests.</p>
         {% endif %}
         
+        <!-- قسم دعوة الأعضاء -->
+        <h3 class="mt-5" data-translate="invite-title">Invite a User</h3>
+        <form method="post" action="{% url 'projects:invite_user' room.id %}" class="mb-4">
+            {% csrf_token %}
+            {{ invite_form.as_p }}
+            <button type="submit" class="btn btn-primary" data-translate="invite-btn">Send Invitation</button>
+        </form>
+
         <a href="{% url 'projects:room_detail' room.id %}" class="btn btn-secondary mt-3" data-translate="back-btn">Back to Room</a>
     </main>
 
@@ -599,6 +607,8 @@
                 "accept-btn": "Accept",
                 "reject-btn": "Reject",
                 "no-requests": "No pending join requests.",
+                "invite-title": "Invite a User",
+                "invite-btn": "Send Invitation",
                 "back-btn": "Back to Room",
                 "nav-home": "Home",
                 "nav-courses": "Courses",
@@ -634,6 +644,8 @@
                 "accept-btn": "قبول",
                 "reject-btn": "رفض",
                 "no-requests": "لا توجد طلبات انضمام معلقة.",
+                "invite-title": "دعوة مستخدم",
+                "invite-btn": "إرسال الدعوة",
                 "back-btn": "العودة إلى الغرفة",
                 "nav-home": "الرئيسية",
                 "nav-courses": "الدورات",
