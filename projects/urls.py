@@ -40,4 +40,6 @@ urlpatterns = [
     path('room/<int:room_id>/manage-requests/', views.manage_join_requests, name='manage_join_requests'),
     # الانضمام إلى غرفة (اختياري، يمكن إزالته إذا لم يعد مطلوبًا)
     path('room/<int:room_id>/join/', views.join_room, name='join_room'),
+    path('rooms/<int:room_id>/invite/', views.invite_user, name='invite_user'),
+
 ]

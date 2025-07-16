@@ -200,7 +200,9 @@ class JoinRequest(models.Model):
         choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')],
         default='pending'
     )
+    is_invitation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    
     def __str__(self):
-        return f"Join request by {self.user.username} for {self.room.title}"
+        return f"{'Invitation' if self.is_invitation else 'Join request'} by {self.user.username} for {self.room.title}"

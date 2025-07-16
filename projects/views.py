@@ -329,7 +329,7 @@ def manage_join_requests(request, room_id):
     room = get_object_or_404(CollaborationRoom, id=room_id)
     if request.user != room.creator:
         messages.error(request, 'فقط منشئ الغرفة يمكنه إدارة طلبات الانضمام.')
-        return redirect(room.get_absolute_url())
+        return redirect('projects:room_detail', room_id=room.id)
     
     join_requests = room.join_requests.filter(status='pending')
     if request.method == 'POST':
@@ -341,14 +341,48 @@ def manage_join_requests(request, room_id):
             join_request.status = 'accepted'
             join_request.save()
             room.members.add(join_request.user)
-            messages.success(request, f'تم قبول طلب انضمام {join_request.user.username}.')
+            messages.success(request, f'تم قبول {"دعوة" if join_request.is_invitation else "طلب انضمام"} {join_request.user.username}.')
         elif action == 'reject':
             join_request.status = 'rejected'
             join_request.save()
-            messages.success(request, f'تم رفض طلب انضمام {join_request.user.username}.')
+            messages.success(request, f'تم رفض {"دعوة" if join_request.is_invitation else "طلب انضمام"} {join_request.user.username}.')
         return redirect('projects:manage_join_requests', room_id=room.id)
     
     return render(request, 'projects/manage_join_requests.html', {
         'room': room,
         'join_requests': join_requests,
+        'invite_form': InviteUserForm(),
     })
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import CollaborationRoom, JoinRequest
+from .forms import InviteUserForm
+@login_required
+def invite_user(request, room_id):
+    room = get_object_or_404(CollaborationRoom, id=room_id)
+    if request.user != room.creator:
+        messages.error(request, 'فقط منشئ الغرفة يمكنه دعوة أعضاء.')
+        return redirect('projects:room_detail', room_id=room.id)
+
+    if request.method == 'POST':
+        form = InviteUserForm(request.POST)
+        if form.is_valid():
+            invited_user = form.cleaned_data['user']
+            if invited_user in room.members.all():
+                messages.info(request, f'{invited_user.username} هو بالفعل عضو في الغرفة.')
+            else:
+                join_request, created = JoinRequest.objects.get_or_create(
+                    room=room,
+                    user=invited_user,
+                    defaults={'status': 'pending', 'is_invitation': True}
+                )
+                if created:
+                    messages.success(request, f'تم إرسال دعوة إلى {invited_user.username}.')
+                else:
+                    messages.info(request, f'تم إرسال دعوة إلى {invited_user.username} مسبقًا.')
+            return redirect('projects:manage_join_requests', room_id=room.id)
+    else:
+        form = InviteUserForm()
+    
+    return render(request, 'projects/invite_user.html', {'form': form, 'room': room})

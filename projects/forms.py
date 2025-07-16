@@ -112,3 +112,15 @@ class RoomTaskForm(forms.ModelForm):
             'assigned_to': forms.Select(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
         }
+from django import forms
+from django.contrib.auth import get_user_model
+from .models import CollaborationRoom
+
+User = get_user_model()
+
+class InviteUserForm(forms.Form):
+    user = forms.ModelChoiceField(
+        queryset=User.objects.filter(courses_profile__role='student'),
+        label="Select User to Invite",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )

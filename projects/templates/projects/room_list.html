@@ -535,8 +535,6 @@
             {% empty %}
                 <p class="no-rooms" data-translate="no-rooms">No collaboration rooms are available.</p>
             {% endfor %}
-        </div>
-        
         <div class="text-center mt-4">
             <a href="{% url 'projects:project_list' %}" class="btn btn-secondary" data-translate="back-to-projects">Back to Projects</a>
             {% if request.user.is_authenticated %}

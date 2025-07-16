@@ -1,15 +1,13 @@
 from django.contrib import admin
 from django.utils import timezone
 from .models import Project, Task, TaskSubmission, ProjectComment, SubmissionComment, SubmissionRating, CollaborationRoom, RoomMessage, RoomFile, RoomTask, JoinRequest
-from courses.admin import BaseModelAdmin  # استيراد BaseModelAdmin من courses
+from courses.admin import BaseModelAdmin
 from courses.models import UserProfile
 from django.core.exceptions import PermissionDenied
 import logging
 
-# إعداد تسجيل الأخطاء
 logger = logging.getLogger(__name__)
 
-# إجراء جماعي للموافقة على تقديمات المهام
 def approve_submissions(modeladmin, request, queryset):
     for submission in queryset:
         if not submission.approved:
@@ -27,7 +25,7 @@ approve_submissions.short_description = "الموافقة على التقديم�
 class ProjectAdmin(BaseModelAdmin):
     list_display = ('title', 'instructor', 'status', 'category', 'created_at')
     list_filter = ('status', 'category', 'created_at')
-    search_fields = ('title', 'description', 'instructor__username')  # البحث باستخدام instructor__username
+    search_fields = ('title', 'description', 'instructor__username')
     list_editable = ('status',)
     date_hierarchy = 'created_at'
     raw_id_fields = ('instructor',)
@@ -42,7 +40,7 @@ class ProjectAdmin(BaseModelAdmin):
             profile = UserProfile.objects.get(user=request.user)
             if profile.role == 'instructor':
                 logger.info(f"Filtering projects for instructor {request.user.username}")
-                filtered_qs = qs.filter(instructor=request.user)  # ForeignKey
+                filtered_qs = qs.filter(instructor=request.user)
                 logger.info(f"Found {filtered_qs.count()} projects for instructor {request.user.username}")
                 return filtered_qs
             logger.warning(f"User {request.user.username} with role {profile.role} denied access")
@@ -295,8 +293,8 @@ class RoomTaskAdmin(BaseModelAdmin):
 
 @admin.register(JoinRequest)
 class JoinRequestAdmin(BaseModelAdmin):
-    list_display = ('room', 'user', 'status', 'created_at')
-    list_filter = ('status', 'created_at')
+    list_display = ('room', 'user', 'status', 'is_invitation', 'created_at')  # إضافة is_invitation
+    list_filter = ('status', 'is_invitation', 'created_at')  # إضافة is_invitation للفلترة
     search_fields = ('room__title', 'user__username')
     raw_id_fields = ('room', 'user')
     list_per_page = 25
