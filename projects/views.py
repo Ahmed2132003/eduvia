@@ -312,17 +312,18 @@ def room_detail(request, room_id):
 def request_join_room(request, room_id):
     room = get_object_or_404(CollaborationRoom, id=room_id)
     if request.user == room.creator or request.user in room.members.all():
-        messages.info(request, 'أنت بالفعل عضو أو منشئ هذه الغرفة.')
-        return redirect(room.get_absolute_url())
+        messages.info(request, 'أنت بالفعل عضو في هذه الغرفة.')
+        return redirect('projects:room_list')
     
-    join_request, created = JoinRequest.objects.get_or_create(
-        room=room, user=request.user, defaults={'status': 'pending'}
-    )
-    if created:
-        messages.success(request, 'تم إرسال طلب الانضمام بنجاح!')
-    else:
-        messages.info(request, 'لقد قمت بإرسال طلب انضمام بالفعل.')
-    return redirect(room.get_absolute_url())
+    # التحقق من وجود طلب معلق أو مرفوض لنفس الغرفة فقط
+    if JoinRequest.objects.filter(user=request.user, room=room, status__in=['pending', 'rejected']).exists():
+        messages.info(request, 'لقد قدمت طلب انضمام لهذه الغرفة مسبقًا.')
+        return redirect('projects:room_list')
+    
+    # إنشاء طلب انضمام جديد
+    JoinRequest.objects.create(room=room, user=request.user, status='pending')
+    messages.success(request, 'تم إرسال طلب الانضمام بنجاح.')
+    return redirect('projects:room_list')
 
 @login_required
 def manage_join_requests(request, room_id):

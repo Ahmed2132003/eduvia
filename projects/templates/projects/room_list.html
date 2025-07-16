@@ -5,16 +5,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="page-title">Collaboration Rooms - Eduvia</title>
-    <meta name="description" data-translate="meta-desc" content="Browse and join collaboration rooms on the Eduvia platform to work together on educational projects efficiently.">
-    <meta name="keywords" data-translate="meta-keywords" content="collaboration rooms, education, group projects, Eduvia, collaborative learning">
+    <meta name="description" data-translate="meta-desc" content="Explore collaboration rooms on Eduvia. Join or create rooms to work on exciting projects with peers.">
+    <meta name="keywords" data-translate="meta-keywords" content="collaboration rooms, Eduvia, teamwork, project collaboration, online learning">
     <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, noarchive">
     <meta name="og:title" data-translate="og-title" content="Collaboration Rooms - Eduvia">
-    <meta name="og:description" data-translate="og-desc" content="Join Eduvia's collaboration rooms to collaborate on projects with peers and enhance your learning experience.">
+    <meta name="og:description" data-translate="og-desc" content="Discover and join collaboration rooms on Eduvia to work on projects with peers and enhance your learning experience.">
     <meta name="og:type" content="website">
+    <meta name="og:image" content="{% static 'images/collaboration_hero.jpg' %}">
+    <meta name="og:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Schema Markup for SEO -->
+    <script type="application/ld+json" id="schema-markup">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Collaboration Rooms - Eduvia",
+        "description": "Explore collaboration rooms on Eduvia. Join or create rooms to work on exciting projects with peers.",
+        "url": "{{ request.build_absolute_uri }}",
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "{{ request.scheme }}://{{ request.get_host }}/home/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Collaboration Rooms"
+                }
+            ]
+        }
+    }
+    </script>
+    <title data-translate="page-title">Collaboration Rooms - Eduvia</title>
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Cairo Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,7 +55,7 @@
             --text-color: #333;
             --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
             --header-text: #ffffff;
-            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/room1.jpg" %}') no-repeat center center/cover;
+            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/room3.jpg" %}') no-repeat center center/cover;
             --hero-text: #ffffff;
             --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
             --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
@@ -32,13 +64,15 @@
             --btn-primary-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
             --btn-primary-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
             --btn-primary-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
-            --btn-success-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
-            --btn-success-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
-            --btn-success-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
-            --btn-secondary-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
-            --btn-secondary-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
-            --btn-secondary-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
-            --btn-disabled-bg: #6c757d;
+            --btn-secondary-bg: linear-gradient(90deg, #6c757d, #adb5bd);
+            --btn-secondary-bg-hover: linear-gradient(90deg, #5c636a, #90969c);
+            --btn-success-bg: linear-gradient(90deg, #28a745, #34ce57);
+            --btn-success-bg-hover: linear-gradient(90deg, #218838, #2ea44f);
+            --btn-success-shadow: 0 4px 12px rgba(40, 167, 69, 0.5);
+            --alert-info-bg: #cce5ff;
+            --alert-info-text: #004085;
+            --alert-success-bg: #d4edda;
+            --alert-success-text: #155724;
         }
 
         /* Dark Mode Colors */
@@ -47,7 +81,7 @@
             --text-color: #e0e0e0;
             --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
             --header-text: #e0e0e0;
-            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/room1.jpg" %}') no-repeat center center/cover;
+            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/room3.jpg" %}') no-repeat center center/cover;
             --hero-text: #e0e0e0;
             --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
             --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
@@ -56,13 +90,15 @@
             --btn-primary-bg: linear-gradient(90deg, #3498db, #2980b9);
             --btn-primary-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
             --btn-primary-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
-            --btn-success-bg: linear-gradient(90deg, #3498db, #2980b9);
-            --btn-success-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --btn-success-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
-            --btn-secondary-bg: linear-gradient(90deg, #3498db, #2980b9);
-            --btn-secondary-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --btn-secondary-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
-            --btn-disabled-bg: #4a4a4a;
+            --btn-secondary-bg: linear-gradient(90deg, #6c757d, #5a6268);
+            --btn-secondary-bg-hover: linear-gradient(90deg, #5c636a, #4b5156);
+            --btn-success-bg: linear-gradient(90deg, #28a745, #218838);
+            --btn-success-bg-hover: linear-gradient(90deg, #218838, #1c7430);
+            --btn-success-shadow: 0 4px 12px rgba(40, 167, 69, 0.5);
+            --alert-info-bg: #3498db;
+            --alert-info-text: #ffffff;
+            --alert-success-bg: #28a745;
+            --alert-success-text: #ffffff;
         }
 
         body {
@@ -278,10 +314,10 @@
         .container {
             margin-top: 50px;
             max-width: 1400px;
+            padding: 0 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0 20px;
         }
 
         h2 {
@@ -299,45 +335,34 @@
             100% { transform: translateY(0); opacity: 1; }
         }
 
-        /* Room Cards Container */
-        .rooms-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Room Card */
         .room-card {
+            flex: 0 0 calc(25% - 20px);
+            max-width: 320px;
+            min-width: 260px;
             background: var(--card-bg);
-            border: none;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.3s ease;
             animation: fadeIn 1s ease-out forwards;
-            flex: 0 0 calc(25% - 20px);
-            max-width: 320px;
-            min-width: 260px;
         }
 
         .room-card:hover {
-            transform: translateY(-10px) scale(1.02);
+            transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .card-body {
             padding: 20px;
-            text-align: left;
-        }
-
-        html[dir="rtl"] .card-body {
-            text-align: right;
         }
 
         .card-title {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 600;
             color: var(--card-text);
             margin-bottom: 15px;
             transition: color 0.3s ease;
@@ -346,18 +371,17 @@
         .card-text {
             font-size: 16px;
             color: var(--card-secondary-text);
-            margin-bottom: 10px;
+            margin: 5px 0;
             transition: color 0.3s ease;
         }
 
-        .no-rooms {
-            text-align: center;
-            font-size: 18px;
-            color: var(--card-secondary-text);
+        .card-text span {
+            color: var(--text-color);
+            font-weight: 500;
             transition: color 0.3s ease;
         }
 
-        .btn-primary, .btn-success, .btn-secondary {
+        .btn-primary, .btn-secondary, .btn-success {
             background: var(--btn-primary-bg);
             border: none;
             padding: 10px 25px;
@@ -367,20 +391,34 @@
             box-shadow: var(--btn-primary-shadow);
             transition: all 0.4s ease;
             color: #ffffff;
+            margin: 5px;
         }
 
-        .btn-primary:hover, .btn-success:hover, .btn-secondary:hover {
+        .btn-secondary {
+            background: var(--btn-secondary-bg);
+        }
+
+        .btn-success {
+            background: var(--btn-success-bg);
+            box-shadow: var(--btn-success-shadow);
+        }
+
+        .btn-primary:hover {
             background: var(--btn-primary-bg-hover);
             transform: scale(1.1);
             box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
-            color: #ffffff;
         }
 
-        .btn-secondary:disabled {
-            background: var(--btn-disabled-bg);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .btn-secondary:hover {
+            background: var(--btn-secondary-bg-hover);
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(108, 117, 125, 0.7);
+        }
+
+        .btn-success:hover {
+            background: var(--btn-success-bg-hover);
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.7);
         }
 
         .messages {
@@ -393,19 +431,22 @@
             border-radius: 10px;
             font-size: 16px;
             animation: fadeIn 1s ease-out;
-            text-align: left;
-            color: var(--text-color);
-            background-color: var(--card-bg);
-            transition: background 0.3s ease, color 0.3s ease;
+            background-color: var(--alert-info-bg);
+            color: var(--alert-info-text);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        html[dir="rtl"] .alert {
-            text-align: right;
+        .alert-success {
+            background-color: var(--alert-success-bg);
+            color: var(--alert-success-text);
         }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        .no-rooms {
+            text-align: center;
+            font-size: 18px;
+            color: var(--card-secondary-text);
+            animation: fadeIn 1s ease-out;
+            transition: color 0.3s ease;
         }
 
         /* Footer */
@@ -428,8 +469,6 @@
             .hero h1 { font-size: 36px; }
             .hero p { font-size: 20px; }
             h2 { font-size: 30px; }
-            .card-title { font-size: 20px; }
-            .card-text { font-size: 14px; }
             .room-card { flex: 0 0 calc(50% - 20px); }
         }
 
@@ -437,11 +476,13 @@
             .hero h1 { font-size: 28px; }
             .hero p { font-size: 16px; }
             h2 { font-size: 24px; }
-            .btn-primary, .btn-success, .btn-secondary {
+            .btn-primary, .btn-secondary, .btn-success {
                 padding: 8px 20px;
                 font-size: 14px;
             }
             .room-card { flex: 0 0 100%; }
+            .card-title { font-size: 18px; }
+            .card-text { font-size: 14px; }
         }
     </style>
 </head>
@@ -489,13 +530,13 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1 data-translate="hero-title">Join Collaboration Rooms</h1>
-        <p data-translate="hero-desc">Work together with peers on exciting projects and enhance your learning experience.</p>
+        <h1 data-translate="hero-title">Collaboration Rooms</h1>
+        <p data-translate="hero-desc">Join or create rooms to collaborate on exciting projects with your peers!</p>
     </section>
 
     <!-- Main Content -->
     <main class="container">
-        <h2 class="text-center mb-4" data-translate="main-title">Collaboration Rooms</h2>
+        <h2 class="text-center mb-4" data-translate="content-title">Available Collaboration Rooms</h2>
         
         {% if messages %}
             <div class="messages">
@@ -505,42 +546,48 @@
             </div>
         {% endif %}
         
-        <div class="rooms-container">
-            {% for room in rooms %}
-                <article class="card room-card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ room.title }}</h5>
-                        <p class="card-text"><span data-translate="creator-label">Creator:</span> {{ room.creator.username }}</p>
-                        <p class="card-text"><span data-translate="project-label">Project:</span> {{ room.project.title }}</p>
-                        <p class="card-text"><span data-translate="members-label">Members:</span> {{ room.members.count }}</p>
-                        {% if request.user.is_authenticated %}
-                            {% if request.user == room.creator or request.user in room.members.all %}
-                                <a href="{% url 'projects:room_detail' room.id %}" class="btn btn-primary" data-translate="view-room">View Room</a>
+        {% if rooms %}
+            <div class="rooms-container d-flex flex-wrap justify-content-center gap-3">
+                {% for room in rooms %}
+                    <article class="card room-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ room.title }}</h5>
+                            <p class="card-text"><span data-translate="creator-label">Creator:</span> {{ room.creator.username }}</p>
+                            <p class="card-text"><span data-translate="project-label">Project:</span> {{ room.project.title }}</p>
+                            <p class="card-text"><span data-translate="members-label">Members:</span> {{ room.members.count }}</p>
+                            {% if request.user.is_authenticated %}
+                                {% if request.user == room.creator or request.user in room.members.all %}
+                                    <a href="{% url 'projects:room_detail' room.id %}" class="btn btn-primary" data-translate="view-room">View Room</a>
+                                {% else %}
+                                    {% with has_request=False %}
+                                        {% for jr in join_requests %}
+                                            {% if jr.room == room %}
+                                                {% if jr.status == 'pending' %}
+                                                    <button class="btn btn-secondary" disabled data-translate="pending-request">Your Request is Pending</button>
+                                                    {% with has_request=True %}
+                                                    {% endwith %}
+                                                {% elif jr.status == 'rejected' %}
+                                                    <button class="btn btn-secondary" disabled data-translate="rejected-request">Your Request was Rejected</button>
+                                                    {% with has_request=True %}
+                                                    {% endwith %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if not has_request %}
+                                            <a href="{% url 'projects:request_join_room' room.id %}" class="btn btn-success" data-translate="request-join">Request to Join</a>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endif %}
                             {% else %}
-                                {% for jr in join_requests %}
-                                    {% if jr.room == room and jr.status == 'pending' %}
-                                        <button class="btn btn-secondary" disabled data-translate="pending-request">Your Request is Pending</button>
-                                    {% elif jr.room == room and jr.status == 'rejected' %}
-                                        <button class="btn btn-secondary" disabled data-translate="rejected-request">Your Request was Rejected</button>
-                                    {% endif %}
-                                {% empty %}
-                                    <a href="{% url 'projects:request_join_room' room.id %}" class="btn btn-success" data-translate="request-join">Request to Join</a>
-                                {% endfor %}
+                                <p data-translate="login-to-join">Please log in to request to join.</p>
                             {% endif %}
-                        {% else %}
-                            <p data-translate="login-to-join">Please log in to request to join.</p>
-                        {% endif %}
-                    </div>
-                </article>
-            {% empty %}
-                <p class="no-rooms" data-translate="no-rooms">No collaboration rooms are available.</p>
-            {% endfor %}
-        <div class="text-center mt-4">
-            <a href="{% url 'projects:project_list' %}" class="btn btn-secondary" data-translate="back-to-projects">Back to Projects</a>
-            {% if request.user.is_authenticated %}
-                <a href="{% url 'projects:create_room' %}" class="btn btn-primary" data-translate="create-room">Create New Room</a>
-            {% endif %}
-        </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-rooms" data-translate="no-rooms">No collaboration rooms are available.</p>
+        {% endif %}
     </main>
 
     <!-- Footer -->
@@ -548,30 +595,29 @@
         <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
     </footer>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Translation object
         const translations = {
             en: {
                 "page-title": "Collaboration Rooms - Eduvia",
-                "meta-desc": "Browse and join collaboration rooms on the Eduvia platform to work together on educational projects efficiently.",
-                "meta-keywords": "collaboration rooms, education, group projects, Eduvia, collaborative learning",
+                "meta-desc": "Explore collaboration rooms on Eduvia. Join or create rooms to work on exciting projects with peers.",
+                "meta-keywords": "collaboration rooms, Eduvia, teamwork, project collaboration, online learning",
                 "og-title": "Collaboration Rooms - Eduvia",
-                "og-desc": "Join Eduvia's collaboration rooms to collaborate on projects with peers and enhance your learning experience.",
-                "hero-title": "Join Collaboration Rooms",
-                "hero-desc": "Work together with peers on exciting projects and enhance your learning experience.",
-                "main-title": "Collaboration Rooms",
+                "og-desc": "Discover and join collaboration rooms on Eduvia to work on projects with peers and enhance your learning experience.",
+                "hero-title": "Collaboration Rooms",
+                "hero-desc": "Join or create rooms to collaborate on exciting projects with your peers!",
+                "content-title": "Available Collaboration Rooms",
                 "creator-label": "Creator:",
                 "project-label": "Project:",
                 "members-label": "Members:",
                 "view-room": "View Room",
+                "request-join": "Request to Join",
                 "pending-request": "Your Request is Pending",
                 "rejected-request": "Your Request was Rejected",
-                "request-join": "Request to Join",
                 "login-to-join": "Please log in to request to join.",
                 "no-rooms": "No collaboration rooms are available.",
-                "back-to-projects": "Back to Projects",
-                "create-room": "Create New Room",
                 "nav-home": "Home",
                 "nav-courses": "Courses",
                 "nav-chatbot": "Chatbot",
@@ -584,28 +630,30 @@
                 "nav-logout": "Logout",
                 "nav-coins": "Coins:",
                 "nav-login": "Login",
-                "footer-text": "© 2025 Eduvia. All rights reserved."
+                "footer-text": "© 2025 Eduvia. All rights reserved.",
+                "schema-name": "Collaboration Rooms - Eduvia",
+                "schema-desc": "Explore collaboration rooms on Eduvia. Join or create rooms to work on exciting projects with peers.",
+                "breadcrumb-home": "Home",
+                "breadcrumb-rooms": "Collaboration Rooms"
             },
             ar: {
                 "page-title": "غرف التعاون - إدوفيا",
-                "meta-desc": "تصفح وانضم إلى غرف التعاون على منصة إدوفيا للعمل معًا على المشاريع التعليمية بكفاءة.",
-                "meta-keywords": "غرف التعاون, التعليم, المشاريع الجماعية, إدوفيا, التعلم التعاوني",
+                "meta-desc": "استكشف غرف التعاون على إدوفيا. انضم أو أنشئ غرفًا للعمل على مشاريع مثيرة مع أقرانك.",
+                "meta-keywords": "غرف التعاون, إدوفيا, العمل الجماعي, تعاون المشاريع, التعلم عبر الإنترنت",
                 "og-title": "غرف التعاون - إدوفيا",
-                "og-desc": "انضم إلى غرف التعاون في إدوفيا للتعاون في المشاريع مع أقرانك وتعزيز تجربة التعلم الخاصة بك.",
-                "hero-title": "انضم إلى غرف التعاون",
-                "hero-desc": "اعمل مع أقرانك على مشاريع مثيرة وعزز تجربة التعلم الخاصة بك.",
-                "main-title": "غرف التعاون",
+                "og-desc": "اكتشف وانضم إلى غرف التعاون على إدوفيا للعمل على المشاريع مع أقرانك وتعزيز تجربة التعلم الخاصة بك.",
+                "hero-title": "غرف التعاون",
+                "hero-desc": "انضم أو أنشئ غرفًا للتعاون في مشاريع مثيرة مع أقرانك!",
+                "content-title": "غرف التعاون المتاحة",
                 "creator-label": "المنشئ:",
                 "project-label": "المشروع:",
                 "members-label": "الأعضاء:",
                 "view-room": "عرض الغرفة",
+                "request-join": "طلب الانضمام",
                 "pending-request": "طلبك معلق",
                 "rejected-request": "تم رفض طلبك",
-                "request-join": "طلب الانضمام",
                 "login-to-join": "يرجى تسجيل الدخول لطلب الانضمام.",
                 "no-rooms": "لا توجد غرف تعاون متاحة.",
-                "back-to-projects": "العودة إلى المشاريع",
-                "create-room": "إنشاء غرفة جديدة",
                 "nav-home": "الرئيسية",
                 "nav-courses": "الدورات",
                 "nav-chatbot": "الدردشة الآلية",
@@ -618,7 +666,11 @@
                 "nav-logout": "تسجيل الخروج",
                 "nav-coins": "النقاط:",
                 "nav-login": "تسجيل الدخول",
-                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة.",
+                "schema-name": "غرف التعاون - إدوفيا",
+                "schema-desc": "استكشف غرف التعاون على إدوفيا. انضم أو أنشئ غرفًا للعمل على مشاريع مثيرة مع أقرانك.",
+                "breadcrumb-home": "الرئيسية",
+                "breadcrumb-rooms": "غرف التعاون"
             }
         };
 
@@ -657,20 +709,20 @@
             // Update all translatable elements
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
-                let text = translations[newLang][key];
-                if (element.tagName.toLowerCase() === 'meta') {
-                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        element.setAttribute('content', text);
-                    } else if (element.getAttribute('property')?.startsWith('og:')) {
-                        element.setAttribute('content', text);
-                    }
-                } else {
-                    element.textContent = text;
-                }
+                element.textContent = translations[newLang][key];
             });
 
             // Update the title
             document.title = translations[newLang]["page-title"];
+
+            // Update Schema Markup
+            const schema = document.getElementById('schema-markup');
+            const schemaData = JSON.parse(schema.textContent);
+            schemaData.name = translations[newLang]["schema-name"];
+            schemaData.description = translations[newLang]["schema-desc"];
+            schemaData.breadcrumb.itemListElement[0].name = translations[newLang]["breadcrumb-home"];
+            schemaData.breadcrumb.itemListElement[1].name = translations[newLang]["breadcrumb-rooms"];
+            schema.textContent = JSON.stringify(schemaData, null, 2);
 
             localStorage.setItem('language', newLang);
         }
@@ -694,20 +746,20 @@
 
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
-                let text = translations[savedLang][key];
-                if (element.tagName.toLowerCase() === 'meta') {
-                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        element.setAttribute('content', text);
-                    } else if (element.getAttribute('property')?.startsWith('og:')) {
-                        element.setAttribute('content', text);
-                    }
-                } else {
-                    element.textContent = text;
-                }
+                element.textContent = translations[savedLang][key];
             });
 
             // Set the title on page load
             document.title = translations[savedLang]["page-title"];
+
+            // Update Schema Markup on page load
+            const schema = document.getElementById('schema-markup');
+            const schemaData = JSON.parse(schema.textContent);
+            schemaData.name = translations[savedLang]["schema-name"];
+            schemaData.description = translations[savedLang]["schema-desc"];
+            schemaData.breadcrumb.itemListElement[0].name = translations[savedLang]["breadcrumb-home"];
+            schemaData.breadcrumb.itemListElement[1].name = translations[savedLang]["breadcrumb-rooms"];
+            schema.textContent = JSON.stringify(schemaData, null, 2);
         });
     </script>
 </body>
