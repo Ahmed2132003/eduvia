@@ -1,4 +1,4 @@
-{% load static %}
+{% load static mentorship_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -581,8 +581,8 @@
     <div class="action-buttons">
         <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="back-to-dashboard">Back to Dashboard</a>
         {% if user == group.admin %}
-            <a href="{% url 'mentorship:edit_group' group_id=group.id %}" class="btn" data-translate="edit-group">Edit Group</a>
-            <a href="{% url 'mentorship:manage_group_requests' group_id=group.id %}" class="btn" data-translate="manage-requests">Manage Requests</a>
+            <a href="{% url 'mentorship:edit_group' group_id=group.id group_title=group.name|custom_slugify %}" class="btn" data-translate="edit-group">Edit Group</a>
+            <a href="{% url 'mentorship:manage_group_requests' group_id=group.id group_title=group.name|custom_slugify %}" class="btn" data-translate="manage-requests">Manage Requests</a>
         {% endif %}
     </div>
 

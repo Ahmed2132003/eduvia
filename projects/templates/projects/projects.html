@@ -1,4 +1,5 @@
 {% load static %}
+{% load projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -473,11 +474,11 @@
     <div class="cards-container">
         {% for project in projects %}
             <section class="project-card">
-                <h2><a href="{% url 'projects:project_details' project.id %}">{{ project.title }}</a></h2>
+                <h2><a href="{% url 'projects:project_details' project.id project.slugified_title %}">{{ project.title }}</a></h2>
                 <p>{{ project.description|truncatewords:30 }}</p>
                 <p><span data-translate="category-label">Category:</span> {{ project.get_category_display }}</p>
                 <p><span data-translate="status-label">Status:</span> {{ project.get_status_display }}</p>
-                <a href="{% url 'projects:project_details' project.id %}" class="btn" data-translate="view-details">View Details</a>
+                <a href="{% url 'projects:project_details' project.id project.slugified_title %}" class="btn" data-translate="view-details">View Details</a>
             </section>
         {% empty %}
             <p class="no-projects" data-translate="no-projects">No projects available.</p>

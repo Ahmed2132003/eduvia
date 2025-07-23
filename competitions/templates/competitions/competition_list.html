@@ -1,5 +1,7 @@
-{% load static competition_tags %}
-
+{% load static %}
+{% load competition_tags %}
+{% load i18n %}
+{% load competition_filters %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
@@ -512,13 +514,13 @@
         {% endif %}
         {% if user.role == 'instructor' %}
             <div class="create-competition">
-                <a href="{% url 'create_competition' %}" data-translate="create-competition-link">Create New Competition</a>
+                <a href="{% url 'competitions:create_competition' %}" data-translate="create-competition-link">Create New Competition</a>
             </div>
         {% endif %}
         <ul class="competitions-list">
             {% for competition in competitions %}
                 <li class="competition-card">
-                    <a href="{% url 'competition_detail' competition.id %}">{{ competition.title }}</a>
+                    <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}">{{ competition.title }}</a>
                     <p data-translate="date-label">From: {{ competition.start_time|localtime }}<br>To: {{ competition.end_time|localtime }}</p>
                     <p>
                         {% if competition.is_ongoing %}

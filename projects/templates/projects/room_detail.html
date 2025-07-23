@@ -1,4 +1,4 @@
-{% load static %}
+{% load static projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -669,7 +669,7 @@
                 </p>
                 
                 {% if request.user == room.creator %}
-                    <a href="{% url 'projects:manage_join_requests' room.id %}" class="btn btn-primary mb-3" data-translate="manage-requests">Manage Join Requests</a>
+                    <a href="{% url 'projects:manage_join_requests' room.id room.title|custom_slugify %}" class="btn btn-primary mb-3" data-translate="manage-requests">Manage Join Requests</a>
                 {% endif %}
             </section>
             

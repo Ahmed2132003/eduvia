@@ -1,4 +1,4 @@
-{% load static %}
+{% load static projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -42,7 +42,7 @@
                     "@type": "ListItem",
                     "position": 3,
                     "name": "{{ room.title }}",
-                    "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'projects:room_detail' room.id %}"
+                    "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'projects:room_detail' room.id room.title|custom_slugify %}"
                 },
                 {
                     "@type": "ListItem",
@@ -543,6 +543,7 @@
 
     <!-- Main Content -->
     <main class="container">
+        <p>Debug: Room ID = {{ room.id }}, Title = {{ room.title }}, Slug = {{ room.title|custom_slugify }}</p>
         <h2 class="text-center mb-4" data-translate="content-title">Manage Join Requests - {{ room.title }}</h2>
         
         {% if messages %}
@@ -574,13 +575,13 @@
         
         <!-- قسم دعوة الأعضاء -->
         <h3 class="mt-5" data-translate="invite-title">Invite a User</h3>
-        <form method="post" action="{% url 'projects:invite_user' room.id %}" class="mb-4">
+        <form method="post" action="{% url 'projects:invite_user' room.id room.title|custom_slugify %}" class="mb-4">
             {% csrf_token %}
             {{ invite_form.as_p }}
             <button type="submit" class="btn btn-primary" data-translate="invite-btn">Send Invitation</button>
         </form>
 
-        <a href="{% url 'projects:room_detail' room.id %}" class="btn btn-secondary mt-3" data-translate="back-btn">Back to Room</a>
+        <a href="{% url 'projects:room_detail' room.id room.title|custom_slugify %}" class="btn btn-secondary mt-3" data-translate="back-btn">Back to Room</a>
     </main>
 
     <!-- Footer -->

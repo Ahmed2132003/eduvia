@@ -1,4 +1,4 @@
-{% load static competition_tags %}
+{% load static competition_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -513,7 +513,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" data-translate="save-button">Save Changes</button>
-            <a href="{% url 'competition_detail' competition.id %}" class="back-link" data-translate="back-link">Back to Competition</a>
+            <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-link" data-translate="back-link">Back to Competition</a>
         </form>
     </section>
 

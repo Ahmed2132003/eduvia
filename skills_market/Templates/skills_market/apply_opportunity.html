@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -483,7 +483,7 @@
                 {% if user.courses_profile %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
                     </span>
                 {% else %}
                     <span class="coins-display">
@@ -505,7 +505,7 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1 data-translate="hero-title">Apply for {{ opportunity.title }}</h1>
+        <h1 data-translate="hero-title">Apply for {{ opportunity.title|default:"Opportunity" }}</h1>
         <p data-translate="hero-desc">Submit your application for this opportunity in Eduvia's Skills Market</p>
     </section>
 
@@ -520,7 +520,7 @@
 
     <!-- Form Container -->
     <div class="form-container">
-        <h2 data-translate="form-title">Apply for {{ opportunity.title }}</h2>
+        <h2 data-translate="form-title">Apply for {{ opportunity.title|default:"Opportunity" }}</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
@@ -637,11 +637,11 @@
                         element.setAttribute('content', text);
                     }
                 } else {
-                    element.textContent = text.replace('{{ opportunity.title }}', '{{ opportunity.title }}');
+                    element.textContent = text.replace('{{ opportunity.title }}', '{{ opportunity.title|default:"Opportunity" }}');
                 }
             });
 
-            document.title = translations[newLang]["page-title"].replace('{{ opportunity.title }}', '{{ opportunity.title }}');
+            document.title = translations[newLang]["page-title"].replace('{{ opportunity.title }}', '{{ opportunity.title|default:"Opportunity" }}');
             localStorage.setItem('language', newLang);
         }
 
@@ -661,7 +661,7 @@
 
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
-                let text = translations[savedLang][key].replace('{{ opportunity.title }}', '{{ opportunity.title }}');
+                let text = translations[savedLang][key].replace('{{ opportunity.title }}', '{{ opportunity.title|default:"Opportunity" }}');
                 if (element.tagName.toLowerCase() === 'meta') {
                     if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
                         element.setAttribute('content', text);
@@ -673,7 +673,7 @@
                 }
             });
 
-            document.title = translations[savedLang]["page-title"].replace('{{ opportunity.title }}', '{{ opportunity.title }}');
+            document.title = translations[savedLang]["page-title"].replace('{{ opportunity.title }}', '{{ opportunity.title|default:"Opportunity" }}');
         });
     </script>
 </body>

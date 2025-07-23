@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'skills_market',
     'mentorship',
     'workshops',
+    'widget_tweaks',
 ]
 
 # إعدادات ASGI لـ Channels

@@ -1,5 +1,7 @@
 from django import template
 import re
+from django.utils.text import slugify
+import unicodedata
 
 register = template.Library()
 
@@ -43,3 +45,15 @@ def mul(value, arg):
 def count_true(value):
     """Count number of True values in a list."""
     return sum(1 for x in value if x)
+
+@register.filter(name='custom_slugify')
+def custom_slugify(value):
+    """Convert string to a URL-safe slug."""
+    print(f"Slugify input: {value}")  # لتسجيل القيمة المدخلة
+    if not value:
+        print("Slugify returning default: no-title")
+        return 'no-title'
+    value = unicodedata.normalize('NFKD', str(value)).encode('ascii', 'ignore').decode('ascii')
+    slug = slugify(value)
+    print(f"Slugify output: {slug}")  # لتسجيل القيمة الناتجة
+    return slug if slug else 'no-title'

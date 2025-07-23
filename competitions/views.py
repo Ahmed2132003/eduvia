@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponsePermanentRedirect
 from django.utils import timezone
-from .models import Competition, Question, Participant, Answer, Certificate
-from .forms import CompetitionForm
+from django.utils.text import slugify
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from datetime import datetime
@@ -17,14 +16,37 @@ import os
 from django.conf import settings
 import logging
 import uuid
+import re
+from .models import Competition, Participant, Question, Answer, Certificate
+from .forms import CompetitionForm
+from django.urls import reverse
 
 logger = logging.getLogger(__name__)
+
+def clean_text(text):
+    """تنظيف النص من الأحرف غير المدعومة مع دعم الأحرف العربية"""
+    if not text or not text.strip():
+        return 'default-title'
+    text = re.sub(r'[^\w\s\-\u0600-\u06FF]', '', str(text)).strip()
+    cleaned = text if text else 'default-title'
+    slugified = slugify(cleaned, allow_unicode=True)
+    return slugified if slugified else 'default-title'
 
 def check_instructor(user):
     return user.is_authenticated and user.role == 'instructor'
 
 def check_student(user):
     return user.is_authenticated and user.role == 'student'
+
+def redirect_old_competition_url(request, competition_id):
+    competition = get_object_or_404(Competition, id=competition_id)
+    cleaned_title = clean_text(competition.title)
+    return HttpResponsePermanentRedirect(
+        reverse('competitions:competition_detail', kwargs={
+            'competition_id': competition.id,
+            'competition_title': cleaned_title
+        })
+    )
 
 @login_required
 def competition_list(request):
@@ -48,10 +70,14 @@ def create_competition(request):
         if form.is_valid():
             competition = form.save(commit=False)
             competition.instructor = request.user
+            cleaned_title = clean_text(competition.title)
+            if not cleaned_title:
+                messages.error(request, "العنوان غير صالح. يرجى إدخال عنوان يحتوي على أحرف صالحة.")
+                return render(request, 'competitions/create_competition.html', {'form': form})
             competition.save()
             logger.info(f"Competition created: {competition}")
             messages.success(request, "Competition created successfully!")
-            return redirect('competition_detail', competition_id=competition.id)
+            return redirect('competitions:competition_detail', competition_id=competition.id, competition_title=cleaned_title)
         else:
             logger.error(f"Form errors: {form.errors}")
             messages.error(request, form.errors)
@@ -61,8 +87,19 @@ def create_competition(request):
     return render(request, 'competitions/create_competition.html', {'form': form})
 
 @login_required
-def competition_detail(request, competition_id):
+def competition_detail(request, competition_id, competition_title):
     competition = get_object_or_404(Competition, id=competition_id)
+    cleaned_title = clean_text(competition.title)
+    logger.debug(f"Competition Detail - ID: {competition_id}, Original Title: {competition.title}, Cleaned Title: {cleaned_title}, Received Title: {competition_title}")
+    
+    if cleaned_title != competition_title:
+        return HttpResponsePermanentRedirect(
+            reverse('competitions:competition_detail', kwargs={
+                'competition_id': competition_id,
+                'competition_title': cleaned_title
+            })
+        )
+    
     is_participant = False
     participant = None
     questions_with_status = []
@@ -87,106 +124,178 @@ def competition_detail(request, competition_id):
         'participant': participant,
         'is_instructor': check_instructor(request.user),
         'questions_with_status': questions_with_status,
+        'slugified_competition_title': cleaned_title,
     })
 
 @login_required
-def edit_competition(request, competition_id):
-    if not check_instructor(request.user):
-        raise PermissionDenied("Only instructors can edit competitions.")
+def edit_competition(request, competition_id, competition_title):
     competition = get_object_or_404(Competition, id=competition_id)
-    if competition.instructor != request.user:
-        raise PermissionDenied("You can only edit competitions you created.")
-    
+    cleaned_title = clean_text(competition.title)
+
+    # إذا كان العنوان الممرر غير صحيح، أعد التوجيه
+    if cleaned_title != competition_title:
+        return redirect('competitions:edit_competition', competition_id=competition_id, competition_title=cleaned_title)
+
+    # تحقق مما إذا كان المستخدم مدرسًا
+    if not (hasattr(request.user, 'courses_profile') and request.user.courses_profile.role == 'instructor'):
+        messages.error(request, "Only instructors can edit competitions.")
+        return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
+
     if request.method == 'POST':
         form = CompetitionForm(request.POST, instance=competition)
         if form.is_valid():
-            competition = form.save()
+            form.save()
             messages.success(request, "Competition updated successfully!")
-            return redirect('competition_detail', competition_id=competition.id)
+            return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
         else:
-            messages.error(request, form.errors)
+            messages.error(request, "Please correct the errors below.")
     else:
         form = CompetitionForm(instance=competition)
-    
-    return render(request, 'competitions/edit_competition.html', {'form': form, 'competition': competition})
 
+    return render(request, 'competitions/edit_competition.html', {
+        'form': form,
+        'competition': competition,
+    })
 
 @login_required
-def join_competition(request, competition_id):
+def join_competition(request, competition_id, competition_title):
     if not check_student(request.user):
         raise PermissionDenied("Only students can join competitions.")
     
     competition = get_object_or_404(Competition, id=competition_id)
+    cleaned_title = clean_text(competition.title)
+    logger.debug(f"Join Competition - ID: {competition_id}, Original Title: {competition.title}, Cleaned Title: {cleaned_title}, Received Title: {competition_title}")
+    
+    if cleaned_title != competition_title:
+        return HttpResponsePermanentRedirect(
+            reverse('competitions:join_competition', kwargs={
+                'competition_id': competition_id,
+                'competition_title': cleaned_title
+            })
+        )
+    
     now = timezone.now()
     if not competition.is_active or competition.end_time < now:
         messages.error(request, "This competition is not available for joining.")
-        return redirect('competition_detail', competition_id=competition.id)
+        return redirect('competitions:competition_detail', competition_id=competition.id, competition_title=cleaned_title)
     
     Participant.objects.get_or_create(user=request.user, competition=competition)
     messages.success(request, "You have joined the competition!")
-    return redirect('competition_detail', competition_id=competition.id)
+    return redirect('competitions:competition_detail', competition_id=competition.id, competition_title=cleaned_title)
 
 @login_required
-def add_question(request, competition_id):
-    if not check_instructor(request.user):
-        raise PermissionDenied("Only instructors can add questions.")
-    
+def add_question(request, competition_id, competition_title):
     competition = get_object_or_404(Competition, id=competition_id)
-    
+    cleaned_title = clean_text(competition.title)
+
+    # إذا كان العنوان الممرر غير صحيح، أعد التوجيه
+    if cleaned_title != competition_title:
+        return redirect('competitions:add_question', competition_id=competition_id, competition_title=cleaned_title)
+
+    # تحقق مما إذا كان المستخدم مدرسًا
+    if not (hasattr(request.user, 'courses_profile') and request.user.courses_profile.role == 'instructor'):
+        messages.error(request, "Only instructors can add questions.")
+        return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
+
     if request.method == 'POST':
         text = request.POST.get('text')
         question_type = request.POST.get('question_type')
-        choices = request.POST.get('choices')
+        choices = request.POST.get('choices', '')
         correct_answer = request.POST.get('correct_answer')
         points = request.POST.get('points')
         coins = request.POST.get('coins')
-        
-        try:
-            Question.objects.create(
-                competition=competition,
-                text=text,
-                question_type=question_type,
-                choices=choices,
-                correct_answer=correct_answer,
-                points=int(points) if points else 0,
-                coins=int(coins) if coins else 0
-            )
-            messages.success(request, "Question added successfully!")
-            return redirect('competition_detail', competition_id=competition.id)
-        except (ValueError, ValidationError) as e:
-            messages.error(request, str(e))
-    
-    return render(request, 'competitions/add_question.html', {'competition': competition})
+
+        if text and question_type and correct_answer and points and coins:
+            try:
+                points = int(points)
+                coins = int(coins)
+                if points < 0 or coins < 0:
+                    messages.error(request, "Points and coins must be non-negative.")
+                else:
+                    question = Question(
+                        competition=competition,
+                        text=text,
+                        question_type=question_type,
+                        choices=choices,
+                        correct_answer=correct_answer,
+                        points=points,
+                        coins=coins
+                    )
+                    question.save()
+                    messages.success(request, "Question added successfully!")
+                    return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
+            except ValueError:
+                messages.error(request, "Invalid points or coins value.")
+        else:
+            messages.error(request, "All required fields must be filled.")
+
+    return render(request, 'competitions/add_question.html', {
+        'competition': competition,
+    })
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.urls import reverse
+from django.core.exceptions import PermissionDenied
+from .models import Competition, Question, Participant, Answer
+from .views import clean_text
 
 @login_required
-def answer_question(request, competition_id, question_id):
-    if not check_student(request.user):
-        raise PermissionDenied("Only students can answer questions.")
-    
+def answer_question(request, competition_id, competition_title, question_id):
     competition = get_object_or_404(Competition, id=competition_id)
-    question = get_object_or_404(Question, id=question_id, competition=competition)
+    cleaned_title = clean_text(competition.title)
+
+    # إذا كان العنوان الممرر غير صحيح، أعد التوجيه
+    if cleaned_title != competition_title:
+        return redirect('competitions:answer_question', competition_id=competition_id, competition_title=cleaned_title, question_id=question_id)
+
+    # التحقق من أن المستخدم طالب
+    if not check_student(request.user):
+        messages.error(request, "Only students can answer questions.")
+        return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
+
+    # التحقق من أن المستخدم مشارك في المسابقة
     participant = get_object_or_404(Participant, user=request.user, competition=competition)
-    
+
+    # التحقق من أن المسابقة مستمرة
     if not competition.is_ongoing:
         messages.error(request, "This competition is not active.")
-        return redirect('competition_detail', competition_id=competition.id)
-    
+        return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
+
+    question = get_object_or_404(Question, id=question_id, competition=competition)
+
     if request.method == 'POST':
         answer_text = request.POST.get('answer')
         try:
+            # إنشاء إجابة جديدة
             Answer.objects.create(
                 participant=participant,
                 question=question,
                 answer_text=answer_text
             )
-            messages.success(request, "Answer submitted!")
+            # التحقق من صحة الإجابة
+            is_correct = False
+            if question.question_type == 'MCQ':
+                correct_answer = question.correct_answer
+                is_correct = answer_text == correct_answer
+            else:
+                correct_answer = question.correct_answer.lower().strip()
+                is_correct = answer_text.lower().strip() == correct_answer
+
+            # تحديث نقاط المستخدم إذا كانت الإجابة صحيحة
+            if is_correct and request.user.courses_profile:
+                request.user.courses_profile.xp += question.points
+                request.user.courses_profile.coins += question.points // 10  # مثال: كل 10 نقاط = 1 كوين
+                request.user.courses_profile.save()
+
+            messages.success(request, "Answer submitted! {}".format("Correct!" if is_correct else "Incorrect."))
         except:
             messages.error(request, "You have already answered this question.")
-        
-        return redirect('competition_detail', competition_id=competition.id)
-    
+
+        return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
+
     choices = question.choices.split(',') if question.question_type == 'MCQ' and question.choices else []
-    
+
     return render(request, 'competitions/answer_question.html', {
         'competition': competition,
         'question': question,
@@ -194,112 +303,48 @@ def answer_question(request, competition_id, question_id):
     })
 
 @login_required
-def leaderboard(request, competition_id):
+def download_certificate(request, competition_id, competition_title):
     competition = get_object_or_404(Competition, id=competition_id)
-    participants = Participant.objects.filter(competition=competition).order_by('-total_xp')
-    return render(request, 'competitions/leaderboard.html', {
-        'competition': competition,
-        'participants': participants,
-    })
-
-@login_required
-def download_competition_certificate(request, competition_id):
-    competition = get_object_or_404(Competition, id=competition_id)
+    cleaned_title = clean_text(competition.title)
+    logger.debug(f"Download Certificate - ID: {competition_id}, Original Title: {competition.title}, Cleaned Title: {cleaned_title}, Received Title: {competition_title}")
+    
+    if cleaned_title != competition_title:
+        return HttpResponsePermanentRedirect(
+            reverse('competitions:download_certificate', kwargs={
+                'competition_id': competition_id,
+                'competition_title': cleaned_title
+            })
+        )
+    
     participant = get_object_or_404(Participant, user=request.user, competition=competition)
-
-    # Check if competition has ended
-    now = timezone.now()
-    if competition.is_active or competition.end_time > now:
-        messages.error(request, 'The competition is still ongoing. Certificates are available after the competition ends.')
-        return redirect('competition_detail', competition_id=competition.id)
-
-    # Determine participant's rank
-    participants = Participant.objects.filter(competition=competition).order_by('-total_xp')
-    participant_ranks = {p.id: idx + 1 for idx, p in enumerate(participants)}
-    participant_rank = participant_ranks.get(participant.id, None)
-
-    # Check if participant is in top 3
-    if participant_rank is None or participant_rank > 3:
-        messages.error(request, 'Certificates are only available for the top 3 participants.')
-        return redirect('competition_detail', competition_id=competition.id)
-
-    # Create or retrieve certificate
+    if not participant.has_completed_competition():
+        messages.error(request, "You must complete all questions to download the certificate.")
+        return redirect('competitions:competition_detail', competition_id=competition.id, competition_title=cleaned_title)
+    
     certificate, created = Certificate.objects.get_or_create(
         user=request.user,
         competition=competition,
         defaults={'certificate_number': str(uuid.uuid4())}
     )
-
-    # Create PDF
+    
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=0.5*inch, bottomMargin=1*inch, leftMargin=0.5*inch, rightMargin=0.5*inch)
     elements = []
-
-    # Set up styles
+    
     styles = getSampleStyleSheet()
-    title_style = ParagraphStyle(
-        name='Title',
-        fontName='Times-Roman',
-        fontSize=32,
-        textColor=colors.navy,
-        alignment=1,
-        spaceAfter=20,
-        leading=36
-    )
-    subtitle_style = ParagraphStyle(
-        name='Subtitle',
-        fontName='Times-Roman',
-        fontSize=20,
-        textColor=colors.white,
-        alignment=1,
-        spaceAfter=15,
-        leading=24
-    )
-    body_style = ParagraphStyle(
-        name='Body',
-        fontName='Times-Roman',
-        fontSize=16,
-        textColor=colors.white,
-        alignment=1,
-        spaceAfter=12,
-        leading=20
-    )
-    stamp_style = ParagraphStyle(
-        name='Stamp',
-        fontName='Times-Roman',
-        fontSize=14,
-        textColor=colors.navy,
-        alignment=1,
-        spaceAfter=8,
-        leading=16
-    )
-    signature_style = ParagraphStyle(
-        name='Signature',
-        fontName='Times-Italic',
-        fontSize=12,
-        textColor=colors.navy,
-        alignment=1,
-        spaceAfter=12,
-        leading=14
-    )
-
-    # Clean text function
-    def clean_text(text):
-        if not text:
-            return ""
-        return ''.join(c for c in str(text) if c.isprintable())
-
-    # Prepare text
-    competition_title = clean_text(competition.title)
+    title_style = ParagraphStyle(name='Title', fontName='Times-Roman', fontSize=32, textColor=colors.navy, alignment=1, spaceAfter=20, leading=36)
+    subtitle_style = ParagraphStyle(name='Subtitle', fontName='Times-Roman', fontSize=20, textColor=colors.white, alignment=1, spaceAfter=15, leading=24)
+    body_style = ParagraphStyle(name='Body', fontName='Times-Roman', fontSize=16, textColor=colors.white, alignment=1, spaceAfter=12, leading=20)
+    stamp_style = ParagraphStyle(name='Stamp', fontName='Times-Roman', fontSize=14, textColor=colors.navy, alignment=1, spaceAfter=8, leading=16)
+    signature_style = ParagraphStyle(name='Signature', fontName='Times-Italic', fontSize=12, textColor=colors.navy, alignment=1, spaceAfter=12, leading=14)
+    
+    competition_title_cleaned = clean_text(competition.title)
     try:
-        full_name = clean_text(request.user.profile.full_name or request.user.username)
+        full_name = clean_text(request.user.courses_profile.full_name or request.user.username)
     except AttributeError:
-        logger.warning(f"Profile not found for user: {request.user.username}")
         full_name = clean_text(request.user.username)
     instructor = clean_text(competition.instructor.username)
-    rank_text = {1: "1st", 2: "2nd", 3: "3rd"}.get(participant_rank, f"{participant_rank}th")
-
-    # Add logos
+    
     logo_path = os.path.join(settings.STATIC_ROOT, 'images', 'logo_eduvia1.png')
     company_logo_path = os.path.join(settings.STATIC_ROOT, 'images', 'creativity_code.png')
     logo_table_data = []
@@ -307,84 +352,36 @@ def download_competition_certificate(request, competition_id):
         logo = Image(logo_path, width=1.5*inch, height=1.5*inch)
         logo_table_data.append([logo])
     else:
-        logger.error(f"Eduvia logo not found at {logo_path}")
         logo_table_data.append([Paragraph("Eduvia Logo", body_style)])
     if os.path.exists(company_logo_path):
         company_logo = Image(company_logo_path, width=1.5*inch, height=1.5*inch)
         logo_table_data.append([company_logo])
     else:
-        logger.error(f"Company logo not found at {company_logo_path}")
         logo_table_data.append([Paragraph("Creativity Code Logo", body_style)])
-
+    
     logo_table = Table([[logo_table_data[0][0], '', logo_table_data[1][0]]], colWidths=[2*inch, 4*inch, 2*inch])
-    logo_table.setStyle(TableStyle([
-        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-        ('ALIGN', (0,0), (0,0), 'LEFT'),
-        ('ALIGN', (-1,-1), (-1,-1), 'RIGHT'),
-    ]))
+    logo_table.setStyle(TableStyle([('VALIGN', (0,0), (-1,-1), 'MIDDLE'), ('ALIGN', (0,0), (0,0), 'LEFT'), ('ALIGN', (-1,-1), (-1,-1), 'RIGHT')]))
     elements.append(logo_table)
     elements.append(Spacer(1, 0.3*inch))
-
-    # Certificate title
-    elements.append(Paragraph("Certificate of Achievement", title_style))
+    
+    elements.append(Paragraph("Certificate of Completion", title_style))
     elements.append(Spacer(1, 0.2*inch))
-
-    # Platform name
     elements.append(Paragraph("Eduvia", subtitle_style))
     elements.append(Spacer(1, 0.2*inch))
-
-    # Congratulatory message
-    elements.append(Paragraph(
-        f"This certificate is proudly presented to <b>{full_name}</b> for achieving",
-        body_style
-    ))
-    elements.append(Paragraph(
-        f"<b>{rank_text} Place</b> in the competition",
-        subtitle_style
-    ))
-    elements.append(Paragraph(
-        f"<b>{competition_title}</b>",
-        subtitle_style
-    ))
+    elements.append(Paragraph(f"This certificate is proudly presented to <b>{full_name}</b> for successfully completing the competition", body_style))
     elements.append(Spacer(1, 0.1*inch))
-
-    # XP earned
-    elements.append(Paragraph(
-        f"Total XP Earned: {participant.total_xp}",
-        body_style
-    ))
+    elements.append(Paragraph(f"<b>{competition_title_cleaned}</b>", subtitle_style))
     elements.append(Spacer(1, 0.1*inch))
-
-    # Instructor
-    elements.append(Paragraph(
-        f"Instructed by: {instructor}",
-        body_style
-    ))
+    elements.append(Paragraph(f"Instructed by: {instructor}", body_style))
     elements.append(Spacer(1, 0.2*inch))
-
-    # Additional message
-    elements.append(Paragraph(
-        "Congratulations on your outstanding performance! Keep competing and excelling!",
-        body_style
-    ))
+    elements.append(Paragraph("Congratulations on your dedication and achievement!", body_style))
     elements.append(Spacer(1, 0.2*inch))
-
-    # Certificate number and issue date
-    elements.append(Paragraph(
-        f"Certificate Number: {certificate.certificate_number}",
-        body_style
-    ))
-    elements.append(Paragraph(
-        f"Issued on: {certificate.issued_at.strftime('%B %d, %Y')}",
-        body_style
-    ))
+    elements.append(Paragraph(f"Certificate Number: {certificate.certificate_number}", body_style))
+    elements.append(Paragraph(f"Issued on: {certificate.issued_at.strftime('%B %d, %Y')}", body_style))
     elements.append(Spacer(1, 0.5*inch))
-
-    # Stamp and signature
     elements.append(Paragraph("Certified by: Eduvia", stamp_style))
     elements.append(Paragraph("Eng. Ahmed Ibrahim", signature_style))
-
-    # Draw border and background
+    
     def draw_border_and_background(canvas, doc):
         canvas.saveState()
         canvas.linearGradient(0, 0, A4[0], A4[1], [colors.cyan, colors.lightcyan])
@@ -404,15 +401,40 @@ def download_competition_certificate(request, competition_id):
         canvas.line(0.25*inch, 0.25*inch, 0.75*inch, 0.25*inch)
         canvas.line(A4[0]-0.75*inch, 0.25*inch, A4[0]-0.25*inch, 0.25*inch)
         canvas.line(A4[0]-0.25*inch, 0.25*inch, A4[0]-0.25*inch, 0.75*inch)
-        canvas.restoreState()
-
-    # Build PDF
+    
     doc.build(elements, onFirstPage=draw_border_and_background, onLaterPages=draw_border_and_background)
     buffer.seek(0)
-
-    # Return PDF response
+    
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="certificate_{competition_title}_{request.user.username}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="certificate_{competition_title_cleaned}_{request.user.username}.pdf"'
     response.write(buffer.getvalue())
     buffer.close()
     return response
+
+from django.shortcuts import render, get_object_or_404
+from .models import Competition, Participant
+from .views import clean_text
+from django.urls import reverse
+from django.http import HttpResponsePermanentRedirect
+
+@login_required
+def leaderboard(request, competition_id, competition_title):
+    competition = get_object_or_404(Competition, id=competition_id)
+    cleaned_title = clean_text(competition.title)
+    
+    # إذا كان العنوان الممرر غير صحيح، أعد التوجيه إلى العنوان الصحيح
+    if cleaned_title != competition_title:
+        return HttpResponsePermanentRedirect(
+            reverse('competitions:leaderboard', kwargs={
+                'competition_id': competition_id,
+                'competition_title': cleaned_title
+            })
+        )
+    
+    participants = Participant.objects.filter(competition=competition).order_by('-total_xp')
+    
+    return render(request, 'competitions/leaderboard.html', {
+        'competition': competition,
+        'participants': participants,
+        'slugified_competition_title': cleaned_title,
+    })

@@ -1,5 +1,5 @@
 {% load static competition_tags %}
-
+{% load competition_filters %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
@@ -501,11 +501,11 @@
                     <li data-translate="no-questions">No questions yet.</li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'add_question' competition.id %}" data-translate="add-question-link">Add New Question</a>
-            <a href="{% url 'edit_competition' competition.id %}" data-translate="edit-competition-link">Edit Competition</a>
+            <a href="{% url 'competitions:add_question' competition.id competition.title|custom_slugify %}" data-translate="add-question-link">Add New Question</a>
+            <a href="{% url 'competitions:edit_competition' competition.id competition.title|custom_slugify %}" data-translate="edit-competition-link">Edit Competition</a>
         {% elif user.role == 'student' %}
             {% if not is_participant %}
-                <form method="post" action="{% url 'join_competition' competition.id %}">
+                <form method="post" action="{% url 'competitions:join_competition' competition.id competition.title|custom_slugify %}">
                     {% csrf_token %}
                     <button type="submit" data-translate="join-competition-button">Join Competition</button>
                 </form>
@@ -521,7 +521,7 @@
                             {% if item.answered %}
                                 (<span data-translate="answered-label">Answered</span>)
                             {% else %}
-                                <a href="{% url 'answer_question' competition.id item.question.id %}" data-translate="answer-link">Answer</a>
+                                <a href="{% url 'competitions:answer_question' competition.id competition.title|custom_slugify item.question.id %}" data-translate="answer-link">Answer</a>
                             {% endif %}
                         </li>
                     {% empty %}
@@ -532,7 +532,7 @@
         {% else %}
             <p data-translate="student-only-message">Only students can participate in competitions.</p>
         {% endif %}
-        <a href="{% url 'leaderboard' competition.id %}" data-translate="leaderboard-link">View Leaderboard</a>
+        <a href="{% url 'competitions:leaderboard' competition.id competition.title|custom_slugify %}" data-translate="leaderboard-link">View Leaderboard</a>
     </section>
 
     <!-- Footer -->

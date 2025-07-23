@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponsePermanentRedirect
+from django.urls import reverse
 from django import forms
 from django.utils.timezone import now
 from django.contrib.auth import get_user_model
 from django.db.models import Max
+from django.core.exceptions import PermissionDenied
 from .models import Course, Video, UserProfile, CourseEnrollment, VideoFile, Comment, VideoRating, Certificate, VideoProgress, UserTaskSubmission, AlternativeQuiz, Task
 from .forms import AlternativeQuizForm, TaskForm
 from .decorators import instructor_required
@@ -15,29 +17,61 @@ from reportlab.lib.units import inch
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.pdfgen import canvas
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
 from io import BytesIO
 import os
 from django.conf import settings
 import re
+from django.utils.text import slugify
+import logging
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
-# دالة لتنظيف النصوص من الأحرف غير المرغوب فيها
 def clean_text(text):
-    return re.sub(r'[^\x20-\x7E]', ' ', text).strip()
+    """تنظيف النص من الأحرف غير المدعومة مع دعم الأحرف العربية"""
+    if not text or not text.strip():
+        return 'default-title'
+    # السماح بالأحرف العربية، الإنجليزية، الأرقام، المسافات، والشرطات
+    text = re.sub(r'[^\w\s\-\u0600-\u06FF]', '', text).strip()
+    cleaned = text if text else 'default-title'
+    slugified = slugify(cleaned, allow_unicode=True)
+    return slugified if slugified else 'default-title'
 
-# تنزيل الشهادة
-@login_required
-def download_certificate(request, course_id):
+def redirect_old_course_url(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    enrollment = get_object_or_404(CourseEnrollment, user=request.user, course=course)
+    cleaned_title = clean_text(course.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    return HttpResponsePermanentRedirect(reverse('courses:course_details', kwargs={
+        'course_id': course.id,
+        'course_title': slugified_title
+    }))
 
+def redirect_old_video_url(request, course_id, video_id):
+    video = get_object_or_404(Video, id=video_id, course__id=course_id)
+    cleaned_course_title = clean_text(video.course.title)
+    cleaned_video_title = clean_text(video.title)
+    return HttpResponsePermanentRedirect(reverse('courses:watch_video', kwargs={
+        'course_id': course_id,
+        'course_title': slugify(cleaned_course_title, allow_unicode=True) or 'default-title',
+        'video_id': video_id,
+        'video_title': slugify(cleaned_video_title, allow_unicode=True) or 'default-title'
+    }))
+
+@login_required
+def download_certificate(request, course_id, course_title):
+    course = get_object_or_404(Course, id=course_id)
+    cleaned_title = clean_text(course.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Download Certificate - Course ID: {course_id}, Original Title: {course.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {course_title}")
+    
+    if slugified_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:download_certificate', kwargs={'course_id': course_id, 'course_title': slugified_title}))
+    
+    enrollment = get_object_or_404(CourseEnrollment, user=request.user, course=course)
     if not enrollment.is_course_completed():
         messages.error(request, 'You must complete all videos to download the certificate.')
-        return redirect('courses:course_details', course_id=course.id)
+        return redirect('courses:course_details', course_id=course.id, course_title=slugified_title)
 
     certificate, created = Certificate.objects.get_or_create(
         user=request.user,
@@ -60,11 +94,10 @@ def download_certificate(request, course_id):
     stamp_style = ParagraphStyle(name='Stamp', fontName='Times-Roman', fontSize=14, textColor=colors.navy, alignment=1, spaceAfter=8, leading=16)
     signature_style = ParagraphStyle(name='Signature', fontName='Times-Italic', fontSize=12, textColor=colors.navy, alignment=1, spaceAfter=12, leading=14)
 
-    course_title = clean_text(course.title)
+    course_title_cleaned = clean_text(course.title)
     try:
-        full_name = clean_text(request.user.profile.full_name or request.user.username)
+        full_name = clean_text(request.user.courses_profile.full_name or request.user.username)
     except UserProfile.DoesNotExist:
-        print(f"Profile not found for user: {request.user.username}")
         full_name = clean_text(request.user.username)
     instructor = clean_text(course.instructor)
 
@@ -75,13 +108,11 @@ def download_certificate(request, course_id):
         logo = Image(logo_path, width=1.5*inch, height=1.5*inch)
         logo_table_data.append([logo])
     else:
-        print(f"Error: Eduvia logo not found at {logo_path}. Please place 'logo_eduvia1.jpg' in 'Eduvia/static/images/' and run 'python manage.py collectstatic'.")
         logo_table_data.append([Paragraph("Eduvia Logo", body_style)])
     if os.path.exists(company_logo_path):
         company_logo = Image(company_logo_path, width=1.5*inch, height=1.5*inch)
         logo_table_data.append([company_logo])
     else:
-        print(f"Error: Company logo not found at {company_logo_path}. Please place 'creativity_code.jpg' in 'Eduvia/static/images/' and run 'python manage.py collectstatic'.")
         logo_table_data.append([Paragraph("Creativity Code Logo", body_style)])
 
     logo_table = Table([[logo_table_data[0][0], '', logo_table_data[1][0]]], colWidths=[2*inch, 4*inch, 2*inch])
@@ -95,7 +126,7 @@ def download_certificate(request, course_id):
     elements.append(Spacer(1, 0.2*inch))
     elements.append(Paragraph(f"This certificate is proudly presented to <b>{full_name}</b> for successfully completing the course", body_style))
     elements.append(Spacer(1, 0.1*inch))
-    elements.append(Paragraph(f"<b>{course_title}</b>", subtitle_style))
+    elements.append(Paragraph(f"<b>{course_title_cleaned}</b>", subtitle_style))
     elements.append(Spacer(1, 0.1*inch))
     elements.append(Paragraph(f"Instructed by: {instructor}", body_style))
     elements.append(Spacer(1, 0.2*inch))
@@ -131,12 +162,11 @@ def download_certificate(request, course_id):
     buffer.seek(0)
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="certificate_{course_title}_{request.user.username}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="certificate_{course_title_cleaned}_{request.user.username}.pdf"'
     response.write(buffer.getvalue())
     buffer.close()
     return response
 
-# Form for creating/updating courses
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
@@ -144,35 +174,50 @@ class CourseForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'category': forms.Select(choices=Course.CATEGORY_CHOICES),
+            'image': forms.URLInput(attrs={'placeholder': 'Enter image URL (e.g., Google Drive link)'}),
+        }
+        labels = {
+            'title': 'Course Title',
+            'description': 'Description',
+            'category': 'Category',
+            'image': 'Image URL',
         }
 
-# Form for creating/updating videos
+    def clean_image(self):
+        image_url = self.cleaned_data.get('image')
+        if image_url:
+            if not image_url.startswith(('http://', 'https://')):
+                raise forms.ValidationError("Please enter a valid URL starting with http:// or https://")
+        return image_url
+
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
         fields = ['title', 'video_url', 'description', 'order']
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
+            'title': forms.TextInput(attrs={'placeholder': 'Enter video title'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Enter video description'}),
+            'video_url': forms.URLInput(attrs={'placeholder': 'Enter video URL (e.g., Google Drive link)'}),
+            'order': forms.NumberInput(attrs={'placeholder': 'Enter video order'}),
+        }
+        labels = {
+            'title': 'Video Title',
+            'description': 'Description',
+            'video_url': 'Video URL',
+            'order': 'Order',
         }
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
-from .models import Course, Video
-
-def instructor_required(view_func):
-    def _wrapped_view(request, *args, **kwargs):
-        if not request.user.is_authenticated or not hasattr(request.user, 'courses_profile') or request.user.courses_profile.role != 'instructor':
-            raise PermissionDenied
-        return view_func(request, *args, **kwargs)
-    return _wrapped_view
+    def clean(self):
+        cleaned_data = super().clean()
+        video_url = cleaned_data.get('video_url')
+        if not video_url:
+            raise forms.ValidationError("يجب إدخال رابط فيديو.")
+        return cleaned_data
 
 @login_required
 @instructor_required
 def instructor_dashboard(request):
-    # جلب الكورسات الخاصة بالمدرب الحالي بناءً على username
     courses = Course.objects.filter(instructor=request.user.username)
-    # جلب الفيديوهات لكل كورس وتخزينها كقائمة منفصلة
     for course in courses:
         course.video_list = Video.objects.filter(course=course).order_by('order')
     context = {
@@ -182,13 +227,11 @@ def instructor_dashboard(request):
     }
     return render(request, 'courses/dashboard.html', context)
 
-# Add new course
-# courses/views.py
 @login_required
 @instructor_required
 def add_course(request):
     if request.method == 'POST':
-        form = CourseForm(request.POST)  # إزالة request.FILES
+        form = CourseForm(request.POST)
         if form.is_valid():
             course = form.save(commit=False)
             course.instructor = request.user.username
@@ -200,14 +243,20 @@ def add_course(request):
     else:
         form = CourseForm()
     return render(request, 'courses/add_course.html', {'form': form})
-# Edit existing course
-# courses/views.py
+
 @login_required
 @instructor_required
-def edit_course(request, course_id):
+def edit_course(request, course_id, course_title):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
+    cleaned_title = clean_text(course.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Edit Course - Course ID: {course_id}, Original Title: {course.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {course_title}")
+    
+    if slugified_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:edit_course', kwargs={'course_id': course_id, 'course_title': slugified_title}))
+    
     if request.method == 'POST':
-        form = CourseForm(request.POST, instance=course)  # إزالة request.FILES
+        form = CourseForm(request.POST, instance=course)
         if form.is_valid():
             form.save()
             messages.success(request, 'Course updated successfully!')
@@ -218,33 +267,26 @@ def edit_course(request, course_id):
         form = CourseForm(instance=course)
     return render(request, 'courses/edit_course.html', {'form': form, 'course': course})
 
-
-
-import logging
-
-logger = logging.getLogger(__name__)
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from .decorators import instructor_required
-from .forms import VideoForm
-from .models import Course, Video
-
 @login_required
 @instructor_required
-def add_video(request, course_id):
+def add_video(request, course_id, course_title):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
+    cleaned_title = clean_text(course.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Add Video - Course ID: {course_id}, Original Title: {course.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {course_title}")
+    
+    if slugified_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:add_video', kwargs={'course_id': course_id, 'course_title': slugified_title}))
+    
     if request.method == 'POST':
-        form = VideoForm(request.POST)  # لم نعد نحتاج request.FILES
+        form = VideoForm(request.POST)
         if form.is_valid():
             video = form.save(commit=False)
             video.course = course
             video.save()
-            logger.debug(f"Video saved with ID: {video.id}")
             messages.success(request, 'Video added successfully!')
-            return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
+            return redirect('courses:watch_video', course_id=course.id, course_title=slugified_title, video_id=video.id, video_title=slugify(clean_text(video.title), allow_unicode=True) or 'default-title')
         else:
-            logger.debug(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors below.')
             for error in form.non_field_errors():
                 messages.error(request, error)
@@ -252,112 +294,146 @@ def add_video(request, course_id):
         form = VideoForm()
     return render(request, 'courses/add_video.html', {'form': form, 'course': course})
 
-# View all videos for a course
 @login_required
 @instructor_required
-def course_videos(request, course_id):
+def course_videos(request, course_id, course_title):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
+    cleaned_title = clean_text(course.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Course Videos - Course ID: {course_id}, Original Title: {course.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {course_title}")
+    
+    if slugified_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:course_videos', kwargs={'course_id': course_id, 'course_title': slugified_title}))
+    
     videos = course.videos.all()
     return render(request, 'courses/course_videos.html', {'course': course, 'videos': videos})
 
-# Edit existing video
 @login_required
 @instructor_required
-def edit_video(request, course_id, video_id):
+def edit_video(request, course_id, course_title, video_id, video_title):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
+    cleaned_course_title = clean_text(course.title)
+    slugified_course_title = slugify(cleaned_course_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Edit Video - Course ID: {course_id}, Original Course Title: {course.title}, Cleaned Course Title: {cleaned_course_title}, Slugified Course Title: {slugified_course_title}, Received Course Title: {course_title}")
+    
+    if slugified_course_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:edit_video', kwargs={'course_id': course_id, 'course_title': slugified_course_title, 'video_id': video_id, 'video_title': video_title}))
+    
     video = get_object_or_404(Video, id=video_id, course=course)
+    cleaned_video_title = clean_text(video.title)
+    slugified_video_title = slugify(cleaned_video_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Edit Video - Video ID: {video_id}, Original Video Title: {video.title}, Cleaned Video Title: {cleaned_video_title}, Slugified Video Title: {slugified_video_title}, Received Video Title: {video_title}")
+    
+    if slugified_video_title != video_title:
+        return HttpResponsePermanentRedirect(reverse('courses:edit_video', kwargs={'course_id': course_id, 'course_title': slugified_course_title, 'video_id': video_id, 'video_title': slugified_video_title}))
+    
     if request.method == 'POST':
         form = VideoForm(request.POST, instance=video)
         if form.is_valid():
             form.save()
             messages.success(request, 'Video updated successfully!')
-            return redirect('courses:course_videos', course_id=course.id)
+            return redirect('courses:course_videos', course_id=course.id, course_title=slugified_course_title)
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
         form = VideoForm(instance=video)
     return render(request, 'courses/edit_video.html', {'form': form, 'course': course, 'video': video})
 
-# List all courses
 def courses_view(request):
     courses = Course.objects.all()
     enrolled_course_ids = []
     if request.user.is_authenticated:
         enrolled_course_ids = list(CourseEnrollment.objects.filter(user=request.user).values_list('course__id', flat=True))
-        print(f"User: {request.user.username}, Enrolled course IDs: {enrolled_course_ids}")
+    for course in courses:
+        logger.debug(f"Courses View - Course ID: {course.id}, Title: {course.title}, Slugified: {slugify(clean_text(course.title), allow_unicode=True)}")
     return render(request, 'courses/courses.html', {
         'courses': courses,
         'enrolled_course_ids': enrolled_course_ids
     })
 
-# Enroll in a course
 @login_required
-def enroll_course(request, course_id):
+def enroll_course(request, course_id, course_title):
+    course = get_object_or_404(Course, id=course_id)
+    cleaned_title = clean_text(course.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Enroll Course - Course ID: {course_id}, Original Title: {course.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {course_title}")
+    
+    if slugified_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:enroll_course', kwargs={'course_id': course_id, 'course_title': slugified_title}))
+    
     if request.method != 'POST':
-        print(f"Invalid request method for course ID: {course_id}")
         return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)
 
-    course = get_object_or_404(Course, id=course_id)
     try:
         user_profile = request.user.courses_profile
     except UserProfile.DoesNotExist:
-        print(f"Error: UserProfile not found for user {request.user.username}")
         return JsonResponse({'success': False, 'message': 'User profile not found. Please contact support.'}, status=400)
 
-    print(f"User: {request.user.username}, Coins: {user_profile.coins}, Course ID: {course_id}")
-
     if CourseEnrollment.objects.filter(user=request.user, course=course).exists():
-        print(f"User {request.user.username} already enrolled in course {course_id}")
         return JsonResponse({
             'success': True,
             'message': 'You are already enrolled in this course.',
-            'redirect': f'/courses/details/{course.id}/',
+            'redirect': reverse('courses:course_details', kwargs={'course_id': course.id, 'course_title': slugified_title}),
             'coins': user_profile.coins
         })
 
     required_coins = 300
     if user_profile.coins < required_coins:
-        print(f"Insufficient coins: Available {user_profile.coins}, Required {required_coins}")
         return JsonResponse({'success': False, 'message': f'You need {required_coins} coins to purchase this course. You have {user_profile.coins} coins.'}, status=400)
 
     try:
         if not user_profile.deduct_coins(required_coins):
-            print(f"Failed to deduct coins: Insufficient balance")
             return JsonResponse({'success': False, 'message': 'Failed to deduct coins. Insufficient balance.'}, status=400)
         CourseEnrollment.objects.create(user=request.user, course=course)
-        print(f"Enrollment successful! Coins after deduction: {user_profile.coins}")
         return JsonResponse({
             'success': True,
             'message': 'Course purchased successfully!',
             'new_coins': user_profile.coins,
-            'redirect': f'/courses/details/{course.id}/'
+            'redirect': reverse('courses:course_details', kwargs={'course_id': course.id, 'course_title': slugified_title})
         })
     except Exception as e:
-        print(f"Error during enrollment: {str(e)}")
         return JsonResponse({'success': False, 'message': f'Failed to purchase course: {str(e)}'}, status=500)
 
-# Check enrollment status
 @login_required
-def check_enrollment(request, course_id):
+def check_enrollment(request, course_id, course_title):
     course = get_object_or_404(Course, id=course_id)
+    cleaned_title = clean_text(course.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Check Enrollment - Course ID: {course_id}, Original Title: {course.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {course_title}")
+    
+    if slugified_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:check_enrollment', kwargs={'course_id': course_id, 'course_title': slugified_title}))
+    
     is_enrolled = CourseEnrollment.objects.filter(user=request.user, course=course).exists()
     return JsonResponse({'is_enrolled': is_enrolled})
 
-# Course details with videos
 @login_required
-def course_details_view(request, course_id):
+def course_details_view(request, course_id, course_title):
     course = get_object_or_404(Course, id=course_id)
-    is_enrolled = CourseEnrollment.objects.filter(user=request.user, course=course).exists()
+    cleaned_title = clean_text(course.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Course Details - Course ID: {course_id}, Original Title: {course.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {course_title}")
     
+    if slugified_title != course_title:
+        return HttpResponsePermanentRedirect(
+            reverse('courses:course_details', kwargs={
+                'course_id': course_id,
+                'course_title': slugified_title
+            })
+        )
+    
+    is_enrolled = CourseEnrollment.objects.filter(user=request.user, course=course).exists()
     if not is_enrolled:
-        messages.error(request, 'You must purchase this course to view its details.')
+        messages.error(request, 'يجب شراء هذه الدورة لعرض التفاصيل.')
         return redirect('courses:courses')
 
     videos = course.videos.all()
-    completed_videos_count = 0
+    for video in videos:
+        video.slugified_title = slugify(clean_text(video.title), allow_unicode=True) or 'default-title'
+        logger.debug(f"Course Details - Video ID: {video.id}, Original Title: {video.title}, Slugified Title: {video.slugified_title}")
+    
+    completed_videos_count = VideoProgress.objects.filter(user=request.user, video__course=course, completed=True).count()
     total_videos_count = videos.count()
-    if request.user.is_authenticated:
-        completed_videos_count = VideoProgress.objects.filter(user=request.user, video__course=course, completed=True).count()
 
     context = {
         "course": course,
@@ -368,20 +444,27 @@ def course_details_view(request, course_id):
     }
     return render(request, 'courses/course_details.html', context)
 
-# Watch video with task handling
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.db.models import Max
-from .models import Course, Video, VideoProgress, CourseEnrollment, Task, AlternativeQuiz, UserTaskSubmission, VideoRating
-from .decorators import instructor_required
-
-from .models import VideoFile  # تأكد من استيراد نموذج VideoFile
-
 @login_required
-def watch_video(request, course_id, video_id):
+def watch_video(request, course_id, course_title, video_id, video_title):
     course = get_object_or_404(Course, id=course_id)
+    cleaned_course_title = clean_text(course.title)
+    slugified_course_title = slugify(cleaned_course_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Watch Video - Course ID: {course_id}, Original Course Title: {course.title}, Cleaned Course Title: {cleaned_course_title}, Slugified Course Title: {slugified_course_title}, Received Course Title: {course_title}")
+    
     video = get_object_or_404(Video, id=video_id, course=course)
+    cleaned_video_title = clean_text(video.title)
+    slugified_video_title = slugify(cleaned_video_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Watch Video - Video ID: {video_id}, Original Video Title: {video.title}, Cleaned Video Title: {cleaned_video_title}, Slugified Video Title: {slugified_video_title}, Received Video Title: {video_title}")
+    
+    if course_title != slugified_course_title or video_title != slugified_video_title:
+        return HttpResponsePermanentRedirect(
+            reverse('courses:watch_video', kwargs={
+                'course_id': course_id,
+                'course_title': slugified_course_title,
+                'video_id': video_id,
+                'video_title': slugified_video_title
+            })
+        )
     
     if not CourseEnrollment.objects.filter(user=request.user, course=course).exists():
         messages.error(request, 'يجب شراء هذه الدورة لمشاهدة الفيديوهات.')
@@ -420,14 +503,13 @@ def watch_video(request, course_id, video_id):
             except UserProfile.DoesNotExist:
                 messages.error(request, 'خطأ: لم يتم العثور على ملف المستخدم.')
 
-    # File upload handling
     if request.method == 'POST' and 'upload_file' in request.POST:
         file = request.FILES.get('file')
         description = request.POST.get('description', '')
         
         if not file:
             messages.error(request, 'يرجى اختيار ملف للرفع.')
-            return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
+            return redirect('courses:watch_video', course_id=course.id, course_title=slugified_course_title, video_id=video.id, video_title=slugified_video_title)
 
         try:
             video_file = VideoFile(
@@ -442,9 +524,8 @@ def watch_video(request, course_id, video_id):
         except Exception as e:
             messages.error(request, f'فشل رفع الملف: {str(e)}')
         
-        return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
+        return redirect('courses:watch_video', course_id=course.id, course_title=slugified_course_title, video_id=video.id, video_title=slugified_video_title)
 
-    # Task submission handling
     if request.method == 'POST' and 'submit_task' in request.POST:
         task_id = request.POST.get('task_id')
         task = get_object_or_404(Task, id=task_id, video=video)
@@ -452,7 +533,7 @@ def watch_video(request, course_id, video_id):
 
         if len(submitted_answers) != len(task.questions):
             messages.error(request, 'يجب الإجابة على جميع الأسئلة.')
-            return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
+            return redirect('courses:watch_video', course_id=course.id, course_title=slugified_course_title, video_id=video.id, video_title=slugified_video_title)
 
         max_attempt = UserTaskSubmission.objects.filter(user=request.user, task=task).aggregate(Max('attempt_number'))['attempt_number__max'] or 0
         new_attempt = max_attempt + 1
@@ -482,9 +563,8 @@ def watch_video(request, course_id, video_id):
             show_alternative_quiz = True
             messages.info(request, f'نسبة نجاحك: {success_rate:.0f}%. تحتاج إلى 50% للنجاح. الاختبار البديل متاح الآن.')
 
-        return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
+        return redirect('courses:watch_video', course_id=course.id, course_title=slugified_course_title, video_id=video.id, video_title=slugified_video_title)
 
-    # Alternative quiz submission handling
     if request.method == 'POST' and 'submit_alternative_quiz' in request.POST:
         quiz_id = request.POST.get('quiz_id')
         submitted_answer = request.POST.get('answer')
@@ -516,7 +596,7 @@ def watch_video(request, course_id, video_id):
             show_alternative_quiz = False
             messages.error(request, 'إجابة غير صحيحة. يمكنك إعادة محاولة المهمة الرئيسية.')
 
-        return redirect('courses:watch_video', course_id=course.id, video_id=video.id)
+        return redirect('courses:watch_video', course_id=course.id, course_title=slugified_course_title, video_id=video.id, video_title=slugified_video_title)
 
     completed_videos_count = VideoProgress.objects.filter(user=request.user, video__course=course, completed=True).count()
     total_videos_count = videos.count()
@@ -524,6 +604,8 @@ def watch_video(request, course_id, video_id):
     uploaded_files = video.files.all()
     user_rating = VideoRating.objects.filter(video=video, user=request.user).first()
     user_rating = user_rating.rating if user_rating else None
+
+    comments = Comment.objects.filter(video=video).order_by('-created_at')
 
     context = {
         'course': course,
@@ -538,38 +620,52 @@ def watch_video(request, course_id, video_id):
         'alternative_quiz': alternative_quiz,
         'show_main_task': show_main_task,
         'show_alternative_quiz': show_alternative_quiz,
+        'comments': comments,
+        'slugified_course_title': slugified_course_title,
+        'slugified_video_title': slugified_video_title,
     }
     return render(request, 'courses/watch_video.html', context)
 
-# Get rating
-def get_rating(request, video_id):
-    if not request.user.is_authenticated:
-        return JsonResponse({'rating': None})
-    rating = VideoRating.objects.filter(video_id=video_id, user=request.user).first()
-    return JsonResponse({'rating': rating.rating if rating else None})
-
-# Rate a video
 @login_required
-def rate_video(request, video_id):
+def rate_video(request, video_id, video_title):
+    video = get_object_or_404(Video, id=video_id)
+    cleaned_title = clean_text(video.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Rate Video - Video ID: {video_id}, Original Title: {video.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {video_title}")
+    
+    if slugified_title != video_title:
+        return HttpResponsePermanentRedirect(reverse('courses:rate_video', kwargs={'video_id': video_id, 'video_title': slugified_title}))
+    
     if request.method == 'POST':
-        video = get_object_or_404(Video, id=video_id)
         rating = int(request.POST.get('rating', 0))
         VideoRating.objects.update_or_create(video=video, user=request.user, defaults={'rating': rating})
-        return redirect('courses:watch_video', course_id=video.course.id, video_id=video.id)
+        return redirect('courses:watch_video', course_id=video.course.id, course_title=slugify(clean_text(video.course.title), allow_unicode=True) or 'default-title', video_id=video.id, video_title=slugified_title)
 
-# Add a comment to a video
 @login_required
-def add_comment(request, video_id):
+def add_comment(request, video_id, video_title):
     video = get_object_or_404(Video, id=video_id)
+    cleaned_title = clean_text(video.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Add Comment - Video ID: {video_id}, Original Title: {video.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {video_title}")
+    
+    if slugified_title != video_title:
+        return HttpResponsePermanentRedirect(reverse('courses:add_comment', kwargs={'video_id': video_id, 'video_title': slugified_title}))
+    
     if request.method == 'POST':
         content = request.POST.get('content')
         Comment.objects.create(video=video, user=request.user, content=content)
-    return redirect('courses:watch_video', course_id=video.course.id, video_id=video.id)
+        return redirect('courses:watch_video', course_id=video.course.id, course_title=slugify(clean_text(video.course.title), allow_unicode=True) or 'default-title', video_id=video.id, video_title=slugified_title)
 
-# Update progress
 @login_required
-def update_progress(request, video_id):
+def update_progress(request, video_id, video_title):
     video = get_object_or_404(Video, id=video_id)
+    cleaned_title = clean_text(video.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Update Progress - Video ID: {video_id}, Original Title: {video.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {video_title}")
+    
+    if slugified_title != video_title:
+        return HttpResponsePermanentRedirect(reverse('courses:update_progress', kwargs={'video_id': video_id, 'video_title': slugified_title}))
+    
     if request.method == 'POST':
         current_time = float(request.POST.get('current_time', 0.0))
         video_progress, created = VideoProgress.objects.get_or_create(
@@ -578,7 +674,7 @@ def update_progress(request, video_id):
             defaults={'completed': False, 'progress_percentage': 0.0, 'current_time': 0.0}
         )
         video_progress.current_time = current_time
-        duration = video.get_duration()
+        duration = video.duration * 60  # Convert minutes to seconds
         if duration:
             video_progress.progress_percentage = (current_time / duration) * 100
             if current_time >= duration - 1:
@@ -594,7 +690,20 @@ def update_progress(request, video_id):
     progress = video_progress.progress_percentage if hasattr(video_progress, 'progress_percentage') else 0
     return JsonResponse({'progress': progress})
 
-# Search for courses
+def get_rating(request, video_id, video_title):
+    video = get_object_or_404(Video, id=video_id)
+    cleaned_title = clean_text(video.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Get Rating - Video ID: {video_id}, Original Title: {video.title}, Cleaned Title: {cleaned_title}, Slugified Title: {slugified_title}, Received Title: {video_title}")
+    
+    if slugified_title != video_title:
+        return HttpResponsePermanentRedirect(reverse('courses:get_rating', kwargs={'video_id': video_id, 'video_title': slugified_title}))
+    
+    if not request.user.is_authenticated:
+        return JsonResponse({'rating': None})
+    rating = VideoRating.objects.filter(video_id=video_id, user=request.user).first()
+    return JsonResponse({'rating': rating.rating if rating else None})
+
 def search_courses(request):
     query = request.GET.get('q', '')
     courses = Course.objects.filter(title__icontains=query) | Course.objects.filter(description__icontains=query) | Course.objects.filter(category__icontains=query) if query else Course.objects.none()
@@ -602,7 +711,6 @@ def search_courses(request):
     enrolled_course_ids = []
     if request.user.is_authenticated:
         enrolled_course_ids = list(CourseEnrollment.objects.filter(user=request.user).values_list('course__id', flat=True))
-        print(f"User: {request.user.username}, Enrolled course IDs: {enrolled_course_ids}")
 
     return render(request, 'courses/search_results.html', {
         'query': query,
@@ -612,8 +720,23 @@ def search_courses(request):
 
 @login_required
 @instructor_required
-def add_task(request, course_id, video_id):
+def add_task(request, course_id, course_title, video_id, video_title):
     video = get_object_or_404(Video, id=video_id, course__id=course_id, course__instructor=request.user.username)
+    cleaned_video_title = clean_text(video.title)
+    slugified_video_title = slugify(cleaned_video_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Add Task - Video ID: {video_id}, Original Video Title: {video.title}, Cleaned Video Title: {cleaned_video_title}, Slugified Video Title: {slugified_video_title}, Received Video Title: {video_title}")
+    
+    course = video.course
+    cleaned_course_title = clean_text(course.title)
+    slugified_course_title = slugify(cleaned_course_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Add Task - Course ID: {course_id}, Original Course Title: {course.title}, Cleaned Course Title: {cleaned_course_title}, Slugified Course Title: {slugified_course_title}, Received Course Title: {course_title}")
+    
+    if slugified_video_title != video_title:
+        return HttpResponsePermanentRedirect(reverse('courses:add_task', kwargs={'course_id': course_id, 'course_title': course_title, 'video_id': video_id, 'video_title': slugified_video_title}))
+    
+    if slugified_course_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:add_task', kwargs={'course_id': course_id, 'course_title': slugified_course_title, 'video_id': video_id, 'video_title': slugified_video_title}))
+    
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -622,15 +745,30 @@ def add_task(request, course_id, video_id):
             task.questions = form.cleaned_data['questions_json']
             task.save()
             messages.success(request, 'Task added successfully!')
-            return redirect('courses:course_videos', course_id=course_id)
+            return redirect('courses:course_videos', course_id=course_id, course_title=slugified_course_title)
     else:
         form = TaskForm()
     return render(request, 'courses/add_task.html', {'form': form, 'video': video})
 
 @login_required
 @instructor_required
-def add_alternative_quiz(request, course_id, video_id):
+def add_alternative_quiz(request, course_id, course_title, video_id, video_title):
     video = get_object_or_404(Video, id=video_id, course__id=course_id, course__instructor=request.user.username)
+    cleaned_video_title = clean_text(video.title)
+    slugified_video_title = slugify(cleaned_video_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Add Alternative Quiz - Video ID: {video_id}, Original Video Title: {video.title}, Cleaned Video Title: {cleaned_video_title}, Slugified Video Title: {slugified_video_title}, Received Video Title: {video_title}")
+    
+    course = video.course
+    cleaned_course_title = clean_text(course.title)
+    slugified_course_title = slugify(cleaned_course_title, allow_unicode=True) or 'default-title'
+    logger.debug(f"Add Alternative Quiz - Course ID: {course_id}, Original Course Title: {course.title}, Cleaned Course Title: {cleaned_course_title}, Slugified Course Title: {slugified_course_title}, Received Course Title: {course_title}")
+    
+    if slugified_video_title != video_title:
+        return HttpResponsePermanentRedirect(reverse('courses:add_alternative_quiz', kwargs={'course_id': course_id, 'course_title': course_title, 'video_id': video_id, 'video_title': slugified_video_title}))
+    
+    if slugified_course_title != course_title:
+        return HttpResponsePermanentRedirect(reverse('courses:add_alternative_quiz', kwargs={'course_id': course_id, 'course_title': slugified_course_title, 'video_id': video_id, 'video_title': slugified_video_title}))
+    
     if request.method == 'POST':
         form = AlternativeQuizForm(request.POST)
         if form.is_valid():
@@ -638,7 +776,7 @@ def add_alternative_quiz(request, course_id, video_id):
             quiz.video = video
             quiz.save()
             messages.success(request, 'Alternative quiz added successfully!')
-            return redirect('courses:course_videos', course_id=course_id)
+            return redirect('courses:course_videos', course_id=course_id, course_title=slugified_course_title)
     else:
         form = AlternativeQuizForm()
     return render(request, 'courses/add_alternative_quiz.html', {'form': form, 'video': video})

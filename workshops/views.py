@@ -2,13 +2,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
 from .models import LiveSession, LiveRecording
+from django.utils.text import slugify
+import unicodedata
 
 def is_instructor(user):
     return user.is_authenticated and user.role == 'instructor'
 
 @login_required(login_url='/')
 def live_session_list(request):
-    current_time = timezone.now()  # الوقت الحالي
+    current_time = timezone.now()
     active_sessions = LiveSession.objects.filter(
         start_time__lte=current_time,
         end_time__gte=current_time,
@@ -26,20 +28,26 @@ def live_session_list(request):
         'active_sessions': active_sessions,
         'upcoming_sessions': upcoming_sessions,
         'user_sessions': user_sessions,
-        'current_time': current_time,  # نمرر الوقت الحالي للقالب
+        'current_time': current_time,
     })
 
 @login_required(login_url='/')
-def watch_live(request, session_id):
+def watch_live(request, session_id, slugified_title):
     session = get_object_or_404(LiveSession, id=session_id, is_active=True)
     if request.user.is_authenticated:
         session.participants.add(request.user)
-    return render(request, 'workshops/watch_live.html', {'session': session})
+    return render(request, 'workshops/watch_live.html', {
+        'session': session,
+        'slugified_title': slugify(unicodedata.normalize('NFKD', session.title or '').encode('ascii', 'ignore').decode('ascii')) or 'no-title'
+    })
 
 @login_required(login_url='/')
-def watch_recording(request, recording_id):
+def watch_recording(request, recording_id, slugified_title):
     recording = get_object_or_404(LiveRecording, id=recording_id)
-    return render(request, 'workshops/watch_recording.html', {'recording': recording})
+    return render(request, 'workshops/watch_recording.html', {
+        'recording': recording,
+        'slugified_title': slugify(unicodedata.normalize('NFKD', recording.live_session.title or '').encode('ascii', 'ignore').decode('ascii')) or 'no-title'
+    })
 
 @login_required(login_url='/')
 @user_passes_test(is_instructor, login_url='/')
@@ -61,32 +69,31 @@ def create_live_session(request):
             end_time=end_time,
             is_active=False
         )
-        return redirect('workshops:start_live', session_id=session.id)
+        slugified_title = slugify(unicodedata.normalize('NFKD', session.title or '').encode('ascii', 'ignore').decode('ascii')) or 'no-title'
+        return redirect('workshops:start_live', session_id=session.id, slugified_title=slugified_title)
     return render(request, 'workshops/create_live_session.html')
 
 @login_required(login_url='/')
 @user_passes_test(is_instructor, login_url='/')
-def start_live(request, session_id):
+def start_live(request, session_id, slugified_title):
     session = get_object_or_404(LiveSession, id=session_id, instructor=request.user, is_active=False)
     if request.method == 'POST' and timezone.now() >= session.start_time and timezone.now() <= session.end_time:
         session.is_active = True
         session.save()
         return redirect(session.meet_link)
-    return render(request, 'workshops/start_live.html', {'session': session})
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import LiveSession, LiveRecording
+    return render(request, 'workshops/start_live.html', {
+        'session': session,
+        'slugified_title': slugify(unicodedata.normalize('NFKD', session.title or '').encode('ascii', 'ignore').decode('ascii')) or 'no-title'
+    })
 
 @login_required(login_url='/')
 @user_passes_test(is_instructor, login_url='/')
-def upload_recording(request, session_id):
+def upload_recording(request, session_id, slugified_title):
     session = get_object_or_404(LiveSession, id=session_id, instructor=request.user)
     if request.method == 'POST':
-        video_file = request.POST.get('video_file')  # استخدام request.POST بدل request.FILES
+        video_file = request.POST.get('video_file')
         if video_file:
             try:
-                # تحويل رابط Google Drive إلى صيغة /preview لو لازم
                 if 'drive.google.com' in video_file and '/view' in video_file:
                     video_file = video_file.replace('/view', '/preview').replace('?usp=sharing', '')
                 LiveRecording.objects.create(
@@ -95,14 +102,19 @@ def upload_recording(request, session_id):
                 )
                 return redirect('workshops:live_session_list')
             except Exception as e:
-                print(f"Error saving recording: {e}")  # للتصحيح
+                print(f"Error saving recording: {e}")
                 return render(request, 'workshops/upload_recording.html', {
                     'session': session,
-                    'error': f'Error saving recording: {str(e)}'
+                    'error': f'Error saving recording: {str(e)}',
+                    'slugified_title': slugified_title
                 })
         else:
             return render(request, 'workshops/upload_recording.html', {
                 'session': session,
-                'error': 'Please provide a valid video URL.'
+                'error': 'Please provide a valid video URL.',
+                'slugified_title': slugified_title
             })
-    return render(request, 'workshops/upload_recording.html', {'session': session})
+    return render(request, 'workshops/upload_recording.html', {
+        'session': session,
+        'slugified_title': slugify(unicodedata.normalize('NFKD', session.title or '').encode('ascii', 'ignore').decode('ascii')) or 'no-title'
+    })

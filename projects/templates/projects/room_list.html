@@ -1,4 +1,4 @@
-{% load static %}
+{% load static projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -557,7 +557,7 @@
                             <p class="card-text"><span data-translate="members-label">Members:</span> {{ room.members.count }}</p>
                             {% if request.user.is_authenticated %}
                                 {% if request.user == room.creator or request.user in room.members.all %}
-                                    <a href="{% url 'projects:room_detail' room.id %}" class="btn btn-primary" data-translate="view-room">View Room</a>
+                                    <a href="{% url 'projects:room_detail' room.id room.title|custom_slugify %}" class="btn btn-primary" data-translate="view-room">View Room</a>
                                 {% else %}
                                     {% with has_request=False %}
                                         {% for jr in join_requests %}
@@ -574,7 +574,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         {% if not has_request %}
-                                            <a href="{% url 'projects:request_join_room' room.id %}" class="btn btn-success" data-translate="request-join">Request to Join</a>
+                                            <a href="{% url 'projects:request_join_room' room.id room.title|custom_slugify %}" class="btn btn-success" data-translate="request-join">Request to Join</a>
                                         {% endif %}
                                     {% endwith %}
                                 {% endif %}

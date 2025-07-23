@@ -1,23 +1,48 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
-from .models import Project, Task, TaskSubmission, ProjectComment
-from .forms import ProjectForm, TaskForm, TaskSubmissionForm, ProjectCommentForm
+from django.http import JsonResponse, HttpResponsePermanentRedirect
+from django.urls import reverse
+from django.utils.text import slugify
+from django.utils.timezone import now
+from .models import Project, Task, TaskSubmission, ProjectComment, CollaborationRoom, RoomMessage, RoomFile, RoomTask, JoinRequest, SubmissionComment, SubmissionRating
+from .forms import ProjectForm, TaskForm, TaskSubmissionForm, ProjectCommentForm, RoomForm, MessageForm, FileForm, RoomTaskForm, InviteUserForm, SubmissionCommentForm, SubmissionRatingForm
 from courses.views import instructor_required
 from django.contrib.auth import get_user_model
+import re
 
 User = get_user_model()
+
+def clean_text(text):
+    """تنظيف النص من الأحرف غير المدعومة مع دعم الأحرف العربية"""
+    if not text or not text.strip():
+        return 'default-title'
+    text = re.sub(r'[^\w\s\-\u0600-\u06FF]', '', text).strip()
+    cleaned = text if text else 'default-title'
+    slugified = slugify(cleaned, allow_unicode=True)
+    return slugified if slugified else 'default-title'
 
 # List all projects
 def projects_view(request):
     projects = Project.objects.all()
+    for project in projects:
+        project.slugified_title = slugify(clean_text(project.title), allow_unicode=True) or 'default-title'
     return render(request, 'projects/projects.html', {'projects': projects})
 
 # Project details
-def project_details(request, project_id):
+def project_details(request, project_id, project_title):
     project = get_object_or_404(Project, id=project_id)
+    cleaned_title = clean_text(project.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != project_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:project_details', kwargs={'project_id': project_id, 'project_title': slugified_title})
+        )
+    
     tasks = project.tasks.all()
+    for task in tasks:
+        task.slugified_title = slugify(clean_text(task.title), allow_unicode=True) or 'default-title'
     comments = project.comments.all()
     return render(request, 'projects/project_details.html', {
         'project': project,
@@ -35,10 +60,10 @@ def add_project(request):
             project = form.save(commit=False)
             project.instructor = request.user
             project.save()
-            messages.success(request, 'Project created successfully!')
-            return redirect('projects:project_list')
+            messages.success(request, 'تم إنشاء المشروع بنجاح!')
+            return redirect('projects:project_details', project_id=project.id, project_title=slugify(clean_text(project.title), allow_unicode=True) or 'default-title')
         else:
-            messages.error(request, 'Please correct the errors below.')
+            messages.error(request, 'يرجى تصحيح الأخطاء أدناه.')
     else:
         form = ProjectForm()
     return render(request, 'projects/add_project.html', {'form': form})
@@ -46,49 +71,72 @@ def add_project(request):
 # Instructor: Add a task to a project
 @login_required
 @instructor_required
-def add_task(request, project_id):
-    project = get_object_or_404(Project, id=project_id, instructor=request.user)
+def add_task(request, project_id, project_title):
+    project = get_object_or_404(Project, id=project_id)
+    cleaned_title = clean_text(project.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != project_title:
+        return redirect('projects:add_task', project_id=project_id, project_title=slugified_title)
+    
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
             task.project = project
             task.save()
-            task.assigned_to.set(form.cleaned_data['assigned_to'])
-            messages.success(request, 'Task added successfully!')
-            return redirect('projects:project_details', project_id=project.id)
-        else:
-            messages.error(request, 'Please correct the errors below.')
+            form.save_m2m()  # Save ManyToMany relationships (e.g., assigned_to)
+            return redirect('projects:project_details', project_id=project.id, project_title=slugified_title)
     else:
         form = TaskForm()
-    return render(request, 'projects/add_task.html', {'form': form, 'project': project})
+    
+    return render(request, 'projects/add_task.html', {
+        'form': form,
+        'project': project,
+    })
 
 # Student: Join a task
 @login_required
-def join_task(request, task_id):
+def join_task(request, task_id, task_title):
     task = get_object_or_404(Task, id=task_id)
+    cleaned_title = clean_text(task.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != task_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:join_task', kwargs={'task_id': task_id, 'task_title': slugified_title})
+        )
+    
     if request.user.courses_profile.role != 'student':
-        messages.error(request, 'Only students can join tasks.')
-        return redirect('projects:project_details', project_id=task.project.id)
+        messages.error(request, 'فقط الطلاب يمكنهم الانضمام إلى المهام.')
+        return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
     
     if request.user in task.assigned_to.all():
-        messages.info(request, 'You are already joined to this task.')
-        return redirect('projects:project_details', project_id=task.project.id)
+        messages.info(request, 'أنت بالفعل منضم لهذه المهمة.')
+        return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
     
     if request.method == 'POST':
         task.assigned_to.add(request.user)
-        messages.success(request, 'You have successfully joined the task! You can now submit solutions and add comments.')
-        return redirect('projects:project_details', project_id=task.project.id)
+        messages.success(request, 'لقد انضممت للمهمة بنجاح! يمكنك الآن تقديم الحلول وإضافة تعليقات.')
+        return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
     
-    return redirect('projects:project_details', project_id=task.project.id)
+    return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
 
 # Student: Submit a task
 @login_required
-def submit_task(request, task_id):
+def submit_task(request, task_id, task_title):
     task = get_object_or_404(Task, id=task_id)
+    cleaned_title = clean_text(task.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != task_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:submit_task', kwargs={'task_id': task_id, 'task_title': slugified_title})
+        )
+    
     if request.user not in task.assigned_to.all():
-        messages.error(request, 'You are not assigned to this task.')
-        return redirect('projects:project_details', project_id=task.project.id)
+        messages.error(request, 'أنت غير معين لهذه المهمة.')
+        return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
     
     if request.method == 'POST':
         form = TaskSubmissionForm(request.POST)
@@ -97,10 +145,10 @@ def submit_task(request, task_id):
             submission.task = task
             submission.student = request.user
             submission.save()
-            messages.success(request, 'Solution submitted successfully!')
-            return redirect('projects:project_details', project_id=task.project.id)
+            messages.success(request, 'تم تقديم الحل بنجاح!')
+            return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
         else:
-            messages.error(request, 'Please correct the errors below.')
+            messages.error(request, 'يرجى تصحيح الأخطاء أدناه.')
     else:
         form = TaskSubmissionForm()
     
@@ -111,9 +159,11 @@ def submit_task(request, task_id):
 @instructor_required
 def approve_submission(request, submission_id):
     submission = get_object_or_404(TaskSubmission, id=submission_id)
+    project = submission.task.project
     if submission.task.project.instructor != request.user:
-        messages.error(request, 'You are not authorized to approve this submission.')
-        return redirect('projects:project_details', project_id=submission.task.project.id)
+        messages.error(request, 'غير مصرح لك بالموافقة على هذا التقديم.')
+        return redirect('projects:project_details', project_id=project.id, project_title=slugify(clean_text(project.title), allow_unicode=True) or 'default-title')
+    
     if request.method == 'POST':
         submission.approved = True
         submission.feedback = request.POST.get('feedback', '')
@@ -122,14 +172,23 @@ def approve_submission(request, submission_id):
         submission.task.completed = True
         submission.task.completed_at = now()
         submission.task.save()
-        messages.success(request, 'Submission approved!')
-        return redirect('projects:project_details', project_id=submission.task.project.id)
+        messages.success(request, 'تمت الموافقة على التقديم!')
+        return redirect('projects:project_details', project_id=project.id, project_title=slugify(clean_text(project.title), allow_unicode=True) or 'default-title')
+    
     return render(request, 'projects/approve_submission.html', {'submission': submission})
 
 # Add a comment to a project
 @login_required
-def add_project_comment(request, project_id):
+def add_project_comment(request, project_id, project_title):
     project = get_object_or_404(Project, id=project_id)
+    cleaned_title = clean_text(project.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != project_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:add_project_comment', kwargs={'project_id': project_id, 'project_title': slugified_title})
+        )
+    
     if request.method == 'POST':
         form = ProjectCommentForm(request.POST)
         if form.is_valid():
@@ -137,21 +196,22 @@ def add_project_comment(request, project_id):
             comment.project = project
             comment.user = request.user
             comment.save()
-            messages.success(request, 'Comment added!')
-            return redirect('projects:project_details', project_id=project.id)
+            messages.success(request, 'تم إضافة التعليق!')
+            return redirect('projects:project_details', project_id=project.id, project_title=slugified_title)
     else:
         form = ProjectCommentForm()
     return render(request, 'projects/add_comment.html', {'form': form, 'project': project})
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import Task, TaskSubmission, SubmissionComment, SubmissionRating
-from .forms import SubmissionCommentForm, SubmissionRatingForm
-
+# View task submissions
 @login_required
-def task_submissions(request, task_id):
+def task_submissions(request, task_id, task_title):
     task = get_object_or_404(Task, id=task_id)
+    cleaned_title = clean_text(task.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != task_title:
+        return redirect('projects:task_submissions', task_id=task_id, task_title=slugified_title)
+    
     submissions = task.submissions.all().select_related('student').prefetch_related('comments', 'ratings')
     return render(request, 'projects/task_submissions.html', {
         'task': task,
@@ -161,9 +221,11 @@ def task_submissions(request, task_id):
         'rating_form': SubmissionRatingForm(),
     })
 
+# Add comment to submission
 @login_required
 def add_submission_comment(request, submission_id):
     submission = get_object_or_404(TaskSubmission, id=submission_id)
+    task = submission.task
     if request.method == 'POST':
         form = SubmissionCommentForm(request.POST)
         if form.is_valid():
@@ -171,13 +233,15 @@ def add_submission_comment(request, submission_id):
             comment.submission = submission
             comment.user = request.user
             comment.save()
-            messages.success(request, 'Comment added successfully!')
-            return redirect('projects:task_submissions', task_id=submission.task.id)
-    return redirect('projects:task_submissions', task_id=submission.task.id)
+            messages.success(request, 'تم إضافة التعليق بنجاح!')
+            return redirect('projects:task_submissions', task_id=task.id, task_title=slugify(clean_text(task.title), allow_unicode=True) or 'default-title')
+    return redirect('projects:task_submissions', task_id=task.id, task_title=slugify(clean_text(task.title), allow_unicode=True) or 'default-title')
 
+# Rate submission
 @login_required
 def rate_submission(request, submission_id):
     submission = get_object_or_404(TaskSubmission, id=submission_id)
+    task = submission.task
     if request.method == 'POST':
         form = SubmissionRatingForm(request.POST)
         if form.is_valid():
@@ -186,29 +250,27 @@ def rate_submission(request, submission_id):
                 user=request.user,
                 defaults={'rating': form.cleaned_data['rating']}
             )
-            messages.success(request, 'Solution rated successfully!')
-            return redirect('projects:task_submissions', task_id=submission.task.id)
-    return redirect('projects:task_submissions', task_id=submission.task.id)
+            messages.success(request, 'تم تقييم الحل بنجاح!')
+            return redirect('projects:task_submissions', task_id=task.id, task_title=slugify(clean_text(task.title), allow_unicode=True) or 'default-title')
+    return redirect('projects:task_submissions', task_id=task.id, task_title=slugify(clean_text(task.title), allow_unicode=True) or 'default-title')
 
+# Distinguish submission
 @login_required
 def distinguish_submission(request, submission_id):
     submission = get_object_or_404(TaskSubmission, id=submission_id)
+    task = submission.task
     if request.user != submission.task.project.instructor:
-        messages.error(request, 'Only the instructor who created the task can distinguish the solution.')
-        return redirect('projects:task_submissions', task_id=submission.task.id)
+        messages.error(request, 'فقط منشئ المشروع يمكنه تمييز الحل.')
+        return redirect('projects:task_submissions', task_id=task.id, task_title=slugify(clean_text(task.title), allow_unicode=True) or 'default-title')
+    
     if request.method == 'POST':
         submission.is_distinguished = True
         submission.save()
-        messages.success(request, 'Solution distinguished successfully!')
-        return redirect('projects:task_submissions', task_id=submission.task.id)
-    return redirect('projects:task_submissions', task_id=submission.task.id)
+        messages.success(request, 'تم تمييز الحل بنجاح!')
+        return redirect('projects:task_submissions', task_id=task.id, task_title=slugify(clean_text(task.title), allow_unicode=True) or 'default-title')
+    return redirect('projects:task_submissions', task_id=task.id, task_title=slugify(clean_text(task.title), allow_unicode=True) or 'default-title')
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import CollaborationRoom, Project, Task, RoomMessage, RoomFile, RoomTask
-from .forms import RoomForm, MessageForm, FileForm, RoomTaskForm
-from django.contrib import messages
-
+# Create collaboration room
 @login_required
 def create_room(request):
     if request.method == 'POST':
@@ -218,45 +280,52 @@ def create_room(request):
             room.creator = request.user
             room.save()
             room.members.add(request.user)
-            messages.success(request, 'Room created successfully!')
-            return redirect(room.get_absolute_url())
+            messages.success(request, 'تم إنشاء الغرفة بنجاح!')
+            return redirect('projects:room_detail', room_id=room.id, room_title=slugify(clean_text(room.title), allow_unicode=True) or 'default-title')
     else:
         form = RoomForm()
     return render(request, 'projects/create_room.html', {'form': form})
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import CollaborationRoom, Project, Task, RoomMessage, RoomFile, RoomTask
-from .forms import RoomForm, MessageForm, FileForm, RoomTaskForm
-
-
+# Join room
 @login_required
-def join_room(request, room_id):
+def join_room(request, room_id, room_title):
     room = get_object_or_404(CollaborationRoom, id=room_id)
-    if request.user not in room.members:
+    cleaned_title = clean_text(room.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != room_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:join_room', kwargs={'room_id': room_id, 'room_title': slugified_title})
+        )
+    
+    if request.user not in room.members.all():
         room.members.add(request.user)
-        messages.success(request, 'You have joined the room!')
-    return redirect(room.get_absolute_url())
+        messages.success(request, 'لقد انضممت للغرفة!')
+    return redirect('projects:room_detail', room_id=room.id, room_title=slugified_title)
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import CollaborationRoom, Project, Task, RoomMessage, RoomFile, RoomTask, JoinRequest
-from .forms import RoomForm, MessageForm, FileForm, RoomTaskForm
-
+# Room list
 def room_list(request):
     rooms = CollaborationRoom.objects.all()
+    for room in rooms:
+        room.slugified_title = slugify(clean_text(room.title), allow_unicode=True) or 'default-title'
     join_requests = JoinRequest.objects.filter(user=request.user) if request.user.is_authenticated else []
     return render(request, 'projects/room_list.html', {
         'rooms': rooms,
         'join_requests': join_requests,
     })
 
+# Room details
 @login_required
-def room_detail(request, room_id):
+def room_detail(request, room_id, room_title):
     room = get_object_or_404(CollaborationRoom, id=room_id)
-    # السماح للجميع برؤية الغرفة، لكن المحتوى الكامل للأعضاء أو المنشئ فقط
+    cleaned_title = clean_text(room.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != room_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:room_detail', kwargs={'room_id': room_id, 'room_title': slugified_title})
+        )
+    
     is_member = request.user in room.members.all() or request.user == room.creator
     join_request = JoinRequest.objects.filter(room=room, user=request.user).first() if request.user.is_authenticated else None
     
@@ -279,7 +348,7 @@ def room_detail(request, room_id):
                 message.room = room
                 message.user = request.user
                 message.save()
-                return redirect(room.get_absolute_url())
+                return redirect('projects:room_detail', room_id=room.id, room_title=slugified_title)
         elif 'file_submit' in request.POST:
             file_form = FileForm(request.POST, request.FILES)
             if file_form.is_valid():
@@ -287,14 +356,14 @@ def room_detail(request, room_id):
                 file.room = room
                 file.uploaded_by = request.user
                 file.save()
-                return redirect(room.get_absolute_url())
+                return redirect('projects:room_detail', room_id=room.id, room_title=slugified_title)
         elif 'task_submit' in request.POST:
             task_form = RoomTaskForm(request.POST)
             if task_form.is_valid():
                 task = task_form.save(commit=False)
                 task.room = room
                 task.save()
-                return redirect(room.get_absolute_url())
+                return redirect('projects:room_detail', room_id=room.id, room_title=slugified_title)
     
     return render(request, 'projects/room_detail.html', {
         'room': room,
@@ -308,29 +377,45 @@ def room_detail(request, room_id):
         'done_tasks': done_tasks,
     })
 
+# Request to join room
 @login_required
-def request_join_room(request, room_id):
+def request_join_room(request, room_id, room_title):
     room = get_object_or_404(CollaborationRoom, id=room_id)
+    cleaned_title = clean_text(room.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != room_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:request_join_room', kwargs={'room_id': room_id, 'room_title': slugified_title})
+        )
+    
     if request.user == room.creator or request.user in room.members.all():
         messages.info(request, 'أنت بالفعل عضو في هذه الغرفة.')
         return redirect('projects:room_list')
     
-    # التحقق من وجود طلب معلق أو مرفوض لنفس الغرفة فقط
     if JoinRequest.objects.filter(user=request.user, room=room, status__in=['pending', 'rejected']).exists():
         messages.info(request, 'لقد قدمت طلب انضمام لهذه الغرفة مسبقًا.')
         return redirect('projects:room_list')
     
-    # إنشاء طلب انضمام جديد
     JoinRequest.objects.create(room=room, user=request.user, status='pending')
     messages.success(request, 'تم إرسال طلب الانضمام بنجاح.')
     return redirect('projects:room_list')
 
+# Manage join requests
 @login_required
-def manage_join_requests(request, room_id):
+def manage_join_requests(request, room_id, room_title):
     room = get_object_or_404(CollaborationRoom, id=room_id)
+    cleaned_title = clean_text(room.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != room_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:manage_join_requests', kwargs={'room_id': room_id, 'room_title': slugified_title})
+        )
+    
     if request.user != room.creator:
         messages.error(request, 'فقط منشئ الغرفة يمكنه إدارة طلبات الانضمام.')
-        return redirect('projects:room_detail', room_id=room.id)
+        return redirect('projects:room_detail', room_id=room.id, room_title=slugified_title)
     
     join_requests = room.join_requests.filter(status='pending')
     if request.method == 'POST':
@@ -347,24 +432,29 @@ def manage_join_requests(request, room_id):
             join_request.status = 'rejected'
             join_request.save()
             messages.success(request, f'تم رفض {"دعوة" if join_request.is_invitation else "طلب انضمام"} {join_request.user.username}.')
-        return redirect('projects:manage_join_requests', room_id=room.id)
+        return redirect('projects:manage_join_requests', room_id=room.id, room_title=slugified_title)
     
     return render(request, 'projects/manage_join_requests.html', {
         'room': room,
         'join_requests': join_requests,
         'invite_form': InviteUserForm(),
     })
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import CollaborationRoom, JoinRequest
-from .forms import InviteUserForm
+
+# Invite user to room
 @login_required
-def invite_user(request, room_id):
+def invite_user(request, room_id, room_title):
     room = get_object_or_404(CollaborationRoom, id=room_id)
+    cleaned_title = clean_text(room.title)
+    slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
+    
+    if slugified_title != room_title:
+        return HttpResponsePermanentRedirect(
+            reverse('projects:invite_user', kwargs={'room_id': room_id, 'room_title': slugified_title})
+        )
+    
     if request.user != room.creator:
-        messages.error(request, 'فقط منشئ الغرفة يمكنه دعوة أعضاء.')
-        return redirect('projects:room_detail', room_id=room.id)
+        messages.error(request, 'فقط منشئ الغرفة يمكنه دعو邀 الأعضاء.')
+        return redirect('projects:room_detail', room_id=room.id, room_title=slugified_title)
 
     if request.method == 'POST':
         form = InviteUserForm(request.POST)
@@ -382,7 +472,7 @@ def invite_user(request, room_id):
                     messages.success(request, f'تم إرسال دعوة إلى {invited_user.username}.')
                 else:
                     messages.info(request, f'تم إرسال دعوة إلى {invited_user.username} مسبقًا.')
-            return redirect('projects:manage_join_requests', room_id=room.id)
+            return redirect('projects:manage_join_requests', room_id=room.id, room_title=slugified_title)
     else:
         form = InviteUserForm()
     

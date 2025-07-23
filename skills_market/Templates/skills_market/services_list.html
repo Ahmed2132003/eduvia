@@ -1,17 +1,17 @@
-{% load static i18n %}
+{% load static i18n widget_tweaks projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="page-title">Skills Market - Eduvia</title>
-    <meta name="description" data-translate="meta-desc" content="Explore and offer micro-services in Eduvia's Skills Market, connecting students with opportunities.">
-    <meta name="keywords" data-translate="meta-keywords" content="skills market, micro-services, student services, Eduvia, freelance">
+    <title data-translate="page-title">Services List - Eduvia</title>
+    <meta name="description" data-translate="meta-desc" content="Browse services offered by skilled students on Eduvia's Skills Market.">
+    <meta name="keywords" data-translate="meta-keywords" content="services, student services, Eduvia, skills market, freelance">
     <meta name="author" content="Eduvia">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" data-translate="og-title" content="Skills Market - Eduvia">
-    <meta property="og:description" data-translate="og-desc" content="Explore and offer micro-services in Eduvia's Skills Market, connecting students with opportunities.">
+    <meta property="og:title" data-translate="og-title" content="Services List - Eduvia">
+    <meta property="og:description" data-translate="og-desc" content="Browse services offered by skilled students on Eduvia's Skills Market.">
     <meta property="og:image" content="{% static 'images/skils3.jpg' %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
@@ -21,7 +21,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Light Mode Colors */
             --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
             --text-color: #333;
             --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
@@ -44,7 +43,6 @@
             --search-bar-border: #ccc;
         }
 
-        /* Dark Mode Colors */
         body.dark-mode {
             --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
             --text-color: #e0e0e0;
@@ -80,7 +78,6 @@
             text-align: right;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -223,7 +220,6 @@
             .coins-display { display: flex; justify-content: center; }
         }
 
-        /* Search Bar */
         .search-container {
             max-width: 600px;
             margin: 20px auto;
@@ -277,7 +273,6 @@
             margin-left: 10px;
         }
 
-        /* Hero Section */
         .hero {
             display: flex;
             flex-direction: column;
@@ -341,7 +336,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Cards Container */
         .cards-container {
             display: flex;
             flex-wrap: wrap;
@@ -352,7 +346,6 @@
             margin: 0 auto;
         }
 
-        /* Service Card Styling */
         .hero-card {
             display: flex;
             flex-direction: column;
@@ -410,7 +403,6 @@
             transform: scale(1.1);
         }
 
-        /* Messages */
         .messages {
             max-width: 1200px;
             margin: 20px auto;
@@ -430,7 +422,6 @@
             color: var(--alert-warning-text);
         }
 
-        /* Action Buttons */
         .action-buttons {
             text-align: center;
             margin: 30px 0;
@@ -461,7 +452,15 @@
             transform: scale(1.1);
         }
 
-        /* Responsive Design */
+        .footer {
+            background: var(--card-bg);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
         @media (max-width: 900px) {
             .hero-card { flex: 1 1 calc(50% - 20px); }
             .hero h1 { font-size: 48px; }
@@ -476,16 +475,6 @@
             .search-form { flex-direction: column; }
             .search-form input[type="text"] { margin-bottom: 10px; }
             .search-form button { width: 100%; }
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--card-bg);
-            text-align: center;
-            padding: 10px 0;
-            font-size: 14px;
-            color: var(--text-color);
-            transition: background 0.3s ease, color 0.3s ease;
         }
     </style>
 </head>
@@ -511,7 +500,7 @@
                 {% if user.courses_profile %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
                     </span>
                 {% else %}
                     <span class="coins-display">
@@ -541,7 +530,7 @@
     <div class="search-container">
         <form class="search-form" method="POST" action="{% url 'skills_market:services_list' %}">
             {% csrf_token %}
-            <input type="text" name="search_query" placeholder="{% trans 'Search for services...' %}" value="{{ search_query|default:'' }}">
+            {{ form.search_query|add_class:"form-control" }}
             <button type="submit"><i class="fas fa-search"></i> {% trans "Search" %}</button>
         </form>
     </div>
@@ -559,12 +548,12 @@
     <div class="cards-container">
         {% for service in services %}
             <section class="hero-card">
-                <h1>{{ service.title }}</h1>
-                <p><span data-translate="card-provider">Provider:</span> {{ service.provider.username }}</p>
-                <p><span data-translate="card-skill">Skill:</span> {{ service.skill.name }}</p>
-                <p><span data-translate="card-price">Price:</span> {{ service.price_coins }} <span data-translate="card-coins">Coins</span></p>
-                <p><span data-translate="card-delivery">Delivery:</span> {{ service.delivery_time_days }} <span data-translate="card-day">Day</span>{{ service.delivery_time_days|pluralize }}</p>
-                <a href="{% url 'skills_market:order_service' service.id %}" class="btn" data-translate="card-order">Order Now</a>
+                <h1>{{ service.title|default:"Service" }}</h1>
+                <p><span data-translate="card-provider">Provider:</span> {{ service.provider.username|default:"Unknown" }}</p>
+                <p><span data-translate="card-skill">Skill:</span> {{ service.skill.name|default:"Unknown" }}</p>
+                <p><span data-translate="card-price">Price:</span> {{ service.price_coins|default:0 }} <span data-translate="card-coins">Coins</span></p>
+                <p><span data-translate="card-delivery">Delivery:</span> {{ service.delivery_time_days|default:0 }} <span data-translate="card-day">Day</span>{{ service.delivery_time_days|pluralize }}</p>
+                <a href="{% url 'skills_market:order_service' service.id service.title|custom_slugify %}" class="btn" data-translate="card-order">Order Now</a>
             </section>
         {% empty %}
             <p class="text-center" data-translate="cards-empty">No services available.</p>
@@ -592,11 +581,11 @@
     <script>
         const translations = {
             en: {
-                "page-title": "Skills Market - Eduvia",
-                "meta-desc": "Explore and offer micro-services in Eduvia's Skills Market, connecting students with opportunities.",
-                "meta-keywords": "skills market, micro-services, student services, Eduvia, freelance",
-                "og-title": "Skills Market - Eduvia",
-                "og-desc": "Explore and offer micro-services in Eduvia's Skills Market, connecting students with opportunities.",
+                "page-title": "Services List - Eduvia",
+                "meta-desc": "Browse services offered by skilled students on Eduvia's Skills Market.",
+                "meta-keywords": "services, student services, Eduvia, skills market, freelance",
+                "og-title": "Services List - Eduvia",
+                "og-desc": "Browse services offered by skilled students on Eduvia's Skills Market.",
                 "hero-title": "Skills Market",
                 "hero-desc": "Explore and offer micro-services in Eduvia's Skills Market, connecting students with opportunities",
                 "card-provider": "Provider:",
@@ -628,11 +617,11 @@
                 "search-button": "Search"
             },
             ar: {
-                "page-title": "سوق المهارات - إدوفيا",
-                "meta-desc": "استكشف وعرض الخدمات المصغرة في سوق المهارات بإدوفيا، واربط الطلاب بالفرص.",
-                "meta-keywords": "سوق المهارات, الخدمات المصغرة, خدمات الطلاب, إدوفيا, عمل حر",
-                "og-title": "سوق المهارات - إدوفيا",
-                "og-desc": "استكشف وعرض الخدمات المصغرة في سوق المهارات بإدوفيا، واربط الطلاب بالفرص.",
+                "page-title": "قائمة الخدمات - إدوفيا",
+                "meta-desc": "تصفح الخدمات التي يقدمها الطلاب المهرة في سوق المهارات بإدوفيا.",
+                "meta-keywords": "خدمات, خدمات الطلاب, إدوفيا, سوق المهارات, عمل حر",
+                "og-title": "قائمة الخدمات - إدوفيا",
+                "og-desc": "تصفح الخدمات التي يقدمها الطلاب المهرة في سوق المهارات بإدوفيا.",
                 "hero-title": "سوق المهارات",
                 "hero-desc": "استكشف وعرض الخدمات المصغرة في سوق المهارات بإدوفيا، واربط الطلاب بالفرص",
                 "card-provider": "المزود:",

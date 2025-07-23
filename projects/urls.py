@@ -9,21 +9,21 @@ urlpatterns = [
     # عرض قائمة الغرف
     path('rooms/', views.room_list, name='room_list'),
     # تفاصيل المشروع
-    path('project/<int:project_id>/', views.project_details, name='project_details'),
+    path('project/<int:project_id>/<str:project_title>/', views.project_details, name='project_details'),
     # إضافة مشروع
     path('project/add/', views.add_project, name='add_project'),
     # إضافة مهمة
-    path('project/<int:project_id>/add_task/', views.add_task, name='add_task'),
+    path('project/<int:project_id>/<str:project_title>/add_task/', views.add_task, name='add_task'),
     # الانضمام إلى مهمة
-    path('task/<int:task_id>/join/', views.join_task, name='join_task'),
+    path('task/<int:task_id>/<str:task_title>/join/', views.join_task, name='join_task'),
     # تقديم حل
-    path('task/<int:task_id>/submit/', views.submit_task, name='submit_task'),
+    path('task/<int:task_id>/<str:task_title>/submit/', views.submit_task, name='submit_task'),
     # الموافقة على حل
     path('submission/<int:submission_id>/approve/', views.approve_submission, name='approve_submission'),
     # إضافة تعليق على المشروع
-    path('project/<int:project_id>/comment/', views.add_project_comment, name='add_project_comment'),
+    path('project/<int:project_id>/<str:project_title>/comment/', views.add_project_comment, name='add_project_comment'),
     # عرض الحلول المقدمة
-    path('task/<int:task_id>/submissions/', views.task_submissions, name='task_submissions'),
+    path('task/<int:task_id>/<str:task_title>/submissions/', views.task_submissions, name='task_submissions'),
     # إضافة تعليق على الحل
     path('submission/<int:submission_id>/comment/', views.add_submission_comment, name='add_submission_comment'),
     # تقييم الحل
@@ -33,13 +33,13 @@ urlpatterns = [
     # إنشاء غرفة تعاون
     path('room/create/', views.create_room, name='create_room'),
     # تفاصيل الغرفة
-    path('room/<int:room_id>/', views.room_detail, name='room_detail'),
+    path('room/<int:room_id>/<str:room_title>/', views.room_detail, name='room_detail'),
     # طلب انضمام إلى غرفة
-    path('room/<int:room_id>/request-join/', views.request_join_room, name='request_join_room'),
+    path('room/<int:room_id>/<str:room_title>/request-join/', views.request_join_room, name='request_join_room'),
     # إدارة طلبات الانضمام
-    path('room/<int:room_id>/manage-requests/', views.manage_join_requests, name='manage_join_requests'),
-    # الانضمام إلى غرفة (اختياري، يمكن إزالته إذا لم يعد مطلوبًا)
-    path('room/<int:room_id>/join/', views.join_room, name='join_room'),
-    path('rooms/<int:room_id>/invite/', views.invite_user, name='invite_user'),
-
+    path('room/<int:room_id>/<str:room_title>/manage-requests/', views.manage_join_requests, name='manage_join_requests'),
+    # الانضمام إلى غرفة
+    path('room/<int:room_id>/<str:room_title>/join/', views.join_room, name='join_room'),
+    # دعوة مستخدم
+    path('room/<int:room_id>/<str:room_title>/invite/', views.invite_user, name='invite_user'),
 ]

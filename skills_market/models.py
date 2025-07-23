@@ -89,9 +89,6 @@ class OpportunityApplication(models.Model):
         opportunity_title = self.opportunity.title if self.opportunity else "لا توجد فرصة"
         return f"طلب من {self.full_name} لـ {opportunity_title}"
 
-
-
-
 class Message(models.Model):
     order = models.ForeignKey('ServiceOrder', on_delete=models.CASCADE, related_name='messages', null=True, blank=True)
     opportunity_application = models.ForeignKey('OpportunityApplication', on_delete=models.CASCADE, related_name='messages', null=True, blank=True)

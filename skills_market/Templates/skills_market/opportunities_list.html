@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -453,7 +453,7 @@
                 {% if user.courses_profile %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
                     </span>
                 {% else %}
                     <span class="coins-display">
@@ -492,9 +492,9 @@
     <div class="cards-container">
         {% for opportunity in opportunities %}
             <section class="hero-card">
-                <h1>{{ opportunity.title }}</h1>
-                <p><span data-translate="card-provider">Provider:</span> {{ opportunity.provider.username }}</p>
-                <p>{{ opportunity.description }}</p>
+                <h1>{{ opportunity.title|default:"Opportunity" }}</h1>
+                <p><span data-translate="card-provider">Provider:</span> {{ opportunity.provider.username|default:"Unknown" }}</p>
+                <p>{{ opportunity.description|default:"No description available" }}</p>
                 <p><span data-translate="card-salary">Salary:</span> {{ opportunity.salary|default:"Not specified" }} <span data-translate="card-coins">Coins</span></p>
                 <p><span data-translate="card-address">Address:</span> {{ opportunity.address|default:"Not specified" }}</p>
                 <a href="{% url 'skills_market:apply_opportunity' opportunity_id=opportunity.id %}" class="btn" data-translate="card-apply">Apply Now</a>
@@ -507,7 +507,7 @@
     <!-- Action Buttons -->
     <div class="action-buttons">
         {% if user.is_authenticated %}
-            {% if user.role == 'instructor' %}
+            {% if user.courses_profile.role == 'instructor' %}
                 <a href="{% url 'skills_market:add_opportunity' %}" class="btn" data-translate="btn-add-opportunity">Add Opportunity</a>
                 <a href="{% url 'skills_market:opportunity_applications' %}" class="btn" data-translate="btn-view-applications">View Applications</a>
             {% endif %}

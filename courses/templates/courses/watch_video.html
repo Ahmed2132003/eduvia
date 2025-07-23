@@ -1,5 +1,6 @@
 {% load static %}
 {% load custom_filters %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -41,7 +42,7 @@
         "isPartOf": {
             "@type": "Course",
             "name": "{{ course.title }}",
-            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id %}"
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id slugified_course_title|default:'default-title' %}"
         },
         "breadcrumb": {
             "@type": "BreadcrumbList",
@@ -62,7 +63,7 @@
                     "@type": "ListItem",
                     "position": 3,
                     "name": "{{ course.title }}",
-                    "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id %}"
+                    "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id slugified_course_title|default:'default-title' %}"
                 },
                 {
                     "@type": "ListItem",
@@ -448,7 +449,7 @@
             gap: 10px;
         }
 
-        .video-card button {
+        .video-card .action-button {
             background: var(--btn-bg);
             color: white;
             padding: 10px 20px;
@@ -460,7 +461,7 @@
             transition: all 0.3s ease;
         }
 
-        .video-card button:hover {
+        .video-card .action-button:hover {
             background: var(--btn-bg-hover);
             transform: scale(1.1);
             box-shadow: var(--btn-shadow);
@@ -670,42 +671,22 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* New Task Container Styling */
-        .task-container {
-            max-height: 400px; /* تحديد ارتفاع الإطار */
-            overflow-y: auto; /* تمكين التمرير العمودي */
-            background: var(--task-container-bg);
-            border: 1px solid var(--task-container-border);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-
-        .task-question {
-            background: var(--task-question-bg);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            animation: slideInFromLeft 0.5s ease-out forwards;
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-
-        @keyframes slideInFromLeft {
-            0% { opacity: 0; transform: translateX(-20px); }
-            100% { opacity: 1; transform: translateX(0); }
-        }
-
-        .task-question p {
+        .task-item h4 {
             color: var(--card-text);
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 18px;
+            font-weight: 600;
             margin-bottom: 10px;
             transition: color 0.3s ease;
         }
 
-        .task-question select {
+        .task-item p {
+            color: var(--card-secondary-text);
+            font-size: 16px;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .task-item select {
             width: 100%;
             padding: 10px;
             border: 1px solid var(--input-border);
@@ -716,23 +697,23 @@
             transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
         }
 
-        body.dark-mode .task-question select {
+        body.dark-mode .task-item select {
             background-color: #444;
             color: #e0e0e0;
         }
 
-        .task-question select:focus {
+        .task-item select:focus {
             border-color: var(--input-focus-border);
             box-shadow: 0 0 8px rgba(0, 168, 204, 0.3);
             outline: none;
         }
 
-        .task-question select option {
+        .task-item select option {
             background-color: #ffffff;
             color: #333;
         }
 
-        body.dark-mode .task-question select option {
+        body.dark-mode .task-item select option {
             background-color: #444;
             color: #e0e0e0;
         }
@@ -754,7 +735,7 @@
             .hero p { font-size: 20px; }
             .video-card h1 { font-size: 24px; }
             .video-card iframe { height: 300px; }
-            .task-container { max-height: 300px; }
+            .task-item { padding: 10px; }
         }
 
         @media (max-width: 600px) {
@@ -764,9 +745,9 @@
             .video-card h1 { font-size: 20px; }
             .video-card iframe { height: 200px; }
             .video-card form { flex-direction: column; align-items: center; }
-            .video-card button { width: 100%; }
+            .video-card .action-button { width: 100%; }
             .star-rating label { font-size: 1.5rem; }
-            .task-container { max-height: 250px; }
+            .task-item { padding: 8px; }
         }
     </style>
 </head>
@@ -824,7 +805,7 @@
             <h1 data-translate="video-card-title">{{ video.title }}</h1>
             {% if video.video_url %}
                 <!-- تحويل الرابط تلقائيًا إذا كان من Google Drive -->
-                {% if video.video_url|contains:"drive.google.com" %}
+                {% if "drive.google.com" in video.video_url %}
                     {% with video_id=video.video_url|drive_id %}
                         <iframe src="https://drive.google.com/uc?export=embed&id={{ video_id }}" width="100%" height="450" frameborder="0" allowfullscreen aria-label="Video: {{ video.title }}"></iframe>
                     {% endwith %}
@@ -832,7 +813,7 @@
                     <iframe src="{{ video.video_url|safe }}" width="100%" height="450" frameborder="0" allowfullscreen aria-label="Video: {{ video.title }}"></iframe>
                 {% endif %}
             {% else %}
-                <p>لا يوجد رابط فيديو متاح.</p>
+                <p data-translate="no-video-url">No video URL available.</p>
             {% endif %}
             <p class="description">{{ video.description }}</p>
             
@@ -840,7 +821,7 @@
             <progress value="{{ completed_videos_count }}" max="{{ total_videos_count }}" aria-label="Course progress"></progress>
 
             <h3 data-translate="rate-video-heading">Rate this Video</h3>
-            <form method="post" action="{% url 'courses:rate_video' video.id %}" id="rating-form">
+            <form method="post" action="{% url 'courses:rate_video' video.id slugified_video_title %}" id="rating-form">
                 {% csrf_token %}
                 <div class="star-rating" id="star-rating">
                     <input type="radio" id="star5" name="rating" value="5" required {% if user_rating %}disabled{% endif %}/>
@@ -854,66 +835,62 @@
                     <input type="radio" id="star1" name="rating" value="1" {% if user_rating %}disabled{% endif %}/>
                     <label for="star1" title="1 star">☆</label>
                 </div>
-                <button type="submit" data-translate="submit-rating-button" {% if user_rating %}disabled{% endif %}>Submit Rating</button>
+                {% if user_rating %}
+                    <p data-translate="already-rated">You have already rated this video: {{ user_rating }} stars</p>
+                {% else %}
+                    <button type="submit" class="action-button" data-translate="submit-rating">Submit Rating</button>
+                {% endif %}
             </form>
-            {% if user_rating %}
-                <div class="alert alert-success" data-translate="rating-submitted">
-                    You have rated this video {{ user_rating }} stars. Rating is final.
-                </div>
-            {% endif %}
 
             <h3 data-translate="upload-file-heading">Upload a File</h3>
+            <form method="post" enctype="multipart/form-data" action="{% url 'courses:watch_video' course_id=course.id course_title=slugified_course_title video_id=video.id video_title=slugified_video_title %}" class="upload-form">
+                {% csrf_token %}
+                <input type="hidden" name="upload_file" value="true">
+                <label for="file" data-translate="file-label">Choose a file:</label>
+                <input type="file" id="file" name="file" required>
+                <label for="description" data-translate="description-label">Description:</label>
+                <textarea id="description" name="description" rows="4" placeholder="{% trans 'Enter file description...' %}"></textarea>
+                <button type="submit" class="action-button" data-translate="upload-button">Upload File</button>
+            </form>
+
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }}">{{ message }}</div>
                 {% endfor %}
             {% endif %}
-            <form method="post" enctype="multipart/form-data" class="upload-form">
-                {% csrf_token %}
-                <div>
-                    <label for="file" data-translate="file-label">File:</label>
-                    <input type="file" id="file" name="file" required aria-label="Upload file">
-                </div>
-                <div>
-                    <label for="description" data-translate="description-label">Description:</label>
-                    <textarea id="description" name="description" aria-label="File description"></textarea>
-                </div>
-                <button type="submit" name="upload_file" data-translate="upload-file-button">Upload File</button>
-            </form>
 
             <h3 data-translate="uploaded-files-heading">Uploaded Files</h3>
-            {% if uploaded_files %}
-                <ul class="file-list">
-                    {% for file in uploaded_files %}
-                        <li class="file-item">
-                            <a href="{{ file.file.url }}" download>{{ file.file.name|cut:"media/video_files/" }}</a>
-                            <p>{{ file.description }}</p>
-                            <p data-translate="uploaded-by">Uploaded by: {{ file.user.username }} {% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}</p>
-                            <p data-translate="uploaded-at">Uploaded at: {{ file.uploaded_at }}</p>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p data-translate="no-files">No files uploaded yet.</p>
-            {% endif %}
-
-            <h3 data-translate="comments-heading">Comments</h3>
-            <ul class="comment-list">
-                {% for comment in video.comments.all %}
-                    <li class="comment-item">
-                        <strong>{{ comment.user.username }}</strong>
-                        <p>{{ comment.content }}</p>
+            <ul class="file-list">
+                {% for file in uploaded_files %}
+                    <li class="file-item">
+                        <a href="{{ file.file.url }}" download>{{ file.file.name|cut:"media/video_files/" }}</a>
+                        <p>{{ file.description }}</p>
+                        <p data-translate="uploaded-by">Uploaded by: {{ file.user.username }} {% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}</p>
+                        <p data-translate="uploaded-at">Uploaded at: {{ file.uploaded_at }}</p>
                     </li>
                 {% empty %}
-                    <li class="comment-item" data-translate="no-comments">No comments yet.</li>
+                    <p data-translate="no-files">No files uploaded yet.</p>
                 {% endfor %}
             </ul>
 
-            <form method="post" action="{% url 'courses:add_comment' video.id %}" class="comment-form">
+            <h3 data-translate="comments-heading">Comments</h3>
+            <form method="post" action="{% url 'courses:add_comment' video.id slugified_video_title %}" class="comment-form">
                 {% csrf_token %}
-                <textarea name="content" rows="3" placeholder="Add your comment here..." required data-translate-placeholder="comment-placeholder" aria-label="Add comment"></textarea>
-                <button type="submit" data-translate="add-comment-button">Add Comment</button>
+                <textarea name="content" rows="3" placeholder="{% trans 'Add a comment...' %}" required data-translate-placeholder="comment-placeholder"></textarea>
+                <button type="submit" class="action-button" data-translate="add-comment-button">Add Comment</button>
             </form>
+
+            <ul class="comment-list">
+                {% for comment in comments %}
+                    <li class="comment-item">
+                        <strong>{{ comment.user.username }}</strong>
+                        <p>{{ comment.content }}</p>
+                        <p>{{ comment.created_at|date:"F d, Y" }}</p>
+                    </li>
+                {% empty %}
+                    <p data-translate="no-comments">No comments yet.</p>
+                {% endfor %}
+            </ul>
 
             <h3 data-translate="tasks-heading">Tasks</h3>
             {% if tasks %}
@@ -932,7 +909,7 @@
                                                 {% else %}
                                                     {% if show_main_task %}
                                                         <p data-translate="fail-message">You need 50% to pass. Score: {{ score|floatformat:0 }}%. Retry the task.</p>
-                                                        <form method="post" action="{% url 'courses:watch_video' course.id video.id %}">
+                                                        <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_title=slugified_course_title video_id=video.id video_title=slugified_video_title %}">
                                                             {% csrf_token %}
                                                             <input type="hidden" name="task_id" value="{{ task.id }}">
                                                             <div class="task-container">
@@ -947,12 +924,12 @@
                                                                     </div>
                                                                 {% endfor %}
                                                             </div>
-                                                            <button type="submit" name="submit_task" data-translate="submit-task-button">Retry Task</button>
+                                                            <button type="submit" name="submit_task" class="action-button" data-translate="submit-task-button">Retry Task</button>
                                                         </form>
                                                     {% endif %}
                                                     {% if show_alternative_quiz and alternative_quiz %}
                                                         <h5 data-translate="alternative-quiz-heading">Alternative Quiz</h5>
-                                                        <form method="post" action="{% url 'courses:watch_video' course.id video.id %}">
+                                                        <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_title=slugified_course_title video_id=video.id video_title=slugified_video_title %}">
                                                             {% csrf_token %}
                                                             <input type="hidden" name="quiz_id" value="{{ alternative_quiz.id }}">
                                                             <p>{{ alternative_quiz.question }}</p>
@@ -961,7 +938,7 @@
                                                                     <li><label><input type="radio" name="answer" value="{{ option }}" required>{{ option }}</label></li>
                                                                 {% endfor %}
                                                             </ul>
-                                                            <button type="submit" name="submit_alternative_quiz" data-translate="submit-quiz-button">Submit Quiz</button>
+                                                            <button type="submit" name="submit_alternative_quiz" class="action-button" data-translate="submit-quiz-button">Submit Quiz</button>
                                                         </form>
                                                     {% endif %}
                                                 {% endif %}
@@ -971,7 +948,7 @@
                                 {% endwith %}
                             {% else %}
                                 {% if show_main_task %}
-                                    <form method="post" action="{% url 'courses:watch_video' course.id video.id %}">
+                                    <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_title=slugified_course_title video_id=video.id video_title=slugified_video_title %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="task_id" value="{{ task.id }}">
                                         <div class="task-container">
@@ -986,7 +963,7 @@
                                                 </div>
                                             {% endfor %}
                                         </div>
-                                        <button type="submit" name="submit_task" data-translate="submit-task-button">Submit Task</button>
+                                        <button type="submit" name="submit_task" class="action-button" data-translate="submit-task-button">Submit Task</button>
                                     </form>
                                 {% else %}
                                     <p data-translate="no-tasks">No tasks available until you pass.</p>
@@ -998,6 +975,8 @@
             {% else %}
                 <p data-translate="no-tasks">No tasks available for this video.</p>
             {% endif %}
+
+            <a href="{% url 'courses:course_details' course.id slugified_course_title|default:'default-title' %}" class="action-button" data-translate="back-to-course">Back to Course</a>
         </article>
     </main>
 
@@ -1022,31 +1001,32 @@
                 "hero-title": "{{ video.title }}",
                 "hero-desc": "Enhance your learning with {{ video.title }} on Eduvia.",
                 "video-card-title": "{{ video.title }}",
-                "video-progress-heading": "Video Progress",
+                "no-video-url": "No video URL available.",
                 "course-progress-heading": "Course Progress",
-                "complete-video-button": "Complete Video",
                 "rate-video-heading": "Rate this Video",
-                "submit-rating-button": "Submit Rating",
+                "already-rated": "You have already rated this video: {{ user_rating }} stars",
+                "submit-rating": "Submit Rating",
                 "upload-file-heading": "Upload a File",
-                "file-label": "File:",
+                "file-label": "Choose a file:",
                 "description-label": "Description:",
-                "upload-file-button": "Upload File",
+                "upload-button": "Upload File",
                 "uploaded-files-heading": "Uploaded Files",
                 "uploaded-by": "Uploaded by: {{ file.user.username }} {% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}",
                 "uploaded-at": "Uploaded at: {{ file.uploaded_at }}",
                 "no-files": "No files uploaded yet.",
-                "comments-heading": "Comments",
-                "no-comments": "No comments yet.",
-                "comment-placeholder": "Add your comment here...",
-                "add-comment-button": "Add Comment",
                 "tasks-heading": "Tasks",
                 "submit-task-button": "Submit Task",
-                "submission-status": "Your score: {{ score|floatformat:0 }}%",
                 "no-tasks": "No tasks available for this video.",
                 "alternative-quiz-heading": "Alternative Quiz",
                 "submit-quiz-button": "Submit Quiz",
                 "pass-message": "You passed the task!",
                 "fail-message": "You need 50% to pass. Score: {{ score|floatformat:0 }}%. Retry the task.",
+                "submission-status": "Your score: {{ score|floatformat:0 }}%",
+                "comments-heading": "Comments",
+                "add-comment-button": "Add Comment",
+                "no-comments": "No comments yet.",
+                "comment-placeholder": "Add a comment...",
+                "back-to-course": "Back to Course",
                 "nav-home": "Home",
                 "nav-courses": "Courses",
                 "nav-chatbot": "Chatbot",
@@ -1059,45 +1039,45 @@
                 "nav-logout": "Logout",
                 "nav-coins": "Coins:",
                 "nav-login": "Login",
-                "footer-text": "© 2025 Eduvia. All rights reserved.",
-                "rating-submitted": "You have rated this video {{ user_rating }} stars. Rating is final."
+                "footer-text": "© 2025 Eduvia. All rights reserved."
             },
             ar: {
                 "video-title": "{{ video.title }} - إدوفيا",
-                "video-meta-desc": "شاهد {{ video.title }} على إدوفيا. تابع التقدم، قيم الفيديو، قم برفع الملفات، تفاعل مع المهام، وأضف تعليقات في تجربة تعليمية تفاعلية.",
-                "video-meta-keywords": "{{ video.title }}, إدوفيا, التعلم عبر الإنترنت, فيديو الدورة, تقييم الفيديو, رفع الملفات, المهام, التعليقات",
+                "video-meta-desc": "شاهد {{ video.title }} على إدوفيا. تابع تقدمك، قيّم الفيديو، ارفع ملفات، تفاعل مع المهام، وأضف تعليقات في هذه التجربة التعليمية التفاعلية.",
+                "video-meta-keywords": "{{ video.title }}، إدوفيا، التعلم عبر الإنترنت، فيديو الدورة، تقييم الفيديو، رفع الملفات، المهام، التعليقات",
                 "video-og-title": "{{ video.title }} - إدوفيا",
-                "video-og-desc": "شاهد {{ video.title }} على إدوفيا. تابع التقدم، قيم الفيديو، قم برفع الملفات، تفاعل مع المهام، وأضف تعليقات في تجربة تعليمية تفاعلية.",
+                "video-og-desc": "شاهد {{ video.title }} على إدوفيا. تابع تقدمك، قيّم الفيديو، ارفع ملفات، تفاعل مع المهام، وأضف تعليقات في هذه التجربة التعليمية التفاعلية.",
                 "video-twitter-title": "{{ video.title }} - إدوفيا",
-                "video-twitter-desc": "شاهد {{ video.title }} على إدوفيا. تابع التقدم، قيم الفيديو، قم برفع الملفات، تفاعل مع المهام، وأضف تعليقات في تجربة تعليمية تفاعلية.",
+                "video-twitter-desc": "شاهد {{ video.title }} على إدوفيا. تابع تقدمك، قيّم الفيديو، ارفع ملفات، تفاعل مع المهام، وأضف تعليقات في هذه التجربة التعليمية التفاعلية.",
                 "hero-title": "{{ video.title }}",
                 "hero-desc": "عزز تعلمك مع {{ video.title }} على إدوفيا.",
                 "video-card-title": "{{ video.title }}",
-                "video-progress-heading": "تقدم الفيديو",
+                "no-video-url": "لا يوجد رابط فيديو متاح.",
                 "course-progress-heading": "تقدم الدورة",
-                "complete-video-button": "إكمال الفيديو",
-                "rate-video-heading": "قيم هذا الفيديو",
-                "submit-rating-button": "إرسال التقييم",
+                "rate-video-heading": "قيّم هذا الفيديو",
+                "already-rated": "لقد قيّمت هذا الفيديو بالفعل: {{ user_rating }} نجوم",
+                "submit-rating": "إرسال التقييم",
                 "upload-file-heading": "رفع ملف",
-                "file-label": "الملف:",
+                "file-label": "اختر ملفًا:",
                 "description-label": "الوصف:",
-                "upload-file-button": "رفع الملف",
+                "upload-button": "رفع الملف",
                 "uploaded-files-heading": "الملفات المرفوعة",
                 "uploaded-by": "تم الرفع بواسطة: {{ file.user.username }} {% if file.is_instructor_upload %}(معلم){% else %}(طالب){% endif %}",
                 "uploaded-at": "تاريخ الرفع: {{ file.uploaded_at }}",
                 "no-files": "لا توجد ملفات مرفوعة بعد.",
-                "comments-heading": "التعليقات",
-                "no-comments": "لا توجد تعليقات بعد.",
-                "comment-placeholder": "أضف تعليقك هنا...",
-                "add-comment-button": "إضافة تعليق",
                 "tasks-heading": "المهام",
                 "submit-task-button": "إرسال المهمة",
-                "submission-status": "نقطتك: {{ score|floatformat:0 }}%",
                 "no-tasks": "لا توجد مهام متاحة لهذا الفيديو.",
                 "alternative-quiz-heading": "اختبار بديل",
                 "submit-quiz-button": "إرسال الاختبار",
                 "pass-message": "لقد نجحت في المهمة!",
                 "fail-message": "تحتاج إلى 50% للنجاح. النقاط: {{ score|floatformat:0 }}%. أعد المحاولة.",
+                "submission-status": "نقطتك: {{ score|floatformat:0 }}%",
+                "comments-heading": "التعليقات",
+                "add-comment-button": "إضافة تعليق",
+                "no-comments": "لا توجد تعليقات بعد.",
+                "comment-placeholder": "أضف تعليقك هنا...",
+                "back-to-course": "العودة إلى الدورة",
                 "nav-home": "الرئيسية",
                 "nav-courses": "الدورات",
                 "nav-chatbot": "الدردشة الآلية",
@@ -1110,8 +1090,7 @@
                 "nav-logout": "تسجيل الخروج",
                 "nav-coins": "النقاط:",
                 "nav-login": "تسجيل الدخول",
-                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة.",
-                "rating-submitted": "لقد قمت بتقييم هذا الفيديو {{ user_rating }} نجوم. التقييم نهائي."
+                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
             }
         };
 
@@ -1153,37 +1132,51 @@
                 let text = translations[newLang][key];
                 if (element.tagName.toLowerCase() === 'meta') {
                     if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        text = text.replace('{{ video.title }}', '{{ video.title }}');
+                        const videoTitle = element.getAttribute('content').match(/Watch (.*?) on Eduvia/)?.[1] || '{{ video.title }}';
+                        text = translations[newLang][key].replace('{{ video.title }}', videoTitle);
                         element.setAttribute('content', text);
                     } else if (element.getAttribute('property')?.startsWith('og:') || element.getAttribute('name')?.startsWith('twitter:')) {
-                        text = text.replace('{{ video.title }}', '{{ video.title }}');
+                        const videoTitle = element.getAttribute('content').match(/(.*?)( - Eduvia|- إدوفيا)/)?.[1] || '{{ video.title }}';
+                        text = translations[newLang][key].replace('{{ video.title }}', videoTitle);
                         element.setAttribute('content', text);
                     }
-                } else if (['hero-title', 'video-card-title', 'hero-desc', 'video-meta-desc', 'video-og-desc', 'video-twitter-desc'].includes(key)) {
-                    const videoTitle = element.textContent.match(/Enhance your learning with (.*) on Eduvia./)?.[1] || 
-                                      element.textContent || '{{ video.title }}';
+                } else if (key === 'hero-title' || key === 'video-card-title') {
+                    const videoTitle = element.textContent || '{{ video.title }}';
                     text = translations[newLang][key].replace('{{ video.title }}', videoTitle);
                     element.textContent = text;
-                } else if (['uploaded-by', 'uploaded-at', 'submission-status'].includes(key)) {
-                    const username = element.textContent.match(/Uploaded by: (.*?) \(/)?.[1] || '{{ file.user.username }}';
-                    const role = element.textContent.includes('(Instructor)') ? '(Instructor)' : element.textContent.includes('(Student)') ? '(Student)' : '';
-                    const date = element.textContent.match(/Uploaded at: (.*)/)?.[1] || '{{ file.uploaded_at }}';
-                    const score = element.textContent.match(/Your score: (\d+)/)?.[1] || '{{ score|floatformat:0 }}';
-                    text = translations[newLang][key]
-                        .replace('{{ file.user.username }}', username)
-                        .replace('{% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}', role)
-                        .replace('{{ file.uploaded_at }}', date)
-                        .replace('{{ score|floatformat:0 }}', score);
+                } else if (key === 'hero-desc') {
+                    const videoTitle = element.textContent.match(/with (.*?) on Eduvia/)?.[1] || '{{ video.title }}';
+                    text = translations[newLang][key].replace('{{ video.title }}', videoTitle);
                     element.textContent = text;
-                } else if (element.hasAttribute('data-translate-placeholder')) {
-                    element.setAttribute('placeholder', text);
+                } else if (key === 'already-rated') {
+                    const rating = element.textContent.match(/: (\d+) stars/)?.[1] || '{{ user_rating }}';
+                    text = translations[newLang][key].replace('{{ user_rating }}', rating);
+                    element.textContent = text;
+                } else if (key === 'uploaded-by') {
+                    const username = element.textContent.match(/by (.*?) \(/)?.[1] || '{{ file.user.username }}';
+                    const role = element.textContent.includes('(Instructor)') ? '(معلم)' : element.textContent.includes('(Student)') ? '(طالب)' : '{{ file.is_instructor_upload }}';
+                    text = translations[newLang][key].replace('{{ file.user.username }}', username).replace('{% if file.is_instructor_upload %}(معلم){% else %}(طالب){% endif %}', role);
+                    element.textContent = text;
+                } else if (key === 'uploaded-at') {
+                    const date = element.textContent.match(/Uploaded at: (.*)/)?.[1] || '{{ file.uploaded_at }}';
+                    text = translations[newLang][key].replace('{{ file.uploaded_at }}', date);
+                    element.textContent = text;
+                } else if (key === 'submission-status') {
+                    const score = element.textContent.match(/Your score: (\d+)/)?.[1] || '{{ score|floatformat:0 }}';
+                    text = translations[newLang][key].replace('{{ score|floatformat:0 }}', score);
+                    element.textContent = text;
+                } else if (key === 'fail-message') {
+                    const score = element.textContent.match(/Score: (\d+)/)?.[1] || '{{ score|floatformat:0 }}';
+                    text = translations[newLang][key].replace('{{ score|floatformat:0 }}', score);
+                    element.textContent = text;
                 } else {
                     element.textContent = text;
                 }
             });
 
             // Update the title
-            document.title = translations[newLang]["video-title"].replace('{{ video.title }}', '{{ video.title }}');
+            const videoTitle = document.title.match(/(.*?)( - Eduvia|- إدوفيا)/)?.[1] || '{{ video.title }}';
+            document.title = translations[newLang]["video-title"].replace('{{ video.title }}', videoTitle);
 
             localStorage.setItem('language', newLang);
         }
@@ -1210,150 +1203,51 @@
                 let text = translations[savedLang][key];
                 if (element.tagName.toLowerCase() === 'meta') {
                     if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        text = text.replace('{{ video.title }}', '{{ video.title }}');
+                        const videoTitle = element.getAttribute('content').match(/Watch (.*?) on Eduvia/)?.[1] || '{{ video.title }}';
+                        text = translations[savedLang][key].replace('{{ video.title }}', videoTitle);
                         element.setAttribute('content', text);
                     } else if (element.getAttribute('property')?.startsWith('og:') || element.getAttribute('name')?.startsWith('twitter:')) {
-                        text = text.replace('{{ video.title }}', '{{ video.title }}');
+                        const videoTitle = element.getAttribute('content').match(/(.*?)( - Eduvia|- إدوفيا)/)?.[1] || '{{ video.title }}';
+                        text = translations[savedLang][key].replace('{{ video.title }}', videoTitle);
                         element.setAttribute('content', text);
                     }
-                } else if (['hero-title', 'video-card-title', 'hero-desc'].includes(key)) {
-                    const videoTitle = element.textContent.match(/Enhance your learning with (.*) on Eduvia./)?.[1] || 
-                                      element.textContent || '{{ video.title }}';
+                } else if (key === 'hero-title' || key === 'video-card-title') {
+                    const videoTitle = element.textContent || '{{ video.title }}';
                     text = translations[savedLang][key].replace('{{ video.title }}', videoTitle);
                     element.textContent = text;
-                } else if (['uploaded-by', 'uploaded-at', 'submission-status'].includes(key)) {
-                    const username = element.textContent.match(/Uploaded by: (.*?) \(/)?.[1] || '{{ file.user.username }}';
-                    const role = element.textContent.includes('(Instructor)') ? '(Instructor)' : element.textContent.includes('(Student)') ? '(Student)' : '';
-                    const date = element.textContent.match(/Uploaded at: (.*)/)?.[1] || '{{ file.uploaded_at }}';
-                    const score = element.textContent.match(/Your score: (\d+)/)?.[1] || '{{ score|floatformat:0 }}';
-                    text = translations[savedLang][key]
-                        .replace('{{ file.user.username }}', username)
-                        .replace('{% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}', role)
-                        .replace('{{ file.uploaded_at }}', date)
-                        .replace('{{ score|floatformat:0 }}', score);
+                } else if (key === 'hero-desc') {
+                    const videoTitle = element.textContent.match(/with (.*?) on Eduvia/)?.[1] || '{{ video.title }}';
+                    text = translations[savedLang][key].replace('{{ video.title }}', videoTitle);
                     element.textContent = text;
-                } else if (element.hasAttribute('data-translate-placeholder')) {
-                    element.setAttribute('placeholder', text);
+                } else if (key === 'already-rated') {
+                    const rating = element.textContent.match(/: (\d+) stars/)?.[1] || '{{ user_rating }}';
+                    text = translations[savedLang][key].replace('{{ user_rating }}', rating);
+                    element.textContent = text;
+                } else if (key === 'uploaded-by') {
+                    const username = element.textContent.match(/by (.*?) \(/)?.[1] || '{{ file.user.username }}';
+                    const role = element.textContent.includes('(Instructor)') ? '(معلم)' : element.textContent.includes('(Student)') ? '(طالب)' : '{{ file.is_instructor_upload }}';
+                    text = translations[savedLang][key].replace('{{ file.user.username }}', username).replace('{% if file.is_instructor_upload %}(معلم){% else %}(طالب){% endif %}', role);
+                    element.textContent = text;
+                } else if (key === 'uploaded-at') {
+                    const date = element.textContent.match(/Uploaded at: (.*)/)?.[1] || '{{ file.uploaded_at }}';
+                    text = translations[savedLang][key].replace('{{ file.uploaded_at }}', date);
+                    element.textContent = text;
+                } else if (key === 'submission-status') {
+                    const score = element.textContent.match(/Your score: (\d+)/)?.[1] || '{{ score|floatformat:0 }}';
+                    text = translations[savedLang][key].replace('{{ score|floatformat:0 }}', score);
+                    element.textContent = text;
+                } else if (key === 'fail-message') {
+                    const score = element.textContent.match(/Score: (\d+)/)?.[1] || '{{ score|floatformat:0 }}';
+                    text = translations[savedLang][key].replace('{{ score|floatformat:0 }}', score);
+                    element.textContent = text;
                 } else {
                     element.textContent = text;
                 }
             });
 
             // Set the title on page load
-            document.title = translations[savedLang]["video-title"].replace('{{ video.title }}', '{{ video.title }}');
-        });
-
-        // Video Progress Tracking
-        const iframe = document.querySelector('iframe');
-        const progressBar = document.querySelector('progress');
-
-        iframe.addEventListener('load', () => {
-            const video = iframe.contentWindow.document.querySelector('video');
-            if (video) {
-                // استرجاع التقدم السابق
-                fetch(`/courses/update_progress/${video.id}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.progress > 0) {
-                            progressBar.value = data.progress;
-                        }
-                    });
-
-                // منع التسريع أو التقديم اليدوي
-                video.addEventListener('seeking', (e) => {
-                    if (video.currentTime > progressBar.value / 100 * video.duration + 1) {
-                        e.preventDefault();
-                        video.currentTime = progressBar.value / 100 * video.duration;
-                        alert('Fast forwarding is not allowed. Please watch the video in real-time.');
-                    }
-                });
-
-                // تحديث التقدم أثناء التشغيل
-                video.addEventListener('timeupdate', () => {
-                    const duration = video.duration;
-                    const currentTime = video.currentTime;
-                    const progress = (currentTime / duration) * 100;
-                    progressBar.value = progress;
-                });
-
-                // تعيين التقدم إلى 100% عند اكتمال الفيديو
-                video.addEventListener('ended', () => {
-                    progressBar.value = 100;
-
-                    // إرسال إشعار بأن الفيديو اكتمل إلى الخادم
-                    fetch(`/courses/update_progress/${video.id}/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-CSRFToken': getCookie('csrftoken'),
-                        },
-                        body: `current_time=${video.duration}`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.completed) {
-                            alert('Video completed! You earned 50 coins.');
-                            location.reload(); // تحديث الصفحة لإظهار التقدم
-                        }
-                    })
-                    .catch(error => console.error('Error updating progress:', error));
-                });
-            }
-        });
-
-        // Function to get CSRF token
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        // تحميل التقييم السابق عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch(`/courses/get_rating/${video.id}/?user_id=${user.id}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.rating) {
-                        const ratingForm = document.getElementById('rating-form');
-                        const starRating = document.getElementById('star-rating');
-                        ratingForm.querySelector('button').disabled = true;
-                        starRating.querySelectorAll('input[type="radio"]').forEach(radio => {
-                            radio.disabled = true;
-                        });
-                        const ratingValue = data.rating;
-                        for (let i = 1; i <= 5; i++) {
-                            const starLabel = document.querySelector(`#star${i} + label`);
-                            if (i <= ratingValue) {
-                                starLabel.style.color = '#ffd700';
-                            }
-                        }
-                        const alertDiv = document.createElement('div');
-                        alertDiv.className = 'alert alert-success';
-                        alertDiv.setAttribute('data-translate', 'rating-submitted');
-                        alertDiv.textContent = `You have rated this video ${ratingValue} stars. Rating is final.`;
-                        ratingForm.insertAdjacentElement('afterend', alertDiv);
-                    }
-                })
-                .catch(error => console.error('Error fetching rating:', error));
-        });
-
-        // معالجة الإرسال لمنع التكرار
-        document.getElementById('rating-form').addEventListener('submit', (e) => {
-            const ratingForm = document.getElementById('rating-form');
-            const starRating = document.getElementById('star-rating');
-            ratingForm.querySelector('button').disabled = true;
-            starRating.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.disabled = true;
-            });
+            const videoTitle = document.title.match(/(.*?)( - Eduvia|- إدوفيا)/)?.[1] || '{{ video.title }}';
+            document.title = translations[savedLang]["video-title"].replace('{{ video.title }}', videoTitle);
         });
     </script>
 </body>

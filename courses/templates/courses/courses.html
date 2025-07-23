@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+{% load course_tags %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
@@ -671,10 +673,10 @@
             <div class="course-actions">
                 {% if user.is_authenticated %}
                     {% if course.id in enrolled_course_ids %}
-                        <a href="{% url 'courses:course_details' course.id %}" class="details-btn" data-translate="details-btn">View Details</a>
+                        <a href="{% url 'courses:course_details' course.id course.title|custom_slugify %}" class="details-btn" data-translate="details-btn">View Details</a>
                     {% else %}
-                        <a href="#" class="details-btn disabled-btn" data-course-id="{{ course.id }}" data-translate="details-btn">View Details</a>
-                        <a href="#" class="purchase-link" data-course-id="{{ course.id }}" data-coins="{% if user.courses_profile %}{{ user.courses_profile.coins }}{% else %}0{% endif %}" data-translate="purchase-link">Purchase for 300 Coins</a>
+                        <a href="{% url 'courses:course_details' course.id course.title|custom_slugify %}" class="details-btn disabled-btn" data-course-id="{{ course.id }}" data-translate="details-btn">View Details</a>
+                        <a href="{% url 'courses:enroll_course' course.id course.title|custom_slugify %}" class="purchase-link" data-course-id="{{ course.id }}" data-course-title="{{ course.title|custom_slugify }}" data-coins="{% if user.courses_profile %}{{ user.courses_profile.coins }}{% else %}0{% endif %}" data-translate="purchase-link">Purchase for 300 Coins</a>
                     {% endif %}
                 {% else %}
                     <a href="/accounts/register/?next={% url 'courses:courses' %}" class="enroll-btn" data-translate="login-btn">Login to Access</a>
@@ -809,21 +811,16 @@
             // Update all translatable elements
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
-                let text = translations[newLang][key];
                 if (element.tagName.toLowerCase() === 'meta') {
-                    element.setAttribute('content', text);
-                } else if (key === 'search-placeholder') {
-                    element.setAttribute('placeholder', text);
-                } else if (key.includes('-message')) {
-                    // Skip dynamic messages to preserve server-side content
+                    element.setAttribute('content', translations[newLang][key]);
+                } else if (key.includes('placeholder')) {
+                    element.setAttribute('placeholder', translations[newLang][key]);
                 } else {
-                    element.textContent = text;
+                    element.textContent = translations[newLang][key];
                 }
             });
-
-            // Update the title
+            
             document.title = translations[newLang]["page-title"];
-
             localStorage.setItem('language', newLang);
         }
 
@@ -846,118 +843,75 @@
 
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
-                let text = translations[savedLang][key];
                 if (element.tagName.toLowerCase() === 'meta') {
-                    element.setAttribute('content', text);
-                } else if (key === 'search-placeholder') {
-                    element.setAttribute('placeholder', text);
-                } else if (key.includes('-message')) {
-                    // Skip dynamic messages to preserve server-side content
+                    element.setAttribute('content', translations[savedLang][key]);
+                } else if (key.includes('placeholder')) {
+                    element.setAttribute('placeholder', translations[savedLang][key]);
                 } else {
-                    element.textContent = text;
+                    element.textContent = translations[savedLang][key];
                 }
             });
 
-            // Set the title on page load
             document.title = translations[savedLang]["page-title"];
         });
 
-        // Function to show toast notification
-        function showToast(message, isSuccess = false) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-            toastMessage.textContent = message;
-            toast.className = 'toast' + (isSuccess ? ' success' : '');
-            toastIcon.className = 'fas fa-' + (isSuccess ? 'check-circle' : 'exclamation-circle');
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-
-        // Function to get CSRF token
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        // Handle disabled View Details button
-        document.querySelectorAll('.details-btn.disabled-btn').forEach(button => {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                const lang = document.getElementById('html-root').getAttribute('lang');
-                const message = lang === 'ar' ? 'يجب شراء هذه الدورة لعرض التفاصيل.' : 'You must purchase this course to view details.';
-                showToast(message);
-            });
-        });
-
-        // Handle Purchase Course link
+        // Purchase course with AJAX
         document.querySelectorAll('.purchase-link').forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                const courseId = this.getAttribute('data-course-id');
-                const userCoins = parseInt(this.getAttribute('data-coins'));
-                const lang = document.getElementById('html-root').getAttribute('lang');
-                console.log(`Attempting to purchase course ID: ${courseId}, User coins (frontend): ${userCoins}`);
-                console.log(`Request URL: /courses/enroll/${courseId}/`);
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const courseId = link.getAttribute('data-course-id');
+                const courseTitle = link.getAttribute('data-course-title');
+                const userCoins = parseInt(link.getAttribute('data-coins'));
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toast-message');
+                const toastIcon = document.getElementById('toast-icon');
 
-                // Send AJAX request to enroll
-                fetch(`/courses/enroll/${courseId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken'),
-                        'Content-Type': 'application/json',
-                    },
-                })
-                .then(response => {
-                    console.log(`Response status: ${response.status}`);
-                    if (!response.ok) {
-                        console.log(`Response error: ${response.statusText}`);
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Response data:', data);
-                    if (data.success) {
-                        // Update button to "View Details"
-                        const courseActions = link.closest('.course-actions');
-                        const detailsText = lang === 'ar' ? translations.ar['details-btn'] : translations.en['details-btn'];
-                        courseActions.innerHTML = `<a href="/courses/details/${courseId}/" class="details-btn">${detailsText}</a>`;
-                        // Update coins display
-                        const coinsDisplay = document.querySelector('.coins-display');
-                        if (coinsDisplay) {
-                            const coinsText = lang === 'ar' ? translations.ar['nav-coins'] : translations.en['nav-coins'];
-                            coinsDisplay.innerHTML = `<i class="fas fa-coins coins-icon"></i> <span>${coinsText}</span> ${data.new_coins || data.coins || 0}`;
+                if (userCoins < 300) {
+                    toast.classList.remove('success');
+                    toast.classList.add('error');
+                    toastIcon.className = 'fas fa-exclamation-circle';
+                    toastMessage.textContent = translations[document.getElementById('html-root').getAttribute('lang')]['error-message'] || 'Insufficient coins! You need 300 coins to purchase this course.';
+                    toast.style.display = 'block';
+                    setTimeout(() => { toast.style.display = 'none'; }, 3000);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`{% url 'courses:enroll_course' 0 'placeholder' %}`.replace('0/placeholder', `${courseId}/${courseTitle}`), {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                            'Content-Type': 'application/json'
                         }
-                        showToast(data.message, true);
-                        // Redirect to course details
-                        if (data.redirect) {
-                            setTimeout(() => {
-                                window.location.href = data.redirect;
-                            }, 1000);
-                        }
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        toast.classList.remove('error');
+                        toast.classList.add('success');
+                        toastIcon.className = 'fas fa-check-circle';
+                        toastMessage.textContent = translations[document.getElementById('html-root').getAttribute('lang')]['success-message'] || 'Successfully enrolled in the course!';
+                        toast.style.display = 'block';
+                        setTimeout(() => {
+                            toast.style.display = 'none';
+                            window.location.reload();
+                        }, 3000);
                     } else {
-                        console.log(`Purchase failed: ${data.message}`);
-                        showToast(data.message || (lang === 'ar' ? 'خطأ في شراء الدورة.' : 'Error purchasing course.'));
+                        toast.classList.remove('success');
+                        toast.classList.add('error');
+                        toastIcon.className = 'fas fa-exclamation-circle';
+                        toastMessage.textContent = data.message || translations[document.getElementById('html-root').getAttribute('lang')]['error-message'] || 'Failed to enroll in the course.';
+                        toast.style.display = 'block';
+                        setTimeout(() => { toast.style.display = 'none'; }, 3000);
                     }
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                    const errorMessage = lang === 'ar' ? `فشل في شراء الدورة: ${error.message}` : `Failed to purchase course: ${error.message}`;
-                    showToast(errorMessage);
-                });
+                } catch (error) {
+                    toast.classList.remove('success');
+                    toast.classList.add('error');
+                    toastIcon.className = 'fas fa-exclamation-circle';
+                    toastMessage.textContent = translations[document.getElementById('html-root').getAttribute('lang')]['error-message'] || 'An error occurred. Please try again.';
+                    toast.style.display = 'block';
+                    setTimeout(() => { toast.style.display = 'none'; }, 3000);
+                }
             });
         });
     </script>

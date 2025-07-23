@@ -1,4 +1,4 @@
-{% load static %}
+{% load static mentorship_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -534,9 +534,10 @@
             {% if admin_groups %}
                 {% for group in admin_groups %}
                     <div class="item">
-                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">{{ group.name }}</a>
+                        <a href="{% url 'mentorship:group_detail' group_id=group.id group_title=group.name|custom_slugify %}">{{ group.name }}</a>
                         <p data-translate="description">Description: {{ group.description|truncatewords:20 }}</p>
-                        <a href="{% url 'mentorship:manage_group_requests' group_id=group.id %}" class="btn btn-sm" data-translate="manage-requests">Manage Requests</a>
+                        <a href="{% url 'mentorship:manage_group_requests' group_id=group.id group_title=group.name|custom_slugify %}" class="btn btn-sm" data-translate="manage-requests">Manage Requests</a>
+                        <a href="{% url 'mentorship:edit_group' group_id=group.id group_title=group.name|custom_slugify %}" class="btn btn-sm" data-translate="edit-group">Edit Group</a>
                     </div>
                 {% endfor %}
             {% else %}
@@ -550,7 +551,7 @@
             {% if member_groups %}
                 {% for group in member_groups %}
                     <div class="item">
-                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">{{ group.name }}</a>
+                        <a href="{% url 'mentorship:group_detail' group_id=group.id group_title=group.name|custom_slugify %}">{{ group.name }}</a>
                         <p data-translate="description">Description: {{ group.description|truncatewords:20 }}</p>
                     </div>
                 {% endfor %}
@@ -565,10 +566,10 @@
             <div class="link-buttons">
                 <a href="{% url 'mentorship:find_mentor' %}" class="btn" data-translate="find-mentor">Find Mentor</a>
                 <a href="{% url 'mentorship:request_mentorship' mentor_id=1 %}" class="btn" data-translate="request-mentorship">Request Mentorship</a>
-                <a href="{% url 'mentorship:group_detail' group_id=1 %}" class="btn" data-translate="group-detail">Group Detail</a>
+                <a href="{% url 'mentorship:group_detail' group_id=1 group_title='example-group' %}" class="btn" data-translate="group-detail">Group Detail</a>
                 <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create Group</a>
-                <a href="{% url 'mentorship:request_join_group' group_id=1 %}" class="btn" data-translate="request-join-group">Request Join Group</a>
-                <a href="{% url 'mentorship:manage_group_requests' group_id=1 %}" class="btn" data-translate="manage-group-requests">Manage Group Requests</a>
+                <a href="{% url 'mentorship:request_join_group' group_id=1 group_title='example-group' %}" class="btn" data-translate="request-join-group">Request Join Group</a>
+                <a href="{% url 'mentorship:manage_group_requests' group_id=1 group_title='example-group' %}" class="btn" data-translate="manage-group-requests">Manage Group Requests</a>
                 <a href="{% url 'mentorship:become_mentor' %}" class="btn" data-translate="become-mentor">Become Mentor</a>
                 <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="mentor-dashboard">Mentor Dashboard</a>
                 <a href="{% url 'mentorship:community_feed' %}" class="btn" data-translate="community-feed">Community Feed</a>
@@ -603,13 +604,13 @@
                 "hero-desc": "Manage your mentees, groups, and mentorship activities in Eduvia",
                 "dashboard-heading": "Mentor Dashboard",
                 "mentees-heading": "Your Mentees",
-                "chat-with": "Chat with {{ mentorship.mentee.username }}",
                 "started": "Started: {{ mentorship.created_at|date:'F d, Y H:i' }}",
                 "rate-mentor": "Rate Mentor",
                 "no-mentees": "You have no mentees yet.",
                 "admin-groups-heading": "Your Admin Groups",
                 "description": "Description: {{ group.description|truncatewords:20 }}",
                 "manage-requests": "Manage Requests",
+                "edit-group": "Edit Group",
                 "no-admin-groups": "You are not an admin of any groups.",
                 "member-groups-heading": "Groups You Are In",
                 "no-member-groups": "You are not a member of any groups.",
@@ -649,13 +650,13 @@
                 "hero-desc": "إدارة المتدربين والمجموعات وأنشطة الإرشاد في إدوفيا",
                 "dashboard-heading": "لوحة تحكم المرشد",
                 "mentees-heading": "المتدربون الخاصون بك",
-                "chat-with": "الدردشة مع {{ mentorship.mentee.username }}",
                 "started": "بدأ في: {{ mentorship.created_at|date:'F d, Y H:i' }}",
                 "rate-mentor": "تقييم المرشد",
                 "no-mentees": "ليس لديك متدربون بعد.",
                 "admin-groups-heading": "المجموعات التي تديرها",
                 "description": "الوصف: {{ group.description|truncatewords:20 }}",
                 "manage-requests": "إدارة الطلبات",
+                "edit-group": "تعديل المجموعة",
                 "no-admin-groups": "أنت لست مسؤولاً عن أي مجموعات.",
                 "member-groups-heading": "المجموعات التي تنتمي إليها",
                 "no-member-groups": "أنت لست عضوًا في أي مجموعات.",
@@ -729,11 +730,8 @@
                     } else if (element.getAttribute('property')?.startsWith('og:')) {
                         element.setAttribute('content', text);
                     }
-                } else if (['chat-with', 'started', 'description'].includes(key)) {
-                    if (key === 'chat-with') {
-                        const username = element.textContent.match(/Chat with (.*)/)?.[1] || '{{ mentorship.mentee.username }}';
-                        text = translations[newLang][key].replace('{{ mentorship.mentee.username }}', username);
-                    } else if (key === 'started') {
+                } else if (['started', 'description'].includes(key)) {
+                    if (key === 'started') {
                         const date = element.textContent.match(/Started: (.*)/)?.[1] || '{{ mentorship.created_at|date:"F d, Y H:i" }}';
                         text = translations[newLang][key].replace('{{ mentorship.created_at|date:"F d, Y H:i" }}', date);
                     } else if (key === 'description') {
@@ -778,11 +776,8 @@
                     } else if (element.getAttribute('property')?.startsWith('og:')) {
                         element.setAttribute('content', text);
                     }
-                } else if (['chat-with', 'started', 'description'].includes(key)) {
-                    if (key === 'chat-with') {
-                        const username = element.textContent.match(/Chat with (.*)/)?.[1] || '{{ mentorship.mentee.username }}';
-                        text = translations[savedLang][key].replace('{{ mentorship.mentee.username }}', username);
-                    } else if (key === 'started') {
+                } else if (['started', 'description'].includes(key)) {
+                    if (key === 'started') {
                         const date = element.textContent.match(/Started: (.*)/)?.[1] || '{{ mentorship.created_at|date:"F d, Y H:i" }}';
                         text = translations[savedLang][key].replace('{{ mentorship.created_at|date:"F d, Y H:i" }}', date);
                     } else if (key === 'description') {

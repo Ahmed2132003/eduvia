@@ -1,4 +1,4 @@
-{% load static competition_tags %}
+{% load static competition_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -508,7 +508,7 @@
             <label data-translate="label-points">Points: <input type="number" name="points" min="0" value="10" required></label>
             <label data-translate="label-coins">Coins: <input type="number" name="coins" min="0" value="10" required></label>
             <button type="submit" data-translate="button-add-question">Add Question</button>
-            <a href="{% url 'competition_detail' competition.id %}" class="back-link" data-translate="button-back">Back to Competition</a>
+            <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-link" data-translate="button-back">Back to Competition</a>
         </form>
     </section>
 

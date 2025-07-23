@@ -1,17 +1,19 @@
 {% load static %}
+{% load widget_tweaks %}
+{% load projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="page-title">Submit Solution for Task: {{ task.title }} - Eduvia</title>
-    <meta name="description" data-translate="meta-desc" content="Submit your solution for task '{{ task.title }}' in project '{{ project.title }}' on Eduvia. Provide links and describe your work.">
-    <meta name="keywords" data-translate="meta-keywords" content="{{ task.title }}, {{ project.title }}, Eduvia, task submission, open source collaboration, project solutions">
+    <title data-translate="page-title">Submit Solution for Task: {{ task.title|default:"Task" }} - Eduvia</title>
+    <meta name="description" data-translate="meta-desc" content="Submit your solution for task '{{ task.title|default:"Task" }}' in project '{{ project.title|default:"Project" }}' on Eduvia. Provide links and describe your work.">
+    <meta name="keywords" data-translate="meta-keywords" content="{{ task.title|default:"Task" }}, {{ project.title|default:"Project" }}, Eduvia, task submission, open source collaboration, project solutions">
     <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
-    <meta name="og:title" data-translate="og-title" content="Submit Solution for {{ task.title }} - Eduvia">
-    <meta name="og:description" data-translate="og-desc" content="Submit your solution for '{{ task.title }}' in '{{ project.title }}' on Eduvia. Provide links and describe your work.">
+    <meta name="og:title" data-translate="og-title" content="Submit Solution for {{ task.title|default:"Task" }} - Eduvia">
+    <meta name="og:description" data-translate="og-desc" content="Submit your solution for '{{ task.title|default:"Task" }}' in '{{ project.title|default:"Project" }}' on Eduvia. Provide links and describe your work.">
     <meta name="og:image" content="{% static 'images/projects5.jpg' %}">
     <meta name="og:url" content="{{ request.build_absolute_uri }}">
     <meta name="twitter:card" content="summary_large_image">
@@ -484,7 +486,7 @@
                 {% if user.courses_profile %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
                     </span>
                 {% else %}
                     <span class="coins-display">
@@ -506,15 +508,19 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1 data-translate="hero-title">Submit Solution for Task: {{ task.title }}</h1>
-        <p data-translate="hero-desc">Submit your solution for the task in project '{{ project.title }}'.</p>
-        <a href="{% url 'projects:project_details' project.id %}" class="btn" data-translate="back-to-project">Back to Project Details</a>
+        <h1 data-translate="hero-title">Submit Solution for Task: {{ task.title|default:"Task" }}</h1>
+        <p data-translate="hero-desc">Submit your solution for the task in project '{{ project.title|default:"Project" }}'.</p>
+        {% if project.id and project.title %}
+            <a href="{% url 'projects:project_details' project.id project.title|custom_slugify %}" class="btn" data-translate="back-to-project">Back to Project Details</a>
+        {% else %}
+            <a href="/projects/" class="btn" data-translate="back-to-project">Back to Projects</a>
+        {% endif %}
     </section>
 
     <!-- Content Container -->
     <div class="content-container">
-        <h1 data-translate="content-title">Submit Solution for Task: {{ task.title }}</h1>
-        <p><strong data-translate="project-label">Project:</strong> {{ project.title }}</p>
+        <h1 data-translate="content-title">Submit Solution for Task: {{ task.title|default:"Task" }}</h1>
+        <p><strong data-translate="project-label">Project:</strong> {{ project.title|default:"Project" }}</p>
 
         {% if messages %}
             <div class="alert alert-info" role="alert">
@@ -524,10 +530,19 @@
             </div>
         {% endif %}
 
-        <form method="post" class="submission-form needs-validation" novalidate>
+        <form method="post" action="{% if task.id and task.slugified_title %}{% url 'projects:submit_task' task.id task.slugified_title %}{% else %}/projects/{% endif %}" class="submission-form needs-validation" novalidate>
             {% csrf_token %}
 
-            <!-- Display form errors if any -->
+            <!-- Display non-field errors -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Display field errors -->
             {% if form.errors %}
                 <div class="alert alert-danger">
                     <ul>
@@ -543,40 +558,72 @@
             <!-- Solution URL field -->
             <div class="mb-3">
                 <label for="{{ form.submission_url.id_for_label }}" class="form-label" data-translate="solution-link-label">Solution Link (e.g., Pull Request)</label>
-                {{ form.submission_url }}
+                {{ form.submission_url|add_class:"form-control" }}
                 <small class="form-text text-muted" data-translate="solution-link-help">Enter the solution link if available (optional).</small>
+                {% if form.submission_url.errors %}
+                    <div class="invalid-feedback" style="display: block;">
+                        {% for error in form.submission_url.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <!-- File URL field -->
             <div class="mb-3">
                 <label for="{{ form.file_url.id_for_label }}" class="form-label" data-translate="file-url-label">File URL</label>
-                {{ form.file_url }}
+                {{ form.file_url|add_class:"form-control" }}
                 <small class="form-text text-muted" data-translate="file-url-help">Enter the URL for your file (e.g., Google Drive, GitHub, etc.) (optional).</small>
-                <div class="invalid-feedback" data-translate="file-url-error">
-                    Please provide a valid file URL.
-                </div>
+                {% if form.file_url.errors %}
+                    <div class="invalid-feedback" style="display: block;">
+                        {% for error in form.file_url.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <!-- Description field -->
             <div class="mb-3">
                 <label for="{{ form.description.id_for_label }}" class="form-label" data-translate="description-label">Solution Description</label>
-                {{ form.description }}
+                {{ form.description|add_class:"form-control" }}
                 <div class="invalid-feedback" data-translate="description-error">
                     Please provide a description for the solution.
                 </div>
+                {% if form.description.errors %}
+                    <div class="invalid-feedback" style="display: block;">
+                        {% for error in form.description.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <!-- Submit and Cancel buttons -->
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary" data-translate="submit-btn">Submit Solution</button>
-                <a href="{% url 'projects:project_details' project.id %}" class="btn btn-secondary" data-translate="cancel-btn">Cancel</a>
+                {% if project.id and project.title %}
+                    <a href="{% url 'projects:project_details' project.id project.title|custom_slugify %}" class="btn btn-secondary" data-translate="cancel-btn">Cancel</a>
+                {% else %}
+                    <a href="/projects/" class="btn btn-secondary" data-translate="cancel-btn">Cancel</a>
+                {% endif %}
             </div>
         </form>
+
+        <!-- Debug Information (Commented Out) -->
+        <!--
+        <div class="alert alert-info">
+            <p>Debug: Project ID = {{ project.id|default:"None" }}</p>
+            <p>Debug: Task Title = {{ task.title|default:"None" }}</p>
+            <p>Debug: Task Slug = {{ task.slugified_title|default:"None" }}</p>
+            <p>Debug: Project Title = {{ project.title|default:"None" }}</p>
+        </div>
+        -->
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data.translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -653,6 +700,10 @@
             }
         };
 
+        // Pass task and project titles to JavaScript
+        const taskTitle = "{{ task.title|escapejs|default:'Task' }}";
+        const projectTitle = "{{ project.title|escapejs|default:'Project' }}";
+
         function toggleMenu() {
             const menu = document.querySelector('.menu');
             menu.classList.toggle('active');
@@ -688,7 +739,7 @@
             // Update all translatable elements
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
-                let text = translations[newLang][key].replace('{{ task.title }}', '{{ task.title }}').replace('{{ project.title }}', '{{ project.title }}');
+                let text = translations[newLang][key].replace('{{ task.title }}', taskTitle).replace('{{ project.title }}', projectTitle);
                 if (element.tagName.toLowerCase() === 'meta') {
                     if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
                         element.setAttribute('content', text);
@@ -701,9 +752,7 @@
             });
 
             // Update the title
-            document.title = translations[newLang]["page-title"].replace('{{ task.title }}', '{{ task.title }}');
-
-            localStorage.setItem('language', newLang);
+            document.title = translations[newLang]["page-title"].replace('{{ task.title }}', taskTitle);
         }
 
         // Apply saved theme and language on page load
@@ -725,7 +774,7 @@
 
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
-                let text = translations[savedLang][key].replace('{{ task.title }}', '{{ task.title }}').replace('{{ project.title }}', '{{ project.title }}');
+                let text = translations[savedLang][key].replace('{{ task.title }}', taskTitle).replace('{{ project.title }}', projectTitle);
                 if (element.tagName.toLowerCase() === 'meta') {
                     if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
                         element.setAttribute('content', text);
@@ -738,7 +787,7 @@
             });
 
             // Set the title on page load
-            document.title = translations[savedLang]["page-title"].replace('{{ task.title }}', '{{ task.title }}');
+            document.title = translations[savedLang]["page-title"].replace('{{ task.title }}', taskTitle);
         });
 
         // Form Validation

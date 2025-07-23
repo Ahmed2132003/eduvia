@@ -1,4 +1,4 @@
-{% load static competition_tags %}
+{% load static competition_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -385,6 +385,29 @@
             box-shadow: var(--btn-shadow);
         }
 
+        /* Back Link */
+        .back-link {
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            background: var(--btn-bg);
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.4s ease;
+            width: fit-content;
+        }
+
+        .back-link:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: var(--btn-shadow);
+        }
+
         /* Messages Styling */
         .messages {
             margin: 20px 0;
@@ -453,7 +476,8 @@
                 {% if user.courses_profile %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                        <span data-translate="nav-coin
+s">Coins:</span> {{ user.courses_profile.coins }}
                     </span>
                 {% else %}
                     <span class="coins-display">
@@ -503,6 +527,7 @@
             {% endif %}
             <button type="submit" data-translate="button-submit">Submit Answer</button>
         </form>
+        <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-link" data-translate="back-link">Back to Competition</a>
     </section>
 
     <!-- Footer -->
@@ -526,6 +551,7 @@
                 "no-choices": "No choices available for this question.",
                 "label-answer": "Answer:",
                 "button-submit": "Submit Answer",
+                "back-link": "Back to Competition",
                 "nav-home": "Home",
                 "nav-courses": "Courses",
                 "nav-chatbot": "Chatbot",
@@ -553,6 +579,7 @@
                 "no-choices": "لا توجد خيارات متاحة لهذا السؤال.",
                 "label-answer": "الإجابة:",
                 "button-submit": "إرسال الإجابة",
+                "back-link": "العودة إلى المسابقة",
                 "nav-home": "الرئيسية",
                 "nav-courses": "الدورات",
                 "nav-chatbot": "الدردشة الآلية",

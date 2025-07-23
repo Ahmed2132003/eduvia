@@ -1,4 +1,4 @@
-{% load static %}
+{% load static projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -652,7 +652,7 @@
     <section class="hero">
         <h1 data-translate="hero-title">Solutions for {{ task.title }}</h1>
         <p data-translate="hero-desc">Review and rate submitted solutions for this task in '{{ project.title }}'.</p>
-        <a href="{% url 'projects:project_details' project.id %}" class="btn" data-translate="back-to-project">Back to Project Details</a>
+        <a href="{% url 'projects:project_details' project.id project.title|custom_slugify %}" class="btn" data-translate="back-to-project">Back to Project Details</a>
     </section>
 
     <!-- Content Container -->
@@ -671,7 +671,7 @@
         <h4 data-translate="collaboration-rooms-title">Collaboration Rooms</h4>
         <ul>
             {% for room in task.rooms.all %}
-                <li><a href="{% url 'projects:room_detail' room.id %}">{{ room.title }}</a> (<span data-translate="creator-label">Creator:</span> {{ room.creator.username }})</li>
+                <li><a href="{% url 'projects:room_detail' room.id room.title|custom_slugify %}">{{ room.title }}</a> (<span data-translate="creator-label">Creator:</span> {{ room.creator.username }})</li>
             {% empty %}
                 <p data-translate="no-rooms"><span data-translate="no-rooms-text">No collaboration rooms yet.</span> <a href="{% url 'projects:create_room' %}" data-translate="create-room-link">Create one</a>.</p>
             {% endfor %}
@@ -745,7 +745,7 @@
             <p data-translate="no-solutions">No solutions submitted yet.</p>
         {% endfor %}
 
-        <a href="{% url 'projects:project_details' project.id %}" class="btn btn-secondary" data-translate="back-to-project">Back to Project Details</a>
+        <a href="{% url 'projects:project_details' project.id project.title|custom_slugify %}" class="btn btn-secondary" data-translate="back-to-project">Back to Project Details</a>
     </div>
 
     <!-- Footer -->

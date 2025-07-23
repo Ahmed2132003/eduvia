@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -413,7 +413,7 @@
                 {% if user.profile %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.profile.coins }}
+                        <span data-translate="nav-coins">Coins:</span> {{ user.profile.coins|default:0 }}
                     </span>
                 {% else %}
                     <span class="coins-display">
@@ -444,20 +444,21 @@
                         <p><strong data-translate="instructor-label">Instructor:</strong> {{ session.instructor.username }}</p>
                         <p><strong data-translate="time-label">Time:</strong> {{ session.start_time }} - {{ session.end_time }}</p>
                         {% if session.session_image %}
-                            <img src="{{ session.session_image.url }}" alt="{{ session.title }}">
+                            <img src="{{ session.session_image }}" alt="{{ session.title }}">
                         {% endif %}
                         {% if session.meet_link %}
                             <p><strong data-translate="meet-label">Meet Link:</strong> <a href="{{ session.meet_link }}" target="_blank">{{ session.meet_link }}</a></p>
                         {% endif %}
                         {% if not session.is_active and current_time >= session.start_time and current_time <= session.end_time %}
-                            <a href="{% url 'workshops:start_live' session.id %}" class="btn" data-translate="start-live">Start Live</a>
+                            <a href="{% url 'workshops:start_live' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="start-live">Start Live</a>
                         {% elif session.is_active %}
                             <p data-translate="session-active">Session is active!</p>
+                            <a href="{% url 'workshops:watch_live' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="join-live">Join Live</a>
                         {% endif %}
                         {% if user == session.instructor %}
-                            <a href="{% url 'workshops:upload_recording' session.id %}" class="btn" data-translate="upload-recording">Upload Recording</a>
+                            <a href="{% url 'workshops:upload_recording' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="upload-recording">Upload Recording</a>
                             {% if session.recordings.exists %}
-                                <a href="{% url 'workshops:watch_recording' session.recordings.first.id %}" class="btn" data-translate="watch-recording">Watch Recording</a>
+                                <a href="{% url 'workshops:watch_recording' recording_id=session.recordings.first.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="watch-recording">Watch Recording</a>
                             {% endif %}
                         {% endif %}
                     </section>
@@ -476,10 +477,10 @@
                     <p><strong data-translate="instructor-label">Instructor:</strong> {{ session.instructor.username }}</p>
                     <p><strong data-translate="time-label">Time:</strong> {{ session.start_time }} - {{ session.end_time }}</p>
                     {% if session.session_image %}
-                        <img src="{{ session.session_image.url }}" alt="{{ session.title }}">
+                        <img src="{{ session.session_image }}" alt="{{ session.title }}">
                     {% endif %}
                     {% if session.meet_link %}
-                        <a href="{{ session.meet_link }}" target="_blank" class="btn" data-translate="join-live">Join Live</a>
+                        <a href="{% url 'workshops:watch_live' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="join-live">Join Live</a>
                     {% endif %}
                 </section>
             {% endfor %}
@@ -496,7 +497,7 @@
                     <p><strong data-translate="instructor-label">Instructor:</strong> {{ session.instructor.username }}</p>
                     <p><strong data-translate="starts-label">Starts:</strong> {{ session.start_time }}</p>
                     {% if session.session_image %}
-                        <img src="{{ session.session_image.url }}" alt="{{ session.title }}">
+                        <img src="{{ session.session_image }}" alt="{{ session.title }}">
                     {% endif %}
                 </section>
             {% endfor %}

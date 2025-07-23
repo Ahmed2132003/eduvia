@@ -1,4 +1,4 @@
-{% load static %}
+{% load static projects_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -500,7 +500,7 @@
     <section class="hero">
         <h1 data-translate="hero-title">Add Comment for Project: {{ project.title }}</h1>
         <p data-translate="hero-desc">Share your feedback for the project '{{ project.title }}'.</p>
-        <a href="{% url 'projects:project_details' project.id %}" class="btn" data-translate="back-btn">Back to Project Details</a>
+        <a href="{% url 'projects:project_details' project.id project.title|custom_slugify %}" class="btn" data-translate="back-btn">Back to Project Details</a>
     </section>
 
     <!-- Content Container -->
@@ -543,7 +543,7 @@
             <!-- Submit and Cancel buttons -->
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary" data-translate="submit-btn">Add Comment</button>
-                <a href="{% url 'projects:project_details' project.id %}" class="btn btn-secondary" data-translate="cancel-btn">Cancel</a>
+                <a href="{% url 'projects:project_details' project.id project.title|custom_slugify %}" class="btn btn-secondary" data-translate="cancel-btn">Cancel</a>
             </div>
         </form>
     </div>

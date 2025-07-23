@@ -1,6 +1,6 @@
 {% load static %}
-{% load course_tags %}
 {% load i18n %}
+{% load course_tags %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
@@ -619,14 +619,14 @@
             <h1>{{ course.title }}</h1>
             <p class="description">{{ course.description }}</p>
             {% if not is_enrolled %}
-                <a href="{% url 'courses:enroll_course' course.id %}" class="enroll-btn" data-translate="enroll-btn">Enroll for 300 Coins</a>
+                <a href="{% url 'courses:enroll_course' course.id course.title|custom_slugify %}" class="enroll-btn" data-translate="enroll-btn">Enroll for 300 Coins</a>
             {% else %}
                 <h3 data-translate="progress-title">Course Progress</h3>
                 <progress value="{{ completed_videos_count }}" max="{{ total_videos_count }}" aria-label="Course progress"></progress>
                 <p class="progress-text" data-translate="progress-text">{{ completed_videos_count }} of {{ total_videos_count }} videos completed</p>
                 
                 {% if completed_videos_count == total_videos_count %}
-                    <a href="{% url 'courses:download_certificate' course.id %}" class="certificate-btn" data-translate="certificate-btn">Download Certificate</a>
+                    <a href="{% url 'courses:download_certificate' course.id course.title|custom_slugify %}" class="certificate-btn" data-translate="certificate-btn">Download Certificate</a>
                 {% endif %}
 
                 <h3 data-translate="videos-title">Videos List</h3>
@@ -634,7 +634,7 @@
                     {% for video in videos %}
                         <li class="video-item">
                             {% if video|is_video_unlocked:request.user %}
-                                <a href="{% url 'courses:watch_video' course.id video.id %}">{{ video.title }}</a>
+                                <a href="{% url 'courses:watch_video' course.id course.title|custom_slugify video.id video.title|custom_slugify %}">{{ video.title }}</a>
                                 {% if video.id|in_video_progress:request.user %}
                                     <span class="completed" data-translate="completed-label">(Completed ✅)</span>
                                 {% endif %}

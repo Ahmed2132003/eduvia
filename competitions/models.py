@@ -5,7 +5,22 @@ from django.core.exceptions import ValidationError
 import logging
 import uuid
 
+
 logger = logging.getLogger(__name__)
+from django.db import models
+from django.conf import settings
+from django.utils.text import slugify
+import uuid
+import re
+
+def clean_text(text):
+    """تنظيف النص من الأحرف غير المدعومة مع دعم الأحرف العربية"""
+    if not text or not text.strip():
+        return 'default-title'
+    text = re.sub(r'[^\w\s\-\u0600-\u06FF]', '', str(text)).strip()
+    cleaned = text if text else 'default-title'
+    slugified = slugify(cleaned, allow_unicode=True)
+    return slugified if slugified else 'default-title'
 
 class Competition(models.Model):
     title = models.CharField(max_length=200)
@@ -44,6 +59,13 @@ class Competition(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('competition_detail', kwargs={
+            'competition_id': self.id,
+            'competition_title': clean_text(self.title)
+        })
 
     @property
     def is_ongoing(self):

@@ -2,6 +2,18 @@ from django.db import models
 from django.conf import settings
 import uuid
 from django.urls import reverse
+from django.urls import reverse
+from django.utils.text import slugify
+import re
+
+def clean_text(text):
+    """تنظيف النص من الأحرف غير المدعومة مع دعم الأحرف العربية"""
+    if not text or not text.strip():
+        return 'default-title'
+    text = re.sub(r'[^\w\s\-\u0600-\u06FF]', '', text).strip()
+    cleaned = text if text else 'default-title'
+    slugified = slugify(cleaned, allow_unicode=True)
+    return slugified if slugified else 'default-title'
 
 class Project(models.Model):
     STATUS_CHOICES = [
@@ -32,6 +44,11 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+    def get_absolute_url(self):
+        return reverse('projects:project_details', kwargs={
+            'project_id': self.id,
+            'project_title': slugify(clean_text(self.title), allow_unicode=True) or 'default-title'
+        })
 
 class Task(models.Model):
     PRIORITY_CHOICES = [
@@ -59,6 +76,11 @@ class Task(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.project.title})"
+    def get_absolute_url(self):
+        return reverse('projects:task_submissions', kwargs={
+            'task_id': self.id,
+            'task_title': slugify(clean_text(self.title), allow_unicode=True) or 'default-title'
+        })
 
 from django.db import models
 from django.conf import settings
@@ -142,11 +164,14 @@ class CollaborationRoom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
-    def get_absolute_url(self):
-        return reverse('projects:room_detail', args=[self.id])
-
+    
     def __str__(self):
         return self.title
+    def get_absolute_url(self):
+        return reverse('projects:room_detail', kwargs={
+            'room_id': self.id,
+            'room_title': slugify(clean_text(self.title), allow_unicode=True) or 'default-title'
+        })
 
 class RoomMessage(models.Model):
     room = models.ForeignKey(CollaborationRoom, on_delete=models.CASCADE, related_name='messages')

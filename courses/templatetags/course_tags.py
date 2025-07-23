@@ -1,5 +1,10 @@
 from django import template
+from django.utils.text import slugify
 from courses.models import VideoProgress
+import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -22,3 +27,43 @@ def is_video_unlocked(video, user):
         return False
     previous_progress = VideoProgress.objects.filter(user=user, video=previous_video).first()
     return previous_progress and previous_progress.completed
+
+@register.filter
+def custom_slugify(value):
+    if not value or not value.strip():
+        logger.debug(f"Empty or invalid title received: {value}")
+        return 'default-title'
+    result = slugify(value, allow_unicode=True)
+    logger.debug(f"Slugified title: {value} -> {result}")
+    return result or 'default-title'
+
+@register.filter
+def contains(value, arg):
+    return arg in value
+
+@register.filter
+def drive_id(value):
+    match = re.search(r'/d/([^/]+)', value)
+    return match.group(1) if match else value
+
+@register.filter
+def lookup(dict, key):
+    return dict.get(str(key))
+
+@register.filter
+def div(value, arg):
+    try:
+        return float(value) / float(arg) if float(arg) != 0 else 0
+    except (ValueError, ZeroDivisionError):
+        return 0
+
+@register.filter
+def mul(value, arg):
+    try:
+        return float(value) * float(arg)
+    except (ValueError, TypeError):
+        return 0
+
+@register.filter
+def count_true(value):
+    return sum(1 for x in value if x)

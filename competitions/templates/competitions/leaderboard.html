@@ -1,4 +1,4 @@
-{% load static competition_tags %}
+{% load static competition_filters %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
@@ -25,7 +25,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Cairo Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <!-- يمكنك الاحتفاظ بأنماط CSS كما هي -->
     <style>
+        /* أنماط CSS الخاصة بك (بدون تغييرات) */
         :root {
             /* Light Mode Colors */
             --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
@@ -74,8 +76,6 @@
             --certificate-bg-hover: linear-gradient(90deg, #c0392b, #e74c3c);
             --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
             --footer-text: #e0e0e0;
-            --message-success-bg: #3498db;
-            --message-error-bg: #e74c3c;
             --input-border: #555;
             --input-focus-border: #3498db;
         }
@@ -437,7 +437,6 @@
             .hero p { font-size: 16px; }
             .content-container h1 { font-size: 24px; }
             .leaderboard-table th, .leaderboard-table td { font-size: 12px; padding: 8px; }
-            .search-box input { width: 200px; }
             .certificate-link { margin-left: 0; margin-top: 10px; }
         }
     </style>
@@ -518,11 +517,11 @@
                 <tr><td colspan="4" data-translate="table-no-participants">No participants yet.</td></tr>
             {% endfor %}
         </table>
-        <a href="{% url 'competition_detail' competition.id %}" class="back-link" data-translate="back-link">Back to Competition</a>
+        <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-link" data-translate="back-link">Back to Competition</a>
         {% if user.is_authenticated and not competition.is_ongoing %}
             {% for participant in participants %}
                 {% if forloop.counter <= 3 and participant.user == user %}
-                    <a href="{% url 'download_competition_certificate' competition.id %}" class="certificate-link" data-translate="certificate-link">Download Certificate</a>
+                    <a href="{% url 'competitions:download_competition_certificate' competition.id competition.title|custom_slugify %}" class="certificate-link" data-translate="certificate-link">Download Certificate</a>
                 {% endif %}
             {% endfor %}
         {% endif %}

@@ -1,21 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from .models import Skill, Service, ServiceOrder, Opportunity, OpportunityApplication, Message
-from .forms import SkillForm, ServiceForm, OrderForm, OpportunityForm, OpportunityApplicationForm, MessageForm
 from django.contrib import messages
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
-@login_required
-def skills_list(request):
-    skills = Skill.objects.all()
-    return render(request, 'skills_market/skills_list.html', {'skills': skills})
-from django.shortcuts import render
 from django.db.models import Q
-from .models import Skill
-@login_required
+from .models import Skill, Service, ServiceOrder, Opportunity, OpportunityApplication, Message
+from .forms import SkillForm, ServiceForm, OrderForm, OpportunityForm, OpportunityApplicationForm, MessageForm
+from django.utils.text import slugify
 
+@login_required
 def skills_list(request):
     query = request.POST.get('search_query', '')
     if query:
@@ -30,6 +25,7 @@ def skills_list(request):
         'search_query': query,
     }
     return render(request, 'skills_market/skills_list.html', context)
+
 @login_required
 def application_detail(request, application_id):
     application = get_object_or_404(OpportunityApplication, id=application_id)
@@ -39,6 +35,7 @@ def application_detail(request, application_id):
     return render(request, 'skills_market/application_detail.html', {
         'application': application,
     })
+
 @login_required
 def add_skill(request):
     if request.method == 'POST':
@@ -53,14 +50,10 @@ def add_skill(request):
         form = SkillForm()
     return render(request, 'skills_market/add_skill.html', {'form': form})
 
-from django.shortcuts import render
-from django.db.models import Q
-from .models import Service
 @login_required
-
 def services_list(request):
     query = request.POST.get('search_query', '')
-    skill_id = request.GET.get('skill')  # دعم فلترة الخدمات حسب المهارة
+    skill_id = request.GET.get('skill')
     services = Service.objects.all()
 
     if query:
@@ -75,8 +68,8 @@ def services_list(request):
         'search_query': query,
     }
     return render(request, 'skills_market/services_list.html', context)
-@login_required
 
+@login_required
 def add_service(request):
     if request.method == 'POST':
         form = ServiceForm(request.POST, user=request.user)
@@ -92,8 +85,13 @@ def add_service(request):
 
 @login_required
 @transaction.atomic
-def order_service(request, service_id):
+def order_service(request, service_id, slugified_title):
     service = get_object_or_404(Service, id=service_id)
+    # تحقق اختياري من slugified_title
+    expected_slug = slugify(service.title)
+    if slugified_title != expected_slug:
+        return redirect('skills_market:order_service', service_id=service_id, slugified_title=expected_slug)
+    
     buyer_profile = request.user.courses_profile
     seller_profile = service.provider.courses_profile
 
@@ -124,8 +122,8 @@ def opportunities_list(request):
 
 @login_required
 def add_opportunity(request):
-    if request.user.role != 'instructor':
-        messages.error(request, 'Only companies can add opportunities!')
+    if request.user.courses_profile.role != 'instructor':
+        messages.error(request, 'Only instructors can add opportunities!')
         return redirect('skills_market:opportunities_list')
     if request.method == 'POST':
         form = OpportunityForm(request.POST)
@@ -140,7 +138,6 @@ def add_opportunity(request):
         form = OpportunityForm()
     return render(request, 'skills_market/add_opportunity.html', {'form': form})
 
-@login_required
 def apply_opportunity(request, opportunity_id):
     opportunity = get_object_or_404(Opportunity, id=opportunity_id)
     if request.method == 'POST':
@@ -150,20 +147,14 @@ def apply_opportunity(request, opportunity_id):
             application.opportunity = opportunity
             application.applicant = request.user
             application.save()
-            # إرسال بريد إلكتروني إلى مقدم الفرصة
-            if opportunity.email:
-                send_mail(
-                    'New Application Received',
-                    f'A new application has been submitted for your opportunity "{opportunity.title}" by {application.full_name}. Contact: {application.email}',
-                    settings.DEFAULT_FROM_EMAIL,
-                    [opportunity.email],
-                    fail_silently=True,
-                )
             messages.success(request, 'Application submitted successfully!')
             return redirect('skills_market:opportunities_list')
     else:
         form = OpportunityApplicationForm()
-    return render(request, 'skills_market/apply_opportunity.html', {'opportunity': opportunity, 'form': form})
+    return render(request, 'skills_market/apply_opportunity.html', {
+        'opportunity': opportunity,
+        'form': form,
+    })
 
 @login_required
 def opportunity_applications(request):
@@ -176,7 +167,6 @@ def accept_application(request, application_id):
     application = get_object_or_404(OpportunityApplication, id=application_id, opportunity__provider=request.user)
     if application.status != 'accepted':
         application.status = 'accepted'
-        # إنشاء طلب افتراضي مرتبط بالفرصة
         order = ServiceOrder.objects.create(
             service=None,
             buyer=application.applicant,
@@ -186,21 +176,18 @@ def accept_application(request, application_id):
         )
         application.order = order
         application.save()
-        # إنشاء رسالة لمقدم الفرصة (Provider)
         provider_message = Message(
             order=order,
             sender=request.user,
             content=f"لقد تم قبول {application.full_name} في فرصة العمل '{application.opportunity.title}' لدينا."
         )
         provider_message.save()
-        # إنشاء رسالة للمتقدم (Applicant)
         applicant_message = Message(
             order=order,
             sender=request.user,
             content=f"لقد تم قبولك في فرصة العمل '{application.opportunity.title}' لدينا. سيتم التواصل معك قريبًا."
         )
         applicant_message.save()
-        # إرسال بريد إلكتروني إلى المتقدم
         if application.email:
             send_mail(
                 'Application Accepted',
@@ -219,32 +206,28 @@ def applicant_messages(request):
     orders = ServiceOrder.objects.filter(buyer=request.user).order_by('-created_at')
     return render(request, 'skills_market/applicant_messages.html', {'orders': orders})
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import ServiceOrder, Message
-from .forms import MessageForm
-
 @login_required
 def applicant_chat(request, order_id):
-    order = ServiceOrder.objects.get(id=order_id)
-    messages = Message.objects.filter(order=order).order_by('sent_at')
+    order = get_object_or_404(ServiceOrder, id=order_id)
+    messages_list = Message.objects.filter(order=order).order_by('sent_at')
     if request.method == 'POST':
         form = MessageForm(request.POST, request.FILES)
         if form.is_valid():
             message = form.save(commit=False)
             message.sender = request.user
             message.order = order
-            if message.file:
-                message.file.name = message.file.name.encode('utf-8').decode('utf-8')  # دعم الأسماء العربية
+            if message.file_url:
+                message.file_url = message.file_url
             message.save()
             return redirect('skills_market:applicant_chat', order_id=order.id)
     else:
         form = MessageForm()
     return render(request, 'skills_market/applicant_chat.html', {
         'order': order,
-        'messages': messages,
+        'messages': messages_list,
         'form': form,
     })
+
 @login_required
 def track_service(request, order_id):
     order = get_object_or_404(ServiceOrder, id=order_id, buyer=request.user)
@@ -286,13 +269,9 @@ def provider_messages(request):
 
 @login_required
 def provider_chat(request, order_id):
-    try:
-        order = get_object_or_404(ServiceOrder, id=order_id)
-        if order.service and order.service.provider != request.user:
-            messages.error(request, f"You are not authorized to view this chat. This order belongs to {order.service.provider.username}.")
-            return redirect('skills_market:provider_messages')
-    except Http404:
-        messages.error(request, f"No order found with ID {order_id}.")
+    order = get_object_or_404(ServiceOrder, id=order_id)
+    if order.service and order.service.provider != request.user:
+        messages.error(request, f"You are not authorized to view this chat. This order belongs to {order.service.provider.username}.")
         return redirect('skills_market:provider_messages')
     messages_list = order.messages.all().order_by('sent_at')
     if request.method == 'POST':
