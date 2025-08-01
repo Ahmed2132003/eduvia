@@ -7,79 +7,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 🔍 SEO -->
     <title data-translate="video-title">{{ video.title }} - Eduvia</title>
-    <!-- SEO Meta Tags -->
-    <meta name="description" data-translate="video-meta-desc" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
-    <meta name="keywords" data-translate="video-meta-keywords" content="{{ video.title }}, Eduvia, online learning, course video, video rating, file upload, tasks, comments">
+    <meta name="description" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
+    <meta name="keywords" content="{{ video.title }}, Eduvia, online learning, course video, video rating, file upload, tasks, comments">
     <meta name="author" content="Eduvia">
     <meta name="robots" content="index, follow">
-    <!-- Open Graph Tags for Social Media -->
-    <meta property="og:title" data-translate="video-og-title" content="{{ video.title }} - Eduvia">
-    <meta property="og:description" data-translate="video-og-desc" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
-    <meta property="og:image" content="{% static 'images/course_video.jpg' %}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <!-- 🌍 Open Graph -->
+    <meta property="og:title" content="{{ video.title }} - Eduvia">
+    <meta property="og:description" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
+    <meta property="og:image" content="https://i.postimg.cc/j5TYfFdj/course-video.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="video.other">
-    <!-- Twitter Card Tags -->
+    <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" data-translate="video-twitter-title" content="{{ video.title }} - Eduvia">
-    <meta name="twitter:description" data-translate="video-twitter-desc" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
-    <meta name="twitter:image" content="{% static 'images/course_video.jpg' %}">
-    <!-- Schema Markup for SEO -->
+    <meta name="twitter:title" content="{{ video.title }} - Eduvia">
+    <meta name="twitter:description" content="Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.">
+    <meta name="twitter:image" content="https://i.postimg.cc/j5TYfFdj/course-video.jpg">
+    <!-- 🖼️ Favicon -->
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/jpeg">
+    <!-- 🌐 Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 🎨Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 🎨 Styles -->
+    <link rel="stylesheet" href="{% static 'courses/watch_video.css' %}">
+    <!-- 🖼️ Hero Background -->
+    <style>
+        :root {
+            --hero-bg-image: url("https://i.postimg.cc/j5TYfFdj/course-video.jpg");
+        }
+    </style>
+    <!-- 📊 Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "VideoObject",
-        "name": "{{ video.title }}",
-        "description": "{{ video.description|truncatewords:30 }}",
-        "thumbnailUrl": "{% static 'images/course_video.jpg' %}",
-        "uploadDate": "{{ video.created_at|date:'c' }}",
-        "contentUrl": "{{ video.video_url }}",
-        "publisher": {
-            "@type": "Organization",
-            "name": "Eduvia",
-            "sameAs": "{{ request.scheme }}://{{ request.get_host }}"
-        },
-        "isPartOf": {
-            "@type": "Course",
-            "name": "{{ course.title }}",
-            "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id slugified_course_title|default:'default-title' %}"
-        },
-        "breadcrumb": {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Home",
-                    "item": "{{ request.scheme }}://{{ request.get_host }}/home/"
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "https://eduvia-ai.fly.dev/#organization",
+                "name": "Eduvia",
+                "url": "https://eduvia-ai.fly.dev",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://i.postimg.cc/j5TYfFdj/course-video.jpg"
                 },
-                {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "Courses",
-                    "item": "{{ request.scheme }}://{{ request.get_host }}/courses/"
+                "sameAs": [
+                    "https://www.facebook.com/share/18iRSctdxN/",
+                    "https://x.com/Eduvia7",
+                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
+                ]
+            },
+            {
+                "@type": "WebPage",
+                "@id": "{{ request.build_absolute_uri }}#webpage",
+                "url": "{{ request.build_absolute_uri }}",
+                "name": "{{ video.title }} - Eduvia",
+                "description": "Watch {{ video.title }} on Eduvia. Track progress, rate the video, upload files, engage with tasks, and comment in this interactive learning experience.",
+                "breadcrumb": {
+                    "@id": "{{ request.build_absolute_uri }}#breadcrumb"
                 },
-                {
-                    "@type": "ListItem",
-                    "position": 3,
+                "inLanguage": "en"
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "{{ request.build_absolute_uri }}#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Eduvia",
+                        "item": "https://eduvia-ai.fly.dev/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Courses",
+                        "item": "https://eduvia-ai.fly.dev/courses/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": "{{ course.title }}",
+                        "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id slugified_course_title|default:'default-title' %}"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 4,
+                        "name": "{{ video.title }}"
+                    }
+                ]
+            },
+            {
+                "@type": "VideoObject",
+                "@id": "{{ request.build_absolute_uri }}#video",
+                "name": "{{ video.title }}",
+                "description": "{{ video.description|truncatewords:30 }}",
+                "thumbnailUrl": "https://i.postimg.cc/j5TYfFdj/course-video.jpg",
+                "uploadDate": "{{ video.created_at|date:'c' }}",
+                "contentUrl": "{{ video.video_url }}",
+                "isPartOf": {
+                    "@type": "Course",
                     "name": "{{ course.title }}",
-                    "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id slugified_course_title|default:'default-title' %}"
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 4,
-                    "name": "{{ video.title }}"
+                    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'courses:course_details' course.id slugified_course_title|default:'default-title' %}"
                 }
-            ]
-        }
+            }
+        ]
     }
     </script>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Cairo Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Light Mode Colors */

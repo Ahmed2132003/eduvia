@@ -1,0 +1,358 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaLearn platform </title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #001a33;
+            color: white;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .menu {
+            display: flex;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            background: url('{% static "images/home1.jpeg" %}') no-repeat center center/cover;
+            color: #009990;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin: 0;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin: 10px 0 20px;
+        }
+
+        .btn {
+            background-color: #009990;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background-color: #009920;
+        }
+
+        /* Hero1 Section */
+        .hero1 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            padding: 40px 20px;
+            background: white;
+            color: #001a33;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-top: 0;
+        }
+
+        .hero1 h1 {
+            color: #009990;
+            font-size: 48px;
+            margin: 0;
+        }
+
+        .hero1 p {
+            font-size: 20px;
+            margin: 10px 0 20px;
+        }
+
+        .hero1 img {
+            width: 70%; /* نسبة العرض بالنسبة للشاشة */
+            height: 500px; /* الحفاظ على نسبة العرض إلى الارتفاع */
+            border-radius: 20px; /* تقويس الحواف */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة ظل للصورة */
+            margin: 20px 0; /* إضافة مسافة بين الصورة والمحتوى */
+            transition: transform 0.3s ease; /* تأثير عند تمرير الفأرة */
+        }
+
+        .hero1 img:hover {
+            transform: scale(1.05); /* تكبير الصورة قليلاً عند التمرير */
+        }
+        .hero2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            padding: 40px 20px;
+            background: white;
+            color: #001a33;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-top: 0;
+        }
+
+        .hero2 h1 {
+            color: #009990;
+            font-size: 48px;
+            margin: 0;
+        }
+
+        .hero2 p {
+            font-size: 20px;
+            margin: 10px 0 20px;
+        }
+
+        .hero2 img {
+            width: 70%; /* نسبة العرض بالنسبة للشاشة */
+            height: 500px; /* الحفاظ على نسبة العرض إلى الارتفاع */
+            border-radius: 20px; /* تقويس الحواف */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة ظل للصورة */
+            margin: 20px 0; /* إضافة مسافة بين الصورة والمحتوى */
+            transition: transform 0.3s ease; /* تأثير عند تمرير الفأرة */
+        }
+
+        .hero2 img:hover {
+            transform: scale(1.05); /* تكبير الصورة قليلاً عند التمرير */
+        }
+        .hero3 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            padding: 40px 20px;
+            background: white;
+            color: #001a33;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-top: 0;
+        }
+
+        .hero3 h1 {
+            color: #009990;
+            font-size: 48px;
+            margin: 0;
+        }
+
+        .hero3 p {
+            font-size: 20px;
+            margin: 10px 0 20px;
+        }
+
+        .hero3 img {
+            width: 70%; /* نسبة العرض بالنسبة للشاشة */
+            height: 500px; /* الحفاظ على نسبة العرض إلى الارتفاع */
+            border-radius: 20px; /* تقويس الحواف */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة ظل للصورة */
+            margin: 20px 0; /* إضافة مسافة بين الصورة والمحتوى */
+            transition: transform 0.3s ease; /* تأثير عند تمرير الفأرة */
+        }
+
+        .hero3 img:hover {
+            transform: scale(1.05); /* تكبير الصورة قليلاً عند التمرير */
+        }
+        .hero4 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            padding: 40px 20px;
+            background: white;
+            color: #001a33;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-top: 0;
+        }
+
+        .hero4 h1 {
+            color: #009990;
+            font-size: 48px;
+            margin: 0;
+        }
+
+        .hero4 p {
+            font-size: 20px;
+            margin: 10px 0 20px;
+        }
+
+        .hero4 img {
+            width: 70%; /* نسبة العرض بالنسبة للشاشة */
+            height: 500px; /* الحفاظ على نسبة العرض إلى الارتفاع */
+            border-radius: 20px; /* تقويس الحواف */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة ظل للصورة */
+            margin: 20px 0; /* إضافة مسافة بين الصورة والمحتوى */
+            transition: transform 0.3s ease; /* تأثير عند تمرير الفأرة */
+        }
+
+        .hero4 img:hover {
+            transform: scale(1.05); /* تكبير الصورة قليلاً عند التمرير */
+        }
+        .hero5 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            padding: 40px 20px;
+            background: white;
+            color: #001a33;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-top: 0;
+        }
+
+        .hero5 h1 {
+            color: #009990;
+            font-size: 48px;
+            margin: 0;
+        }
+
+        .hero5 p {
+            font-size: 20px;
+            margin: 10px 0 20px;
+        }
+
+        .hero5 img {
+            width: 70%; /* نسبة العرض بالنسبة للشاشة */
+            height: 500px; /* الحفاظ على نسبة العرض إلى الارتفاع */
+            border-radius: 20px; /* تقويس الحواف */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة ظل للصورة */
+            margin: 20px 0; /* إضافة مسافة بين الصورة والمحتوى */
+            transition: transform 0.3s ease; /* تأثير عند تمرير الفأرة */
+        }
+
+        .hero5 img:hover {
+            transform: scale(1.05); /* تكبير الصورة قليلاً عند التمرير */
+        }
+
+
+
+
+        /* Footer */
+        .footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">NovaLearn</div>
+        <nav class="menu">
+            <a href="/home/">Home</a>
+            <a href="/courses/">Courses</a>
+            <a href="/recommendation/">Recommendations</a>
+            <a href="/chatbot/">Chatbot</a>
+            <a href="/home/about/">About Us</a>
+            <a href="/home/contact_us/">Contact Us</a>
+            <a href="/register/">Login</a>
+        </nav>
+    </header>
+    
+
+    <!-- Hero Section -->
+    <section class="hero">
+        
+        <a href="/accounts/register/" class="btn">Start now !!</a>
+    </section>
+    <form method="get" action="{% url 'search_courses' %}" style="margin: 20px 0; display: flex; justify-content: center; align-items: center;">
+        <input 
+            type="text" 
+            name="q" 
+            placeholder="Search for a course..." 
+            style="padding: 10px; width: 300px; border: 1px solid #d4af37; border-radius: 5px; font-size: 16px; margin-right: 10px;"
+        >
+        <button 
+            type="submit" 
+            class="btn" 
+            style="background-color: #001a33; color: #ffffff; padding: 10px 20px; font-size: 16px; border-radius: 5px; border: none; cursor: pointer; transition: background-color 0.3s ease;"
+        >
+            Search
+        </button>
+    </form>
+    <!-- Hero1 Section -->
+    <section class="hero1">
+        <h1>Courses section</h1>
+        <p>Here you will find everything about the courses, applying for the courses, how to apply, and all the courses. You can enter the course you need and register in it, then start listening to the first lecture. The lecture after that will be closed until the first one ends, and you can make an evaluation and comment on the course and the lecturer.</p>
+        <img src="{% static 'images/courses11.jpeg' %}" alt="Course Image">
+        <a href="/courses/" class="btn">Courses</a>
+    </section>
+    <section class="hero2">
+        <h1>Recommendation section</h1>
+        <p>Here in the recommendations section you will have a complete system with artificial intelligence, a great recommendation system for courses, and you will see the best rated courses and the best rated lecturers, and you will see artificial intelligence recommendations for courses.</p>
+        <img src="{% static 'images/reco1.jpeg' %}" alt="Course Image">
+        <a href="/recommendation/" class="btn">Recommendation</a>
+    </section>
+    <section class="hero3">
+        <h1>Chatbot section</h1>
+        <p>Our platform's chatbot provides assistance in all courses offered on the platform and can answer any question related to the platform, English, programming, or mathematics, but within the limits of the courses offered, the chatbot will greatly help you in dealing with our platform.</p>
+        <img src="{% static 'images/chat.jpeg' %}" alt="Chatbot Image">
+        <a href="/chatbot/" class="btn">Chatbot</a>
+    </section>
+    <section class="hero4">
+        <h1>About us section</h1>
+        <p>This is the section that contains information about our company and also all the means of knowing about the company you want.</p>
+        <img src="{% static 'images/about.jpeg' %}" alt="About us Image">
+        <a href="/home/about/" class="btn">About us</a>
+    </section>
+    <section class="hero5">
+        <h1>Contact us section</h1>
+        <p>Here is the Contact Us section, which contains all the means of communication with us to report any problem or for any assistance you need from the management or customer service.</p>
+        <img src="{% static 'images/contact333.jpeg' %}" alt="Contact us Image">
+        <a href="/home/contact_us/" class="btn">Contact us</a>
+    </section>
+
+
+
+</body>
+</html>

@@ -6,67 +6,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 🔍 SEO -->
     <title data-translate="course-title">{{ course.title }} - Eduvia</title>
-    <!-- SEO Meta Tags (English) -->
-    <meta name="description" data-translate="course-meta-desc" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.">
-    <meta name="keywords" data-translate="course-meta-keywords" content="{{ course.title }}, Eduvia, online learning, course videos, education, e-learning">
-    <meta name="author" content="Eduvia">
+    <meta name="description" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today." data-translate="course-meta-desc">
+    <meta name="keywords" content="{{ course.title }}, Eduvia, online learning, course videos, education, e-learning" data-translate="course-meta-keywords">
+    <meta name="description" lang="ar" content="استكشف {{ course.title }} على إدوفيا. شاهد فيديوهات الدورة، تابع تقدمك، وابدأ التعلم اليوم." data-translate="course-meta-desc-ar">
+    <meta name="keywords" lang="ar" content="{{ course.title }}، إدوفيا، التعلم عبر الإنترنت، فيديوهات الدورة، التعليم، التعلم الإلكتروني" data-translate="course-meta-keywords-ar">
+    <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
-    <!-- SEO Meta Tags (Arabic) -->
     <meta http-equiv="content-language" content="ar, en">
-    <meta name="description" lang="ar" data-translate="course-meta-desc-ar" content="استكشف {{ course.title }} على إدوفيا. شاهد فيديوهات الدورة، تابع تقدمك، وابدأ التعلم اليوم.">
-    <meta name="keywords" lang="ar" data-translate="course-meta-keywords-ar" content="{{ course.title }}، إدوفيا، التعلم عبر الإنترنت، فيديوهات الدورة، التعليم، التعلم الإلكتروني">
-    <!-- Open Graph Tags -->
-    <meta property="og:title" data-translate="course-og-title" content="{{ course.title }} - Eduvia">
-    <meta property="og:description" data-translate="course-og-desc" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.">
-    <meta property="og:image" content="{% static 'images/course_details.jpg' %}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <!-- 🌍 Open Graph -->
+    <meta property="og:title" content="{{ course.title }} - Eduvia" data-translate="course-og-title">
+    <meta property="og:description" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today." data-translate="course-og-desc">
+    <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
-    <!-- Twitter Card Tags -->
+
+    <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" data-translate="course-twitter-title" content="{{ course.title }} - Eduvia">
-    <meta name="twitter:description" data-translate="course-twitter-desc" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.">
-    <meta name="twitter:image" content="{% static 'images/course_details.jpg' %}">
-    <!-- Schema Markup -->
+    <meta name="twitter:title" content="{{ course.title }} - Eduvia" data-translate="course-twitter-title">
+    <meta name="twitter:description" content="Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today." data-translate="course-twitter-desc">
+    <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
+
+    <!-- 🖼️ Favicon -->
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+
+    <!-- 🌐 Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- 🎨 Styles -->
+    <link rel="stylesheet" href="{% static 'courses/course_details.css' %}">
+
+    <!-- 📊 Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Course",
-        "name": "{{ course.title }}",
-        "description": "{{ course.description|truncatewords:30 }}",
-        "provider": {
-            "@type": "Organization",
-            "name": "Eduvia",
-            "sameAs": "{{ request.scheme }}://{{ request.get_host }}"
-        },
-        "url": "{{ request.build_absolute_uri }}",
-        "breadcrumb": {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "{% trans 'Home' %}",
-                    "item": "{{ request.scheme }}://{{ request.get_host }}/home/"
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "https://eduvia-ai.fly.dev/#organization",
+                "name": "Eduvia",
+                "url": "https://eduvia-ai.fly.dev",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
                 },
-                {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "{% trans 'Courses' %}",
-                    "item": "{{ request.scheme }}://{{ request.get_host }}/courses/"
+                "sameAs": [
+                    "https://www.facebook.com/share/18iRSctdxN/",
+                    "https://x.com/Eduvia7",
+                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
+                ]
+            },
+            {
+                "@type": "WebPage",
+                "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/#webpage",
+                "url": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/",
+                "name": "{{ course.title }} - Eduvia",
+                "description": "Explore {{ course.title }} on Eduvia. Watch course videos, track your progress, and start learning today.",
+                "breadcrumb": {
+                    "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/#breadcrumb"
                 },
-                {
-                    "@type": "ListItem",
-                    "position": 3,
-                    "name": "{{ course.title }}"
-                }
-            ]
-        }
+                "inLanguage": "en"
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Eduvia",
+                        "item": "https://eduvia-ai.fly.dev/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Courses",
+                        "item": "https://eduvia-ai.fly.dev/courses/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": "{{ course.title }}",
+                        "item": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/"
+                    }
+                ]
+            },
+            {
+                "@type": "Course",
+                "name": "{{ course.title }}",
+                "description": "{{ course.description|truncatewords:30 }}",
+                "provider": {
+                    "@type": "Organization",
+                    "name": "Eduvia",
+                    "sameAs": "https://eduvia-ai.fly.dev"
+                },
+                "url": "{{ request.build_absolute_uri }}"
+            }
+        ]
     }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Light Mode Colors */

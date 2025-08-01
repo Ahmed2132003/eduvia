@@ -1,0 +1,151 @@
+const translations = {
+    en: {
+        "page-title": "Application Details - Eduvia",
+        "meta-desc": "View detailed information about an application for an opportunity in Eduvia's Skills Market.",
+        "meta-keywords": "application details, Eduvia, skills market",
+        "og-title": "Application Details - Eduvia",
+        "og-desc": "View detailed information about an application for an opportunity in Eduvia's Skills Market.",
+        "hero-title": "Application Details",
+        "hero-desc": "Review detailed information for the applicant",
+        "details-title": "Applicant Details",
+        "app-name": "Full Name:",
+        "app-phone": "Phone Number:",
+        "app-address": "Address:",
+        "app-age": "Age:",
+        "app-email": "Email:",
+        "app-skills": "Skills:",
+        "app-experience": "Experience:",
+        "app-linkedin": "LinkedIn:",
+        "app-github": "GitHub:",
+        "app-cv": "CV:",
+        "app-status": "Status:",
+        "app-applied": "Applied At:",
+        "app-accept": "Accept Application",
+        "btn-back-applications": "Back to Applications",
+        "btn-back-opportunities": "Back to Opportunities",
+        "nav-home": "Home",
+        "nav-courses": "Courses",
+        "nav-chatbot": "Chatbot",
+        "nav-competitions": "Competitions",
+        "nav-performance": "Performance",
+        "nav-skills-market": "Skills Market",
+        "nav-about": "About Us",
+        "nav-contact": "Contact Us",
+        "nav-dashboard": "Dashboard",
+        "nav-profile": "Profile",
+        "nav-logout": "Logout",
+        "nav-coins": "Coins:",
+        "nav-login": "Login",
+        "footer-text": "© 2025 Eduvia. All rights reserved."
+    },
+    ar: {
+        "page-title": "تفاصيل الطلب - إدوفيا",
+        "meta-desc": "عرض المعلومات التفصيلية لطلب مقدم في سوق المهارات بإدوفيا.",
+        "meta-keywords": "تفاصيل الطلب, إدوفيا, سوق المهارات",
+        "og-title": "تفاصيل الطلب - إدوفيا",
+        "og-desc": "عرض المعلومات التفصيلية لطلب مقدم في سوق المهارات بإدوفيا.",
+        "hero-title": "تفاصيل الطلب",
+        "hero-desc": "مراجعة المعلومات التفصيلية للمتقدم",
+        "details-title": "تفاصيل المتقدم",
+        "app-name": "الاسم الكامل:",
+        "app-phone": "رقم الهاتف:",
+        "app-address": "العنوان:",
+        "app-age": "العمر:",
+        "app-email": "البريد الإلكتروني:",
+        "app-skills": "المهارات:",
+        "app-experience": "الخبرة:",
+        "app-linkedin": "لينكدإن:",
+        "app-github": "جيت هب:",
+        "app-cv": "السيرة الذاتية:",
+        "app-status": "الحالة:",
+        "app-applied": "تاريخ التقديم:",
+        "app-accept": "قبول الطلب",
+        "btn-back-applications": "العودة إلى الطلبات",
+        "btn-back-opportunities": "العودة إلى الفرص",
+        "nav-home": "الرئيسية",
+        "nav-courses": "الدورات",
+        "nav-chatbot": "الدردشة الآلية",
+        "nav-competitions": "المسابقات",
+        "nav-performance": "الأداء",
+        "nav-skills-market": "سوق المهارات",
+        "nav-about": "معلومات عنا",
+        "nav-contact": "تواصل معنا",
+        "nav-dashboard": "لوحة التحكم",
+        "nav-profile": "الملف الشخصي",
+        "nav-logout": "تسجيل الخروج",
+        "nav-coins": "النقاط:",
+        "nav-login": "تسجيل الدخول",
+        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+    }
+};
+
+function toggleMenu() {
+    const menu = document.querySelector('.menu');
+    menu.classList.toggle('active');
+}
+
+function toggleDarkMode() {
+    const body = document.body;
+    const toggleIcon = document.querySelector('.dark-mode-toggle i');
+    body.classList.toggle('dark-mode');
+    if (body.classList.contains('dark-mode')) {
+        toggleIcon.classList.remove('fa-moon');
+        toggleIcon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        toggleIcon.classList.remove('fa-sun');
+        toggleIcon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+function toggleLanguage() {
+    const htmlRoot = document.getElementById('html-root');
+    const currentLang = htmlRoot.getAttribute('lang');
+    const newLang = currentLang === 'en' ? 'ar' : 'en';
+    htmlRoot.setAttribute('lang', newLang);
+    htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+    document.querySelectorAll('[data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        let text = translations[newLang][key];
+        if (element.tagName.toLowerCase() === 'meta') {
+            if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                element.setAttribute('content', text);
+            } else if (element.getAttribute('property')?.startsWith('og:')) {
+                element.setAttribute('content', text);
+            }
+        } else {
+            element.textContent = text;
+        }
+    });
+    document.title = translations[newLang]["page-title"];
+    localStorage.setItem('language', newLang);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    const toggleIcon = document.querySelector('.dark-mode-toggle i');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        toggleIcon.classList.remove('fa-moon');
+        toggleIcon.classList.add('fa-sun');
+    }
+    const savedLang = localStorage.getItem('language') || 'en';
+    const htmlRoot = document.getElementById('html-root');
+    htmlRoot.setAttribute('lang', savedLang);
+    htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+    document.querySelectorAll('[data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        let text = translations[savedLang][key];
+        if (element.tagName.toLowerCase() === 'meta') {
+            if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
+                element.setAttribute('content', text);
+            } else if (element.getAttribute('property')?.startsWith('og:')) {
+                element.setAttribute('content', text);
+            }
+        } else {
+            element.textContent = text;
+        }
+    });
+    document.title = translations[savedLang]["page-title"];
+});

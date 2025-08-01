@@ -5,23 +5,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 🔍 SEO -->
     <title data-translate="answer-question-title">Answer Question | Eduvia</title>
-    <!-- SEO Meta Tags -->
     <meta name="description" data-translate="answer-question-meta-desc" content="Answer questions in educational competitions on the Eduvia platform to test your knowledge and earn XP and coins!">
     <meta name="keywords" data-translate="answer-question-meta-keywords" content="answer questions, educational competitions, Eduvia platform, interactive learning, learning challenges, XP, coins">
-    <meta name="author" content="Eduvia">
+    <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
     <meta http-equiv="content-language" content="ar, en">
-    <!-- Open Graph Tags for Social Media -->
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <!-- 🌍 Open Graph -->
     <meta property="og:title" data-translate="answer-question-og-title" content="Answer Question | Eduvia">
     <meta property="og:description" data-translate="answer-question-og-desc" content="Answer questions in educational competitions on the Eduvia platform to test your knowledge and earn XP and coins!">
-    <meta property="og:image" content="{% static 'images/eduvia_home_1.jpg' %}">
+    <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
-    <!-- Font Awesome for icons -->
+
+    <!-- 🐦 Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" data-translate="answer-question-og-title" content="Answer Question | Eduvia">
+    <meta name="twitter:description" data-translate="answer-question-og-desc" content="Answer questions in educational competitions on the Eduvia platform to test your knowledge and earn XP and coins!">
+    <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
+
+    <!-- 🖼️ Favicon -->
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+
+    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Cairo Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 🎨 Styles -->
+    <link rel="stylesheet" href="{% static 'competitions/answer_question.css' %}">
+
+    <!-- 📊 Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "https://eduvia-ai.fly.dev/#organization",
+                "name": "Eduvia",
+                "url": "https://eduvia-ai.fly.dev",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
+                },
+                "sameAs": [
+                    "https://www.facebook.com/share/18iRSctdxN/",
+                    "https://x.com/Eduvia7",
+                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
+                ]
+            },
+            {
+                "@type": "WebPage",
+                "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/#webpage",
+                "url": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/",
+                "name": "Answer Question | Eduvia",
+                "description": "Answer questions in educational competitions on the Eduvia platform to test your knowledge and earn XP and coins!",
+                "breadcrumb": {
+                    "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/#breadcrumb"
+                },
+                "inLanguage": "en"
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Eduvia",
+                        "item": "https://eduvia-ai.fly.dev/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Competitions",
+                        "item": "https://eduvia-ai.fly.dev/competitions/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": "{{ competition.title }}",
+                        "item": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 4,
+                        "name": "Answer Question",
+                        "item": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/"
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
     <style>
         :root {
             /* Light Mode Colors */
@@ -453,6 +533,7 @@
             .content-container h1 { font-size: 24px; }
         }
     </style>
+
 </head>
 <body>
     <!-- Header -->

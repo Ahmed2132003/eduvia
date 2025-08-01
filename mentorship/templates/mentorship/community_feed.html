@@ -5,353 +5,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="feed-title">Community Feed - Eduvia</title>
-    <!-- SEO Meta Tags -->
-    <meta name="description" data-translate="feed-meta-desc" content="Join the Eduvia community feed to share and engage with programming and job market discussions.">
-    <meta name="keywords" data-translate="feed-meta-keywords" content="community feed, Eduvia, programming, job market">
+
+    <!-- 🔍 SEO -->
+    <title data-translate="page-title">Track Service - Eduvia</title>
+    <meta name="description" content="Track your service order status and communicate with providers on Eduvia's Skills Market.">
+    <meta name="keywords" content="track service, order status, Eduvia, skills market, freelance, communication">
     <meta name="author" content="Eduvia">
     <meta name="robots" content="index, follow">
-    <!-- Open Graph Tags -->
-    <meta property="og:title" data-translate="feed-og-title" content="Community Feed - Eduvia">
-    <meta property="og:description" data-translate="feed-og-desc" content="Join the Eduvia community feed to share and engage with programming and job market discussions.">
-    <meta property="og:image" content="{% static 'images/oppo3.jpg' %}">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <link rel="canonical" href="https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/">
+
+    <!-- 🌍 Open Graph -->
+    <meta property="og:title" content="Track Service - Eduvia">
+    <meta property="og:description" content="Monitor your service orders and exchange messages with providers inside Eduvia's Skills Market.">
+    <meta property="og:image" content="https://i.postimg.cc/3RbkxP2b/oppo3.jpg">
+    <meta property="og:url" content="https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/">
     <meta property="og:type" content="website">
-    <!-- Favicon -->
-    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
-    <!-- Font Awesome -->
+
+    <!-- 🐦 Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Track Service - Eduvia">
+    <meta name="twitter:description" content="Track the progress of your ordered services and stay in touch with the service provider.">
+    <meta name="twitter:image" content="https://i.postimg.cc/3RbkxP2b/oppo3.jpg">
+
+    <!-- 🖼️ Favicon -->
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+
+    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Bootstrap CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- 🎨 Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Cairo Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'mentorship/community_feed.css' %}">
+
+    <!-- 🖼️ Hero Background -->
     <style>
         :root {
-            /* Light Mode Colors */
-            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
-            --text-color: #333;
-            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
-            --header-text: #ffffff;
-            --card-bg: #ffffff;
-            --card-secondary-text: #444;
-            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
-            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
-            --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
-            --border-color: #ddd;
-            --link-color: #00a8cc;
-            --link-hover-color: #00c9a7;
-            --comment-bg: #f0f2f5;
-            --alert-bg: #d1ecf1;
-        }
-
-        /* Dark Mode Colors */
-        body.dark-mode {
-            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
-            --text-color: #e0e0e0;
-            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
-            --header-text: #e0e0e0;
-            --card-bg: #2c2c2c;
-            --card-secondary-text: #b0b0b0;
-            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
-            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-            --border-color: #555;
-            --link-color: #3498db;
-            --link-hover-color: #2980b9;
-            --comment-bg: #3a3a3a;
-            --alert-bg: #2c3e50;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Cairo', sans-serif;
-            background: var(--background-gradient);
-            color: var(--text-color);
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        html[dir="rtl"] body {
-            text-align: right;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: var(--header-bg);
-            color: var(--header-text);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            animation: slideDown 0.8s ease-out forwards;
-        }
-
-        @keyframes slideDown {
-            0% { transform: translateY(-100%); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        .header a {
-            color: var(--header-text);
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 18px;
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .header a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: var(--header-text);
-            left: 0;
-            bottom: -5px;
-            transition: width 0.3s ease;
-        }
-
-        html[dir="rtl"] .header a::after {
-            left: unset;
-            right: 0;
-        }
-
-        .header a:hover::after { width: 100%; }
-        .header a:hover { color: #f0f8ff; }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover { transform: scale(1.05); }
-
-        .menu {
-            display: flex;
-            align-items: center;
-        }
-
-        html[dir="rtl"] .menu {
-            flex-direction: row-reverse;
-        }
-
-        .coins-display {
-            margin-left: 10px;
-            font-weight: bold;
-            color: var(--header-text);
-            background: var(--header-bg);
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        html[dir="rtl"] .coins-display {
-            margin-left: 0;
-            margin-right: 10px;
-        }
-
-        .coins-icon {
-            font-size: 16px;
-            color: #ffd700;
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Dark Mode Toggle */
-        .dark-mode-toggle, .language-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            margin: 0 10px;
-        }
-
-        .dark-mode-toggle i, .language-toggle i {
-            font-size: 20px;
-            color: var(--header-text);
-            transition: color 0.3s ease;
-        }
-
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: var(--header-text);
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .menu {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: var(--header-bg);
-                padding: 20px 0;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
-
-            html[dir="rtl"] .menu {
-                flex-direction: column;
-                left: unset;
-                right: 0;
-            }
-
-            .menu.active { display: flex; }
-            .menu a, .menu .coins-display { margin: 10px 0; font-size: 20px; }
-            .hamburger { display: block; }
-            .coins-display { display: flex; justify-content: center; }
-        }
-
-        /* Post Styling */
-        .post {
-            background: var(--card-bg);
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            transition: background 0.3s ease;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        html[dir="rtl"] .post-header {
-            flex-direction: row-reverse;
-        }
-
-        .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
-        }
-
-        html[dir="rtl"] .profile-pic {
-            margin-right: 0;
-            margin-left: 10px;
-        }
-
-        .post-content {
-            margin-bottom: 10px;
-            word-wrap: break-word;
-        }
-
-        .post-image {
-            max-width: 100%;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid var(--border-color);
-            padding-top: 10px;
-            transition: border-color 0.3s ease;
-        }
-
-        .post-action-btn {
-            display: flex;
-            align-items: center;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .post-action-btn:hover {
-            background-color: var(--comment-bg);
-        }
-
-        .comments-section {
-            display: none;
-            padding-top: 10px;
-        }
-
-        .comment {
-            display: flex;
-            align-items: flex-start;
-            margin-top: 10px;
-        }
-
-        html[dir="rtl"] .comment {
-            flex-direction: row-reverse;
-        }
-
-        .comment .profile-pic {
-            margin-right: 10px;
-        }
-
-        html[dir="rtl"] .comment .profile-pic {
-            margin-right: 0;
-            margin-left: 10px;
-        }
-
-        .comment-content {
-            background: var(--comment-bg);
-            padding: 8px;
-            border-radius: 10px;
-            max-width: 80%;
-            transition: background 0.3s ease;
-        }
-
-        /* Form Styling */
-        .form-group {
-            margin-bottom: 10px;
-        }
-
-        .alert {
-            background: var(--alert-bg);
-            color: var(--card-secondary-text);
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .post {
-                margin-left: 10px;
-                margin-right: 10px;
-            }
-        }
-
-        /* Footer */
-        .footer {
-            background: linear-gradient(145deg, #fdfcfe, #d8f4ff);
-            text-align: center;
-            padding: 10px 0;
-            font-size: 14px;
-            color: #333;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        body.dark-mode .footer {
-            background: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            color: #e0e0e0;
+            --hero-bg-image: url("https://i.postimg.cc/3RbkxP2b/oppo3.jpg");
         }
     </style>
+
+    <!-- 📊 Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "https://eduvia-ai.fly.dev/#organization",
+                "name": "Eduvia",
+                "url": "https://eduvia-ai.fly.dev",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
+                },
+                "sameAs": [
+                    "https://www.facebook.com/share/18iRSctdxN/",
+                    "https://x.com/Eduvia7",
+                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
+                ]
+            },
+            {
+                "@type": "WebPage",
+                "@id": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/#webpage",
+                "url": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/",
+                "name": "Track Service - Eduvia",
+                "description": "Track the status of your service order and chat with the provider in Eduvia's Skills Market.",
+                "breadcrumb": {
+                    "@id": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/#breadcrumb"
+                },
+                "inLanguage": "en"
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Eduvia",
+                        "item": "https://eduvia-ai.fly.dev/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Skills Market",
+                        "item": "https://eduvia-ai.fly.dev/skills_market/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": "Track Service",
+                        "item": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/"
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -427,14 +178,14 @@
         {% for post in posts %}
             <div class="post">
                 <div class="post-header">
-                    <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture }}{% else %}https://i.postimg.cc/T360VPF0/logo-eduvia1.png{% endif %}" alt="{{ post.author.username }}'s profile" class="profile-pic">
+                    <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}" alt="{{ post.author.username }}'s profile" class="profile-pic">
                     <strong>{{ post.author.username }}</strong>
                     <small class="text-muted ms-2">{{ post.created_at }}</small>
                 </div>
                 <div class="post-content">
                     {{ post.content|urlize }}
                     {% if post.image_file %}
-                        <img src="{{ post.image_file }}" alt="Post image" class="post-image" onerror="this.src='https://i.postimg.cc/T360VPF0/logo-eduvia1.png'">
+                        <img src="{{ post.image_file }}" alt="Post image" class="post-image" onerror="this.src='https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png'">
                     {% endif %}
                 </div>
                 <div class="post-actions">
@@ -465,7 +216,7 @@
                 <div class="comments-section">
                     {% for comment in post.mentorship_comments.all %}
                         <div class="comment">
-                            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture }}{% else %}https://i.postimg.cc/T360VPF0/logo-eduvia1.png{% endif %}" alt="{{ comment.author.username }}'s profile" class="profile-pic">
+                            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}" alt="{{ comment.author.username }}'s profile" class="profile-pic">
                             <div class="comment-content">
                                 <strong>{{ comment.author.username }}</strong>
                                 <p>{{ comment.content|urlize }}</p>
@@ -497,196 +248,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Translation object
-        const translations = {
-            en: {
-                "feed-title": "Community Feed - Eduvia",
-                "feed-meta-desc": "Join the Eduvia community feed to share and engage with programming and job market discussions.",
-                "feed-meta-keywords": "community feed, Eduvia, programming, job market",
-                "feed-og-title": "Community Feed - Eduvia",
-                "feed-og-desc": "Join the Eduvia community feed to share and engage with programming and job market discussions.",
-                "feed-heading": "Community Feed",
-                "post-placeholder": "Share something about programming or job market...",
-                "post-button": "Post",
-                "like": "Like",
-                "unlike": "Unlike",
-                "dislike": "Dislike",
-                "remove-dislike": "Remove Dislike",
-                "comments": "Comments",
-                "no-comments": "No comments yet.",
-                "comment-placeholder": "Write a comment...",
-                "comment-button": "Comment",
-                "no-posts": "No posts yet!",
-                "nav-home": "Home",
-                "nav-courses": "Courses",
-                "nav-chatbot": "Chatbot",
-                "nav-competitions": "Competitions",
-                "nav-performance": "Performance",
-                "nav-about": "About Us",
-                "nav-contact": "Contact Us",
-                "nav-dashboard": "Dashboard",
-                "nav-profile": "Profile",
-                "nav-logout": "Logout",
-                "nav-coins": "Coins:",
-                "nav-login": "Login",
-                "footer-text": "© 2025 Eduvia. All rights reserved."
-            },
-            ar: {
-                "feed-title": "تغذية المجتمع - إدوفيا",
-                "feed-meta-desc": "انضم إلى تغذية مجتمع إدوفيا لمشاركة النقاشات وتفاعلها حول البرمجة وسوق العمل.",
-                "feed-meta-keywords": "تغذية المجتمع, إدوفيا, البرمجة, سوق العمل",
-                "feed-og-title": "تغذية المجتمع - إدوفيا",
-                "feed-og-desc": "انضم إلى تغذية مجتمع إدوفيا لمشاركة النقاشات وتفاعلها حول البرمجة وسوق العمل.",
-                "feed-heading": "تغذية المجتمع",
-                "post-placeholder": "شارك شيئًا عن البرمجة أو سوق العمل...",
-                "post-button": "نشر",
-                "like": "إعجاب",
-                "unlike": "إلغاء الإعجاب",
-                "dislike": "عدم الإعجاب",
-                "remove-dislike": "إزالة عدم الإعجاب",
-                "comments": "تعليقات",
-                "no-comments": "لا توجد تعليقات بعد.",
-                "comment-placeholder": "اكتب تعليقًا...",
-                "comment-button": "تعليق",
-                "no-posts": "لا توجد منشورات بعد!",
-                "nav-home": "الرئيسية",
-                "nav-courses": "الدورات",
-                "nav-chatbot": "الدردشة الآلية",
-                "nav-competitions": "المسابقات",
-                "nav-performance": "الأداء",
-                "nav-about": "معلومات عنا",
-                "nav-contact": "تواصل معنا",
-                "nav-dashboard": "لوحة التحكم",
-                "nav-profile": "الملف الشخصي",
-                "nav-logout": "تسجيل الخروج",
-                "nav-coins": "النقاط:",
-                "nav-login": "تسجيل الدخول",
-                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
-            }
-        };
-
-        function toggleMenu() {
-            const menu = document.querySelector('.menu');
-            menu.classList.toggle('active');
-        }
-
-        // Dark Mode Toggle
-        function toggleDarkMode() {
-            const body = document.body;
-            const toggleIcon = document.querySelector('.dark-mode-toggle i');
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                toggleIcon.classList.remove('fa-moon');
-                toggleIcon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                toggleIcon.classList.remove('fa-sun');
-                toggleIcon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
-        }
-
-        // Language Toggle
-        function toggleLanguage() {
-            const htmlRoot = document.getElementById('html-root');
-            const currentLang = htmlRoot.getAttribute('lang');
-            const newLang = currentLang === 'en' ? 'ar' : 'en';
-            
-            // Update lang and direction
-            htmlRoot.setAttribute('lang', newLang);
-            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-            
-            // Update all translatable elements
-            document.querySelectorAll('[data-translate], [data-translate-placeholder], [data-translate-like], [data-translate-dislike]').forEach(element => {
-                const key = element.getAttribute('data-translate') || element.getAttribute('data-translate-placeholder') || element.getAttribute('data-translate-like') || element.getAttribute('data-translate-dislike');
-                let text = translations[newLang][key];
-                if (element.tagName.toLowerCase() === 'meta') {
-                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        element.setAttribute('content', text);
-                    } else if (element.getAttribute('property')?.startsWith('og:')) {
-                        element.setAttribute('content', text);
-                    }
-                } else if (element.tagName.toLowerCase() === 'textarea' && element.hasAttribute('data-translate-placeholder')) {
-                    element.setAttribute('placeholder', text);
-                } else if (element.tagName.toLowerCase() === 'button' && (element.hasAttribute('data-translate-like') || element.hasAttribute('data-translate-dislike'))) {
-                    const action = element.hasAttribute('data-translate-like') ? element.getAttribute('data-translate-like') : element.getAttribute('data-translate-dislike');
-                    text = translations[newLang][action];
-                    if (element.textContent.includes('(')) {
-                        const count = element.textContent.match(/\(([^)]+)\)/)[1];
-                        text += ` (${count})`;
-                    }
-                    element.textContent = text;
-                } else {
-                    element.textContent = text;
-                }
-            });
-
-            // Update the title
-            document.title = translations[newLang]["feed-title"];
-
-            localStorage.setItem('language', newLang);
-        }
-
-        // Apply saved theme and language on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Apply Dark Mode
-            const savedTheme = localStorage.getItem('theme');
-            const toggleIcon = document.querySelector('.dark-mode-toggle i');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                toggleIcon.classList.remove('fa-moon');
-                toggleIcon.classList.add('fa-sun');
-            }
-
-            // Apply Language
-            const savedLang = localStorage.getItem('language') || 'en';
-            const htmlRoot = document.getElementById('html-root');
-            htmlRoot.setAttribute('lang', savedLang);
-            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
-
-            document.querySelectorAll('[data-translate], [data-translate-placeholder], [data-translate-like], [data-translate-dislike]').forEach(element => {
-                const key = element.getAttribute('data-translate') || element.getAttribute('data-translate-placeholder') || element.getAttribute('data-translate-like') || element.getAttribute('data-translate-dislike');
-                let text = translations[savedLang][key];
-                if (element.tagName.toLowerCase() === 'meta') {
-                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        element.setAttribute('content', text);
-                    } else if (element.getAttribute('property')?.startsWith('og:')) {
-                        element.setAttribute('content', text);
-                    }
-                } else if (element.tagName.toLowerCase() === 'textarea' && element.hasAttribute('data-translate-placeholder')) {
-                    element.setAttribute('placeholder', text);
-                } else if (element.tagName.toLowerCase() === 'button' && (element.hasAttribute('data-translate-like') || element.hasAttribute('data-translate-dislike'))) {
-                    const action = element.hasAttribute('data-translate-like') ? element.getAttribute('data-translate-like') : element.getAttribute('data-translate-dislike');
-                    text = translations[savedLang][action];
-                    if (element.textContent.includes('(')) {
-                        const count = element.textContent.match(/\(([^)]+)\)/)[1];
-                        text += ` (${count})`;
-                    }
-                    element.textContent = text;
-                } else {
-                    element.textContent = text;
-                }
-            });
-
-            // Set the title on page load
-            document.title = translations[savedLang]["feed-title"];
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.show-comments').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault(); // Prevent default link behavior
-                    const commentsSection = this.closest('.post').querySelector('.comments-section');
-                    if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
-                        commentsSection.style.display = 'block';
-                    } else {
-                        commentsSection.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="{% static 'mentorship/community_feed.js' %}"></script>
 </body>
 </html>
