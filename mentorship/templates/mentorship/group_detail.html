@@ -6,46 +6,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
+    <!-- SEO -->
     <title data-translate="group-detail-title">{{ group.name }} - Eduvia</title>
     <meta name="description" content="Group chat for {{ group.name }} in Eduvia's Mentorship System.">
     <meta name="keywords" content="group chat, {{ group.name }}, Eduvia, mentorship">
     <meta name="author" content="Eduvia">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/group_detail/{{ group.id }}/">
+    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/group/{{ group.id }}/">
 
-    <!-- 🌍 Open Graph -->
+    <!-- Open Graph -->
     <meta property="og:title" content="{{ group.name }} - Eduvia">
     <meta property="og:description" content="Group chat for {{ group.name }} in Eduvia's Mentorship System.">
     <meta property="og:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/group_detail/{{ group.id }}/">
+    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/group/{{ group.id }}/">
     <meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ group.name }} - Eduvia">
     <meta name="twitter:description" content="Group chat for {{ group.name }} in Eduvia's Mentorship System.">
     <meta name="twitter:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
 
-    <!-- 🖼️ Favicon -->
+    <!-- Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-    <!-- 🌐 Fonts & Icons -->
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- 🎨 Styles -->
+    <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'mentorship/group_detail.css' %}">
 
-    <!-- 🖼️ Hero Background -->
+    <!-- Hero Background -->
     <style>
         :root {
             --hero-bg-image: url("https://i.postimg.cc/kM86Bn8g/oppo3.jpg");
         }
     </style>
 
-    <!-- 📊 Structured Data -->
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -67,18 +67,18 @@
             },
             {
                 "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/group_detail/{{ group.id }}/#webpage",
-                "url": "https://eduvia-ai.fly.dev/mentorship/group_detail/{{ group.id }}/",
+                "@id": "https://eduvia-ai.fly.dev/mentorship/group/{{ group.id }}/#webpage",
+                "url": "https://eduvia-ai.fly.dev/mentorship/group/{{ group.id }}/",
                 "name": "{{ group.name }} - Eduvia",
                 "description": "Group chat for {{ group.name }} in Eduvia's Mentorship System.",
                 "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/mentorship/group_detail/{{ group.id }}/#breadcrumb"
+                    "@id": "https://eduvia-ai.fly.dev/mentorship/group/{{ group.id }}/#breadcrumb"
                 },
                 "inLanguage": "en"
             },
             {
                 "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/group_detail/{{ group.id }}/#breadcrumb",
+                "@id": "https://eduvia-ai.fly.dev/mentorship/group/{{ group.id }}/#breadcrumb",
                 "itemListElement": [
                     {
                         "@type": "ListItem",
@@ -96,7 +96,7 @@
                         "@type": "ListItem",
                         "position": 3,
                         "name": "{{ group.name }}",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/group_detail/{{ group.id }}/"
+                        "item": "https://eduvia-ai.fly.dev/mentorship/group/{{ group.id }}/"
                     }
                 ]
             }
@@ -584,11 +584,12 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -618,14 +619,14 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>{{ group.name }}</h1>
-        <p>{{ group.description|truncatewords:20 }}</p>
+        <h1>{{ group.name|default:"Unnamed Group" }}</h1>
+        <p>{{ group.description|truncatewords:20|default:"No description available" }}</p>
     </section>
 
     <!-- Chat Container -->
     <div class="chat-container">
         <div class="chat-header">
-            <h2 data-translate="chat-header">Group Chat: {{ group.name }}</h2>
+            <h2 data-translate="chat-header">Group Chat: {{ group.name|default:"Unnamed Group" }}</h2>
             <p data-translate="admin-label">Admin: {{ group.admin.username }}</p>
             <p data-translate="created-at-label">Created At: {{ group.created_at|date:"F d, Y H:i" }}</p>
         </div>
@@ -659,14 +660,14 @@
     <div class="action-buttons">
         <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="back-to-dashboard">Back to Dashboard</a>
         {% if user == group.admin %}
-            <a href="{% url 'mentorship:edit_group' group_id=group.id group_title=group.name|custom_slugify %}" class="btn" data-translate="edit-group">Edit Group</a>
-            <a href="{% url 'mentorship:manage_group_requests' group_id=group.id group_title=group.name|custom_slugify %}" class="btn" data-translate="manage-requests">Manage Requests</a>
+            <a href="{% url 'mentorship:edit_group' group_id=group.id %}" class="btn" data-translate="edit-group">Edit Group</a>
+            <a href="{% url 'mentorship:manage_group_requests' group_id=group.id %}" class="btn" data-translate="manage-requests">Manage Requests</a>
         {% endif %}
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->
@@ -675,12 +676,12 @@
         // Translation object
         const translations = {
             en: {
-                "group-detail-title": "{{ group.name }} - Eduvia",
-                "group-detail-meta-desc": "Group chat for {{ group.name }} in Eduvia's Mentorship System.",
-                "group-detail-meta-keywords": "group chat, {{ group.name }}, Eduvia, mentorship",
-                "group-detail-og-title": "{{ group.name }} - Eduvia",
-                "group-detail-og-desc": "Group chat for {{ group.name }} in Eduvia's Mentorship System.",
-                "chat-header": "Group Chat: {{ group.name }}",
+                "group-detail-title": "{{ group.name|default:'Unnamed Group' }} - Eduvia",
+                "group-detail-meta-desc": "Group chat for {{ group.name|default:'Unnamed Group' }} in Eduvia's Mentorship System.",
+                "group-detail-meta-keywords": "group chat, {{ group.name|default:'Unnamed Group' }}, Eduvia, mentorship",
+                "group-detail-og-title": "{{ group.name|default:'Unnamed Group' }} - Eduvia",
+                "group-detail-og-desc": "Group chat for {{ group.name|default:'Unnamed Group' }} in Eduvia's Mentorship System.",
+                "chat-header": "Group Chat: {{ group.name|default:'Unnamed Group' }}",
                 "admin-label": "Admin:",
                 "created-at-label": "Created At:",
                 "view-attachment": "View Attachment",
@@ -705,34 +706,34 @@
                 "footer-text": "© 2025 Eduvia. All rights reserved."
             },
             ar: {
-                "group-detail-title": "{{ group.name }} - إدوفيا",
-                "group-detail-meta-desc": "دردشة المجموعة لـ {{ group.name }} في نظام الإرشاد بمنصة إدوفيا.",
-                "group-detail-meta-keywords": "دردشة المجموعة, {{ group.name }}, إدوفيا, الإرشاد",
-                "group-detail-og-title": "{{ group.name }} - إدوفيا",
-                "group-detail-og-desc": "دردشة المجموعة لـ {{ group.name }} في نظام الإرشاد بمنصة إدوفيا.",
-                "chat-header": "دردشة المجموعة: {{ group.name }}",
-                "admin-label": "المدير:",
-                "created-at-label": "تاريخ الإنشاء:",
-                "view-attachment": "عرض المرفق",
-                "no-messages": "لا توجد رسائل بعد.",
-                "send-message": "إرسال رسالة",
-                "back-to-dashboard": "العودة إلى لوحة التحكم",
-                "edit-group": "تعديل المجموعة",
-                "manage-requests": "إدارة الطلبات",
-                "nav-home": "الرئيسية",
-                "nav-courses": "الدورات",
-                "nav-chatbot": "الدردشة الآلية",
-                "nav-competitions": "المسابقات",
-                "nav-performance": "الأداء",
-                "nav-skills-market": "سوق المهارات",
-                "nav-about": "معلومات عنا",
-                "nav-contact": "تواصل معنا",
-                "nav-dashboard": "لوحة التحكم",
-                "nav-profile": "الملف الشخصي",
-                "nav-logout": "تسجيل الخروج",
-                "nav-coins": "النقاط:",
-                "nav-login": "تسجيل الدخول",
-                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+                "group-detail-title": "{{ group.name|default:'Unnamed Group' }} - Eduvia",
+                "group-detail-meta-desc": "Group chat for {{ group.name|default:'Unnamed Group' }} in Eduvia's Mentorship System.",
+                "group-detail-meta-keywords": "group chat, {{ group.name|default:'Unnamed Group' }}, Eduvia, mentorship",
+                "group-detail-og-title": "{{ group.name|default:'Unnamed Group' }} - Eduvia",
+                "group-detail-og-desc": "Group chat for {{ group.name|default:'Unnamed Group' }} in Eduvia's Mentorship System.",
+                "chat-header": "Group Chat: {{ group.name|default:'Unnamed Group' }}",
+                "admin-label": "Admin:",
+                "created-at-label": "Created At:",
+                "view-attachment": "View Attachment",
+                "no-messages": "No messages yet.",
+                "send-message": "Send Message",
+                "back-to-dashboard": "Back to Dashboard",
+                "edit-group": "Edit Group",
+                "manage-requests": "Manage Requests",
+                "nav-home": "Home",
+                "nav-courses": "Courses",
+                "nav-chatbot": "Chatbot",
+                "nav-competitions": "Competitions",
+                "nav-performance": "Performance",
+                "nav-skills-market": "Skills Market",
+                "nav-about": "About Us",
+                "nav-contact": "Contact Us",
+                "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile",
+                "nav-logout": "Logout",
+                "nav-coins": "Coins:",
+                "nav-login": "Login",
+                "footer-text": "© 2025 Eduvia. All rights reserved."
             }
         };
 

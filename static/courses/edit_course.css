@@ -4,22 +4,20 @@
     --text-color: #333;
     --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
     --header-text: #ffffff;
-    --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/edit-course.jpg" %}') no-repeat center center/cover;
+    --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), var(--hero-bg-image) no-repeat center center/cover;
     --hero-text: #ffffff;
     --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
     --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
     --card-text: #00a8cc;
     --card-secondary-text: #444;
-    --card-tertiary-text: #666;
     --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
     --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
-    --btn-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
+    --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
+    --search-input-border: #d4af37;
+    --search-btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
+    --search-btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
     --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
     --footer-text: #333;
-    --course-item-bg: #ffffff;
-    --course-item-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    --link-color: #12d3cf;
-    --link-hover: #00a8cc;
 }
 
 /* Dark Mode Colors */
@@ -28,22 +26,19 @@ body.dark-mode {
     --text-color: #e0e0e0;
     --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
     --header-text: #e0e0e0;
-    --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/edit-course.jpg" %}') no-repeat center center/cover;
+    --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), var(--hero-bg-image) no-repeat center center/cover;
     --hero-text: #e0e0e0;
     --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
     --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
     --card-text: #3498db;
     --card-secondary-text: #b0b0b0;
-    --card-tertiary-text: #888;
     --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
     --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-    --btn-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
+    --search-btn-bg: linear-gradient(90deg, #3498db, #2980b9);
+    --search-btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
     --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
     --footer-text: #e0e0e0;
-    --course-item-bg: #333;
-    --course-item-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    --link-color: #3498db;
-    --link-hover: #2980b9;
+    --search-input-border: #555;
 }
 
 body {
@@ -153,7 +148,7 @@ html[dir="rtl"] .coins-display {
     100% { transform: rotate(360deg); }
 }
 
-/* Dark Mode and Language Toggle */
+/* Dark Mode Toggle */
 .dark-mode-toggle, .language-toggle {
     display: flex;
     align-items: center;
@@ -175,19 +170,25 @@ html[dir="rtl"] .coins-display {
     border: none;
     color: var(--header-text);
     cursor: pointer;
+    z-index: 101; /* Ensure hamburger is above menu */
 }
 
 @media (max-width: 768px) {
     .menu {
         display: none;
         flex-direction: column;
-        position: absolute;
+        position: fixed; /* Changed from absolute to fixed for better mobile behavior */
         top: 60px;
         left: 0;
         width: 100%;
         background: var(--header-bg);
         padding: 20px 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 100; /* Ensure menu is below hamburger but above content */
+    }
+
+    .menu.active {
+        display: flex; /* Ensure menu is displayed when active */
     }
 
     html[dir="rtl"] .menu {
@@ -196,10 +197,17 @@ html[dir="rtl"] .coins-display {
         right: 0;
     }
 
-    .menu.active { display: flex; }
-    .menu a { margin: 10px 0; font-size: 20px; }
-    .hamburger { display: block; }
-    .coins-display { margin: 10px 0; justify-content: center; }
+    .menu a, .menu .dark-mode-toggle, .menu .language-toggle, .menu .coins-display {
+        margin: 10px 0;
+        font-size: 20px;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+    }
+
+    .hamburger {
+        display: block;
+    }
 }
 
 /* Hero Section */
@@ -208,7 +216,7 @@ html[dir="rtl"] .coins-display {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 60vh;
+    height: 80vh;
     background: var(--hero-bg);
     color: var(--hero-text);
     text-align: center;
@@ -237,16 +245,16 @@ html[dir="rtl"] .coins-display {
 }
 
 .hero h1 {
-    font-size: 48px;
+    font-size: 64px;
     font-weight: 700;
     margin: 0;
     text-shadow: var(--hero-text-shadow);
     animation: slideInFromTop 1s ease-out forwards;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
 .hero p {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 400;
     margin: 20px 0 30px;
     max-width: 800px;
@@ -256,6 +264,105 @@ html[dir="rtl"] .coins-display {
     opacity: 0;
 }
 
+.btn {
+    background: var(--btn-bg);
+    color: white;
+    padding: 14px 40px;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 50px;
+    box-shadow: var(--btn-shadow);
+    transition: all 0.4s ease;
+    animation: bounceIn 1s ease-out 0.6s forwards;
+    opacity: 0;
+}
+
+.btn:hover {
+    background: var(--btn-bg-hover);
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
+}
+
+/* Cards Container */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Hero Card Styling */
+.hero-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: var(--card-bg);
+    color: var(--card-text);
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    flex: 1 1 calc(33.33% - 20px);
+    box-sizing: border-box;
+    min-width: 280px;
+    max-width: 360px;
+    height: 500px;
+}
+
+.hero-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.hero-card h1 {
+    color: var(--card-text);
+    font-size: 28px;
+    margin: 10px 0;
+}
+
+.hero-card p {
+    font-size: 16px;
+    color: var(--card-secondary-text);
+    line-height: 1.5;
+    margin: 0 0 15px;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hero-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.hero-card img:hover {
+    transform: scale(1.05);
+}
+
+.hero-card .btn {
+    background: var(--btn-bg);
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-size: 16px;
+    box-shadow: var(--btn-shadow);
+}
+
+.hero-card .btn:hover {
+    background: var(--btn-bg-hover);
+    transform: scale(1.1);
+}
+
+/* Animations */
 @keyframes slideInFromTop {
     0% { transform: translateY(-50px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
@@ -266,101 +373,25 @@ html[dir="rtl"] .coins-display {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Content Section */
-.content {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
+@keyframes bounceIn {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
-.overview-card, .courses-card {
-    background: var(--card-bg);
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    animation: fadeIn 1.2s ease-out forwards;
+/* Responsive Design */
+@media (max-width: 900px) {
+    .hero-card { flex: 1 1 calc(50% - 20px); }
+    .hero h1 { font-size: 48px; }
+    .hero p { font-size: 22px; }
 }
 
-.overview-card h2, .courses-card h2 {
-    color: var(--card-text);
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 15px;
-}
-
-.overview-card p, .courses-card p {
-    color: var(--card-secondary-text);
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-.overview-card a.btn {
-    background: var(--btn-bg);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-size: 16px;
-    box-shadow: var(--btn-shadow);
-    transition: all 0.3s ease;
-    display: inline-block;
-    margin-top: 15px;
-}
-
-.overview-card a.btn:hover {
-    background: var(--btn-bg-hover);
-    transform: scale(1.1);
-}
-
-.courses-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.course-item {
-    background: var(--course-item-bg);
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: var(--course-item-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.course-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.course-item h3 {
-    color: var(--card-text);
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.course-item p {
-    color: var(--card-tertiary-text);
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-.course-item .links a {
-    color: var(--link-color);
-    text-decoration: none;
-    font-size: 14px;
-    margin-right: 10px;
-    transition: color 0.3s ease;
-}
-
-html[dir="rtl"] .course-item .links a {
-    margin-right: 0;
-    margin-left: 10px;
-}
-
-.course-item .links a:hover {
-    color: var(--link-hover);
-    text-decoration: underline;
+@media (max-width: 600px) {
+    .hero-card { flex: 1 1 100%; }
+    .hero { height: 60vh; }
+    .hero h1 { font-size: 36px; }
+    .hero p { font-size: 18px; }
+    .btn { padding: 12px 30px; font-size: 18px; }
 }
 
 /* Footer */
@@ -370,19 +401,83 @@ html[dir="rtl"] .course-item .links a {
     padding: 10px 0;
     font-size: 14px;
     color: var(--footer-text);
-    margin-top: 40px;
-    transition: background 0.3s ease, color 0.3s ease;
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }
 
-/* Responsive Design */
-@media (max-width: 900px) {
-    .hero h1 { font-size: 36px; }
-    .hero p { font-size: 20px; }
+/* Content Section */
+.content {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
 }
 
-@media (max-width: 600px) {
-    .hero h1 { font-size: 28px; }
-    .hero p { font-size: 18px; }
-    .overview-card h2, .courses-card h2 { font-size: 20px; }
-    .course-item h3 { font-size: 18px; }
+.overview-card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 1.2s ease-out forwards;
+}
+
+.overview-card h2 {
+    font-size: 32px;
+    color: var(--card-text);
+    margin-bottom: 20px;
+}
+
+.overview-card p {
+    font-size: 18px;
+    color: var(--card-secondary-text);
+    margin-bottom: 30px;
+}
+
+.overview-card form {
+    text-align: left;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+html[dir="rtl"] .overview-card form {
+    text-align: right;
+}
+
+.overview-card label {
+    font-size: 16px;
+    color: var(--card-text);
+    display: block;
+    margin-bottom: 10px;
+}
+
+.overview-card input, .overview-card textarea, .overview-card select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.overview-card input:focus, .overview-card textarea:focus, .overview-card select:focus {
+    border-color: var(--card-text);
+    outline: none;
+}
+
+.overview-card button {
+    background: var(--btn-bg);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.overview-card button:hover {
+    background: var(--btn-bg-hover);
+    transform: scale(1.05);
 }

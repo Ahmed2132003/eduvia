@@ -8,23 +8,23 @@
 
     <!-- 🔍 SEO -->
     <title data-translate="chatbot-title">Chatbot - Eduvia</title>
-    <meta name="description" content="Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!">
-    <meta name="keywords" content="Eduvia, chatbot, online learning, programming, mathematics, English">
+    <meta name="description" content="Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!" data-translate="chatbot-meta-desc">
+    <meta name="keywords" content="Eduvia, chatbot, online learning, programming, mathematics, English" data-translate="chatbot-meta-keywords">
     <meta name="author" content="Eduvia">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://eduvia-ai.fly.dev/chatbot/">
 
     <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Chatbot - Eduvia">
-    <meta property="og:description" content="Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!">
+    <meta property="og:title" content="Chatbot - Eduvia" data-translate="chatbot-og-title">
+    <meta property="og:description" content="Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!" data-translate="chatbot-og-desc">
     <meta property="og:image" content="https://i.postimg.cc/3x8M2G1k/chat-eduvia.jpg">
     <meta property="og:url" content="https://eduvia-ai.fly.dev/chatbot/">
     <meta property="og:type" content="website">
 
     <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Chatbot - Eduvia">
-    <meta name="twitter:description" content="Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!">
+    <meta name="twitter:title" content="Chatbot - Eduvia" data-translate="chatbot-twitter-title">
+    <meta name="twitter:description" content="Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!" data-translate="chatbot-twitter-desc">
     <meta name="twitter:image" content="https://i.postimg.cc/3x8M2G1k/chat-eduvia.jpg">
 
     <!-- 🖼️ Favicon -->
@@ -108,10 +108,11 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -152,19 +153,59 @@
         <button type="submit" data-translate="search-btn">Search</button>
     </form>
 
+    <!-- Sidebar for Chats -->
+    <div class="sidebar">
+        <h2 data-translate="chatbot-chats-title">Your Chats</h2>
+        <a href="{% url 'chatbot:chatbot_page' %}" class="new-chat-btn" data-translate="chatbot-new-chat">New Chat</a>
+        <ul>
+            {% for chat in chats %}
+                <li>
+                    <a href="{% url 'chatbot:chatbot_page_with_id' chat_id=chat.id %}" {% if chat.id == current_chat.id %}class="active"{% endif %}>
+                        {{ chat.title }} ({{ chat.created_at|date:"Y-m-d H:i" }})
+                    </a>
+                </li>
+            {% empty %}
+                <li data-translate="chatbot-no-chats">No chats yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
     <!-- Chat Container -->
     <div id="chat-container">
-        <div id="chat-messages"></div>
+        <p class="message-limit" data-translate="chatbot-message-limit">Messages today: {{ daily_message_count }} / {{ daily_limit }}</p>
+        <div id="chat-messages">
+            {% for message in messages %}
+                <div class="message user-message">{{ message.user_message }}</div>
+                <div class="message bot-message">{{ message.bot_response }}</div>
+            {% endfor %}
+        </div>
         <input type="text" id="user-input" placeholder="Type your message here..." data-translate="chatbot-input-placeholder">
         <button id="send-button" onclick="sendMessage()" data-translate="chatbot-send">Send</button>
         <div class="loading" id="loading" data-translate="chatbot-loading">Loading...</div>
         <div class="error-message" id="error-message"></div>
+        {% if daily_message_count >= daily_limit %}
+            <div class="limit-reached-message">
+                {% if user.profile.subscription_plan == 'free' %}
+                    <p data-translate="chatbot-limit-reached-free">You have reached the daily message limit (5 messages). Please subscribe to continue chatting.</p>
+                    <a href="{% url 'accounts:subscribe' %}" class="btn subscribe-btn" data-translate="chatbot-subscribe">Subscribe Now</a>
+                {% elif user.profile.subscription_plan == 'basic' %}
+                    <p data-translate="chatbot-limit-reached-basic">You have reached the daily message limit (30 messages). Please upgrade to Pro to continue chatting.</p>
+                    <a href="{% url 'accounts:subscribe' %}" class="btn subscribe-btn" data-translate="chatbot-subscribe">Upgrade to Pro</a>
+                {% elif user.profile.subscription_plan == 'pro' %}
+                    <p data-translate="chatbot-limit-reached-pro">You have reached the daily message limit (60 messages). Please upgrade to Premium to continue chatting.</p>
+                    <a href="{% url 'accounts:subscribe' %}" class="btn subscribe-btn" data-translate="chatbot-subscribe">Upgrade to Premium</a>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
+
+    <!-- CSRF Token -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
     <script src="{% static 'chatbot/chatbot.js' %}"></script>
 </body>

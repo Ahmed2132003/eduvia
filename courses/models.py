@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 import uuid
 import re
-
+from django.utils.timezone import now
 def clean_text(text):
     """تنظيف النص من الأحرف غير المدعومة"""
     if not text:
@@ -18,6 +18,13 @@ class UserProfile(models.Model):
         ('student', 'Student'),
         ('instructor', 'Instructor'),
     ]
+    SUBSCRIPTION_PLANS = [
+        ('free', 'Free'),
+        ('basic', 'Basic'),
+        ('pro', 'Pro'),
+        ('premium', 'Premium'),
+        ('instructor_plan', 'Instructor Plan'),
+    ]
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -25,6 +32,8 @@ class UserProfile(models.Model):
     )
     coins = models.PositiveIntegerField(default=300)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
+    subscription_plan = models.CharField(max_length=20, choices=SUBSCRIPTION_PLANS, default='free')
+    subscription_end_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}'s profile"
@@ -37,6 +46,52 @@ class UserProfile(models.Model):
         if self.coins >= amount:
             self.coins -= amount
             self.save()
+            return True
+        return False
+
+    def can_enroll_in_course(self):
+        enrollments = CourseEnrollment.objects.filter(user=self.user).count()
+        if self.subscription_plan == 'free':
+            return enrollments < 1
+        elif self.subscription_plan == 'basic':
+            return enrollments < 2
+        elif self.subscription_plan == 'pro':
+            return enrollments < 4
+        elif self.subscription_plan == 'premium':
+            return True
+        return False
+
+    def can_view_video(self, course, video_order):
+        if self.subscription_plan == 'free':
+            videos_watched = VideoProgress.objects.filter(user=self.user, video__course=course).count()
+            return videos_watched < 10 and video_order <= 10
+        return True
+
+    def can_upload_file(self):
+        return self.subscription_plan in ['basic', 'pro', 'premium']
+
+    def can_view_files(self):
+        return self.subscription_plan in ['basic', 'pro', 'premium']
+
+    def can_download_certificate(self):
+        return self.subscription_plan in ['basic', 'pro', 'premium']
+
+    def can_add_course(self):
+        if self.subscription_plan == 'instructor_plan' and (not self.subscription_end_date or self.subscription_end_date > now()):
+            return True
+        if self.subscription_plan == 'free' and Course.objects.filter(instructor=self.user.username).count() < 1:
+            return True
+        return False
+
+    def can_add_video(self, course):
+        if self.subscription_plan == 'instructor_plan' and (not self.subscription_end_date or self.subscription_end_date > now()):
+            return True
+        if self.subscription_plan == 'free' and course and Video.objects.filter(course=course).count() < 10:
+            return True
+        return False
+
+    def can_edit_or_delete(self):
+        if self.subscription_plan == 'instructor_plan' and (not self.subscription_end_date or self.subscription_end_date > now()):
             return True
         return False
 
@@ -180,21 +235,14 @@ class CourseRating(models.Model):
 class VideoFile(models.Model):
     video = models.ForeignKey('Video', on_delete=models.CASCADE, related_name='files')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    file = models.FileField(upload_to='video_files/')
+    file = models.FileField(upload_to='video_files/', null=True, blank=True)
+    file_url = models.URLField(max_length=500, null=True, blank=True)
     description = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     is_instructor_upload = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"File {self.file.name} uploaded by {self.user} for {self.video}"
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-from django.contrib.auth import get_user_model
-User = get_user_model()
+        return f"File {self.file.name or self.file_url} uploaded by {self.user} for {self.video}"
 
 class Task(models.Model):
     video = models.ForeignKey(Video, related_name='tasks', on_delete=models.CASCADE)
@@ -216,7 +264,7 @@ class AlternativeQuiz(models.Model):
         return self.question
 
 class UserTaskSubmission(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     submitted_answers = models.JSONField(default=list)
     is_correct = models.JSONField(default=list)
@@ -225,3 +273,8 @@ class UserTaskSubmission(models.Model):
 
     class Meta:
         unique_together = ('user', 'task', 'attempt_number')
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)

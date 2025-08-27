@@ -28,7 +28,7 @@ const translations = {
         "nav-logout": "Logout",
         "nav-coins": "Coins:",
         "nav-login": "Login",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "leaderboard-title": "لوحة المتصدرين | إدوفيا",
@@ -59,7 +59,7 @@ const translations = {
         "nav-logout": "تسجيل الخروج",
         "nav-coins": "النقاط:",
         "nav-login": "تسجيل الدخول",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 

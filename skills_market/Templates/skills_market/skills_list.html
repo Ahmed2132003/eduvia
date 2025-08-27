@@ -119,8 +119,9 @@
             <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -154,14 +155,28 @@
         <p data-translate="hero-desc">Discover a variety of skills offered by our community</p>
     </section>
 
+    <!-- Subscription Plan Notice for Free Plan -->
+    {% if subscription_plan == 'free' %}
+        <div class="alert alert-warning text-center" data-translate="free-plan-notice">
+            أنت تستخدم الخطة المجانية. قم بترقية خطتك لفتح ميزات مثل إضافة المهارات، طلب الخدمات، والدردشة. 
+            <a href="/accounts/subscribe/" class="btn btn-primary">ترقية الآن</a>
+        </div>
+    {% endif %}
+
     <!-- Search Bar -->
-    <div class="search-container">
-        <form class="search-form" method="POST" action="{% url 'skills_market:skills_list' %}">
-            {% csrf_token %}
-            {{ form.search_query|add_class:"form-control"|attr:"data-translate=search-placeholder" }}
-            <button type="submit"><i class="fas fa-search"></i> {% trans "Search" %}</button>
-        </form>
-    </div>
+    {% if subscription_plan in 'premium,instructor' %}
+        <div class="search-container">
+            <form class="search-form" method="POST" action="{% url 'skills_market:skills_list' %}">
+                {% csrf_token %}
+                {{ form.search_query|add_class:"form-control"|attr:"data-translate=search-placeholder" }}
+                <button type="submit"><i class="fas fa-search"></i> {% trans "Search" %}</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="search-container">
+            <p class="text-center" data-translate="search-restricted">البحث المتقدم متاح فقط في خطط Premium وInstructor.</p>
+        </div>
+    {% endif %}
 
     <!-- Messages -->
     {% if messages %}
@@ -192,14 +207,14 @@
     <!-- Action Buttons -->
     <div class="action-buttons">
         <a href="{% url 'skills_market:services_list' %}" class="btn" data-translate="btn-services">View Services</a>
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and subscription_plan != 'free' %}
             <a href="{% url 'skills_market:add_skill' %}" class="btn" data-translate="btn-add-skill">Add Skill</a>
         {% endif %}
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

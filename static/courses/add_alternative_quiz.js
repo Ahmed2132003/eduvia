@@ -18,7 +18,7 @@ const translations = {
         "hero-title": "Add Alternative Quiz",
         "submit-btn": "Add Quiz",
         "back-link": "Back to Course",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "title": "إضافة اختبار بديل - إدوفيا",
@@ -39,7 +39,7 @@ const translations = {
         "hero-title": "إضافة اختبار بديل",
         "submit-btn": "إضافة الاختبار",
         "back-link": "العودة إلى الدورة",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 

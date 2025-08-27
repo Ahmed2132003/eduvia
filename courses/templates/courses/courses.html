@@ -6,26 +6,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="page-title">Courses - Eduvia</title>
+    <title data-translate="page-title">{% trans "Courses - Eduvia" %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- SEO Meta Tags (English) -->
-    <meta name="description" data-translate="meta-desc" content="Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.">
-    <meta name="keywords" data-translate="meta-keywords" content="Eduvia, online courses, education platform, learning, course catalog">
+    <meta name="description" data-translate="meta-desc" content="{% trans 'Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.' %}">
+    <meta name="keywords" data-translate="meta-keywords" content="{% trans 'Eduvia, online courses, education platform, learning, course catalog' %}">
     <meta name="author" content="Eduvia">
     <!-- SEO Meta Tags (Arabic) -->
     <meta http-equiv="content-language" content="ar, en">
-    <meta name="description" lang="ar" data-translate="meta-desc-ar" content="استكشف مجموعة واسعة من الدورات التعليمية عبر الإنترنت على إدوفيا. ابحث عن دورات بقيادة خبراء تناسب اهتماماتك وابدأ التعلم اليوم.">
-    <meta name="keywords" lang="ar" data-translate="meta-keywords-ar" content="إدوفيا، دورات عبر الإنترنت، منصة تعليمية، تعليم، كتالوج الدورات">
+    <meta name="description" lang="ar" data-translate="meta-desc-ar" content="{% trans 'Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.' %}">
+    <meta name="keywords" lang="ar" data-translate="meta-keywords-ar" content="{% trans 'Eduvia, online courses, education platform, learning, course catalog' %}">
     <!-- Open Graph Tags -->
-    <meta property="og:title" data-translate="og-title" content="Courses - Eduvia">
-    <meta property="og:description" data-translate="og-desc" content="Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.">
+    <meta property="og:title" data-translate="og-title" content="{% trans 'Courses - Eduvia' %}">
+    <meta property="og:description" data-translate="og-desc" content="{% trans 'Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.' %}">
     <meta property="og:image" content="{% static 'images/course_page1.jpg' %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" data-translate="twitter-title" content="Courses - Eduvia">
-    <meta name="twitter:description" data-translate="twitter-desc" content="Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.">
+    <meta name="twitter:title" data-translate="twitter-title" content="{% trans 'Courses - Eduvia' %}">
+    <meta name="twitter:description" data-translate="twitter-desc" content="{% trans 'Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.' %}">
     <meta name="twitter:image" content="{% static 'images/course_page1.jpg' %}">
     <style>
         :root {
@@ -43,8 +43,8 @@
             --card-title-text: #001a33;
             --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
             --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
-            --purchase-bg: linear-gradient(to right, #ff6f61, #ff9f43);
-            --purchase-bg-hover: linear-gradient(to right, #e65a50, #e68a3a);
+            --join-bg: linear-gradient(to right, #ff6f61, #ff9f43);
+            --join-bg-hover: linear-gradient(to right, #e65a50, #e68a3a);
             --btn-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
             --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
             --footer-text: #333;
@@ -79,8 +79,8 @@
             --card-title-text: #e0e0e0;
             --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
             --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --purchase-bg: linear-gradient(to right, #e74c3c, #e67e22);
-            --purchase-bg-hover: linear-gradient(to right, #c0392b, #d35400);
+            --join-bg: linear-gradient(to right, #e74c3c, #e67e22);
+            --join-bg-hover: linear-gradient(to right, #c0392b, #d35400);
             --btn-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
             --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
             --footer-text: #e0e0e0;
@@ -381,6 +381,35 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
+        /* Subscription Info */
+        .subscription-info {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .subscription-info p {
+            font-size: 18px;
+            margin: 0 0 10px;
+            color: var(--card-secondary-text);
+        }
+
+        .subscription-info a {
+            color: white;
+            background: var(--btn-bg);
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .subscription-info a:hover {
+            background: var(--btn-bg-hover);
+        }
+
         /* Cards Container */
         .cards-container {
             display: flex;
@@ -472,12 +501,12 @@
             transform: scale(1.1);
         }
 
-        .purchase-btn, .purchase-link {
-            background: var(--purchase-bg);
+        .join-btn, .join-link {
+            background: var(--join-bg);
         }
 
-        .purchase-btn:hover, .purchase-link:hover {
-            background: var(--purchase-bg-hover);
+        .join-btn:hover, .join-link:hover {
+            background: var(--join-bg-hover);
             transform: scale(1.1);
         }
 
@@ -597,33 +626,35 @@
         <div class="logo">Eduvia</div>
         <button class="hamburger" onclick="toggleMenu()">☰</button>
         <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            <a href="/" data-translate="nav-home">{% trans "Home" %}</a>
+            <a href="/courses/" data-translate="nav-courses">{% trans "Courses" %}</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">{% trans "Chatbot" %}</a>
+            <a href="/competitions/" data-translate="nav-competitions">{% trans "Competitions" %}</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">{% trans "Performance" %}</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
+            <a href="/about/" data-translate="nav-about">{% trans "About Us" %}</a>
+            <a href="/contact_us/" data-translate="nav-contact">{% trans "Contact Us" %}</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                <a href="/accounts/profile/" data-translate="nav-profile">{% trans "Profile" %}</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">{% trans "Logout" %}</a>
                 {% if user.courses_profile %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                        <span data-translate="nav-coins">{% trans "Coins:" %}</span> {{ user.courses_profile.coins }}
                     </span>
                 {% else %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
+                        <span data-translate="nav-coins">{% trans "Coins:" %}</span> 0
                     </span>
                 {% endif %}
             {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+                <a href="/accounts/register/" data-translate="nav-login">{% trans "Login" %}</a>
             {% endif %}
+
             <div class="dark-mode-toggle" onclick="toggleDarkMode()">
                 <i class="fas fa-moon"></i>
             </div>
@@ -644,9 +675,29 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1 data-translate="hero-title">Discover Our Courses</h1>
-        <p data-translate="hero-desc">Explore a wide range of expert-led courses to enhance your skills and knowledge.</p>
+        <h1 data-translate="hero-title">{% trans "Discover Our Courses" %}</h1>
+        <p data-translate="hero-desc">{% trans "Explore a wide range of expert-led courses to enhance your skills and knowledge." %}</p>
     </section>
+
+    <!-- Subscription Info -->
+    {% if user.is_authenticated and user.courses_profile %}
+        <div class="subscription-info">
+            {% if user.courses_profile.subscription_plan == 'free' %}
+                <p data-translate="free-plan-info">{% trans "You are on the Free Plan. You can enroll in 1 course and watch up to 10 videos. Upgrade to a paid plan for more access." %}</p>
+            {% elif user.courses_profile.subscription_plan == 'basic' %}
+                <p data-translate="basic-plan-info">{% trans "You are on the Basic Plan. You can enroll in up to 2 courses." %}</p>
+            {% elif user.courses_profile.subscription_plan == 'pro' %}
+                <p data-translate="pro-plan-info">{% trans "You are on the Pro Plan. You can enroll in up to 4 courses." %}</p>
+            {% elif user.courses_profile.subscription_plan == 'premium' %}
+                <p data-translate="premium-plan-info">{% trans "You are on the Premium Plan. Enjoy unlimited course enrollments!" %}</p>
+            {% elif user.courses_profile.subscription_plan == 'instructor_plan' %}
+                <p data-translate="instructor-plan-info">{% trans "You are on the Instructor Plan. You can create and manage unlimited courses and videos." %}</p>
+            {% endif %}
+            {% if user.courses_profile.subscription_plan != 'premium' and user.courses_profile.subscription_plan != 'instructor_plan' %}
+                <a href="{% url 'accounts:subscribe' %}" class="btn btn-subscribe" data-translate="btn-subscribe">Upgrade</a>
+            {% endif %}
+        </div>
+    {% endif %}
 
     <!-- Search Form -->
     <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
@@ -654,36 +705,48 @@
             type="text" 
             name="q" 
             data-translate-placeholder="search-placeholder"
-            placeholder="Search for a course..." 
+            placeholder="{% trans 'Search for a course...' %}" 
             value="{{ query|default:'' }}"
         >
-        <button type="submit" class="btn" data-translate="search-button">Search</button>
+        <button type="submit" class="btn" data-translate="search-button">{% trans "Search" %}</button>
     </form>
 
     <!-- Cards Container -->
     <div class="cards-container">
-        {% for course in courses %}
-        <div class="course-card" id="course-{{ course.id }}">
-            <img src="{{ course.get_image_url }}?t={{ course.id }}" alt="{{ course.title }}">
-            <h2>{{ course.title }}</h2>
-            <p>{{ course.description|truncatewords:20 }}</p>
-            <p><strong data-translate="instructor-label">Instructor:</strong> {{ course.instructor }}</p>
-            <p><strong data-translate="rating-label">Rating:</strong> {{ course.average_rating }}</p>
-            <p><strong data-translate="category-label">Category:</strong> {{ course.get_category_display }}</p>
-            <div class="course-actions">
-                {% if user.is_authenticated %}
-                    {% if course.id in enrolled_course_ids %}
-                        <a href="{% url 'courses:course_details' course.id course.title|custom_slugify %}" class="details-btn" data-translate="details-btn">View Details</a>
-                    {% else %}
-                        <a href="{% url 'courses:course_details' course.id course.title|custom_slugify %}" class="details-btn disabled-btn" data-course-id="{{ course.id }}" data-translate="details-btn">View Details</a>
-                        <a href="{% url 'courses:enroll_course' course.id course.title|custom_slugify %}" class="purchase-link" data-course-id="{{ course.id }}" data-course-title="{{ course.title|custom_slugify }}" data-coins="{% if user.courses_profile %}{{ user.courses_profile.coins }}{% else %}0{% endif %}" data-translate="purchase-link">Purchase for 300 Coins</a>
-                    {% endif %}
-                {% else %}
-                    <a href="/accounts/register/?next={% url 'courses:courses' %}" class="enroll-btn" data-translate="login-btn">Login to Access</a>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
+        {% if courses %}
+            {% for course in courses %}
+                <div class="course-card" id="course-{{ course.id }}">
+                    <img src="{{ course.get_image_url }}?t={{ course.id }}" alt="{{ course.title }}">
+                    <h2>{{ course.title }}</h2>
+                    <p>{{ course.description|truncatewords:20 }}</p>
+                    <p><strong data-translate="instructor-label">{% trans "Instructor:" %}</strong> {{ course.instructor }}</p>
+                    <p><strong data-translate="rating-label">{% trans "Rating:" %}</strong> {{ course.average_rating }}</p>
+                    <p><strong data-translate="category-label">{% trans "Category:" %}</strong> {{ course.get_category_display }}</p>
+                    <div class="course-actions">
+                        {% if user.is_authenticated %}
+                            {% if course.id in enrolled_course_ids %}
+                                <a href="{% url 'courses:course_details' course.id course.title|custom_slugify %}" class="details-btn" data-translate="details-btn">{% trans "View Details" %}</a>
+                            {% else %}
+                                <a href="{% url 'courses:course_details' course.id course.title|custom_slugify %}" class="details-btn" data-course-id="{{ course.id }}" data-translate="details-btn">{% trans "View Details" %}</a>
+                                <a href="{% url 'courses:enroll_course' course.id course.title|custom_slugify %}" 
+                                   class="join-link" 
+                                   data-course-id="{{ course.id }}" 
+                                   data-course-title="{{ course.title|custom_slugify }}"
+                                   {% if not user.courses_profile or user.courses_profile.subscription_plan == 'free' and enrolled_course_ids|length >= 1 or user.courses_profile.subscription_plan == 'basic' and enrolled_course_ids|length >= 2 or user.courses_profile.subscription_plan == 'pro' and enrolled_course_ids|length >= 4 %}
+                                       class="join-link disabled-btn"
+                                       title="{% trans 'You have reached the enrollment limit for your plan. Please upgrade.' %}"
+                                   {% endif %}
+                                   data-translate="join-link">{% trans "Join Course" %}</a>
+                            {% endif %}
+                        {% else %}
+                            <a href="/accounts/register/?next={% url 'courses:courses' %}" class="join-btn" data-translate="login-btn">{% trans "Login to Access" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-results" data-translate="no-courses-found">{% trans "No courses found matching your search." %}</p>
+        {% endif %}
     </div>
 
     <!-- Toast Notification -->
@@ -694,88 +757,11 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <script>
-        // Translation object
-        const translations = {
-            en: {
-                "page-title": "Courses - Eduvia",
-                "meta-desc": "Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.",
-                "meta-keywords": "Eduvia, online courses, education platform, learning, course catalog",
-                "meta-desc-ar": "استكشف مجموعة واسعة من الدورات التعليمية عبر الإنترنت على إدوفيا. ابحث عن دورات بقيادة خبراء تناسب اهتماماتك وابدأ التعلم اليوم.",
-                "meta-keywords-ar": "إدوفيا، دورات عبر الإنترنت، منصة تعليمية، تعليم، كتالوج الدورات",
-                "og-title": "Courses - Eduvia",
-                "og-desc": "Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.",
-                "twitter-title": "Courses - Eduvia",
-                "twitter-desc": "Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.",
-                "hero-title": "Discover Our Courses",
-                "hero-desc": "Explore a wide range of expert-led courses to enhance your skills and knowledge.",
-                "search-placeholder": "Search for a course...",
-                "search-button": "Search",
-                "instructor-label": "Instructor:",
-                "rating-label": "Rating:",
-                "category-label": "Category:",
-                "details-btn": "View Details",
-                "purchase-link": "Purchase for 300 Coins",
-                "login-btn": "Login to Access",
-                "nav-home": "Home",
-                "nav-courses": "Courses",
-                "nav-chatbot": "Chatbot",
-                "nav-competitions": "Competitions",
-                "nav-performance": "Performance",
-                "nav-about": "About Us",
-                "nav-contact": "Contact Us",
-                "nav-dashboard": "Dashboard",
-                "nav-profile": "Profile",
-                "nav-logout": "Logout",
-                "nav-coins": "Coins:",
-                "nav-login": "Login",
-                "footer-text": "© 2025 Eduvia. All rights reserved.",
-                "success-message": "", // Placeholder for dynamic messages
-                "error-message": "",
-                "info-message": ""
-            },
-            ar: {
-                "page-title": "الدورات - إدوفيا",
-                "meta-desc": "استكشف مجموعة واسعة من الدورات التعليمية عبر الإنترنت على إدوفيا. ابحث عن دورات بقيادة خبراء تناسب اهتماماتك وابدأ التعلم اليوم.",
-                "meta-keywords": "إدوفيا، دورات عبر الإنترنت، منصة تعليمية، تعليم، كتالوج الدورات",
-                "meta-desc-ar": "استكشف مجموعة واسعة من الدورات التعليمية عبر الإنترنت على إدوفيا. ابحث عن دورات بقيادة خبراء تناسب اهتماماتك وابدأ التعلم اليوم.",
-                "meta-keywords-ar": "إدوفيا، دورات عبر الإنترنت، منصة تعليمية، تعليم، كتالوج الدورات",
-                "og-title": "الدورات - إدوفيا",
-                "og-desc": "اكتشف وسجل في الدورات التعليمية عبر الإنترنت على إدوفيا لتعزيز مهاراتك ومعرفتك.",
-                "twitter-title": "الدورات - إدوفيا",
-                "twitter-desc": "اكتشف وسجل في الدورات التعليمية عبر الإنترنت على إدوفيا لتعزيز مهاراتك ومعرفتك.",
-                "hero-title": "اكتشف دوراتنا",
-                "hero-desc": "استكشف مجموعة واسعة من الدورات بقيادة خبراء لتعزيز مهاراتك ومعرفتك.",
-                "search-placeholder": "ابحث عن دورة...",
-                "search-button": "بحث",
-                "instructor-label": "المدرب:",
-                "rating-label": "التقييم:",
-                "category-label": "الفئة:",
-                "details-btn": "عرض التفاصيل",
-                "purchase-link": "الشراء مقابل 300 نقطة",
-                "login-btn": "تسجيل الدخول للوصول",
-                "nav-home": "الرئيسية",
-                "nav-courses": "الدورات",
-                "nav-chatbot": "الدردشة الآلية",
-                "nav-competitions": "المسابقات",
-                "nav-performance": "الأداء",
-                "nav-about": "معلومات عنا",
-                "nav-contact": "تواصل معنا",
-                "nav-dashboard": "لوحة التحكم",
-                "nav-profile": "الملف الشخصي",
-                "nav-logout": "تسجيل الخروج",
-                "nav-coins": "النقاط:",
-                "nav-login": "تسجيل الدخول",
-                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة.",
-                "success-message": "",
-                "error-message": "",
-                "info-message": ""
-            }
-        };
-
+        // Toggle Menu for Mobile
         function toggleMenu() {
             const menu = document.querySelector('.menu');
             menu.classList.toggle('active');
@@ -808,25 +794,12 @@
             htmlRoot.setAttribute('lang', newLang);
             htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
             
-            // Update all translatable elements
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (element.tagName.toLowerCase() === 'meta') {
-                    element.setAttribute('content', translations[newLang][key]);
-                } else if (key.includes('placeholder')) {
-                    element.setAttribute('placeholder', translations[newLang][key]);
-                } else {
-                    element.textContent = translations[newLang][key];
-                }
-            });
-            
-            document.title = translations[newLang]["page-title"];
-            localStorage.setItem('language', newLang);
+            // Reload page to apply Django translations
+            window.location.reload();
         }
 
-        // Apply saved theme and language on page load
+        // Apply saved theme on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Apply Dark Mode
             const savedTheme = localStorage.getItem('theme');
             const toggleIcon = document.querySelector('.dark-mode-toggle i');
             if (savedTheme === 'dark') {
@@ -834,43 +807,38 @@
                 toggleIcon.classList.remove('fa-moon');
                 toggleIcon.classList.add('fa-sun');
             }
-
-            // Apply Language
-            const savedLang = localStorage.getItem('language') || 'en';
-            const htmlRoot = document.getElementById('html-root');
-            htmlRoot.setAttribute('lang', savedLang);
-            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
-
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (element.tagName.toLowerCase() === 'meta') {
-                    element.setAttribute('content', translations[savedLang][key]);
-                } else if (key.includes('placeholder')) {
-                    element.setAttribute('placeholder', translations[savedLang][key]);
-                } else {
-                    element.textContent = translations[savedLang][key];
-                }
-            });
-
-            document.title = translations[savedLang]["page-title"];
         });
 
-        // Purchase course with AJAX
-        document.querySelectorAll('.purchase-link').forEach(link => {
+        // Join course with AJAX
+        document.querySelectorAll('.join-link').forEach(link => {
             link.addEventListener('click', async (e) => {
                 e.preventDefault();
                 const courseId = link.getAttribute('data-course-id');
                 const courseTitle = link.getAttribute('data-course-title');
-                const userCoins = parseInt(link.getAttribute('data-coins'));
                 const toast = document.getElementById('toast');
                 const toastMessage = document.getElementById('toast-message');
                 const toastIcon = document.getElementById('toast-icon');
+                const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
+                const canEnroll = !link.classList.contains('disabled-btn');
 
-                if (userCoins < 300) {
+                // Check CSRF token
+                if (!csrfToken) {
+                    console.error('CSRF token not found');
                     toast.classList.remove('success');
                     toast.classList.add('error');
                     toastIcon.className = 'fas fa-exclamation-circle';
-                    toastMessage.textContent = translations[document.getElementById('html-root').getAttribute('lang')]['error-message'] || 'Insufficient coins! You need 300 coins to purchase this course.';
+                    toastMessage.textContent = '{% trans "CSRF token missing. Please refresh the page." %}';
+                    toast.style.display = 'block';
+                    setTimeout(() => { toast.style.display = 'none'; }, 3000);
+                    return;
+                }
+
+                // Check if enrollment is allowed
+                if (!canEnroll) {
+                    toast.classList.remove('success');
+                    toast.classList.add('error');
+                    toastIcon.className = 'fas fa-exclamation-circle';
+                    toastMessage.textContent = '{% trans "You have reached the enrollment limit for your plan. Please upgrade." %}';
                     toast.style.display = 'block';
                     setTimeout(() => { toast.style.display = 'none'; }, 3000);
                     return;
@@ -880,35 +848,42 @@
                     const response = await fetch(`{% url 'courses:enroll_course' 0 'placeholder' %}`.replace('0/placeholder', `${courseId}/${courseTitle}`), {
                         method: 'POST',
                         headers: {
-                            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
-                            'Content-Type': 'application/json'
+                            'X-CSRFToken': csrfToken,
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
                         }
                     });
 
                     const data = await response.json();
-                    if (data.status === 'success') {
+
+                    if (data.success) {
                         toast.classList.remove('error');
                         toast.classList.add('success');
                         toastIcon.className = 'fas fa-check-circle';
-                        toastMessage.textContent = translations[document.getElementById('html-root').getAttribute('lang')]['success-message'] || 'Successfully enrolled in the course!';
+                        toastMessage.textContent = data.message;
                         toast.style.display = 'block';
                         setTimeout(() => {
                             toast.style.display = 'none';
-                            window.location.reload();
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
+                            } else {
+                                window.location.reload();
+                            }
                         }, 3000);
                     } else {
                         toast.classList.remove('success');
                         toast.classList.add('error');
                         toastIcon.className = 'fas fa-exclamation-circle';
-                        toastMessage.textContent = data.message || translations[document.getElementById('html-root').getAttribute('lang')]['error-message'] || 'Failed to enroll in the course.';
+                        toastMessage.textContent = data.message;
                         toast.style.display = 'block';
                         setTimeout(() => { toast.style.display = 'none'; }, 3000);
                     }
                 } catch (error) {
+                    console.error('Enrollment error:', error);
                     toast.classList.remove('success');
                     toast.classList.add('error');
                     toastIcon.className = 'fas fa-exclamation-circle';
-                    toastMessage.textContent = translations[document.getElementById('html-root').getAttribute('lang')]['error-message'] || 'An error occurred. Please try again.';
+                    toastMessage.textContent = '{% trans "An error occurred while enrolling. Please try again." %}';
                     toast.style.display = 'block';
                     setTimeout(() => { toast.style.display = 'none'; }, 3000);
                 }

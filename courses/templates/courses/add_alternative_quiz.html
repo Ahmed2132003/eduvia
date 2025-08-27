@@ -114,10 +114,11 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -155,11 +156,15 @@
             {{ form.as_p }}
             <button type="submit" class="btn" data-translate="submit-btn">Add Quiz</button>
         </form>
-        <a href="{% url 'courses:course_videos' video.course.id %}" class="back-link" data-translate="back-link">Back to Course</a>
+        {% if course %}
+            <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|slugify|default:'default-title' %}" class="cancel" data-translate="form-cancel">Cancel</a>
+        {% else %}
+            <a href="{% url 'courses:courses' %}" class="cancel" data-translate="form-cancel">Cancel</a>
+        {% endif %}
     </div>
 
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <script src="{% static 'courses/add_alternative_quiz.js' %}"></script>

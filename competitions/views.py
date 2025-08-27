@@ -20,6 +20,7 @@ import re
 from .models import Competition, Participant, Question, Answer, Certificate
 from .forms import CompetitionForm
 from django.urls import reverse
+from accounts.models import Profile  # أضف هذا الاستيراد
 
 logger = logging.getLogger(__name__)
 
@@ -52,18 +53,41 @@ def redirect_old_competition_url(request, competition_id):
 def competition_list(request):
     competitions = Competition.objects.all()
     now = timezone.now()
+    profile = Profile.objects.get(user=request.user)  # أضف هذا
     logger.info(f"Rendering competition_list: now={now}, user={request.user.username}, competitions_count={competitions.count()}")
     for competition in competitions:
         logger.info(f"Competition '{competition.title}': start_time={competition.start_time}, end_time={competition.end_time}, is_active={competition.is_active}, is_ongoing={competition.is_ongoing}")
     return render(request, 'competitions/competition_list.html', {
         'competitions': competitions,
-        'now': now
+        'now': now,
+        'subscription_plan': profile.subscription_plan  # أضف هذا للـ context
     })
 
 @login_required
 def create_competition(request):
     if not check_instructor(request.user):
         raise PermissionDenied("Only instructors can create competitions.")
+    
+    profile = get_object_or_404(Profile, user=request.user)
+    now = timezone.now()
+    if profile.subscription_plan != 'instructor' or (profile.subscription_end_date and profile.subscription_end_date < now):
+        messages.error(request, "يجب أن تكون مشتركًا في خطة المحاضرين لإنشاء مسابقات. اشترك الآن.")
+        return redirect('accounts:subscribe')
+    
+    # عدد المسابقات الموجودة
+    current_comps = Competition.objects.filter(instructor=request.user).count()
+    max_comps = 0
+    duration = profile.subscription_duration
+    if duration == 'monthly':
+        max_comps = 2
+    elif duration == 'six_months':
+        max_comps = 4
+    elif duration == 'yearly':
+        max_comps = float('inf')
+    
+    if current_comps >= max_comps:
+        messages.error(request, f"لقد تجاوزت الحد الأقصى لإنشاء المسابقات في خطتك ({duration}). اشترك في مدة أطول أو خطة أعلى.")
+        return redirect('accounts:subscribe')
     
     if request.method == 'POST':
         form = CompetitionForm(request.POST)
@@ -103,6 +127,7 @@ def competition_detail(request, competition_id, competition_title):
     is_participant = False
     participant = None
     questions_with_status = []
+    profile = Profile.objects.get(user=request.user)  # أضف هذا
 
     if check_student(request.user):
         is_participant = Participant.objects.filter(
@@ -125,6 +150,7 @@ def competition_detail(request, competition_id, competition_title):
         'is_instructor': check_instructor(request.user),
         'questions_with_status': questions_with_status,
         'slugified_competition_title': cleaned_title,
+        'subscription_plan': profile.subscription_plan  # أضف هذا
     })
 
 @login_required
@@ -132,12 +158,11 @@ def edit_competition(request, competition_id, competition_title):
     competition = get_object_or_404(Competition, id=competition_id)
     cleaned_title = clean_text(competition.title)
 
-    # إذا كان العنوان الممرر غير صحيح، أعد التوجيه
     if cleaned_title != competition_title:
         return redirect('competitions:edit_competition', competition_id=competition_id, competition_title=cleaned_title)
 
-    # تحقق مما إذا كان المستخدم مدرسًا
-    if not (hasattr(request.user, 'courses_profile') and request.user.courses_profile.role == 'instructor'):
+    profile = get_object_or_404(Profile, user=request.user)
+    if not check_instructor(request.user):
         messages.error(request, "Only instructors can edit competitions.")
         return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
 
@@ -179,6 +204,33 @@ def join_competition(request, competition_id, competition_title):
         messages.error(request, "This competition is not available for joining.")
         return redirect('competitions:competition_detail', competition_id=competition.id, competition_title=cleaned_title)
     
+    profile = get_object_or_404(Profile, user=request.user)
+    plan = profile.subscription_plan or 'free'
+    
+    # تعديل اللوجيك: لو 'free'، استمر بدون تحقق end_date، بس لو خطة أخرى وexpired، منع
+    if plan != 'free' and (not profile.subscription_end_date or profile.subscription_end_date < now):
+        messages.error(request, "خطتك المدفوعة منتهية الصلاحية. اشترك مرة أخرى للانضمام إلى المسابقات.")
+        return redirect('accounts:subscribe')
+    
+    # عدد الاشتراكات
+    current_joins = Participant.objects.filter(user=request.user).count()
+    month_joins = Participant.objects.filter(user=request.user, joined_at__month=now.month, joined_at__year=now.year).count()
+    
+    max_joins = 0
+    if plan == 'free':
+        max_joins = 1  # إجمالي
+    elif plan == 'basic':
+        max_joins = 2
+        current_joins = month_joins
+    elif plan == 'pro':
+        max_joins = 4
+    elif plan == 'premium':
+        max_joins = float('inf')
+    
+    if current_joins >= max_joins:
+        messages.error(request, f"لقد تجاوزت الحد الأقصى للانضمام في خطتك ({plan}). اشترك في خطة أعلى للمزيد.")
+        return redirect('accounts:subscribe')
+    
     Participant.objects.get_or_create(user=request.user, competition=competition)
     messages.success(request, "You have joined the competition!")
     return redirect('competitions:competition_detail', competition_id=competition.id, competition_title=cleaned_title)
@@ -188,12 +240,11 @@ def add_question(request, competition_id, competition_title):
     competition = get_object_or_404(Competition, id=competition_id)
     cleaned_title = clean_text(competition.title)
 
-    # إذا كان العنوان الممرر غير صحيح، أعد التوجيه
     if cleaned_title != competition_title:
         return redirect('competitions:add_question', competition_id=competition_id, competition_title=cleaned_title)
 
-    # تحقق مما إذا كان المستخدم مدرسًا
-    if not (hasattr(request.user, 'courses_profile') and request.user.courses_profile.role == 'instructor'):
+    profile = get_object_or_404(Profile, user=request.user)
+    if not check_instructor(request.user):
         messages.error(request, "Only instructors can add questions.")
         return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
 
@@ -232,32 +283,21 @@ def add_question(request, competition_id, competition_title):
     return render(request, 'competitions/add_question.html', {
         'competition': competition,
     })
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.urls import reverse
-from django.core.exceptions import PermissionDenied
-from .models import Competition, Question, Participant, Answer
-from .views import clean_text
 
 @login_required
 def answer_question(request, competition_id, competition_title, question_id):
     competition = get_object_or_404(Competition, id=competition_id)
     cleaned_title = clean_text(competition.title)
 
-    # إذا كان العنوان الممرر غير صحيح، أعد التوجيه
     if cleaned_title != competition_title:
         return redirect('competitions:answer_question', competition_id=competition_id, competition_title=cleaned_title, question_id=question_id)
 
-    # التحقق من أن المستخدم طالب
     if not check_student(request.user):
         messages.error(request, "Only students can answer questions.")
         return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
 
-    # التحقق من أن المستخدم مشارك في المسابقة
     participant = get_object_or_404(Participant, user=request.user, competition=competition)
 
-    # التحقق من أن المسابقة مستمرة
     if not competition.is_ongoing:
         messages.error(request, "This competition is not active.")
         return redirect('competitions:competition_detail', competition_id=competition_id, competition_title=cleaned_title)
@@ -267,13 +307,11 @@ def answer_question(request, competition_id, competition_title, question_id):
     if request.method == 'POST':
         answer_text = request.POST.get('answer')
         try:
-            # إنشاء إجابة جديدة
             Answer.objects.create(
                 participant=participant,
                 question=question,
                 answer_text=answer_text
             )
-            # التحقق من صحة الإجابة
             is_correct = False
             if question.question_type == 'MCQ':
                 correct_answer = question.correct_answer
@@ -282,10 +320,9 @@ def answer_question(request, competition_id, competition_title, question_id):
                 correct_answer = question.correct_answer.lower().strip()
                 is_correct = answer_text.lower().strip() == correct_answer
 
-            # تحديث نقاط المستخدم إذا كانت الإجابة صحيحة
             if is_correct and request.user.courses_profile:
                 request.user.courses_profile.xp += question.points
-                request.user.courses_profile.coins += question.points // 10  # مثال: كل 10 نقاط = 1 كوين
+                request.user.courses_profile.coins += question.points // 10
                 request.user.courses_profile.save()
 
             messages.success(request, "Answer submitted! {}".format("Correct!" if is_correct else "Incorrect."))
@@ -317,6 +354,16 @@ def download_certificate(request, competition_id, competition_title):
         )
     
     participant = get_object_or_404(Participant, user=request.user, competition=competition)
+    
+    profile = get_object_or_404(Profile, user=request.user)
+    plan = profile.subscription_plan or 'free'
+    participants = Participant.objects.filter(competition=competition).order_by('-total_xp')
+    rank = list(participants).index(participant) + 1
+    
+    if rank <= 3 and plan == 'free':
+        messages.error(request, "في الخطة المجانية، لا يمكنك الحصول على شهادة إذا كنت من الأوائل 3. اشترك في خطة مدفوعة.")
+        return redirect('accounts:subscribe')
+    
     if not participant.has_completed_competition():
         messages.error(request, "You must complete all questions to download the certificate.")
         return redirect('competitions:competition_detail', competition_id=competition.id, competition_title=cleaned_title)
@@ -411,18 +458,11 @@ def download_certificate(request, competition_id, competition_title):
     buffer.close()
     return response
 
-from django.shortcuts import render, get_object_or_404
-from .models import Competition, Participant
-from .views import clean_text
-from django.urls import reverse
-from django.http import HttpResponsePermanentRedirect
-
 @login_required
 def leaderboard(request, competition_id, competition_title):
     competition = get_object_or_404(Competition, id=competition_id)
     cleaned_title = clean_text(competition.title)
     
-    # إذا كان العنوان الممرر غير صحيح، أعد التوجيه إلى العنوان الصحيح
     if cleaned_title != competition_title:
         return HttpResponsePermanentRedirect(
             reverse('competitions:leaderboard', kwargs={

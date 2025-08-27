@@ -8,7 +8,7 @@ urlpatterns = [
     path('', views.courses_view, name='courses'),
     path('search/', views.search_courses, name='search_courses'),
     # Course enrollment
-    path('enroll/<int:course_id>/<str:course_title>/', views.enroll_course, name='enroll_course'),
+    path('courses/enroll/<int:course_id>/<str:course_title>/', views.enroll_course, name='enroll_course'),
     # Course details
     path('details/<int:course_id>/<str:course_title>/', views.course_details_view, name='course_details'),
     # Redirect old course details URL
@@ -19,12 +19,16 @@ urlpatterns = [
     path('instructor/add_course/', views.add_course, name='add_course'),
     # Edit course
     path('instructor/edit_course/<int:course_id>/<str:course_title>/', views.edit_course, name='edit_course'),
+    # Delete course
+    path('instructor/delete_course/<int:course_id>/<str:course_title>/', views.delete_course, name='delete_course'),
     # Add video
     path('instructor/add_video/<int:course_id>/<str:course_title>/', views.add_video, name='add_video'),
     # View course videos
     path('instructor/course_videos/<int:course_id>/<str:course_title>/', views.course_videos, name='course_videos'),
     # Edit video
     path('instructor/edit_video/<int:course_id>/<str:course_title>/<int:video_id>/<str:video_title>/', views.edit_video, name='edit_video'),
+    # Delete video
+    path('instructor/delete_video/<int:course_id>/<str:course_title>/<int:video_id>/<str:video_title>/', views.delete_video, name='delete_video'),
     # Check enrollment
     path('check_enrollment/<int:course_id>/<str:course_title>/', views.check_enrollment, name='check_enrollment'),
     # Watch video

@@ -24,7 +24,7 @@ const translations = {
         "form-label": "Video URL",
         "submit-btn": "Upload Recording",
         "back-btn": "Back to Sessions",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "title": "رفع تسجيل - {{ session.title }} - إدوفيا",
@@ -51,7 +51,7 @@ const translations = {
         "form-label": "رابط الفيديو",
         "submit-btn": "رفع التسجيل",
         "back-btn": "العودة إلى الجلسات",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود. جميع الحقوق محفوظة."
     }
 };
 

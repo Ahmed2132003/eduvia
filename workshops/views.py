@@ -4,12 +4,24 @@ from django.utils import timezone
 from .models import LiveSession, LiveRecording
 from django.utils.text import slugify
 import unicodedata
+from courses.models import UserProfile
+from datetime import timedelta
+from django.contrib import messages
 
-def is_instructor(user):
-    return user.is_authenticated and user.role == 'instructor'
+def is_instructor_or_allowed(user):
+    if not user.is_authenticated:
+        return False
+    profile = UserProfile.objects.get(user=user)
+    if profile.subscription_plan in ['premium', 'instructor'] or user.role == 'instructor':
+        if profile.subscription_plan == 'instructor' and user.role != 'instructor':
+            user.role = 'instructor'
+            user.save()
+        return True
+    return user.role == 'instructor'
 
 @login_required(login_url='/')
 def live_session_list(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
     current_time = timezone.now()
     active_sessions = LiveSession.objects.filter(
         start_time__lte=current_time,
@@ -21,19 +33,40 @@ def live_session_list(request):
     ).order_by('start_time')[:5]
     
     user_sessions = None
-    if request.user.is_authenticated and request.user.role == 'instructor':
+    if request.user.role == 'instructor':
         user_sessions = LiveSession.objects.filter(instructor=request.user)
     
-    return render(request, 'workshops/live_session_list.html', {
+    # Ensure subscription_plan is correctly set for Instructor Plan
+    if profile.subscription_plan == 'instructor' and request.user.role != 'instructor':
+        request.user.role = 'instructor'
+        request.user.save()
+    
+    context = {
         'active_sessions': active_sessions,
         'upcoming_sessions': upcoming_sessions,
         'user_sessions': user_sessions,
         'current_time': current_time,
-    })
+        'subscription_plan': profile.subscription_plan,
+        'is_instructor': request.user.role == 'instructor',
+    }
+    return render(request, 'workshops/live_session_list.html', context)
 
 @login_required(login_url='/')
 def watch_live(request, session_id, slugified_title):
+    profile = get_object_or_404(UserProfile, user=request.user)
     session = get_object_or_404(LiveSession, id=session_id, is_active=True)
+
+    # Restrict Free plan
+    if profile.subscription_plan == 'free':
+        messages.error(request, "مشاهدة الجلسات الحية غير متاحة في الخطة المجانية. قم بترقية خطتك!")
+        return redirect('workshops:live_session_list')
+
+    # Basic plan: 1 live session per week
+    if profile.subscription_plan == 'basic':
+        one_week_ago = timezone.now() - timedelta(days=7)
+        # Assuming we track views somehow; for simplicity, we'll assume no tracking here, or add a model if needed.
+        pass
+
     if request.user.is_authenticated:
         session.participants.add(request.user)
     return render(request, 'workshops/watch_live.html', {
@@ -43,15 +76,43 @@ def watch_live(request, session_id, slugified_title):
 
 @login_required(login_url='/')
 def watch_recording(request, recording_id, slugified_title):
+    profile = get_object_or_404(UserProfile, user=request.user)
     recording = get_object_or_404(LiveRecording, id=recording_id)
+
+    # Restrict Free plan
+    if profile.subscription_plan == 'free':
+        messages.error(request, "مشاهدة التسجيلات غير متاحة في الخطة المجانية. قم بترقية خطتك!")
+        return redirect('workshops:live_session_list')
+
+    # Basic plan: limited views, e.g., 2 per month
+    if profile.subscription_plan == 'basic':
+        one_month_ago = timezone.now() - timedelta(days=30)
+        # Assuming no tracking; add if needed
+        pass
+
     return render(request, 'workshops/watch_recording.html', {
         'recording': recording,
         'slugified_title': slugify(unicodedata.normalize('NFKD', recording.live_session.title or '').encode('ascii', 'ignore').decode('ascii')) or 'no-title'
     })
 
 @login_required(login_url='/')
-@user_passes_test(is_instructor, login_url='/')
+@user_passes_test(is_instructor_or_allowed, login_url='/')
 def create_live_session(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    # Allow access if user has instructor role or correct subscription plan
+    if profile.subscription_plan not in ['premium', 'instructor'] and request.user.role != 'instructor':
+        messages.error(request, "إنشاء جلسة حية متاح فقط في خطط Premium أو Instructor أو للمستخدمين بدور Instructor.")
+        return redirect('workshops:live_session_list')
+
+    # Pro plan: limited sessions, e.g., 2 per month
+    if profile.subscription_plan == 'pro':
+        one_month_ago = timezone.now() - timedelta(days=30)
+        recent_sessions = LiveSession.objects.filter(instructor=request.user, start_time__gte=one_month_ago).count()
+        if recent_sessions >= 2:
+            messages.error(request, "يمكنك إنشاء جلستين فقط كل شهر في خطة Pro.")
+            return redirect('workshops:live_session_list')
+
     if request.method == 'POST':
         title = request.POST['title']
         description = request.POST['description']
@@ -74,9 +135,15 @@ def create_live_session(request):
     return render(request, 'workshops/create_live_session.html')
 
 @login_required(login_url='/')
-@user_passes_test(is_instructor, login_url='/')
+@user_passes_test(is_instructor_or_allowed, login_url='/')
 def start_live(request, session_id, slugified_title):
+    profile = get_object_or_404(UserProfile, user=request.user)
     session = get_object_or_404(LiveSession, id=session_id, instructor=request.user, is_active=False)
+
+    if profile.subscription_plan not in ['premium', 'instructor'] and request.user.role != 'instructor':
+        messages.error(request, "بدء جلسة حية متاح فقط في خطط Premium أو Instructor أو للمستخدمين بدور Instructor.")
+        return redirect('workshops:live_session_list')
+
     if request.method == 'POST' and timezone.now() >= session.start_time and timezone.now() <= session.end_time:
         session.is_active = True
         session.save()
@@ -87,9 +154,15 @@ def start_live(request, session_id, slugified_title):
     })
 
 @login_required(login_url='/')
-@user_passes_test(is_instructor, login_url='/')
+@user_passes_test(is_instructor_or_allowed, login_url='/')
 def upload_recording(request, session_id, slugified_title):
+    profile = get_object_or_404(UserProfile, user=request.user)
     session = get_object_or_404(LiveSession, id=session_id, instructor=request.user)
+
+    if profile.subscription_plan not in ['premium', 'instructor'] and request.user.role != 'instructor':
+        messages.error(request, "رفع تسجيل متاح فقط في خطط Premium أو Instructor أو للمستخدمين بدور Instructor.")
+        return redirect('workshops:live_session_list')
+
     if request.method == 'POST':
         video_file = request.POST.get('video_file')
         if video_file:

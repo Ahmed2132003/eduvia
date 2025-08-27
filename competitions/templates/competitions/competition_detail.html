@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- 🔍 SEO -->
-    <title data-translate="competition-details-title">Competition Details | Eduvia</title>
+    <title data-translate="competition-details-title">{{ competition.title }} | Eduvia</title>
     <meta name="description" data-translate="competition-details-meta-desc" content="Explore the details of educational competitions on the Eduvia platform, participate in challenges, answer questions, and earn XP and coins!">
     <meta name="keywords" data-translate="competition-details-meta-keywords" content="competition details, educational competitions, Eduvia platform, interactive learning, learning challenges, XP, coins">
     <meta name="author" content="Eduvia Team">
@@ -61,7 +61,7 @@
                 "@type": "WebPage",
                 "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/#webpage",
                 "url": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/",
-                "name": "Competition Details | Eduvia",
+                "name": "{{ competition.title }} | Eduvia",
                 "description": "Explore the details of educational competitions on the Eduvia platform, participate in challenges, answer questions, and earn XP and coins!",
                 "breadcrumb": {
                     "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/#breadcrumb"
@@ -109,8 +109,9 @@
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -140,13 +141,13 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1 data-translate="hero-title">{{ competition.title }}</h1>
+        <h1 data-translate="hero-title" data-original-title="{{ competition.title }}">{{ competition.title }}</h1>
         <p data-translate="hero-desc">Participate in this exciting challenge and earn rewards!</p>
     </section>
 
     <!-- Content Section -->
     <section class="content-container">
-        <h1 data-translate="content-title">{{ competition.title }}</h1>
+        <h1 data-translate="content-title" data-original-title="{{ competition.title }}">{{ competition.title }}</h1>
         {% if messages %}
             <div class="messages">
                 {% for message in messages %}
@@ -204,7 +205,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <script src="{% static 'competitions/competition_detail.js' %}"></script>

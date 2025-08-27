@@ -1,4 +1,3 @@
-// Translation object
 const translations = {
     en: {
         "chatbot-title": "Chatbot - Eduvia",
@@ -14,6 +13,15 @@ const translations = {
         "chatbot-input-placeholder": "Type your message here...",
         "chatbot-send": "Send",
         "chatbot-loading": "Loading...",
+        "chatbot-chats-title": "Your Chats",
+        "chatbot-new-chat": "New Chat",
+        "chatbot-no-chats": "No chats yet.",
+        "chatbot-message-limit": "Messages today: ",
+        "chatbot-limit-reached-free": "You have reached the daily message limit (5 messages). Please subscribe to continue chatting.",
+        "chatbot-limit-reached-basic": "You have reached the daily message limit (30 messages). Please upgrade to Pro to continue chatting.",
+        "chatbot-limit-reached-pro": "You have reached the daily message limit (60 messages). Please upgrade to Premium to continue chatting.",
+        "chatbot-subscribe": "Subscribe Now",
+        "chatbot-error": "Error: ",
         "nav-home": "Home",
         "nav-courses": "Courses",
         "nav-chatbot": "Chatbot",
@@ -28,7 +36,7 @@ const translations = {
         "nav-login": "Login",
         "search-placeholder": "Search for a course...",
         "search-btn": "Search",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "chatbot-title": "روبوت الدردشة - إدوفيا",
@@ -44,6 +52,15 @@ const translations = {
         "chatbot-input-placeholder": "اكتب رسالتك هنا...",
         "chatbot-send": "إرسال",
         "chatbot-loading": "جارٍ التحميل...",
+        "chatbot-chats-title": "محادثاتك",
+        "chatbot-new-chat": "محادثة جديدة",
+        "chatbot-no-chats": "لا توجد محادثات بعد.",
+        "chatbot-message-limit": "الرسائل اليوم: ",
+        "chatbot-limit-reached-free": "لقد وصلت إلى الحد الأقصى للرسائل اليومية (5 رسائل). يرجى الاشتراك لمواصلة الدردشة.",
+        "chatbot-limit-reached-basic": "لقد وصلت إلى الحد الأقصى للرسائل اليومية (30 رسالة). يرجى ترقية باقتك إلى Pro لمواصلة الدردشة.",
+        "chatbot-limit-reached-pro": "لقد وصلت إلى الحد الأقصى للرسائل اليومية (60 رسالة). يرجى ترقية باقتك إلى Premium لمواصلة الدردشة.",
+        "chatbot-subscribe": "اشترك الآن",
+        "chatbot-error": "خطأ: ",
         "nav-home": "الرئيسية",
         "nav-courses": "الدورات",
         "nav-chatbot": "الدردشة الآلية",
@@ -58,7 +75,7 @@ const translations = {
         "nav-login": "تسجيل الدخول",
         "search-placeholder": "ابحث عن دورة...",
         "search-btn": "ابحث",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 
@@ -73,7 +90,7 @@ function getCSRFToken() {
     return null;
 }
 
-function sendMessage() {
+async function sendMessage() {
     const inputField = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
     const messagesDiv = document.getElementById("chat-messages");
@@ -81,53 +98,69 @@ function sendMessage() {
     const errorDiv = document.getElementById("error-message");
     const userMessage = inputField.value.trim();
 
-    if (userMessage) {
-        // Show user message
-        const userMessageDiv = document.createElement("div");
-        userMessageDiv.className = "user-message";
-        userMessageDiv.innerHTML = `<div class="message">${userMessage}</div>`;
-        messagesDiv.appendChild(userMessageDiv);
+    if (!userMessage) {
+        errorDiv.textContent = translations[document.getElementById('html-root').getAttribute('lang')]["chatbot-error"] + "Message cannot be empty";
+        return;
+    }
 
-        // Disable button and show loading
-        sendButton.disabled = true;
-        loadingDiv.style.display = "block";
-        errorDiv.textContent = "";
+    // Show user message
+    const userMessageDiv = document.createElement("div");
+    userMessageDiv.className = "message user-message";
+    userMessageDiv.textContent = userMessage;
+    messagesDiv.appendChild(userMessageDiv);
 
-        fetch(window.location.href, {
+    // Disable button and show loading
+    sendButton.disabled = true;
+    loadingDiv.style.display = "block";
+    errorDiv.textContent = "";
+
+    try {
+        const response = await fetch(window.location.href, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCSRFToken(),
             },
             body: JSON.stringify({ message: userMessage })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to connect to the server: ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
+        });
+
+        const data = await response.json();
+
+        if (data.redirect) {
+            window.location.href = data.redirect;
+            return;
+        }
+
+        if (data.error) {
+            errorDiv.textContent = translations[document.getElementById('html-root').getAttribute('lang')]["chatbot-error"] + data.error;
+        } else {
             const botMessageDiv = document.createElement("div");
-            botMessageDiv.className = "bot-message";
-            botMessageDiv.innerHTML = `<div class="message">${data.response}</div>`;
+            botMessageDiv.className = "message bot-message";
+            botMessageDiv.textContent = data.response;
             messagesDiv.appendChild(botMessageDiv);
+
+            // Update chat list if new chat was created
+            if (data.chat_id && !document.querySelector(`.sidebar ul li a[href="/chatbot/${data.chat_id}/"]`)) {
+                const chatList = document.querySelector('.sidebar ul');
+                const newChatItem = document.createElement('li');
+                newChatItem.innerHTML = `<a href="/chatbot/${data.chat_id}/" class="active">${data.chat_title} (${new Date().toLocaleString()})</a>`;
+                chatList.insertBefore(newChatItem, chatList.firstChild);
+                document.querySelectorAll('.sidebar ul li a').forEach(link => {
+                    if (link.getAttribute('href') !== `/chatbot/${data.chat_id}/`) {
+                        link.classList.remove('active');
+                    }
+                });
+            }
 
             inputField.value = "";
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        })
-        .catch(error => {
-            errorDiv.textContent = translations[document.getElementById('html-root').getAttribute('lang')]["chatbot-error"] + error.message;
-            console.error('There was a problem with the fetch operation:', error);
-        })
-        .finally(() => {
-            // Re-enable button and hide loading
-            sendButton.disabled = false;
-            loadingDiv.style.display = "none";
-        });
+        }
+    } catch (error) {
+        errorDiv.textContent = translations[document.getElementById('html-root').getAttribute('lang')]["chatbot-error"] + error.message;
+        console.error('There was a problem with the fetch operation:', error);
+    } finally {
+        sendButton.disabled = false;
+        loadingDiv.style.display = "none";
     }
 }
 
@@ -136,12 +169,11 @@ function toggleMenu() {
     menu.classList.toggle('active');
 }
 
-// Dark Mode Toggle
 function toggleDarkMode() {
     const body = document.body;
     const toggleIcon = document.querySelector('.dark-mode-toggle i');
     body.classList.toggle('dark-mode');
-    
+
     if (body.classList.contains('dark-mode')) {
         toggleIcon.classList.remove('fa-moon');
         toggleIcon.classList.add('fa-sun');
@@ -153,17 +185,14 @@ function toggleDarkMode() {
     }
 }
 
-// Language Toggle
 function toggleLanguage() {
     const htmlRoot = document.getElementById('html-root');
     const currentLang = htmlRoot.getAttribute('lang');
     const newLang = currentLang === 'en' ? 'ar' : 'en';
-    
-    // Update lang and direction
+
     htmlRoot.setAttribute('lang', newLang);
     htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-    
-    // Update all translatable elements
+
     document.querySelectorAll('[data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');
         const text = translations[newLang][key];
@@ -180,15 +209,11 @@ function toggleLanguage() {
         }
     });
 
-    // Update the title
     document.title = translations[newLang]["chatbot-title"];
-    
     localStorage.setItem('language', newLang);
 }
 
-// Apply saved theme and language on page load
 document.addEventListener('DOMContentLoaded', () => {
-    // Apply Dark Mode
     const savedTheme = localStorage.getItem('theme');
     const toggleIcon = document.querySelector('.dark-mode-toggle i');
     if (savedTheme === 'dark') {
@@ -197,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleIcon.classList.add('fa-sun');
     }
 
-    // Apply Language
     const savedLang = localStorage.getItem('language') || 'en';
     const htmlRoot = document.getElementById('html-root');
     htmlRoot.setAttribute('lang', savedLang);
@@ -220,12 +244,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.title = translations[savedLang]["chatbot-title"];
-});
 
-// Enable sending message with Enter key
-document.getElementById("user-input").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        sendMessage();
-    }
+    document.getElementById("user-input").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Clear current chat ID on New Chat click
+    document.querySelector('.new-chat-btn').addEventListener('click', () => {
+        localStorage.removeItem('currentChatId');
+    });
 });

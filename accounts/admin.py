@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.exceptions import PermissionDenied
-from .models import User, Profile, UserChat, UserMessage
+from .models import User, Profile, UserChat, UserMessage, InstructorPayout
 import logging
 
 # إعداد تسجيل الأخطاء
@@ -72,13 +72,17 @@ class UserAdmin(BaseUserAdmin, BaseModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(BaseModelAdmin):
-    list_display = ('user', 'full_name', 'xp', 'coins')
-    list_filter = ('user__role',)
+    list_display = ('user', 'full_name', 'xp', 'coins', 'subscription_plan', 'payment_status','subscription_end_date' )
+    list_filter = ('user__role', 'subscription_plan')
     search_fields = ('user__username', 'full_name')
     fieldsets = (
         (None, {'fields': ('user', 'full_name')}),
-        ('Details', {'fields': ('profile_picture', 'date_of_birth', 'xp', 'coins')}),
+        ('Details', {'fields': ('profile_picture', 'date_of_birth', 'xp', 'coins', 'subscription_plan', 'paymob_order_id','subscription_end_date')}),
     )
+
+    def payment_status(self, obj):
+        return "مدفوع" if obj.paymob_order_id else "غير مدفوع"
+    payment_status.short_description = "حالة الدفع"
 
 @admin.register(UserChat)
 class UserChatAdmin(BaseModelAdmin):
@@ -92,3 +96,14 @@ class UserMessageAdmin(BaseModelAdmin):
     list_filter = ('sent_at',)
     search_fields = ('sender__username', 'content')
     readonly_fields = ('sent_at',)
+
+@admin.register(InstructorPayout)
+class InstructorPayoutAdmin(BaseModelAdmin):
+    list_display = ('instructor', 'amount', 'payout_date', 'course_views', 'total_platform_views', 'payout_percentage')
+    list_filter = ('payout_date',)
+    search_fields = ('instructor__username',)
+    fieldsets = (
+        (None, {'fields': ('instructor', 'amount')}),
+        ('Payout Details', {'fields': ('payout_date', 'course_views', 'total_platform_views', 'payout_percentage')}),
+    )
+    readonly_fields = ('payout_date',)

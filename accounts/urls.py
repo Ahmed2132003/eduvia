@@ -16,4 +16,6 @@ urlpatterns = [
     path('messages/', views.user_messages, name='user_messages'),
     path('verify/', views.verify_code_view, name='verify_code'),
     path('verify-form/', views.verify_code_form_view, name='verify_code_form'),
+    path('payment-callback/', views.payment_callback, name='payment_callback'),
+    path('subscribe/', views.subscribe_view, name='subscribe'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

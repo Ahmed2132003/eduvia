@@ -20,7 +20,7 @@ const translations = {
         "content-desc": "Explore is an interactive platform",
         "edu": "About",
         "github": "GitHub",
-        "footer": "© 2025"
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "title": "من نحن - إدوفيا",
@@ -44,7 +44,7 @@ const translations = {
         "hero": "من",
         "content-desc": "إدو كفيدية هي منصة تعاملية تفاعلية",
         "edu": "M",
-        "footer": "© 2025"
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 

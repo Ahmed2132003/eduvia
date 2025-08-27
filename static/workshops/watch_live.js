@@ -26,7 +26,7 @@ const translations = {
         "meet-link-label": "Meet Link:",
         "join-btn": "Join Live Session",
         "no-meet-link": "No Meet link available.",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "title": "مشاهدة مباشرة - {{ session.title }} - إدوفيا",
@@ -55,7 +55,7 @@ const translations = {
         "meet-link-label": "رابط الاجتماع:",
         "join-btn": "انضم إلى الجلسة المباشرة",
         "no-meet-link": "لا يوجد رابط اجتماع متاح.",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود. جميع الحقوق محفوظة."
     }
 };
 

@@ -104,10 +104,11 @@
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated and user.is_staff %}
-                <a href="/admin/" data-translate="nav-admin">Dashboard</a>
-            {% endif %}
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             {% if user.is_authenticated %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
                 <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
                 {% if user.courses_profile %}
@@ -218,7 +219,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <script src="{% static 'pages/home.js' %}"></script>

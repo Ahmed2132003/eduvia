@@ -9,7 +9,7 @@ def health_check(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls , name='admin_dashboard'),
-    path('accounts/', include('accounts.urls')),
+    path('accounts/',include('accounts.urls', namespace='accounts')),
     path('healthcheck/', health_check),
     path('', include('pages.urls')),
     path('courses/', include('courses.urls')),

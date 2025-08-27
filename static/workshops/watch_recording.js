@@ -25,7 +25,7 @@ const translations = {
         "instructor-label": "Instructor:",
         "video-error": "Failed to load the video. Please check the URL or try again later.",
         "back-btn": "Back to Sessions",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "title": "مشاهدة التسجيل - {{ recording.live_session.title }} - إدوفيا",
@@ -53,7 +53,7 @@ const translations = {
         "instructor-label": "المدرب:",
         "video-error": "فشل تحميل الفيديو. يرجى التحقق من الرابط أو المحاولة مرة أخرى لاحقًا.",
         "back-btn": "العودة إلى الجلسات",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود. جميع الحقوق محفوظة."
     }
 };
 

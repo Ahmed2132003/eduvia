@@ -26,7 +26,7 @@ const translations = {
         "social-github": "GitHub",
         "social-tiktok": "TikTok",
         "social-youtube": "YouTube",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "title": "تواصل معنا - إدوفيا",
@@ -54,7 +54,7 @@ const translations = {
         "social-github": "جيثب",
         "social-tiktok": "تيك توك",
         "social-youtube": "يوتيوب",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 

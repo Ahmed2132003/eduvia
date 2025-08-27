@@ -35,11 +35,12 @@ const translations = {
         "nav-about": "About Us",
         "nav-contact": "Contact Us",
         "nav-dashboard": "Dashboard",
+        "nav-subscribe": "subscribe",
         "nav-profile": "Profile",
         "nav-logout": "Logout",
         "nav-coins": "Coins:",
         "nav-login": "Login",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "competition-details-title": "تفاصيل المسابقة | إدوفيا",
@@ -77,11 +78,12 @@ const translations = {
         "nav-about": "معلومات عنا",
         "nav-contact": "تواصل معنا",
         "nav-dashboard": "لوحة التحكم",
+        "nav-subscribe": "الاشتراك",
         "nav-profile": "الملف الشخصي",
         "nav-logout": "تسجيل الخروج",
         "nav-coins": "النقاط:",
         "nav-login": "تسجيل الدخول",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 
@@ -106,14 +108,7 @@ function toggleDarkMode() {
     }
 }
 
-function toggleLanguage() {
-    const htmlRoot = document.getElementById('html-root');
-    const currentLang = htmlRoot.getAttribute('lang');
-    const newLang = currentLang === 'en' ? 'ar' : 'en';
-    
-    htmlRoot.setAttribute('lang', newLang);
-    htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-    
+function updateTranslations(newLang) {
     document.querySelectorAll('[data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');
         const text = translations[newLang][key];
@@ -124,9 +119,10 @@ function toggleLanguage() {
                 element.setAttribute('content', text);
             }
         } else if (element.tagName.toLowerCase() === 'p' && ['description-label', 'start-label', 'end-label', 'status-label', 'xp-label', 'coins-label'].includes(key)) {
-            const labelText = text + " ";
-            const dynamicContent = element.childNodes[element.childNodes.length - 1].textContent.trim();
-            element.textContent = labelText + dynamicContent;
+            // استخراج النص الديناميكي بدون الـ label
+            const currentText = element.textContent.trim();
+            const dynamicContent = currentText.replace(/^.*?:\s*/, '').trim(); // إزالة الـ label
+            element.textContent = text + " " + dynamicContent;
         } else if (element.tagName.toLowerCase() === 'span' && ['status-ongoing', 'status-not-active', 'answered-label'].includes(key)) {
             element.textContent = text;
         } else if (element.tagName.toLowerCase() === 'li' && ['no-questions', 'no-questions-available'].includes(key)) {
@@ -135,9 +131,21 @@ function toggleLanguage() {
             element.textContent = text;
         }
     });
+}
 
-    const compTitle = "{{ competition.title }}";
-    document.title = translations[newLang]["competition-details-title"];
+function toggleLanguage() {
+    const htmlRoot = document.getElementById('html-root');
+    const currentLang = htmlRoot.getAttribute('lang');
+    const newLang = currentLang === 'en' ? 'ar' : 'en';
+    
+    htmlRoot.setAttribute('lang', newLang);
+    htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+    
+    updateTranslations(newLang);
+
+    // تحديث العنوان والهيدر
+    const compTitle = document.querySelector('h1[data-translate="hero-title"]').dataset.originalTitle || "{{ competition.title }}";
+    document.title = compTitle + " | " + (newLang === 'ar' ? 'إدوفيا' : 'Eduvia');
     document.querySelectorAll('[data-translate="hero-title"]').forEach(element => {
         element.textContent = compTitle;
     });
@@ -162,30 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
     htmlRoot.setAttribute('lang', savedLang);
     htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
 
-    document.querySelectorAll('[data-translate]').forEach(element => {
-        const key = element.getAttribute('data-translate');
-        const text = translations[savedLang][key];
-        if (element.tagName.toLowerCase() === 'meta') {
-            if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                element.setAttribute('content', text);
-            } else if (element.getAttribute('property')?.startsWith('og:')) {
-                element.setAttribute('content', text);
-            }
-        } else if (element.tagName.toLowerCase() === 'p' && ['description-label', 'start-label', 'end-label', 'status-label', 'xp-label', 'coins-label'].includes(key)) {
-            const labelText = text + " ";
-            const dynamicContent = element.childNodes[element.childNodes.length - 1].textContent.trim();
-            element.textContent = labelText + dynamicContent;
-        } else if (element.tagName.toLowerCase() === 'span' && ['status-ongoing', 'status-not-active', 'answered-label'].includes(key)) {
-            element.textContent = text;
-        } else if (element.tagName.toLowerCase() === 'li' && ['no-questions', 'no-questions-available'].includes(key)) {
-            element.textContent = text;
-        } else {
-            element.textContent = text;
-        }
+    // حفظ عنوان المسابقة الأصلي
+    document.querySelectorAll('[data-translate="hero-title"]').forEach(element => {
+        element.dataset.originalTitle = element.textContent;
     });
 
-    const compTitle = "{{ competition.title }}";
-    document.title = translations[savedLang]["competition-details-title"];
+    updateTranslations(savedLang);
+
+    // تحديث العنوان والهيدر
+    const compTitle = document.querySelector('h1[data-translate="hero-title"]').dataset.originalTitle || "{{ competition.title }}";
+    document.title = compTitle + " | " + (savedLang === 'ar' ? 'إدوفيا' : 'Eduvia');
     document.querySelectorAll('[data-translate="hero-title"]').forEach(element => {
         element.textContent = compTitle;
     });

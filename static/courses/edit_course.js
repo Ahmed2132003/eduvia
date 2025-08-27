@@ -1,24 +1,21 @@
 const translations = {
     en: {
         "page-title": "Edit Course - Eduvia",
-        "meta-desc": "Edit your courses on Eduvia's Instructor Dashboard. Update and organize your educational content with ease.",
-        "meta-keywords": "Eduvia, edit course, instructor dashboard, online teaching, course management",
-        "meta-desc-ar": "تعديل دوراتك على لوحة تحكم المدربين في إدوفيا. قم بتحديث وتنظيم محتواك التعليمي بسهولة.",
-        "meta-keywords-ar": "إدوفيا، تعديل الدورة، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الدورات",
+        "meta-desc": "Edit your courses on Eduvia's Instructor Dashboard. Update course details and manage educational content with ease.",
+        "meta-keywords": "Eduvia, edit course, instructor dashboard, course management, educational platform",
+        "meta-desc-ar": "تعديل دوراتك على لوحة تحكم المدربين في إدوفيا. تحديث تفاصيل الدورة وإدارة المحتوى التعليمي بسهولة.",
+        "meta-keywords-ar": "إدوفيا، تعديل الدورة، لوحة تحكم المدربين، إدارة الدورات، منصة تعليمية",
         "og-title": "Edit Course - Eduvia",
-        "og-desc": "Update your teaching content with Eduvia's Instructor Dashboard. Edit courses and engage with students.",
+        "og-desc": "Easily update and manage your course content on Eduvia's Instructor Dashboard.",
         "twitter-title": "Edit Course - Eduvia",
-        "twitter-desc": "Update your teaching content with Eduvia's Instructor Dashboard. Edit courses and engage with students.",
-        "hero-title": "Edit Course",
-        "hero-desc": "Update your course details and content to enhance the learning experience.",
-        "edit-course-title": "Edit Course",
-        "edit-course-desc": "Update your course details below.",
-        "form-placeholder": "Course edit form goes here.",
+        "twitter-desc": "Easily update and manage your course content on Eduvia's Instructor Dashboard.",
+        "title": "Eduvia",
         "nav-home": "Home",
         "nav-courses": "Courses",
         "nav-chatbot": "Chatbot",
         "nav-competitions": "Competitions",
         "nav-performance": "Performance",
+        "nav-subscribe": "Subscribe",
         "nav-about": "About Us",
         "nav-contact": "Contact Us",
         "nav-dashboard": "Dashboard",
@@ -26,28 +23,30 @@ const translations = {
         "nav-logout": "Logout",
         "nav-coins": "Coins:",
         "nav-login": "Login",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "hero-title": "Edit Course",
+        "hero-desc": "Update your course details and manage your educational content with ease.",
+        "edit-course-title": "Edit Course",
+        "edit-course-desc": "Modify the course title, description, or category below.",
+        "save-changes": "Save Changes",
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "page-title": "تعديل الدورة - إدوفيا",
-        "meta-desc": "تعديل دوراتك على لوحة تحكم المدربين في إدوفيا. قم بتحديث وتنظيم محتواك التعليمي بسهولة.",
-        "meta-keywords": "إدوفيا، تعديل الدورة، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الدورات",
-        "meta-desc-ar": "تعديل دوراتك على لوحة تحكم المدربين في إدوفيا. قم بتحديث وتنظيم محتواك التعليمي بسهولة.",
-        "meta-keywords-ar": "إدوفيا، تعديل الدورة، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الدورات",
+        "meta-desc": "تعديل دوراتك على لوحة تحكم المدربين في إدوفيا. تحديث تفاصيل الدورة وإدارة المحتوى التعليمي بسهولة.",
+        "meta-keywords": "إدوفيا، تعديل الدورة، لوحة تحكم المدربين، إدارة الدورات، منصة تعليمية",
+        "meta-desc-ar": "تعديل دوراتك على لوحة تحكم المدربين في إدوفيا. تحديث تفاصيل الدورة وإدارة المحتوى التعليمي بسهولة.",
+        "meta-keywords-ar": "إدوفيا، تعديل الدورة، لوحة تحكم المدربين، إدارة الدورات، منصة تعليمية",
         "og-title": "تعديل الدورة - إدوفيا",
-        "og-desc": "قم بتحديث محتوى تدريسك مع لوحة تحكم المدربين في إدوفيا. تعديل الدورات والتفاعل مع الطلاب.",
+        "og-desc": "تحديث وإدارة محتوى دوراتك بسهولة على لوحة تحكم المدربين في إدوفيا.",
         "twitter-title": "تعديل الدورة - إدوفيا",
-        "twitter-desc": "قم بتحديث محتوى تدريسك مع لوحة تحكم المدربين في إدوفيا. تعديل الدورات والتفاعل مع الطلاب.",
-        "hero-title": "تعديل الدورة",
-        "hero-desc": "قم بتحديث تفاصيل دورتك ومحتواها لتحسين تجربة التعلم.",
-        "edit-course-title": "تعديل الدورة",
-        "edit-course-desc": "قم بتحديث تفاصيل دورتك أدناه.",
-        "form-placeholder": "نموذج تعديل الدورة يوضع هنا.",
+        "twitter-desc": "تحديث وإدارة محتوى دوراتك بسهولة على لوحة تحكم المدربين في إدوفيا.",
+        "title": "إدوفيا",
         "nav-home": "الرئيسية",
         "nav-courses": "الدورات",
         "nav-chatbot": "الدردشة الآلية",
         "nav-competitions": "المسابقات",
         "nav-performance": "الأداء",
+        "nav-subscribe": "الاشتراك",
         "nav-about": "معلومات عنا",
         "nav-contact": "تواصل معنا",
         "nav-dashboard": "لوحة التحكم",
@@ -55,13 +54,19 @@ const translations = {
         "nav-logout": "تسجيل الخروج",
         "nav-coins": "النقاط:",
         "nav-login": "تسجيل الدخول",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "hero-title": "تعديل الدورة",
+        "hero-desc": "تحديث تفاصيل الدورة وإدارة المحتوى التعليمي بسهولة.",
+        "edit-course-title": "تعديل الدورة",
+        "edit-course-desc": "عدل عنوان الدورة، الوصف، أو الفئة أدناه.",
+        "save-changes": "حفظ التغييرات",
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 
 function toggleMenu() {
     const menu = document.querySelector('.menu');
     menu.classList.toggle('active');
+    console.log('Menu toggled:', menu.classList.contains('active')); // Debugging
 }
 
 // Dark Mode Toggle
@@ -94,17 +99,15 @@ function toggleLanguage() {
     // Update all translatable elements
     document.querySelectorAll('[data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');
-        let text = translations[newLang][key];
-        if (element.tagName.toLowerCase() === 'meta') {
-            element.setAttribute('content', text);
-        } else {
-            element.textContent = text;
+        element.textContent = translations[newLang][key];
+        if (element.tagName.toLowerCase() === 'input' && element.getAttribute('type') === 'text') {
+            element.setAttribute('placeholder', translations[newLang][key]);
         }
     });
 
     // Update the title
     document.title = translations[newLang]["page-title"];
-
+    
     localStorage.setItem('language', newLang);
 }
 
@@ -127,14 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('[data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');
-        let text = translations[savedLang][key];
-        if (element.tagName.toLowerCase() === 'meta') {
-            element.setAttribute('content', text);
-        } else {
-            element.textContent = text;
+        const text = translations[savedLang][key];
+        element.textContent = text;
+        if (element.tagName.toLowerCase() === 'input' && element.getAttribute('type') === 'text') {
+            element.setAttribute('placeholder', text);
         }
     });
 
-    // Set the title on page load
     document.title = translations[savedLang]["page-title"];
 });

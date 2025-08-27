@@ -51,7 +51,7 @@ const translations = {
         "card-live-title": "Live Sessions",
         "card-live-desc": "Join interactive live sessions with expert instructors to enhance your learning experience in real-time.",
         "card-live-btn": "Live Sessions",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "title": "منصة إدوفيا",
@@ -105,7 +105,7 @@ const translations = {
         "card-live-title": "الجلسات المباشرة",
         "card-live-desc": "انضم إلى جلسات مباشرة تفاعلية مع المدربين الخبراء لتعزيز تجربتك التعليمية في الوقت الفعلي.",
         "card-live-btn": "الجلسات المباشرة",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 

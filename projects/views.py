@@ -10,7 +10,7 @@ from .forms import ProjectForm, TaskForm, TaskSubmissionForm, ProjectCommentForm
 from courses.views import instructor_required
 from django.contrib.auth import get_user_model
 import re
-
+from courses.models import UserProfile  
 User = get_user_model()
 
 def clean_text(text):
@@ -21,7 +21,59 @@ def clean_text(text):
     cleaned = text if text else 'default-title'
     slugified = slugify(cleaned, allow_unicode=True)
     return slugified if slugified else 'default-title'
+def check_subscription(request, action, project=None, room=None):
+    if not request.user.is_authenticated:
+        return False, "يجب تسجيل الدخول للوصول إلى هذه الميزة."
+    
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    plan = user_profile.subscription_plan
 
+    # إذا كانت الخطة منتهية أو غير موجودة
+    if not plan or (user_profile.subscription_end_date and user_profile.subscription_end_date < now()):  # هنا التعديل
+        return False, "اشتراكك منتهي أو غير موجود. الرجاء الترقية إلى خطة مدفوعة."
+
+    # الخطة المجانية
+    if plan == "free":
+        return False, "يجب الاشتراك في خطة مدفوعة للوصول إلى هذه الميزة. <a href='/accounts/subscribe/'>قم بالترقية الآن</a>"
+
+    # الخطة الأساسية
+    if plan == "basic":
+        if action == "view_project":
+            viewed_projects = request.session.get('viewed_projects', [])
+            if project and project.id not in viewed_projects and len(viewed_projects) >= 3:
+                return False, "لقد وصلت إلى الحد الأقصى لعدد المشاريع (3). <a href='/accounts/subscribe/'>قم بالترقية الآن</a>"
+        elif action == "join_room":
+            joined_rooms = CollaborationRoom.objects.filter(members=request.user).count()
+            if joined_rooms >= 3:
+                return False, "لقد وصلت إلى الحد الأقصى لعدد الغرف (3). <a href='/accounts/subscribe/'>قم بالترقية الآن</a>"
+        elif action in ["create_project", "create_room"]:
+            return False, "لا يمكنك إنشاء مشروع أو غرفة تعاون في الخطة الأساسية. <a href='/accounts/subscribe/'>قم بالترقية الآن</a>"
+
+    # الخطة الاحترافية
+    if plan == "pro":
+        if action == "create_project":
+            return False, "لا يمكنك إنشاء مشروع في الخطة الاحترافية. <a href='/accounts/subscribe/'>قم بالترقية إلى خطة المدرب</a>"
+        elif action == "create_room":
+            created_rooms = CollaborationRoom.objects.filter(creator=request.user).count()
+            if created_rooms >= 3:
+                return False, "لقد وصلت إلى الحد الأقصى لعدد الغرف التي يمكنك إنشاؤها (3). <a href='/accounts/subscribe/'>قم بالترقية الآن</a>"
+        elif action == "join_room":
+            joined_rooms = CollaborationRoom.objects.filter(members=request.user).count()
+            if joined_rooms >= 6:
+                return False, "لقد وصلت إلى الحد الأقصى لعدد الغرف (6). <a href='/accounts/subscribe/'>قم بالترقية الآن</a>"
+
+    # الخطة المميزة
+    if plan == "premium":
+        if action == "create_project":
+            return False, "لا يمكنك إنشاء مشروع في الخطة المميزة. <a href='/accounts/subscribe/'>قم بالترقية إلى خطة المدرب</a>"
+
+    # خطة المدرب (مفتوحة بالكامل)
+    if plan == "instructor":
+        if user_profile.role != "instructor":
+            return False, "يجب أن تكون مدربًا لاستخدام ميزات خطة المدرب."
+        return True, ""
+
+    return True, ""
 # List all projects
 def projects_view(request):
     projects = Project.objects.all()
@@ -39,7 +91,20 @@ def project_details(request, project_id, project_title):
         return HttpResponsePermanentRedirect(
             reverse('projects:project_details', kwargs={'project_id': project_id, 'project_title': slugified_title})
         )
-    
+
+    # فحص الاشتراك لعرض تفاصيل المشروع
+    can_access, message = check_subscription(request, "view_project", project=project)
+    if not can_access:
+        messages.error(request, message)
+        return redirect('projects:project_list')
+
+    # تسجيل المشروع في الجلسة لتتبع المشاريع التي تمت مشاهدتها
+    if request.user.is_authenticated and project:
+        viewed_projects = request.session.get('viewed_projects', [])
+        if project.id not in viewed_projects:
+            viewed_projects.append(project.id)
+            request.session['viewed_projects'] = viewed_projects[:3]  # نحدد أقصى 3 مشاريع
+
     tasks = project.tasks.all()
     for task in tasks:
         task.slugified_title = slugify(clean_text(task.title), allow_unicode=True) or 'default-title'
@@ -54,6 +119,11 @@ def project_details(request, project_id, project_title):
 @login_required
 @instructor_required
 def add_project(request):
+    can_access, message = check_subscription(request, "create_project")
+    if not can_access:
+        messages.error(request, message)
+        return redirect('projects:project_list')
+
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
@@ -79,13 +149,18 @@ def add_task(request, project_id, project_title):
     if slugified_title != project_title:
         return redirect('projects:add_task', project_id=project_id, project_title=slugified_title)
     
+    can_access, message = check_subscription(request, "create_task")
+    if not can_access:
+        messages.error(request, message)
+        return redirect('projects:project_details', project_id=project.id, project_title=slugified_title)
+
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
             task.project = project
             task.save()
-            form.save_m2m()  # Save ManyToMany relationships (e.g., assigned_to)
+            form.save_m2m()  # Save ManyToMany relationships
             return redirect('projects:project_details', project_id=project.id, project_title=slugified_title)
     else:
         form = TaskForm()
@@ -106,7 +181,12 @@ def join_task(request, task_id, task_title):
         return HttpResponsePermanentRedirect(
             reverse('projects:join_task', kwargs={'task_id': task_id, 'task_title': slugified_title})
         )
-    
+
+    can_access, message = check_subscription(request, "join_task")
+    if not can_access:
+        messages.error(request, message)
+        return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
+
     if request.user.courses_profile.role != 'student':
         messages.error(request, 'فقط الطلاب يمكنهم الانضمام إلى المهام.')
         return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
@@ -121,7 +201,6 @@ def join_task(request, task_id, task_title):
         return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
     
     return redirect('projects:project_details', project_id=task.project.id, project_title=slugify(clean_text(task.project.title), allow_unicode=True) or 'default-title')
-
 # Student: Submit a task
 @login_required
 def submit_task(request, task_id, task_title):
@@ -273,6 +352,11 @@ def distinguish_submission(request, submission_id):
 # Create collaboration room
 @login_required
 def create_room(request):
+    can_access, message = check_subscription(request, "create_room")
+    if not can_access:
+        messages.error(request, message)
+        return redirect('projects:room_list')
+
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
@@ -297,7 +381,12 @@ def join_room(request, room_id, room_title):
         return HttpResponsePermanentRedirect(
             reverse('projects:join_room', kwargs={'room_id': room_id, 'room_title': slugified_title})
         )
-    
+
+    can_access, message = check_subscription(request, "join_room", room=room)
+    if not can_access:
+        messages.error(request, message)
+        return redirect('projects:room_list')
+
     if request.user not in room.members.all():
         room.members.add(request.user)
         messages.success(request, 'لقد انضممت للغرفة!')

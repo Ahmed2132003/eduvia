@@ -14,6 +14,7 @@ const translations = {
         "nav-logout": "Logout",
         "nav-coins": "Coins:",
         "nav-login": "Login",
+        "btn-subscribe": "Subscribe",
         "hero-title": "Your Profile",
         "hero-subtitle": "View and manage your personal details on Eduvia.",
         "profile-title": "User Profile",
@@ -28,7 +29,7 @@ const translations = {
         "btn-home": "Back to Home",
         "btn-send": "Send Message",
         "message-form-title": "Send a Message to ",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "title": "الملف الشخصي - إدوفيا",
@@ -45,6 +46,7 @@ const translations = {
         "nav-logout": "تسجيل الخروج",
         "nav-coins": "النقاط:",
         "nav-login": "تسجيل الدخول",
+        "btn-subscribe": "الاشتراك", 
         "hero-title": "ملفك الشخصي",
         "hero-subtitle": "عرض وإدارة تفاصيلك الشخصية على إدوفيا.",
         "profile-title": "الملف الشخصي",
@@ -59,7 +61,7 @@ const translations = {
         "btn-home": "العودة إلى الرئيسية",
         "btn-send": "إرسال الرسالة",
         "message-form-title": "إرسال رسالة إلى ",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 
@@ -89,6 +91,8 @@ function toggleLanguage() {
     const currentLang = htmlRoot.getAttribute('lang');
     const newLang = currentLang === 'en' ? 'ar' : 'en';
     
+    console.log(`Switching language to: ${newLang}`);
+    
     htmlRoot.setAttribute('lang', newLang);
     htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
     
@@ -99,9 +103,14 @@ function toggleLanguage() {
             if (forAttr && translations[newLang][key]) {
                 element.textContent = translations[newLang][key];
             }
-        } else {
+        } else if (translations[newLang][key]) {
             element.textContent = translations[newLang][key];
+        } else {
+            console.warn(`Translation missing for key: ${key} in language: ${newLang}`);
         }
+    });
+    document.querySelectorAll('[data-translate="btn-subscribe"]').forEach(element => {
+        element.textContent = translations[newLang]["btn-subscribe"] || "Subscribe"; 
     });
 
     document.title = translations[newLang]["title"];
@@ -110,6 +119,8 @@ function toggleLanguage() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing translations and theme');
+    
     const savedTheme = localStorage.getItem('theme');
     const toggleIcon = document.querySelector('.dark-mode-toggle i');
     if (savedTheme === 'dark') {
@@ -130,10 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (forAttr && translations[savedLang][key]) {
                 element.textContent = translations[savedLang][key];
             }
-        } else {
+        } else if (translations[savedLang][key]) {
             element.textContent = translations[savedLang][key];
+        } else {
+            console.warn(`Translation missing for key: ${key} in language: ${savedLang}`);
         }
     });
 
     document.title = translations[savedLang]["title"];
+    console.log(`Applied language: ${savedLang}`);
 });

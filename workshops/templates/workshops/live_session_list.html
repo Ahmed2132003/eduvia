@@ -165,16 +165,17 @@
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             {% if user.is_authenticated %}
-                {% if user.role == 'instructor' %}
-                    <a href="{% url 'workshops:create_live_session' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
                 <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.profile %}
+                {% if user.courses_profile %}
                     <span class="coins-display">
                         <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.profile.coins|default:0 }}
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
                     </span>
                 {% else %}
                     <span class="coins-display">
@@ -194,6 +195,14 @@
         </nav>
     </header>
 
+    <!-- Subscription Plan Notice for Free Plan -->
+    {% if subscription_plan == 'free' %}
+        <div class="alert alert-warning text-center" data-translate="free-plan-notice">
+            أنت تستخدم الخطة المجانية. قم بترقية خطتك لفتح ميزات مثل مشاهدة الجلسات الحية، التسجيلات، والإنشاء. 
+            <a href="/accounts/subscribe/" class="btn btn-primary">ترقية الآن</a>
+        </div>
+    {% endif %}
+
     <div class="cards-container">
         {% if user.is_authenticated and user.role == 'instructor' %}
             <h3 data-translate="your-sessions">Your Live Sessions</h3>
@@ -210,13 +219,13 @@
                         {% if session.meet_link %}
                             <p><strong data-translate="meet-label">Meet Link:</strong> <a href="{{ session.meet_link }}" target="_blank" itemprop="url">{{ session.meet_link }}</a></p>
                         {% endif %}
-                        {% if not session.is_active and current_time >= session.start_time and current_time <= session.end_time %}
+                        {% if not session.is_active and current_time >= session.start_time and current_time <= session.end_time and subscription_plan in 'premium,instructor' or is_instructor %}
                             <a href="{% url 'workshops:start_live' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="start-live">Start Live</a>
                         {% elif session.is_active %}
                             <p data-translate="session-active">Session is active!</p>
                             <a href="{% url 'workshops:watch_live' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="join-live">Join Live</a>
                         {% endif %}
-                        {% if user == session.instructor %}
+                        {% if user == session.instructor and subscription_plan in 'premium,instructor' or is_instructor %}
                             <a href="{% url 'workshops:upload_recording' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="upload-recording">Upload Recording</a>
                             {% if session.recordings.exists %}
                                 <a href="{% url 'workshops:watch_recording' recording_id=session.recordings.first.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="watch-recording">Watch Recording</a>
@@ -240,7 +249,7 @@
                     {% if session.session_image %}
                         <img src="{{ session.session_image }}" alt="{{ session.title }}" itemprop="image">
                     {% endif %}
-                    {% if session.meet_link %}
+                    {% if session.meet_link and subscription_plan != 'free' %}
                         <a href="{% url 'workshops:watch_live' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}" class="btn" data-translate="join-live">Join Live</a>
                     {% endif %}
                 </section>
@@ -269,12 +278,14 @@
 
     <div class="nav-buttons">
         <a href="{% url 'workshops:live_session_list' %}" data-translate="nav-home-btn">Home</a>
-        <a href="{% url 'workshops:create_live_session' %}" data-translate="nav-create-btn">Create Session</a>
+        {% if subscription_plan in 'premium,instructor' or is_instructor %}
+            <a href="{% url 'workshops:create_live_session' %}" data-translate="nav-create-btn">Create Session</a>
+        {% endif %}
         <a href="{% url 'workshops:live_session_list' %}" data-translate="nav-back-btn">Back</a>
     </div>
 
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <script src="{% static 'workshops/live_session_list.js' %}"></script>

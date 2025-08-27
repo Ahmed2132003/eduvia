@@ -115,11 +115,12 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -149,10 +150,9 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1 data-translate="hero-title">Manage Requests for {{ group.name }}</h1>
-        <p data-translate="hero-desc">Review and approve requests to join your group</p>
+        <h1>{{ group.name|default:"Unnamed Group" }}</h1>
+        <p>{{ group.description|truncatewords:20|default:"No description available" }}</p>
     </section>
-
     <!-- Messages -->
     <div class="messages">
         {% if messages %}
@@ -185,13 +185,13 @@
 
     <!-- Action Buttons -->
     <div class="action-buttons">
-        <a href="{% url 'mentorship:group_detail' group_id=group.id group_title=group.name|custom_slugify %}" class="btn" data-translate="back-to-group">Back to Group</a>
+        <a href="{% url 'mentorship:group_detail' group_id=group.id %}" class="btn" data-translate="back-to-group">Back to Group</a>
         <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="back-to-dashboard">Back to Dashboard</a>
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->

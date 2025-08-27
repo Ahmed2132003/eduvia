@@ -17,9 +17,21 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '*.fly.dev',
     'eduvia-ai.fly.dev',
+    '75727303c9c8.ngrok-free.app',
 ]
-
-# إعدادات التطبيقات
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'https://*.fly.dev',
+    'https://eduvia-ai.fly.dev',
+    'https://75727303c9c8.ngrok-free.app',
+]
+# settings.py
+PAYMOB_API_KEY = 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRBMk5UWTVPQ3dpYm1GdFpTSTZJbWx1YVhScFlXd2lmUS4tSmszLXpWN2U0VWJSWlJXbUoxTDVnZEl3LVRQVjhsTVEzWGYyWk1XbnlyM0cwdXNSdGNKSnlUbHRzeGhsVFdRSU5sZTh5bW5IcjFqaGlfSlNoY0FEQQ=='  
+PAYMOB_MERCHANT_ID = '1065698' 
+PAYMOB_INTEGRATION_ID = '5225414'  
+PAYMOB_API_BASE_URL = 'https://accept.paymob.com/api'
+PAYMOB_IFRAME_ID = '945991'  
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -163,7 +175,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
-
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # إعدادات HTTPS للإنتاج
 SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
 SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=0, cast=int)

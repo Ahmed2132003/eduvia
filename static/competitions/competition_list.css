@@ -422,3 +422,50 @@ html[dir="rtl"] .coins-display {
     .hero h1 { font-size: 28px; }
     .hero p { font-size: 16px; }
 }
+/* تنسيق الرسائل مع أنيميشن */
+.messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 300px;
+}
+
+.messages p {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Cairo', sans-serif;
+    font-size: 16px;
+    animation: fadeIn 0.5s ease-in-out;
+    transition: opacity 0.5s ease;
+}
+
+.messages p.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+}
+
+.messages p.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #66bb6a;
+}
+
+.messages p i {
+    margin-right: 10px;
+}
+
+/* أنيميشن fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

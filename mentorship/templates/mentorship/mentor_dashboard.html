@@ -115,11 +115,12 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -136,7 +137,7 @@
                     </span>
                 {% endif %}
             {% else %}
-                <a href="/register/" data-translate="nav-login">Login</a>
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
             {% endif %}
             <div class="dark-mode-toggle" onclick="toggleDarkMode()">
                 <i class="fas fa-moon"></i>
@@ -157,6 +158,13 @@
     <div class="dashboard-container">
         <h2 data-translate="dashboard-heading">Mentor Dashboard</h2>
         
+        <!-- Subscription Info -->
+        <div class="section">
+            <h3>Your Current Plan: {{ subscription|capfirst }}</h3>
+            <p>Your Admin Groups: {{ current_admin }} / {% if max_admin_groups == inf %}Unlimited{% else %}{{ max_admin_groups }}{% endif %}</p>
+            <p>Your Member Groups: {{ current_member }} / {% if max_member_groups == inf %}Unlimited{% else %}{{ max_member_groups }}{% endif %}</p>
+        </div>
+
         <!-- Mentees Section -->
         <div class="section">
             <h3 data-translate="mentees-heading">Your Mentees</h3>
@@ -178,10 +186,10 @@
             {% if admin_groups %}
                 {% for group in admin_groups %}
                     <div class="item">
-                        <a href="{% url 'mentorship:group_detail' group_id=group.id group_title=group.name|custom_slugify %}">{{ group.name }}</a>
+                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">{{ group.name }}</a>
                         <p data-translate="description">Description: {{ group.description|truncatewords:20 }}</p>
-                        <a href="{% url 'mentorship:manage_group_requests' group_id=group.id group_title=group.name|custom_slugify %}" class="btn btn-sm" data-translate="manage-requests">Manage Requests</a>
-                        <a href="{% url 'mentorship:edit_group' group_id=group.id group_title=group.name|custom_slugify %}" class="btn btn-sm" data-translate="edit-group">Edit Group</a>
+                        <a href="{% url 'mentorship:manage_group_requests' group_id=group.id %}" class="btn btn-sm" data-translate="manage-requests">Manage Requests</a>
+                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">{{ group.name }}</a>
                     </div>
                 {% endfor %}
             {% else %}
@@ -195,7 +203,7 @@
             {% if member_groups %}
                 {% for group in member_groups %}
                     <div class="item">
-                        <a href="{% url 'mentorship:group_detail' group_id=group.id group_title=group.name|custom_slugify %}">{{ group.name }}</a>
+                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">{{ group.name }}</a>
                         <p data-translate="description">Description: {{ group.description|truncatewords:20 }}</p>
                     </div>
                 {% endfor %}
@@ -209,11 +217,13 @@
             <h3 data-translate="all-links-heading">All Mentorship Links</h3>
             <div class="link-buttons">
                 <a href="{% url 'mentorship:find_mentor' %}" class="btn" data-translate="find-mentor">Find Mentor</a>
-                <a href="{% url 'mentorship:request_mentorship' mentor_id=1 %}" class="btn" data-translate="request-mentorship">Request Mentorship</a>
-                <a href="{% url 'mentorship:group_detail' group_id=1 group_title='example-group' %}" class="btn" data-translate="group-detail">Group Detail</a>
-                <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create Group</a>
-                <a href="{% url 'mentorship:request_join_group' group_id=1 group_title='example-group' %}" class="btn" data-translate="request-join-group">Request Join Group</a>
-                <a href="{% url 'mentorship:manage_group_requests' group_id=1 group_title='example-group' %}" class="btn" data-translate="manage-group-requests">Manage Group Requests</a>
+                <a href="{% url 'mentorship:group_detail' group_id=1 %}" class="btn" data-translate="group-detail">Group Detail</a>
+                
+                {% if subscription != 'free' %}
+                    <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create Group</a>
+                {% endif %}
+                <a href="{% url 'mentorship:request_join_group' group_id=1 %}" class="btn" data-translate="request-join-group">Request Join Group</a>
+                <a href="{% url 'mentorship:manage_group_requests' group_id=1 %}" class="btn" data-translate="manage-group-requests">Manage Group Requests</a>
                 <a href="{% url 'mentorship:become_mentor' %}" class="btn" data-translate="become-mentor">Become Mentor</a>
                 <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="mentor-dashboard">Mentor Dashboard</a>
                 <a href="{% url 'mentorship:community_feed' %}" class="btn" data-translate="community-feed">Community Feed</a>
@@ -225,12 +235,16 @@
     <!-- Action Buttons -->
     <div class="action-buttons">
         <a href="{% url 'mentorship:find_mentor' %}" class="btn" data-translate="find-mentor">Find a Mentor</a>
-        <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create a Group</a>
+        {% if can_create_group %}
+            <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create a Group</a>
+        {% else %}
+            <p data-translate="cannot-create-group">You cannot create a group in your current plan.</p>
+        {% endif %}
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->

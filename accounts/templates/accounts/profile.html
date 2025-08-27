@@ -110,9 +110,13 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
                 <a href="{% url 'accounts:profile' %}" data-translate="nav-profile">Profile</a>
                 <a href="{% url 'accounts:user_messages' %}" data-translate="nav-messages">Messages</a>
                 <a href="{% url 'accounts:logout' %}" data-translate="nav-logout">Logout</a>
@@ -187,6 +191,7 @@
         {% endif %}
         {% if is_own_profile %}
             <a href="{% url 'accounts:edit_profile' %}" class="btn" data-translate="btn-edit">Edit Profile</a>
+            <a href="{% url 'accounts:subscribe' %}" class="btn btn-subscribe" data-translate="btn-subscribe">Subscribe</a>
         {% endif %}
         <a href="{% url 'home' %}" class="btn" data-translate="btn-home">Back to Home</a>
     </div>
@@ -194,7 +199,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <script src="{% static 'accounts/profile.js' %}"></script>

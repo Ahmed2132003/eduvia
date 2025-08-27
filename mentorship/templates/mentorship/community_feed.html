@@ -7,24 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- 🔍 SEO -->
-    <title data-translate="page-title">Track Service - Eduvia</title>
-    <meta name="description" content="Track your service order status and communicate with providers on Eduvia's Skills Market.">
-    <meta name="keywords" content="track service, order status, Eduvia, skills market, freelance, communication">
+    <title data-translate="page-title">Community Feed - Eduvia</title>
+    <meta name="description" content="Engage with the Eduvia community through posts and discussions in the Mentorship System.">
+    <meta name="keywords" content="community feed, Eduvia, mentorship, posts, discussions">
     <meta name="author" content="Eduvia">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/">
+    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/community_feed/">
 
     <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Track Service - Eduvia">
-    <meta property="og:description" content="Monitor your service orders and exchange messages with providers inside Eduvia's Skills Market.">
+    <meta property="og:title" content="Community Feed - Eduvia">
+    <meta property="og:description" content="Engage with the Eduvia community through posts and discussions in the Mentorship System.">
     <meta property="og:image" content="https://i.postimg.cc/3RbkxP2b/oppo3.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/">
+    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/community_feed/">
     <meta property="og:type" content="website">
 
     <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Track Service - Eduvia">
-    <meta name="twitter:description" content="Track the progress of your ordered services and stay in touch with the service provider.">
+    <meta name="twitter:title" content="Community Feed - Eduvia">
+    <meta name="twitter:description" content="Engage with the Eduvia community through posts and discussions in the Mentorship System.">
     <meta name="twitter:image" content="https://i.postimg.cc/3RbkxP2b/oppo3.jpg">
 
     <!-- 🖼️ Favicon -->
@@ -67,18 +67,18 @@
             },
             {
                 "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/#webpage",
-                "url": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/",
-                "name": "Track Service - Eduvia",
-                "description": "Track the status of your service order and chat with the provider in Eduvia's Skills Market.",
+                "@id": "https://eduvia-ai.fly.dev/mentorship/community_feed/#webpage",
+                "url": "https://eduvia-ai.fly.dev/mentorship/community_feed/",
+                "name": "Community Feed - Eduvia",
+                "description": "Engage with the Eduvia community through posts and discussions in the Mentorship System.",
                 "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/#breadcrumb"
+                    "@id": "https://eduvia-ai.fly.dev/mentorship/community_feed/#breadcrumb"
                 },
                 "inLanguage": "en"
             },
             {
                 "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/#breadcrumb",
+                "@id": "https://eduvia-ai.fly.dev/mentorship/community_feed/#breadcrumb",
                 "itemListElement": [
                     {
                         "@type": "ListItem",
@@ -89,14 +89,14 @@
                     {
                         "@type": "ListItem",
                         "position": 2,
-                        "name": "Skills Market",
-                        "item": "https://eduvia-ai.fly.dev/skills_market/"
+                        "name": "Mentorship",
+                        "item": "https://eduvia-ai.fly.dev/mentorship/"
                     },
                     {
                         "@type": "ListItem",
                         "position": 3,
-                        "name": "Track Service",
-                        "item": "https://eduvia-ai.fly.dev/skills_market/skills/track_service/{{ order.id }}/"
+                        "name": "Community Feed",
+                        "item": "https://eduvia-ai.fly.dev/mentorship/community_feed/"
                     }
                 ]
             }
@@ -115,10 +115,12 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
+            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -157,22 +159,35 @@
             {% endif %}
         </div>
 
+        <!-- Subscription Info -->
+        {% if subscription == 'basic' %}
+            <p data-translate="daily-posts">Daily posts: {{ daily_post_count }} / 4</p>
+        {% elif subscription == 'pro' %}
+            <p data-translate="daily-posts">Daily posts: {{ daily_post_count }} / 8</p>
+        {% elif subscription in 'premium instructor' %}
+            <p data-translate="daily-posts-unlimited">Daily posts: Unlimited</p>
+        {% endif %}
+
         <!-- Form to create a new post -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <textarea name="post_content" class="form-control" rows="3" placeholder="Share something about programming or job market..." data-translate-placeholder="post-placeholder"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <input type="url" name="image_file" class="form-control" placeholder="Enter image URL (e.g., https://i.postimg.cc/...)" data-translate-placeholder="image-placeholder">
-                        <small data-translate="image-upload-instruction">Upload your image to <a href="https://postimg.cc/" target="_blank">PostImage</a> and paste the direct link here.</small>
-                    </div>
-                    <button type="submit" class="btn btn-primary" data-translate="post-button">Post</button>
-                </form>
+        {% if subscription != 'free' %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea name="post_content" class="form-control" rows="3" placeholder="Share something about programming or job market..." data-translate-placeholder="post-placeholder"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="url" name="image_file" class="form-control" placeholder="Enter image URL (e.g., https://i.postimg.cc/...)" data-translate-placeholder="image-placeholder">
+                            <small data-translate="image-upload-instruction">Upload your image to <a href="https://postimg.cc/" target="_blank">PostImage</a> and paste the direct link here.</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-translate="post-button">Post</button>
+                    </form>
+                </div>
             </div>
-        </div>
+        {% else %}
+            <p class="text-muted" data-translate="free-plan-view-only">The free plan allows viewing only. Upgrade to a paid plan to add posts.</p>
+        {% endif %}
 
         <!-- Display posts -->
         {% for post in posts %}
@@ -189,29 +204,33 @@
                     {% endif %}
                 </div>
                 <div class="post-actions">
-                    <div class="post-action-btn">
-                        <form method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="post_id" value="{{ post.id }}">
-                            <input type="hidden" name="like_post" value="true">
-                            <button type="submit" class="btn btn-sm btn-{% if request.user in post.likes.all %}danger{% else %}success{% endif %}" data-translate-like="{% if request.user in post.likes.all %}unlike{% else %}like{% endif %}">
-                                {% if request.user in post.likes.all %}Unlike{% else %}Like{% endif %} ({{ post.likes.count }})
-                            </button>
-                        </form>
-                    </div>
-                    <div class="post-action-btn">
-                        <form method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="post_id" value="{{ post.id }}">
-                            <input type="hidden" name="dislike_post" value="true">
-                            <button type="submit" class="btn btn-sm btn-{% if request.user in post.dislikes.all %}danger{% else %}warning{% endif %}" data-translate-dislike="{% if request.user in post.dislikes.all %}remove-dislike{% else %}dislike{% endif %}">
-                                {% if request.user in post.dislikes.all %}Remove Dislike{% else %}Dislike{% endif %} ({{ post.dislikes.count }})
-                            </button>
-                        </form>
-                    </div>
-                    <div class="post-action-btn">
-                        <a href="{% url 'mentorship:post_comments' post_id=post.id %}" class="show-comments" data-translate="comments">Comments ({{ post.mentorship_comments.count }})</a>
-                    </div>
+                    {% if subscription != 'free' %}
+                        <div class="post-action-btn">
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                                <input type="hidden" name="like_post" value="true">
+                                <button type="submit" class="btn btn-sm btn-{% if request.user in post.likes.all %}danger{% else %}success{% endif %}" data-translate-like="{% if request.user in post.likes.all %}unlike{% else %}like{% endif %}">
+                                    {% if request.user in post.likes.all %}Unlike{% else %}Like{% endif %} ({{ post.likes.count }})
+                                </button>
+                            </form>
+                        </div>
+                        <div class="post-action-btn">
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                                <input type="hidden" name="dislike_post" value="true">
+                                <button type="submit" class="btn btn-sm btn-{% if request.user in post.dislikes.all %}danger{% else %}warning{% endif %}" data-translate-dislike="{% if request.user in post.dislikes.all %}remove-dislike{% else %}dislike{% endif %}">
+                                    {% if request.user in post.dislikes.all %}Remove Dislike{% else %}Dislike{% endif %} ({{ post.dislikes.count }})
+                                </button>
+                            </form>
+                        </div>
+                        <div class="post-action-btn">
+                            <a href="{% url 'mentorship:post_comments' post_id=post.id %}" class="show-comments" data-translate="comments">Comments ({{ post.mentorship_comments.count }})</a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted" data-translate="free-plan-no-interaction">You cannot interact with posts on the free plan.</p>
+                    {% endif %}
                 </div>
                 <div class="comments-section">
                     {% for comment in post.mentorship_comments.all %}
@@ -226,14 +245,16 @@
                     {% empty %}
                         <p class="text-muted" data-translate="no-comments">No comments yet.</p>
                     {% endfor %}
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="post_id" value="{{ post.id }}">
-                        <div class="form-group">
-                            <textarea name="comment_content" class="form-control" rows="2" placeholder="Write a comment..." data-translate-placeholder="comment-placeholder"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-secondary" data-translate="comment-button">Comment</button>
-                    </form>
+                    {% if subscription != 'free' %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <div class="form-group">
+                                <textarea name="comment_content" class="form-control" rows="2" placeholder="Write a comment..." data-translate-placeholder="comment-placeholder"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-secondary" data-translate="comment-button">Comment</button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
         {% empty %}
@@ -243,7 +264,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->

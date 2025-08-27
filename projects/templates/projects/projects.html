@@ -85,8 +85,9 @@
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             {% if user.is_authenticated %}
-                {% if user.courses_profile and user.courses_profile.role == 'instructor' %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
@@ -118,22 +119,44 @@
     <section class="hero">
         <h1 data-translate="hero-title">Open Source Projects</h1>
         <p data-translate="hero-desc">Collaborate on exciting open-source projects, contribute to tasks, and earn rewards!</p>
-        {% if user.courses_profile.role == 'instructor' %}
+        {% if user.is_authenticated and user.courses_profile.role == 'instructor' %}
             <div style="text-align: center; margin: 20px 0;">
                 <a href="{% url 'projects:add_project' %}" class="btn" data-translate="contribute-btn">Start Contributing!</a>
             </div>
         {% endif %}
     </section>
 
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message|safe }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- Cards Container -->
     <div class="cards-container">
         {% for project in projects %}
             <section class="project-card">
-                <h2><a href="{% url 'projects:project_details' project.id project.slugified_title %}">{{ project.title|default:"Project" }}</a></h2>
+                <h2>
+                    {% if user.is_authenticated and user.courses_profile.subscription_plan != 'free' %}
+                        <a href="{% url 'projects:project_details' project.id project.slugified_title %}">{{ project.title|default:"Project" }}</a>
+                    {% else %}
+                        <a href="{% url 'accounts:subscribe' %}" class="upgrade-link" onclick="alert('يجب الاشتراك في خطة مدفوعة لعرض تفاصيل المشروع.')">{{ project.title|default:"Project" }}</a>
+                    {% endif %}
+                </h2>
                 <p>{{ project.description|truncatewords:30|default:"No description available." }}</p>
                 <p><span data-translate="category-label">Category:</span> {{ project.get_category_display|default:"Unknown" }}</p>
                 <p><span data-translate="status-label">Status:</span> {{ project.get_status_display|default:"Unknown" }}</p>
-                <a href="{% url 'projects:project_details' project.id project.slugified_title %}" class="btn" data-translate="view-details">View Details</a>
+                {% if user.is_authenticated and user.courses_profile.subscription_plan != 'free' %}
+                    <a href="{% url 'projects:project_details' project.id project.slugified_title %}" class="btn" data-translate="view-details">View Details</a>
+                {% else %}
+                    <a href="{% url 'accounts:subscribe' %}" class="btn btn-warning" data-translate="upgrade-plan">Upgrade Plan</a>
+                {% endif %}
             </section>
         {% empty %}
             <p class="no-projects" data-translate="no-projects">No projects available.</p>
@@ -141,7 +164,7 @@
     </div>
 
     <!-- Add Project Button for Instructors -->
-    {% if user.courses_profile.role == 'instructor' %}
+    {% if user.is_authenticated and user.courses_profile.role == 'instructor' and user.courses_profile.subscription_plan == 'instructor' %}
         <div style="text-align: center; margin: 40px 0;">
             <a href="{% url 'projects:add_project' %}" class="btn" data-translate="add-project">Add New Project</a>
         </div>
@@ -149,7 +172,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->

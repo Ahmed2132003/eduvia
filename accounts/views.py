@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
-from accounts.models import User
+from accounts.models import User ,Profile
 from django.contrib import messages
 from .forms import RegistrationForm, ProfileForm, MessageForm
 from courses.models import UserProfile
@@ -14,7 +14,204 @@ from django.core.mail import send_mail
 from django.conf import settings
 import time
 from django.views.decorators.csrf import csrf_protect
+import paymob
+from datetime import datetime, timedelta
+import requests
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from datetime import datetime, timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+import logging
+import hmac
+import hashlib
+paymob.api_key = settings.PAYMOB_API_KEY
+logger = logging.getLogger(__name__)
 
+@login_required
+def subscribe_view(request):
+    if request.method == 'POST':
+        plan = request.POST.get('plan')
+        duration = request.POST.get('duration')
+        phone_number = request.POST.get('phone_number')
+
+        logger.debug(f"Received POST data: plan={plan}, duration={duration}, phone_number={phone_number}")
+
+        if plan not in ['basic', 'pro', 'premium', 'instructor']:
+            messages.error(request, 'خطة غير صالحة.')
+            logger.error(f"Invalid plan: {plan}")
+            return redirect('accounts:subscribe')
+
+        if not phone_number:
+            messages.error(request, 'رقم التليفون مطلوب للدفع عبر المحافظ الإلكترونية.')
+            logger.error("Phone number is required")
+            return redirect('accounts:subscribe')
+
+        prices = {
+            'basic': {'monthly': 15000, 'six_months': 81000, 'yearly': 144000},
+            'pro': {'monthly': 35000, 'six_months': 189000, 'yearly': 336000},
+            'premium': {'monthly': 50000, 'six_months': 270000, 'yearly': 480000},
+            'instructor': {'monthly': 40000, 'six_months': 216000, 'yearly': 384000},
+        }
+        amount = prices[plan][duration]
+
+        try:
+            auth_response = requests.post(
+                f'{settings.PAYMOB_API_BASE_URL}/auth/tokens',
+                json={'api_key': settings.PAYMOB_API_KEY}
+            )
+            auth_response.raise_for_status()
+            auth_token = auth_response.json()['token']
+            logger.debug(f"Auth token obtained: {auth_token}")
+
+            order_response = requests.post(
+                f'{settings.PAYMOB_API_BASE_URL}/ecommerce/orders',
+                json={
+                    'auth_token': auth_token,
+                    'delivery_needed': False,
+                    'amount_cents': amount,
+                    'currency': 'EGP',
+                    'merchant_order_id': f"{request.user.id}_{plan}_{duration}_{int(datetime.now().timestamp())}"
+                }
+            )
+            order_response.raise_for_status()
+            order_id = order_response.json()['id']
+            logger.debug(f"Order created: {order_id}")
+
+            payment_key_response = requests.post(
+                f'{settings.PAYMOB_API_BASE_URL}/acceptance/payment_keys',
+                json={
+                    'auth_token': auth_token,
+                    'amount_cents': amount,
+                    'currency': 'EGP',
+                    'order_id': order_id,
+                    'billing_data': {
+                        'email': request.user.email,
+                        'first_name': getattr(request.user.profile, 'full_name', request.user.username) or request.user.username,
+                        'phone_number': phone_number,
+                        'last_name': 'NA',
+                        'street': 'NA',
+                        'building': 'NA',
+                        'floor': 'NA',
+                        'apartment': 'NA',
+                        'city': 'NA',
+                        'country': 'NA',
+                        'postal_code': 'NA',
+                        'state': 'NA'
+                    },
+                    'integration_id': settings.PAYMOB_INTEGRATION_ID
+                }
+            )
+            payment_key_response.raise_for_status()
+            payment_key = payment_key_response.json()['token']
+            logger.debug(f"Payment key obtained: {payment_key}")
+
+            profile, created = Profile.objects.get_or_create(user=request.user)
+            profile.phone_number = phone_number
+            profile.paymob_order_id = str(order_id)  
+            profile.subscription_duration = duration
+            profile.save()
+            logger.info(f"Profile updated for user {request.user.id}, order_id {order_id}")
+
+            payment_url = f'{settings.PAYMOB_API_BASE_URL}/acceptance/payments/pay'
+            payment_data = {
+                'source': {
+                    'identifier': phone_number,
+                    'subtype': 'WALLET'
+                },
+                'payment_token': payment_key
+            }
+            payment_response = requests.post(payment_url, json=payment_data)
+            payment_response.raise_for_status()
+            redirect_url = payment_response.json().get('redirect_url')
+            if not redirect_url:
+                raise ValueError("No redirect URL returned from Paymob")
+            logger.debug(f"Redirecting to payment URL: {redirect_url}")
+
+            messages.success(request, 'جاري توجيهك لصفحة الدفع...')
+            return redirect(redirect_url)
+
+        except (requests.exceptions.RequestException, ValueError) as e:
+            messages.error(request, f'خطأ في الدفع: {str(e)}')
+            logger.error(f"Payment error: {str(e)}")
+            return redirect('accounts:subscribe')
+
+    return render(request, 'accounts/subscribe.html', {})
+
+
+
+
+def verify_hmac(data, secret_key):
+    secure_key = secret_key.encode('utf-8')
+    ordered_keys = [
+        'amount_cents', 'created_at', 'currency', 'error_occured', 'has_parent_transaction',
+        'id', 'integration_id', 'is_3d_secure', 'is_auth', 'is_capture', 'is_refunded',
+        'is_standalone_payment', 'is_voided', 'order', 'owner', 'pending', 'source_data.pan',
+        'source_data.sub_type', 'source_data.type', 'success'
+    ]
+    concatenated_string = ''.join(str(data.get(key, '')) for key in ordered_keys)
+    computed_hmac = hmac.new(secure_key, concatenated_string.encode('utf-8'), hashlib.sha512).hexdigest()
+    logger.info(f"Computed HMAC: {computed_hmac}, Received HMAC: {data.get('hmac')}")
+    return computed_hmac == data.get('hmac')
+
+@csrf_exempt
+def payment_callback(request):
+    data = request.POST if request.method == 'POST' else request.GET
+    logger.debug(f"Callback received: method={request.method}, data={dict(data)}")
+
+    # التحقق من HMAC
+    paymob_secret = '1B86912BCE6BBE2BFF095BC2FB1C6702'
+    if not verify_hmac(data, paymob_secret):
+        logger.error("HMAC verification failed")
+        return HttpResponse('Invalid HMAC', status=400)
+
+    if data.get('success') == 'true' and data.get('currency') == 'EGP':
+        merchant_order_id = data.get('merchant_order_id')
+        try:
+            parts = merchant_order_id.split('_')
+            if len(parts) < 3:
+                raise ValueError(f"Invalid merchant_order_id format: {merchant_order_id}")
+            
+            user_id, plan, duration = parts[:3]
+            
+            # جلب المستخدم والبروفايل
+            user = get_object_or_404(User, id=user_id)
+            profile = get_object_or_404(Profile, user=user)
+            user_profile, created = UserProfile.objects.get_or_create(user=user)  # جلب أو إنشاء UserProfile
+
+            # تحديد مدة الاشتراك
+            now = datetime.now(timezone.utc)
+            if duration == 'yearly':
+                new_end_date = now + timedelta(days=365)
+            elif duration == 'six_months':
+                new_end_date = now + timedelta(days=180)
+            elif duration == 'monthly':
+                new_end_date = now + timedelta(days=30)
+            else:
+                raise ValueError(f"Invalid duration: {duration}")
+
+            # تحديث Profile
+            profile.subscription_plan = plan
+            profile.subscription_duration = duration
+            profile.subscription_end_date = new_end_date
+            profile.paymob_order_id = data.get('order')
+            profile.save()
+
+            # تحديث UserProfile
+            user_profile.subscription_plan = plan
+            user_profile.subscription_end_date = new_end_date
+            user_profile.save()
+
+            logger.info(f"Payment confirmed for user {user_id}, plan {plan}, duration {duration}, end_date {new_end_date}")
+            return HttpResponse('Payment confirmed', status=200)
+        except (ValueError, User.DoesNotExist, Profile.DoesNotExist) as e:
+            logger.error(f"Error processing callback: {str(e)}")
+            return HttpResponse(f'Error processing callback: {str(e)}', status=400)
+    else:
+        logger.warning(f"Payment failed or invalid currency: {data}")
+        return HttpResponse('Payment failed or invalid currency', status=400)
+    
+    
 def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -78,7 +275,8 @@ def verify_code_view(request):
                         password=temp_data['password'],
                         role=temp_data['role']
                     )
-                    Profile.objects.get_or_create(user=user)  # إنشاء Profile فقط
+                    Profile.objects.get_or_create(user=user)
+                    UserProfile.objects.get_or_create(user=user)  # إنشاء UserProfile
                     login(request, user)
                     del request.session['temp_user_data']
                     messages.success(request, 'Registration successful! Your profile has been created.')

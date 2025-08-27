@@ -25,11 +25,12 @@ const translations = {
         "nav-about": "About Us",
         "nav-contact": "Contact Us",
         "nav-dashboard": "Dashboard",
+        "nav-subscribe": "subscribe",
         "nav-profile": "Profile",
         "nav-logout": "Logout",
         "nav-coins": "Coins:",
         "nav-login": "Login",
-        "footer-text": "© 2025 Eduvia. All rights reserved."
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
         "competitions-title": "المسابقات التعليمية | إدوفيا",
@@ -57,11 +58,12 @@ const translations = {
         "nav-about": "معلومات عنا",
         "nav-contact": "تواصل معنا",
         "nav-dashboard": "لوحة التحكم",
+        "nav-subscribe": "الاشتراك",
         "nav-profile": "الملف الشخصي",
         "nav-logout": "تسجيل الخروج",
         "nav-coins": "النقاط:",
         "nav-login": "تسجيل الدخول",
-        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };
 
