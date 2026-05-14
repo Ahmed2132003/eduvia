@@ -730,7 +730,7 @@
                     <div class="course-actions">
                         {% if user.is_authenticated %}
                             {% if course.id in enrolled_course_ids %}
-                                <a href="{% url 'courses:course_detail' course.id %}" 
+                                <a href="{% url 'courses:course_details' course.id course.slug %}"                            
                                 class="join-btn" data-translate="view-course">
                                 {% trans "View Course" %}</a>
                             {% else %}
