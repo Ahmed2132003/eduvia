@@ -2,6 +2,31 @@
 
 import django.core.validators
 from django.db import migrations, models
+from django.utils.text import slugify
+
+
+def populate_course_slugs(apps, schema_editor):
+    Course = apps.get_model('courses', 'Course')
+    used_slugs = set(
+        Course.objects.exclude(slug__isnull=True)
+        .exclude(slug='')
+        .values_list('slug', flat=True)
+    )
+
+    for course in Course.objects.all().iterator():
+        if course.slug:
+            continue
+
+        base_slug = slugify(course.title or '') or f'course-{course.pk}'
+        candidate = base_slug
+        suffix = 1
+        while candidate in used_slugs:
+            suffix += 1
+            candidate = f'{base_slug}-{suffix}'
+
+        course.slug = candidate
+        course.save(update_fields=['slug'])
+        used_slugs.add(candidate)
 
 
 class Migration(migrations.Migration):
@@ -13,21 +38,48 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='course',
-            options={'ordering': ['-created_at'], 'verbose_name': 'Course', 'verbose_name_plural': 'Courses'},
+            options={
+                'ordering': ['-created_at'],
+                'verbose_name': 'Course',
+                'verbose_name_plural': 'Courses',
+            },
         ),
         migrations.AddField(
             model_name='course',
             name='slug',
-            field=models.SlugField(blank=True, max_length=220, unique=True),
+            field=models.SlugField(blank=True, max_length=220, null=True),
+        ),
+        migrations.RunPython(populate_course_slugs, migrations.RunPython.noop),
+        migrations.AlterField(
+            model_name='course',
+            name='slug',
+            field=models.SlugField(blank=True, max_length=220, null=True, unique=True),
         ),
         migrations.AlterField(
             model_name='course',
             name='category',
-            field=models.CharField(choices=[('programming', 'Programming'), ('english', 'English'), ('math', 'Math')], default='programming', max_length=50),
+            field=models.CharField(
+                choices=[
+                    ('programming', 'Programming'),
+                    ('english', 'English'),
+                    ('math', 'Math'),
+                ],
+                default='programming',
+                max_length=50,
+            ),
         ),
         migrations.AlterField(
             model_name='course',
             name='title',
-            field=models.CharField(help_text='Enter a clear and descriptive course title.', max_length=200, validators=[django.core.validators.MinLengthValidator(3, 'Title must be at least 3 characters long.')]),
+            field=models.CharField(
+                help_text='Enter a clear and descriptive course title.',
+                max_length=200,
+                validators=[
+                    django.core.validators.MinLengthValidator(
+                        3,
+                        'Title must be at least 3 characters long.',
+                    ),
+                ],
+            ),
         ),
     ]
