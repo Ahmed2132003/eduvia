@@ -3,6 +3,8 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.urls import reverse
+from .utils import generate_unicode_slug, unique_model_slug
 import uuid
 import re
 from django.utils.timezone import now
@@ -117,6 +119,7 @@ class Course(models.Model):
     image = models.URLField(max_length=500, null=True, blank=True)
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default='beginner')
     total_lessons = models.PositiveIntegerField(default=0)
+    slug = models.SlugField(max_length=500, unique=True, allow_unicode=True, blank=True)
     
     def __str__(self):
         return self.title
@@ -124,9 +127,26 @@ class Course(models.Model):
     def get_image_url(self):
         return self.image if self.image else 'https://via.placeholder.com/300x200?text=No+Image'
 
+    def get_slug(self):
+        if self.slug:
+            return self.slug
+        return generate_unicode_slug(self.title, fallback_prefix='course', fallback_id=self.id)
+
+    def get_enroll_url(self):
+        return reverse('courses:enroll_course', kwargs={'course_id': self.id, 'course_slug': self.get_slug()})
+
+    def save(self, *args, **kwargs):
+        super_result = None
+        if not self.pk:
+            super_result = super().save(*args, **kwargs)
+        if not self.slug:
+            self.slug = unique_model_slug(Course, self.title, fallback_prefix='course', fallback_id=self.pk, instance_pk=self.pk)
+            super_result = super().save(update_fields=['slug'])
+            return super_result
+        return super_result or super().save(*args, **kwargs)
+
     def get_absolute_url(self):
-        from django.urls import reverse
-        return reverse('courses:course_details', kwargs={'course_id': self.id, 'course_title': slugify(clean_text(self.title))})
+        return reverse('courses:course_details', kwargs={'course_id': self.id, 'course_slug': self.get_slug()})
 
 class CourseEnrollment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
@@ -180,9 +200,9 @@ class Video(models.Model):
         from django.urls import reverse
         return reverse('courses:watch_video', kwargs={
             'course_id': self.course.id,
-            'course_title': slugify(clean_text(self.course.title)),
+            'course_slug': self.course.get_slug(),
             'video_id': self.id,
-            'video_title': slugify(clean_text(self.title))
+            'video_slug': generate_unicode_slug(self.title, fallback_prefix='video', fallback_id=self.id)
         })
 
 class VideoProgress(models.Model):

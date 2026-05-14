@@ -739,7 +739,7 @@
                                     title="{% trans 'You have reached the enrollment limit for your plan. Please upgrade.' %}"
                                     data-translate="join-link">{% trans "Join Course" %}</a>
                                 {% else %}
-                                    <a href="{% url 'courses:enroll_course' course.id course.title|arabic_slug:course.id %}"                                     
+                                    <a href="{{ course.get_enroll_url }}"                                                                        
                                     class="join-btn" 
                                     data-enroll-url="{% enroll_url course %}"
                                     data-translate="join-link">{% trans "Join Course" %}</a>

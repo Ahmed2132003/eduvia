@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 import os
 from decouple import config
 
@@ -198,6 +199,12 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='creativitycode78@gmail.com'
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Creativity Code <creativitycode78@gmail.com>')
 
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='backslashreplace')
+
 # إعدادات السجل (Logging)
 LOGGING = {
     'version': 1,
@@ -205,6 +212,7 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stdout',
         },
         'file': {
             'class': 'logging.FileHandler',

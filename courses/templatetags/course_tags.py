@@ -2,6 +2,7 @@
 
 from django import template
 from django.utils.text import slugify
+from courses.utils import generate_unicode_slug
 from courses.models import VideoProgress
 import re
 import logging
@@ -104,13 +105,7 @@ def arabic_slug(value, fallback_id=None):
     if not value or not str(value).strip():
         return str(fallback_id) if fallback_id else 'course'
     
-    slug = slugify(str(value), allow_unicode=True)
-    
-    if not slug:
-        return str(fallback_id) if fallback_id else 'course'
-    
-    slug = re.sub(r'-+', '-', slug.strip('-'))
-    return slug
+    return generate_unicode_slug(value, fallback_prefix='course', fallback_id=fallback_id)
 
 @register.simple_tag
 def course_url(course):
@@ -133,5 +128,5 @@ def enroll_url(course):
     """يولّد رابط التسجيل في الكورس مع fallback slug آمن."""
     return reverse('courses:enroll_course', kwargs={
         'course_id': course.id,
-        'course_slug': arabic_slug(course.title, fallback_id=course.id)
+        'course_slug': course.get_slug()
     })
