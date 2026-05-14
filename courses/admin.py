@@ -247,7 +247,7 @@ approve_submissions.short_description = "الموافقة على التقديم�
 # تسجيل نماذج Courses
 @admin.register(Course)
 class CourseAdmin(BaseModelAdmin):
-    list_display = ('title', 'instructor', 'category', 'created_at')
+    list_display = ('title', 'instructor', 'category', 'created_at','slug')
     list_filter = ('category', 'created_at')
     search_fields = ('title', 'instructor', 'description')
     list_per_page = 25

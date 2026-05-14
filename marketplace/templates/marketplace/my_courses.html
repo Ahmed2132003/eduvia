@@ -1,0 +1,17 @@
+<div class="container" style="max-width: 900px; margin: 2rem auto;">
+  <h1>My Courses</h1>
+  <form method="post" style="display:flex; gap:8px; margin-bottom:16px;">{% csrf_token %}
+    <input type="hidden" name="action" value="apply_code" />
+    <input type="number" name="course_id" placeholder="Course ID" required />
+    <input type="text" name="code" placeholder="Enrollment Code" required />
+    <button type="submit">Apply Code</button>
+  </form>
+  {% if messages %}{% for message in messages %}<p>{{ message }}</p>{% endfor %}{% endif %}
+  <ul>
+  {% for enrollment in enrollments %}
+    <li>{{ enrollment.course.title }} — {{ enrollment.get_source_display }}</li>
+  {% empty %}
+    <li>You are not enrolled in any course yet.</li>
+  {% endfor %}
+  </ul>
+</div>

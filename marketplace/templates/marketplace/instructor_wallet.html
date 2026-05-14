@@ -1,0 +1,12 @@
+<div class="container" style="max-width: 900px; margin: 2rem auto;">
+  <h1>Instructor Wallet</h1>
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+    <div style="border:1px solid #ddd; padding:12px; border-radius:10px;">Pending: {{ wallet.pending_balance }}</div>
+    <div style="border:1px solid #ddd; padding:12px; border-radius:10px;">Available: {{ wallet.available_balance }}</div>
+    <div style="border:1px solid #ddd; padding:12px; border-radius:10px;">Withdrawn: {{ wallet.withdrawn_balance }}</div>
+  </div>
+  <h3 style="margin-top:18px;">Recent Transactions</h3>
+  <ul>
+    {% for tx in transactions %}<li>{{ tx.created_at }} - {{ tx.tx_type }} - {{ tx.amount }}</li>{% empty %}<li>No transactions yet.</li>{% endfor %}
+  </ul>
+</div>

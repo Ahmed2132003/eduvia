@@ -109,6 +109,8 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     instructor = models.CharField(max_length=100)
+    instructor_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='instructed_courses')
+    price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='programming')
     created_at = models.DateTimeField(auto_now_add=True)
     average_rating = models.FloatField(default=0)

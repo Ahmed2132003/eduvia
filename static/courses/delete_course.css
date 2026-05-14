@@ -1,9 +1,10 @@
 :root {
+    /* Light Mode Colors */
     --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
     --text-color: #333;
     --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
     --header-text: #ffffff;
-    --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('https://i.postimg.cc/yY4YPvQ0/add-task1.jpg') no-repeat center center/cover;
+    --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), var(--hero-bg-image) no-repeat center center/cover;
     --hero-text: #ffffff;
     --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
     --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
@@ -12,21 +13,17 @@
     --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
     --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
     --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
-    --search-input-border: #d4af37;
-    --search-btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
-    --search-btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
     --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
     --footer-text: #333;
-    --input-border: #d4af37;
-    --input-focus-border: #00a8cc;
 }
 
+/* Dark Mode Colors */
 body.dark-mode {
     --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
     --text-color: #e0e0e0;
-    --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
+    --header-bg: linear-gradient(90deg, #2c3e80, #34495e);
     --header-text: #e0e0e0;
-    --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('https://i.postimg.cc/yY4YPvQ0/add-task1.jpg') no-repeat center center/cover;
+    --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), var(--hero-bg-image) no-repeat center center/cover;
     --hero-text: #e0e0e0;
     --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
     --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
@@ -34,14 +31,8 @@ body.dark-mode {
     --card-secondary-text: #b0b0b0;
     --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
     --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-    --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-    --search-input-border: #34495e;
-    --search-btn-bg: linear-gradient(90deg, #3498db, #2980b9);
-    --search-btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
     --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
     --footer-text: #e0e0e0;
-    --input-border: #555;
-    --input-focus-border: #3498db;
 }
 
 body {
@@ -56,6 +47,7 @@ html[dir="rtl"] body {
     text-align: right;
 }
 
+/* Header */
 .header {
     display: flex;
     justify-content: space-between;
@@ -150,6 +142,7 @@ html[dir="rtl"] .coins-display {
     100% { transform: rotate(360deg); }
 }
 
+/* Dark Mode & Language Toggle */
 .dark-mode-toggle, .language-toggle {
     display: flex;
     align-items: center;
@@ -171,19 +164,25 @@ html[dir="rtl"] .coins-display {
     border: none;
     color: var(--header-text);
     cursor: pointer;
+    z-index: 101;
 }
 
 @media (max-width: 768px) {
     .menu {
         display: none;
         flex-direction: column;
-        position: absolute;
+        position: fixed;
         top: 60px;
         left: 0;
         width: 100%;
         background: var(--header-bg);
         padding: 20px 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+    }
+
+    .menu.active {
+        display: flex;
     }
 
     html[dir="rtl"] .menu {
@@ -192,22 +191,30 @@ html[dir="rtl"] .coins-display {
         right: 0;
     }
 
-    .menu.active { display: flex; }
-    .menu a { margin: 10px 0; font-size: 20px; }
-    .hamburger { display: block; }
-    .coins-display { margin: 10px 0; justify-content: center; }
+    .menu a, .menu .dark-mode-toggle, .menu .language-toggle, .menu .coins-display {
+        margin: 10px 0;
+        font-size: 20px;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+    }
+
+    .hamburger {
+        display: block;
+    }
 }
 
+/* Hero Section */
 .hero {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 50vh;
+    height: 60vh;
     background: var(--hero-bg);
     color: var(--hero-text);
     text-align: center;
-    padding: 20px;
+    padding: 0 20px;
     position: relative;
     z-index: 1;
     overflow: hidden;
@@ -237,12 +244,24 @@ html[dir="rtl"] .coins-display {
     margin: 0;
     text-shadow: var(--hero-text-shadow);
     animation: slideInFromTop 1s ease-out forwards;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 20px 0 30px;
+    max-width: 800px;
+    line-height: 1.6;
+    text-shadow: var(--hero-text-shadow);
+    animation: fadeIn 1.2s ease-out 0.3s forwards;
+    opacity: 0;
 }
 
 .btn {
     background: var(--btn-bg);
     color: white;
-    padding: 12px 30px;
+    padding: 14px 40px;
     text-decoration: none;
     font-size: 18px;
     font-weight: 600;
@@ -259,116 +278,152 @@ html[dir="rtl"] .coins-display {
     box-shadow: 0 10px 25px rgba(0, 201, 167, 0.7);
 }
 
-.form-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
+.btn-secondary {
+    background: linear-gradient(90deg, #6c757d, #5a6268);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(90deg, #5a6268, #495057);
+    transform: scale(1.1);
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.dashboard-card {
     background: var(--card-bg);
+    color: var(--card-text);
+    padding: 20px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    text-align: center;
+    animation: fadeIn 1.2s ease-out forwards;
 }
 
-.form-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+.dashboard-card h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: var(--card-text);
 }
 
-.form-container p {
+.dashboard-card p {
+    font-size: 18px;
+    color: var(--card-secondary-text);
     margin: 10px 0;
 }
 
-.form-container label {
-    font-size: 16px;
+.text-danger {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+/* Courses List */
+.courses-list {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1.2s ease-out forwards;
+}
+
+.courses-list h2 {
+    font-size: 28px;
     color: var(--card-text);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+}
+
+.table th, .table td {
+    padding: 15px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+html[dir="rtl"] .table th, html[dir="rtl"] .table td {
+    text-align: right;
+}
+
+.table th {
+    background: var(--btn-bg);
+    color: white;
     font-weight: 600;
 }
 
-.form-container input,
-.form-container textarea {
-    padding: 10px;
-    border: 1px solid var(--input-border);
-    border-radius: 5px;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
+.table td {
+    color: var(--card-secondary-text);
 }
 
-.form-container input:focus,
-.form-container textarea:focus {
-    outline: none;
-    border-color: #00a8cc;
-}
-
-.question-group {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid var(--input-border);
-    border-radius: 10px;
-    position: relative;
-}
-
-.question-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.question-group input, .question-group textarea {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.remove-question-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background 0.3s ease;
-}
-
-.remove-question-btn:hover {
-    background: darkred;
-}
-
-html[dir="rtl"] .remove-question-btn {
-    right: unset;
-    left: 10px;
-}
-
-#add-question-btn {
-    background: green;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s ease;
-}
-
-#add-question-btn:hover {
-    background: darkgreen;
-}
-
-.back-link {
-    display: inline-block;
-    margin-top: 20px;
+.table a {
     color: var(--card-text);
     text-decoration: none;
-    font-size: 16px;
-    font-weight: 600;
-    transition: color 0.3s ease;
 }
 
-.back-link:hover {
-    color: var(--btn-bg-hover);
+.table a:hover {
+    text-decoration: underline;
 }
 
+.table .btn {
+    margin: 5px;
+    padding: 8px 15px;
+    font-size: 14px;
+}
+
+.course-item {
+    transition: background 0.3s ease;
+}
+
+.course-item:hover {
+    background: rgba(0, 201, 167, 0.1);
+}
+
+/* Animations */
+@keyframes slideInFromTop {
+    0% { transform: translateY(-50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceIn {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    .hero h1 { font-size: 36px; }
+    .hero p { font-size: 20px; }
+    .dashboard-card h2 { font-size: 24px; }
+    .courses-list h2 { font-size: 24px; }
+}
+
+@media (max-width: 600px) {
+    .hero { height: 50vh; }
+    .hero h1 { font-size: 28px; }
+    .hero p { font-size: 16px; }
+    .btn { padding: 12px 30px; font-size: 16px; }
+    .dashboard-card { padding: 15px; }
+    .courses-list { padding: 15px; }
+    .table th, .table td { font-size: 14px; padding: 10px; }
+}
+
+/* Footer */
 .footer {
     background: var(--footer-bg);
     text-align: center;
@@ -378,21 +433,4 @@ html[dir="rtl"] .remove-question-btn {
     position: relative;
     bottom: 0;
     width: 100%;
-}
-
-@keyframes slideInFromTop {
-    0% { transform: translateY(-50px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes bounceIn {
-    0% { opacity: 0; transform: scale(0.5); }
-    50% { opacity: 1; transform: scale(1.15); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-@media (max-width: 600px) {
-    .hero h1 { font-size: 36px; }
-    .btn { padding: 10px 20px; font-size: 16px; }
-    .form-container { padding: 15px; }
 }

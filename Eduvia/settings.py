@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'mentorship',
     'workshops',
     'widget_tweaks',
+    'rest_framework',
+    'marketplace.apps.MarketplaceConfig',
 ]
 
 # إعدادات ASGI لـ Channels
@@ -88,6 +90,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'marketplace.middleware.StudentAccessMiddleware',
 ]
 
 # إعدادات URL

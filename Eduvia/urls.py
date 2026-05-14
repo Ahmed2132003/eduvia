@@ -20,6 +20,7 @@ urlpatterns = [
     path('skills_market/', include('skills_market.urls')),
     path("mentorship/", include("mentorship.urls")),
     path('workshops/', include('workshops.urls')),
+    path('api/marketplace/', include('marketplace.urls')) ,
 ]
 
 # خدمة ملفات الـ media في الإنتاج والتطوير

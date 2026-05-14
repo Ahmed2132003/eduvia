@@ -192,6 +192,17 @@
             text-align: right;
         }
 
+        /* إضافة لدعم الاتجاه التلقائي */
+        [dir="auto"] {
+            direction: auto;
+            text-align: inherit; /* يتبع الاتجاه التلقائي */
+            unicode-bidi: plaintext; /* يساعد في النصوص المختلطة */
+        }
+
+        html[dir="rtl"] [dir="auto"] {
+            text-align: right; /* افتراضي RTL لو الـ body RTL */
+        }
+
         /* Header */
         .header {
             display: flex;
@@ -833,14 +844,14 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1 data-translate="hero-title">{{ video.title }}</h1>
-        <p data-translate="hero-desc">Enhance your learning with {{ video.title }} on Eduvia.</p>
+        <h1 data-translate="hero-title" dir="auto">{{ video.title }}</h1>
+        <p data-translate="hero-desc" dir="auto">Enhance your learning with {{ video.title }} on Eduvia.</p>
     </section>
 
     <!-- Content Section -->
     <main class="content">
         <article class="video-card">
-            <h1 data-translate="video-card-title">{{ video.title }}</h1>
+            <h1 data-translate="video-card-title" dir="auto">{{ video.title }}</h1>
             {% if video.video_url %}
                 <!-- تحويل الرابط تلقائيًا إذا كان من Google Drive -->
                 {% if "drive.google.com" in video.video_url %}
@@ -851,14 +862,14 @@
                     <iframe src="{{ video.video_url|safe }}" width="100%" height="450" frameborder="0" allowfullscreen aria-label="Video: {{ video.title }}"></iframe>
                 {% endif %}
             {% else %}
-                <p data-translate="no-video-url">No video URL available.</p>
+                <p data-translate="no-video-url" dir="auto">No video URL available.</p>
             {% endif %}
-            <p class="description">{{ video.description }}</p>
+            <p class="description" dir="auto">{{ video.description }}</p>
             
-            <h3 data-translate="course-progress-heading">Course Progress</h3>
+            <h3 data-translate="course-progress-heading" dir="auto">Course Progress</h3>
             <progress value="{{ completed_videos_count }}" max="{{ total_videos_count }}" aria-label="Course progress"></progress>
 
-            <h3 data-translate="rate-video-heading">Rate this Video</h3>
+            <h3 data-translate="rate-video-heading" dir="auto">Rate this Video</h3>
             <form method="post" action="{% url 'courses:rate_video' video.id slugified_video_title %}" id="rating-form">
                 {% csrf_token %}
                 <div class="star-rating" id="star-rating">
@@ -874,86 +885,86 @@
                     <label for="star1" title="1 star">☆</label>
                 </div>
                 {% if user_rating %}
-                    <p data-translate="already-rated">You have already rated this video: {{ user_rating }} stars</p>
+                    <p data-translate="already-rated" dir="auto">You have already rated this video: {{ user_rating }} stars</p>
                 {% else %}
                     <button type="submit" class="action-button" data-translate="submit-rating">Submit Rating</button>
                 {% endif %}
             </form>
 
-            <h3 data-translate="upload-file-heading">Upload a File</h3>
+            <h3 data-translate="upload-file-heading" dir="auto">Upload a File</h3>
             <form method="post" enctype="multipart/form-data" action="{% url 'courses:watch_video' course_id=course.id course_title=slugified_course_title video_id=video.id video_title=slugified_video_title %}" class="upload-form">
                 {% csrf_token %}
                 <input type="hidden" name="upload_file" value="true">
-                <label for="file" data-translate="file-label">Choose a file:</label>
+                <label for="file" data-translate="file-label" dir="auto">Choose a file:</label>
                 <input type="file" id="file" name="file" required>
-                <label for="description" data-translate="description-label">Description:</label>
-                <textarea id="description" name="description" rows="4" placeholder="{% trans 'Enter file description...' %}"></textarea>
+                <label for="description" data-translate="description-label" dir="auto">Description:</label>
+                <textarea id="description" name="description" rows="4" placeholder="{% trans 'Enter file description...' %}" dir="auto"></textarea>
                 <button type="submit" class="action-button" data-translate="upload-button">Upload File</button>
             </form>
 
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    <div class="alert alert-{{ message.tags }}" dir="auto">{{ message }}</div>
                 {% endfor %}
             {% endif %}
 
-            <h3 data-translate="uploaded-files-heading">Uploaded Files</h3>
+            <h3 data-translate="uploaded-files-heading" dir="auto">Uploaded Files</h3>
             <ul class="file-list">
                 {% for file in uploaded_files %}
-                    <li class="file-item">
+                    <li class="file-item" dir="auto">
                         <a href="{{ file.file.url }}" download>{{ file.file.name|cut:"media/video_files/" }}</a>
-                        <p>{{ file.description }}</p>
-                        <p data-translate="uploaded-by">Uploaded by: {{ file.user.username }} {% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}</p>
-                        <p data-translate="uploaded-at">Uploaded at: {{ file.uploaded_at }}</p>
+                        <p dir="auto">{{ file.description }}</p>
+                        <p data-translate="uploaded-by" dir="auto">Uploaded by: {{ file.user.username }} {% if file.is_instructor_upload %}(Instructor){% else %}(Student){% endif %}</p>
+                        <p data-translate="uploaded-at" dir="auto">Uploaded at: {{ file.uploaded_at }}</p>
                     </li>
                 {% empty %}
-                    <p data-translate="no-files">No files uploaded yet.</p>
+                    <p data-translate="no-files" dir="auto">No files uploaded yet.</p>
                 {% endfor %}
             </ul>
 
-            <h3 data-translate="comments-heading">Comments</h3>
+            <h3 data-translate="comments-heading" dir="auto">Comments</h3>
             <form method="post" action="{% url 'courses:add_comment' video.id slugified_video_title %}" class="comment-form">
                 {% csrf_token %}
-                <textarea name="content" rows="3" placeholder="{% trans 'Add a comment...' %}" required data-translate-placeholder="comment-placeholder"></textarea>
+                <textarea name="content" rows="3" placeholder="{% trans 'Add a comment...' %}" required data-translate-placeholder="comment-placeholder" dir="auto"></textarea>
                 <button type="submit" class="action-button" data-translate="add-comment-button">Add Comment</button>
             </form>
 
             <ul class="comment-list">
                 {% for comment in comments %}
-                    <li class="comment-item">
-                        <strong>{{ comment.user.username }}</strong>
-                        <p>{{ comment.content }}</p>
-                        <p>{{ comment.created_at|date:"F d, Y" }}</p>
+                    <li class="comment-item" dir="auto">
+                        <strong dir="auto">{{ comment.user.username }}</strong>
+                        <p dir="auto">{{ comment.content }}</p>
+                        <p dir="auto">{{ comment.created_at|date:"F d, Y" }}</p>
                     </li>
                 {% empty %}
-                    <p data-translate="no-comments">No comments yet.</p>
+                    <p data-translate="no-comments" dir="auto">No comments yet.</p>
                 {% endfor %}
             </ul>
 
-            <h3 data-translate="tasks-heading">Tasks</h3>
+            <h3 data-translate="tasks-heading" dir="auto">Tasks</h3>
             {% if tasks %}
                 <ul class="task-list">
                     {% for task in tasks %}
-                        <li class="task-item">
-                            <h4>{{ task.title }}</h4>
+                        <li class="task-item" dir="auto">
+                            <h4 dir="auto">{{ task.title }}</h4>
                             {% if task.id in task_submissions %}
                                 {% with submission=task_submissions|lookup:task.id %}
                                     {% with correct_count=submission.is_correct|count_true %}
                                         {% with total_questions=task.questions|length %}
                                             {% with score=correct_count|div:total_questions|mul:100 %}
-                                                <p data-translate="submission-status">Your score: {{ score|floatformat:0 }}%</p>
+                                                <p data-translate="submission-status" dir="auto">Your score: {{ score|floatformat:0 }}%</p>
                                                 {% if score >= 50 %}
-                                                    <p data-translate="pass-message">You passed the task!</p>
+                                                    <p data-translate="pass-message" dir="auto">You passed the task!</p>
                                                 {% else %}
                                                     {% if show_main_task %}
-                                                        <p data-translate="fail-message">You need 50% to pass. Score: {{ score|floatformat:0 }}%. Retry the task.</p>
+                                                        <p data-translate="fail-message" dir="auto">You need 50% to pass. Score: {{ score|floatformat:0 }}%. Retry the task.</p>
                                                         <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_title=slugified_course_title video_id=video.id video_title=slugified_video_title %}">
                                                             {% csrf_token %}
                                                             <input type="hidden" name="task_id" value="{{ task.id }}">
                                                             <div class="task-container">
                                                                 {% for question in task.questions %}
-                                                                    <div class="task-question" style="animation-delay: {{ forloop.counter0|mul:0.2 }}s;">
-                                                                        <p>{{ question.question }}</p>
+                                                                    <div class="task-question" style="animation-delay: {{ forloop.counter0|mul:0.2 }}s;" dir="auto">
+                                                                        <p dir="auto">{{ question.question }}</p>
                                                                         <select name="answers[]" required aria-label="Select answer for {{ question.question }}">
                                                                             {% for option in question.options %}
                                                                                 <option value="{{ option }}">{{ option }}</option>
@@ -966,12 +977,12 @@
                                                         </form>
                                                     {% endif %}
                                                     {% if show_alternative_quiz and alternative_quiz %}
-                                                        <h5 data-translate="alternative-quiz-heading">Alternative Quiz</h5>
+                                                        <h5 data-translate="alternative-quiz-heading" dir="auto">Alternative Quiz</h5>
                                                         <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_title=slugified_course_title video_id=video.id video_title=slugified_video_title %}">
                                                             {% csrf_token %}
                                                             <input type="hidden" name="quiz_id" value="{{ alternative_quiz.id }}">
-                                                            <p>{{ alternative_quiz.question }}</p>
-                                                            <ul>
+                                                            <p dir="auto">{{ alternative_quiz.question }}</p>
+                                                            <ul dir="auto">
                                                                 {% for option in alternative_quiz.options %}
                                                                     <li><label><input type="radio" name="answer" value="{{ option }}" required>{{ option }}</label></li>
                                                                 {% endfor %}
@@ -991,8 +1002,8 @@
                                         <input type="hidden" name="task_id" value="{{ task.id }}">
                                         <div class="task-container">
                                             {% for question in task.questions %}
-                                                <div class="task-question" style="animation-delay: {{ forloop.counter0|mul:0.2 }}s;">
-                                                    <p>{{ question.question }}</p>
+                                                <div class="task-question" style="animation-delay: {{ forloop.counter0|mul:0.2 }}s;" dir="auto">
+                                                    <p dir="auto">{{ question.question }}</p>
                                                     <select name="answers[]" required aria-label="Select answer for {{ question.question }}">
                                                         {% for option in question.options %}
                                                             <option value="{{ option }}">{{ option }}</option>
@@ -1004,14 +1015,14 @@
                                         <button type="submit" name="submit_task" class="action-button" data-translate="submit-task-button">Submit Task</button>
                                     </form>
                                 {% else %}
-                                    <p data-translate="no-tasks">No tasks available until you pass.</p>
+                                    <p data-translate="no-tasks" dir="auto">No tasks available until you pass.</p>
                                 {% endif %}
                             {% endif %}
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p data-translate="no-tasks">No tasks available for this video.</p>
+                <p data-translate="no-tasks" dir="auto">No tasks available for this video.</p>
             {% endif %}
 
             <a href="{% url 'courses:course_details' course.id slugified_course_title|default:'default-title' %}" class="action-button" data-translate="back-to-course">Back to Course</a>
@@ -1020,7 +1031,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+        <p data-translate="footer-text" dir="auto">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->

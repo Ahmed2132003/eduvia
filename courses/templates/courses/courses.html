@@ -1,6 +1,6 @@
+{% load course_tags %}
 {% load static %}
 {% load i18n %}
-{% load course_tags %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
@@ -8,25 +8,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-translate="page-title">{% trans "Courses - Eduvia" %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
     <!-- SEO Meta Tags (English) -->
     <meta name="description" data-translate="meta-desc" content="{% trans 'Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.' %}">
     <meta name="keywords" data-translate="meta-keywords" content="{% trans 'Eduvia, online courses, education platform, learning, course catalog' %}">
     <meta name="author" content="Eduvia">
+    
     <!-- SEO Meta Tags (Arabic) -->
     <meta http-equiv="content-language" content="ar, en">
-    <meta name="description" lang="ar" data-translate="meta-desc-ar" content="{% trans 'Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.' %}">
+    <meta name="description" lang="ar" data-translate="meta-desc-ar" content="{% trans 'اكتشف مجموعة واسعة من الدورات التدريبية عبر الإنترنت على إدوفيا. ابحث عن دورات يقودها خبراء تناسب اهتماماتك وابدأ التعلم اليوم.' %}">
     <meta name="keywords" lang="ar" data-translate="meta-keywords-ar" content="{% trans 'Eduvia, online courses, education platform, learning, course catalog' %}">
+    
     <!-- Open Graph Tags -->
     <meta property="og:title" data-translate="og-title" content="{% trans 'Courses - Eduvia' %}">
     <meta property="og:description" data-translate="og-desc" content="{% trans 'Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.' %}">
     <meta property="og:image" content="{% static 'images/course_page1.jpg' %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
+    
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" data-translate="twitter-title" content="{% trans 'Courses - Eduvia' %}">
     <meta name="twitter:description" data-translate="twitter-desc" content="{% trans 'Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.' %}">
     <meta name="twitter:image" content="{% static 'images/course_page1.jpg' %}">
+
     <style>
         :root {
             /* Light Mode Colors */
@@ -620,23 +625,26 @@
     </style>
 </head>
 <body>
-    <form>{% csrf_token %}</form>
+    <!-- CSRF Token for AJAX -->
+    <form style="display: none;">{% csrf_token %}</form>
+
     <!-- Header -->
     <header class="header">
         <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <button class="hamburger" onclick="toggleMenu()">Menu</button>
         <nav class="menu">
             <a href="/" data-translate="nav-home">{% trans "Home" %}</a>
             <a href="/courses/" data-translate="nav-courses">{% trans "Courses" %}</a>
             <a href="/chatbot/" data-translate="nav-chatbot">{% trans "Chatbot" %}</a>
             <a href="/competitions/" data-translate="nav-competitions">{% trans "Competitions" %}</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">{% trans "Performance" %}</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
+            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">{% trans "Subscribe" %}</a>
             <a href="/about/" data-translate="nav-about">{% trans "About Us" %}</a>
             <a href="/contact_us/" data-translate="nav-contact">{% trans "Contact Us" %}</a>
+
             {% if user.is_authenticated %}
                 {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">{% trans "Dashboard" %}</a>
                 {% endif %}
                 <a href="/accounts/profile/" data-translate="nav-profile">{% trans "Profile" %}</a>
                 <a href="/accounts/logout/" data-translate="nav-logout">{% trans "Logout" %}</a>
@@ -694,7 +702,7 @@
                 <p data-translate="instructor-plan-info">{% trans "You are on the Instructor Plan. You can create and manage unlimited courses and videos." %}</p>
             {% endif %}
             {% if user.courses_profile.subscription_plan != 'premium' and user.courses_profile.subscription_plan != 'instructor_plan' %}
-                <a href="{% url 'accounts:subscribe' %}" class="btn btn-subscribe" data-translate="btn-subscribe">Upgrade</a>
+                <a href="{% url 'accounts:subscribe' %}" class="btn btn-subscribe" data-translate="btn-subscribe">{% trans "Upgrade" %}</a>
             {% endif %}
         </div>
     {% endif %}
@@ -716,36 +724,42 @@
         {% if courses %}
             {% for course in courses %}
                 <div class="course-card" id="course-{{ course.id }}">
-                    <img src="{{ course.get_image_url }}?t={{ course.id }}" alt="{{ course.title }}">
+                    <img src="{{ course.image.url }}" alt="{{ course.title }}" onerror="this.src='{% static 'images/default_course.jpg' %}'">
                     <h2>{{ course.title }}</h2>
                     <p>{{ course.description|truncatewords:20 }}</p>
-                    <p><strong data-translate="instructor-label">{% trans "Instructor:" %}</strong> {{ course.instructor }}</p>
-                    <p><strong data-translate="rating-label">{% trans "Rating:" %}</strong> {{ course.average_rating }}</p>
-                    <p><strong data-translate="category-label">{% trans "Category:" %}</strong> {{ course.get_category_display }}</p>
                     <div class="course-actions">
                         {% if user.is_authenticated %}
                             {% if course.id in enrolled_course_ids %}
-                                <a href="{% url 'courses:course_details' course.id course.title|custom_slugify %}" class="details-btn" data-translate="details-btn">{% trans "View Details" %}</a>
+                                <a href="{% url 'courses:course_detail' course.id %}" 
+                                class="join-btn" data-translate="view-course">
+                                {% trans "View Course" %}</a>
                             {% else %}
-                                <a href="{% url 'courses:course_details' course.id course.title|custom_slugify %}" class="details-btn" data-course-id="{{ course.id }}" data-translate="details-btn">{% trans "View Details" %}</a>
-                                <a href="{% url 'courses:enroll_course' course.id course.title|custom_slugify %}" 
-                                   class="join-link" 
-                                   data-course-id="{{ course.id }}" 
-                                   data-course-title="{{ course.title|custom_slugify }}"
-                                   {% if not user.courses_profile or user.courses_profile.subscription_plan == 'free' and enrolled_course_ids|length >= 1 or user.courses_profile.subscription_plan == 'basic' and enrolled_course_ids|length >= 2 or user.courses_profile.subscription_plan == 'pro' and enrolled_course_ids|length >= 4 %}
-                                       class="join-link disabled-btn"
-                                       title="{% trans 'You have reached the enrollment limit for your plan. Please upgrade.' %}"
-                                   {% endif %}
-                                   data-translate="join-link">{% trans "Join Course" %}</a>
+                                {% if not user.courses_profile or user.courses_profile.subscription_plan == 'free' and enrolled_course_ids|length >= 1 or user.courses_profile.subscription_plan == 'basic' and enrolled_course_ids|length >= 2 or user.courses_profile.subscription_plan == 'pro' and enrolled_course_ids|length >= 4 %}
+                                    <a href="#" class="join-link disabled-btn"
+                                    title="{% trans 'You have reached the enrollment limit for your plan. Please upgrade.' %}"
+                                    data-translate="join-link">{% trans "Join Course" %}</a>
+                                {% else %}
+                                    <a href="{% url 'courses:enroll_course' course.id course.slug %}" 
+                                    class="join-btn" 
+                                    data-enroll-url="{% enroll_url course %}"
+                                    data-translate="join-link">{% trans "Join Course" %}</a>
+                                {% endif %}
                             {% endif %}
                         {% else %}
-                            <a href="/accounts/register/?next={% url 'courses:courses' %}" class="join-btn" data-translate="login-btn">{% trans "Login to Access" %}</a>
+                            <a href="/accounts/register/?next={% url 'courses:courses' %}" 
+                            class="join-btn" data-translate="login-btn">{% trans "Login to Access" %}</a>
                         {% endif %}
                     </div>
                 </div>
+            {% empty %}
+                <p class="no-results" data-translate="no-courses-found">
+                    {% trans "No courses found matching your search." %}
+                </p>
             {% endfor %}
         {% else %}
-            <p class="no-results" data-translate="no-courses-found">{% trans "No courses found matching your search." %}</p>
+            <p class="no-results" data-translate="no-courses-found">
+                {% trans "No courses available." %}
+            </p>
         {% endif %}
     </div>
 
@@ -790,11 +804,8 @@
             const currentLang = htmlRoot.getAttribute('lang');
             const newLang = currentLang === 'en' ? 'ar' : 'en';
             
-            // Update lang and direction
             htmlRoot.setAttribute('lang', newLang);
             htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-            
-            // Reload page to apply Django translations
             window.location.reload();
         }
 
@@ -810,42 +821,38 @@
         });
 
         // Join course with AJAX
-        document.querySelectorAll('.join-link').forEach(link => {
+        document.querySelectorAll('.join-btn[data-enroll-url]').forEach(link => {
             link.addEventListener('click', async (e) => {
                 e.preventDefault();
-                const courseId = link.getAttribute('data-course-id');
-                const courseTitle = link.getAttribute('data-course-title');
+                const enrollUrl = link.getAttribute('data-enroll-url');
                 const toast = document.getElementById('toast');
                 const toastMessage = document.getElementById('toast-message');
                 const toastIcon = document.getElementById('toast-icon');
                 const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
-                const canEnroll = !link.classList.contains('disabled-btn');
 
-                // Check CSRF token
                 if (!csrfToken) {
                     console.error('CSRF token not found');
                     toast.classList.remove('success');
                     toast.classList.add('error');
                     toastIcon.className = 'fas fa-exclamation-circle';
-                    toastMessage.textContent = '{% trans "CSRF token missing. Please refresh the page." %}';
+                    toastMessage.textContent = 'CSRF token missing. Please refresh the page.';
                     toast.style.display = 'block';
                     setTimeout(() => { toast.style.display = 'none'; }, 3000);
                     return;
                 }
 
-                // Check if enrollment is allowed
-                if (!canEnroll) {
+                if (link.classList.contains('disabled-btn')) {
                     toast.classList.remove('success');
                     toast.classList.add('error');
                     toastIcon.className = 'fas fa-exclamation-circle';
-                    toastMessage.textContent = '{% trans "You have reached the enrollment limit for your plan. Please upgrade." %}';
+                    toastMessage.textContent = 'You have reached the enrollment limit for your plan. Please upgrade.';
                     toast.style.display = 'block';
                     setTimeout(() => { toast.style.display = 'none'; }, 3000);
                     return;
                 }
 
                 try {
-                    const response = await fetch(`{% url 'courses:enroll_course' 0 'placeholder' %}`.replace('0/placeholder', `${courseId}/${courseTitle}`), {
+                    const response = await fetch(enrollUrl, {
                         method: 'POST',
                         headers: {
                             'X-CSRFToken': csrfToken,
@@ -883,7 +890,7 @@
                     toast.classList.remove('success');
                     toast.classList.add('error');
                     toastIcon.className = 'fas fa-exclamation-circle';
-                    toastMessage.textContent = '{% trans "An error occurred while enrolling. Please try again." %}';
+                    toastMessage.textContent = 'An error occurred while enrolling. Please try again.';
                     toast.style.display = 'block';
                     setTimeout(() => { toast.style.display = 'none'; }, 3000);
                 }

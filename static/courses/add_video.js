@@ -67,6 +67,8 @@ const translations = {
         "nav-logout": "تسجيل الخروج",
         "nav-coins": "النقاط:",
         "nav-login": "تسجيل الدخول",
+        "form-label-duration": { en: "Duration (minutes)", ar: "المدة (بالدقائق)" },
+        "form-label-questions": { en: "Questions for Task (JSON, Optional)", ar: "أسئلة المهمة (JSON، اختياري)" },
         "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
     }
 };

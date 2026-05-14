@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-{% load static i18n %}
+{% load static i18n course_tags %} 
+
 <html lang="en" dir="ltr" id="html-root">
 <head>
     <meta charset="UTF-8">
@@ -210,7 +211,7 @@
                     <label for="id_video_file" class="custom-file-upload">
                         <i class="fas fa-upload"></i> Choose File
                     </label>
-                    <input type="file" name="video_file" id="id_video_file">
+                    {{ form.video_file }}  <!-- استخدم {{ form.video_file }} بدل الـ input اليدوي -->
                     <video class="video-preview" controls></video>
                     {% if form.video_file.errors %}
                         <div class="form-errors">
@@ -244,9 +245,22 @@
                         </div>
                     {% endif %}
                 </div>
+                <div class="form-group">
+                    <label for="id_duration"><i class="fas fa-clock"></i> <span data-translate="form-label-duration">Duration (minutes)</span></label>
+                    {{ form.duration }}
+                    {% if form.duration.errors %}
+                        <div class="form-errors">
+                            <ul>
+                                {% for error in form.duration.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
                 <div class="form-group checkbox-group">
                     <label>
-                        <input type="checkbox" name="unlocked" id="id_unlocked" {% if form.unlocked.value %}checked{% endif %}>
+                        {{ form.unlocked }}  <!-- استخدم {{ form.unlocked }} بدل الـ input اليدوي -->
                         <span data-translate="form-label-unlocked">Unlocked</span>
                     </label>
                     {% if form.unlocked.errors %}
@@ -259,9 +273,22 @@
                         </div>
                     {% endif %}
                 </div>
+                <div class="form-group">
+                    <label for="id_questions_json"><i class="fas fa-question-circle"></i> <span data-translate="form-label-questions">Questions for Task (JSON, Optional)</span></label>
+                    {{ form.questions_json }}
+                    {% if form.questions_json.errors %}
+                        <div class="form-errors">
+                            <ul>
+                                {% for error in form.questions_json.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
                 <div class="buttons">
                     <button type="submit" data-translate="form-submit">Add Video</button>
-                    <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|slugify %}" class="cancel" data-translate="form-cancel">Cancel</a>
+                    <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|arabic_slug:course.id %}" class="cancel" data-translate="form-cancel">Cancel</a>
                 </div>
             </form>
         </div>

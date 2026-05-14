@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
+    <!-- SEO -->
     <title data-translate="page-title">Instructor Dashboard - Eduvia</title>
     <meta name="description" content="Manage your courses and videos on Eduvia's Instructor Dashboard. Create, edit, and organize your educational content." data-translate="meta-desc">
     <meta name="keywords" content="Eduvia, instructor dashboard, course management, online teaching, video management" data-translate="meta-keywords">
@@ -16,38 +16,38 @@
     <meta http-equiv="content-language" content="ar, en">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <!-- 🌍 Open Graph -->
+    <!-- Open Graph -->
     <meta property="og:title" content="Instructor Dashboard - Eduvia" data-translate="og-title">
     <meta property="og:description" content="Manage your courses and videos on Eduvia's Instructor Dashboard." data-translate="og-desc">
     <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Instructor Dashboard - Eduvia" data-translate="twitter-title">
     <meta name="twitter:description" content="Manage your courses and videos on Eduvia's Instructor Dashboard." data-translate="twitter-desc">
     <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
 
-    <!-- 🖼️ Favicon -->
+    <!-- Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-    <!-- 🌐 Fonts & Icons -->
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- 🎨 Styles -->
+    <!-- Styles -->
     <link rel="stylesheet" href="{% static 'courses/instructor_dashboard.css' %}">
 
-    <!-- 🖼️ Hero Background -->
+    <!-- Hero Background -->
     <style>
         :root {
             --hero-bg-image: url("https://i.postimg.cc/nz8B0rZD/dashboard.jpg");
         }
     </style>
 
-    <!-- 📊 Structured Data -->
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -104,7 +104,7 @@
     <!-- Header -->
     <header class="header">
         <div class="logo" data-translate="title">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <button class="hamburger" onclick="toggleMenu()">Menu</button>
         <nav class="menu">
             <a href="/" data-translate="nav-home">Home</a>
             <a href="/courses/" data-translate="nav-courses">Courses</a>
@@ -188,18 +188,31 @@
                                             <p class="text-danger" data-translate="video-limit">You have reached the maximum limit of 10 videos in this course. Upgrade to add more.</p>
                                         {% endif %}
                                         {% for video in course.video_list %}
-                                            <a href="{% url 'courses:watch_video' course_id=course.id course_title=course.title|slugify video_id=video.id video_title=video.title|slugify|default:'default-title' %}">{{ video.title|default:'فيديو بدون عنوان' }}</a><br>
+                                            <a href="{% url 'courses:watch_video' course_id=course.id course_title=course.title|arabic_slug:course.id video_id=video.id video_title=video.title|arabic_slug:video.id %}">
+                                                {{ video.title|default:'Untitled Video' }}
+                                            </a><br>
                                         {% empty %}
                                             <span data-translate="no-videos">No videos available</span>
                                         {% endfor %}
                                     </td>
                                     <td>
-                                        <a href="{% url 'courses:edit_course' course_id=course.id course_title=course.title|slugify %}" class="btn btn-sm btn-warning" data-translate="edit-btn">Edit</a>
-                                        <a href="{% url 'courses:delete_course' course_id=course.id course_title=course.title|slugify %}" class="btn btn-sm btn-danger" data-translate="delete-btn">Delete</a>
+                                        <!-- Edit -->
+                                        <a href="{% url 'courses:edit_course' course_id=course.id course_title=course.title|arabic_slug:course.id %}" 
+                                           class="btn btn-sm btn-warning" data-translate="edit-btn">Edit</a>
+
+                                        <!-- Delete -->
+                                        <a href="{% url 'courses:delete_course' course_id=course.id course_title=course.title|arabic_slug:course.id %}" 
+                                            class="btn btn-sm btn-danger" data-translate="delete-btn">Delete</a>
+
+                                        <!-- Add Video -->
                                         {% if can_add_video %}
-                                            <a href="{% url 'courses:add_video' course_id=course.id course_title=course.title|slugify %}" class="btn btn-sm btn-success" data-translate="add-video-btn">Add Video</a>
+                                            <a href="{% url 'courses:add_video' course_id=course.id course_title=course.title|arabic_slug:course.id %}" 
+                                               class="btn btn-sm btn-success" data-translate="add-video-btn">Add Video</a>
                                         {% endif %}
-                                        <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|slugify %}" class="btn btn-sm btn-info" data-translate="view-videos-btn">View Videos</a>
+
+                                        <!-- View Videos -->
+                                        <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|arabic_slug:course.id %}" 
+                                           class="btn btn-sm btn-info" data-translate="view-videos-btn">View Videos</a>
                                     </td>
                                 </tr>
                             {% endfor %}

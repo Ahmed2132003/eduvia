@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-{% load static i18n %}
+{% load static i18n course_tags %}
 <html lang="en" dir="ltr" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
+    <!-- SEO -->
     <title data-translate="title">Add Task - Eduvia</title>
     <meta name="description" content="Add a new task to your course on Eduvia Platform. Easily create and manage tasks to enhance your learning experience." data-translate="meta-description">
     <meta name="keywords" content="Eduvia, add task, course management, online learning, education platform" data-translate="meta-keywords">
@@ -16,30 +16,30 @@
     <meta http-equiv="content-language" content="ar, en">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <!-- 🌍 Open Graph -->
+    <!-- Open Graph -->
     <meta property="og:title" content="Add Task - Eduvia" data-translate="title">
     <meta property="og:description" content="Add a new task to your course on Eduvia Platform. Easily create and manage tasks to enhance your learning experience." data-translate="meta-description">
     <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Add Task - Eduvia" data-translate="title">
     <meta name="twitter:description" content="Add a new task to your course on Eduvia Platform. Easily create and manage tasks to enhance your learning experience." data-translate="meta-description">
     <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
 
-    <!-- 🖼️ Favicon -->
+    <!-- Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-    <!-- 🌐 Fonts & Icons -->
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- 🎨 Styles -->
+    <!-- Styles -->
     <link rel="stylesheet" href="{% static 'courses/add_task.css' %}">
 
-    <!-- 📊 Structured Data -->
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -107,7 +107,7 @@
 <body>
     <header class="header">
         <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <button class="hamburger" onclick="toggleMenu()">Menu</button>
         <nav class="menu">
             <a href="/" data-translate="nav-home">Home</a>
             <a href="/courses/" data-translate="nav-courses">Courses</a>
@@ -151,13 +151,46 @@
     </section>
 
     <div class="form-container">
-        <form method="post">
+        <form method="post" id="task-form">
             {% csrf_token %}
-            {{ form.as_p }}
+            <div class="form-group">
+                <label for="id_title"><i class="fas fa-heading"></i> <span data-translate="form-label-title">Task Title</span></label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <div class="form-errors">
+                        <ul>
+                            {% for error in form.title.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_order"><i class="fas fa-sort-numeric-up"></i> <span data-translate="form-label-order">Task Order</span></label>
+                {{ form.order }}
+                {% if form.order.errors %}
+                    <div class="form-errors">
+                        <ul>
+                            {% for error in form.order.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div id="questions-container">
+                <h3 data-translate="questions-heading">Questions</h3>
+            </div>
+
+            <button type="button" id="add-question-btn" class="btn" data-translate="add-question-btn">+ Add Question</button>
+            {{ form.questions }} <!-- Hidden field -->
             <button type="submit" class="btn" data-translate="submit-btn">Add Task</button>
         </form>
+
         {% if course %}
-            <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|slugify|default:'default-title' %}" class="cancel" data-translate="form-cancel">Cancel</a>
+            <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|arabic_slug:course.id %}" class="cancel" data-translate="form-cancel">Cancel</a>
         {% else %}
             <a href="{% url 'courses:courses' %}" class="cancel" data-translate="form-cancel">Cancel</a>
         {% endif %}
@@ -167,6 +200,131 @@
         <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
-    <script src="{% static 'courses/add_task.js' %}"></script>
+    <!-- JS مدمج داخل الصفحة (بدون ملف خارجي) -->
+    <script>
+        const translations = {
+            en: {
+                "title": "Add Task - Eduvia",
+                "meta-description": "Add a new task to your course on Eduvia Platform. Easily create and manage tasks to enhance your learning experience.",
+                "meta-keywords": "Eduvia, add task, course management, online learning, education platform",
+                "nav-home": "Home", "nav-courses": "Courses", "nav-chatbot": "Chatbot", "nav-competitions": "Competitions",
+                "nav-performance": "Performance", "nav-about": "About Us", "nav-contact": "Contact Us", "nav-dashboard": "Dashboard",
+                "nav-profile": "Profile", "nav-logout": "Logout", "nav-coins": "Coins:", "nav-login": "Login",
+                "hero-title": "Add New Task", "submit-btn": "Add Task", "form-cancel": "Cancel",
+                "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved.",
+                "form-label-title": "Task Title", "form-label-order": "Task Order",
+                "questions-heading": "Questions", "add-question-btn": "+ Add Question", "remove-question-btn": "Remove",
+                "form-label-question": "Question", "form-label-options": "Options (comma-separated)", "form-label-correct-answer": "Correct Answer"
+            },
+            ar: {
+                "title": "إضافة مهمة - إدوفيا",
+                "meta-description": "إضافة مهمة جديدة إلى دورتك على منصة إدوفيا. أنشئ وأدر المهام بسهولة لتعزيز تجربتك التعليمية.",
+                "meta-keywords": "إدوفيا, إضافة مهمة, إدارة الدورات, التعلم عبر الإنترنت, منصة تعليمية",
+                "nav-home": "الرئيسية", "nav-courses": "الدورات", "nav-chatbot": "الدردشة الآلية", "nav-competitions": "المسابقات",
+                "nav-performance": "الأداء", "nav-about": "معلومات عنا", "nav-contact": "تواصل معنا", "nav-dashboard": "لوحة التحكم",
+                "nav-profile": "الملف الشخصي", "nav-logout": "تسجيل الخروج", "nav-coins": "النقاط:", "nav-login": "تسجيل الدخول",
+                "hero-title": "إضافة مهمة جديدة", "submit-btn": "إضافة المهمة", "form-cancel": "إلغاء",
+                "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة.",
+                "form-label-title": "عنوان المهمة", "form-label-order": "ترتيب المهمة",
+                "questions-heading": "الأسئلة", "add-question-btn": "+ إضافة سؤال", "remove-question-btn": "إزالة",
+                "form-label-question": "السؤال", "form-label-options": "الخيارات (مفصولة بفاصلة)", "form-label-correct-answer": "الإجابة الصحيحة"
+            }
+        };
+
+        function toggleMenu() {
+            document.querySelector('.menu').classList.toggle('active');
+        }
+
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.querySelector('.dark-mode-toggle i');
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function toggleLanguage() {
+            const html = document.getElementById('html-root');
+            const lang = html.lang === 'en' ? 'ar' : 'en';
+            html.lang = lang;
+            html.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            applyTranslations(lang);
+            localStorage.setItem('language', lang);
+        }
+
+        function applyTranslations(lang) {
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.dataset.translate;
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+            document.querySelectorAll('meta[data-translate]').forEach(meta => {
+                const key = meta.dataset.translate;
+                if (translations[lang][key]) meta.content = translations[lang][key];
+            });
+            document.title = translations[lang].title;
+        }
+
+        // === إدارة الأسئلة ===
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('language') || 'en';
+            applyTranslations(savedLang);
+
+            const addBtn = document.getElementById('add-question-btn');
+            const container = document.getElementById('questions-container');
+            const hiddenField = document.getElementById('id_questions');
+            let questionCount = 0;
+
+            // تحميل الأسئلة الموجودة (لو كان في تعديل)
+            if (hiddenField.value && hiddenField.value !== '[]') {
+                try {
+                    const existing = JSON.parse(hiddenField.value);
+                    existing.forEach(q => addQuestion(q.question, q.options.join(', '), q.correct_answer));
+                } catch (e) { console.error(e); }
+            }
+
+            addBtn.addEventListener('click', () => addQuestion());
+
+            function addQuestion(q = '', opts = '', correct = '') {
+                questionCount++;
+                const div = document.createElement('div');
+                div.className = 'question-group';
+                div.innerHTML = `
+                    <label><i class="fas fa-question"></i> ${translations[savedLang]['form-label-question']} ${questionCount}</label>
+                    <input type="text" class="question-text" value="${q}" placeholder="${translations[savedLang]['form-label-question']}" required>
+                    <label><i class="fas fa-list"></i> ${translations[savedLang]['form-label-options']}</label>
+                    <input type="text" class="options" value="${opts}" placeholder="${translations[savedLang]['form-label-options']}" required>
+                    <label><i class="fas fa-check"></i> ${translations[savedLang]['form-label-correct-answer']}</label>
+                    <input type="text" class="correct-answer" value="${correct}" placeholder="${translations[savedLang]['form-label-correct-answer']}" required>
+                    <button type="button" class="remove-question-btn">${translations[savedLang]['remove-question-btn']}</button>
+                `;
+                container.appendChild(div);
+
+                div.querySelector('.remove-question-btn').onclick = () => div.remove();
+            }
+
+            // تحويل الأسئلة إلى JSON قبل الإرسال
+            document.getElementById('task-form').onsubmit = function() {
+                const questions = [];
+                document.querySelectorAll('.question-group').forEach(g => {
+                    const q = g.querySelector('.question-text').value.trim();
+                    const opts = g.querySelector('.options').value;
+                    const correct = g.querySelector('.correct-answer').value.trim();
+
+                    if (q && opts && correct) {
+                        const options = opts.split(',').map(o => o.trim()).filter(o => o);
+                        if (options.length >= 2) {
+                            questions.push({ question: q, options, correct_answer: correct });
+                        }
+                    }
+                });
+                hiddenField.value = JSON.stringify(questions);
+            };
+        });
+    </script>
 </body>
 </html>
