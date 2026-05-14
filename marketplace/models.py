@@ -1,5 +1,10 @@
+from __future__ import annotations
+
+import hashlib
+import hmac
 import uuid
 from decimal import Decimal
+
 from django.conf import settings
 from django.db import models
 
@@ -12,118 +17,78 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
-class CoursePurchase(TimeStampedModel):
-    class Status(models.TextChoices):
-        PENDING = 'pending', 'Pending'
-        COMPLETED = 'completed', 'Completed'
-        FAILED = 'failed', 'Failed'
-        REFUNDED = 'refunded', 'Refunded'
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='course_purchases')
-    course = models.ForeignKey('courses.Course', on_delete=models.PROTECT, related_name='purchases')
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
-    currency = models.CharField(max_length=8, default='EGP')
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
-    idempotency_key = models.CharField(max_length=128, unique=True)
-
-
 class Enrollment(TimeStampedModel):
     class Source(models.TextChoices):
-        PAYMENT = 'payment', 'Payment'
-        CODE = 'code', 'Enrollment Code'
-        ADMIN = 'admin', 'Admin'
+        PAYMOB = "paymob", "Paymob"
+        ENROLLMENT_CODE = "enrollment_code", "Enrollment Code"
+        ADMIN = "admin", "Admin"
 
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='marketplace_enrollments')
-    course = models.ForeignKey('courses.Course', on_delete=models.PROTECT, related_name='marketplace_enrollments')
-    purchase = models.OneToOneField(CoursePurchase, on_delete=models.SET_NULL, null=True, blank=True, related_name='enrollment')
-    source = models.CharField(max_length=16, choices=Source.choices)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="enrollments")
+    course = models.ForeignKey("courses.Course", on_delete=models.PROTECT, related_name="enrollments_v2")
+    enrolled_at = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(max_length=24, choices=Source.choices)
+    payment_reference = models.CharField(max_length=128, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=['student', 'course'], name='uq_marketplace_enrollment')]
-
-
-class Payment(TimeStampedModel):
-    class Provider(models.TextChoices):
-        PAYMOB = 'paymob', 'Paymob'
-
-    class Status(models.TextChoices):
-        INITIATED = 'initiated', 'Initiated'
-        AUTHORIZED = 'authorized', 'Authorized'
-        CAPTURED = 'captured', 'Captured'
-        FAILED = 'failed', 'Failed'
-
-    purchase = models.OneToOneField(CoursePurchase, on_delete=models.PROTECT, related_name='payment')
-    provider = models.CharField(max_length=20, choices=Provider.choices, default=Provider.PAYMOB)
-    provider_order_id = models.CharField(max_length=128, unique=True)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.INITIATED)
-
-
-class PaymentTransaction(TimeStampedModel):
-    payment = models.ForeignKey(Payment, on_delete=models.PROTECT, related_name='transactions')
-    provider_txn_id = models.CharField(max_length=128, unique=True)
-    raw_payload = models.JSONField(default=dict)
-    signature_valid = models.BooleanField(default=False)
+        constraints = [models.UniqueConstraint(fields=["student", "course"], name="uq_active_student_course_enrollment")]
 
 
 class EnrollmentCode(TimeStampedModel):
-    code = models.CharField(max_length=64, unique=True)
-    course = models.ForeignKey('courses.Course', on_delete=models.PROTECT, related_name='enrollment_codes')
-    expires_at = models.DateTimeField()
-    max_usage = models.PositiveIntegerField(default=1)
+    code_hash = models.CharField(max_length=64, unique=True)
+    course = models.ForeignKey("courses.Course", on_delete=models.PROTECT, related_name="enrollment_codes")
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="created_enrollment_codes")
+    max_uses = models.PositiveIntegerField(default=1)
     used_count = models.PositiveIntegerField(default=0)
+    expires_at = models.DateTimeField()
     is_active = models.BooleanField(default=True)
+
+    @staticmethod
+    def hash_code(code: str) -> str:
+        normalized = code.strip().lower().encode("utf-8")
+        return hashlib.sha256(normalized).hexdigest()
+
+
+class CoursePayment(TimeStampedModel):
+    class Provider(models.TextChoices):
+        PAYMOB = "paymob", "Paymob"
+
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        PAID = "paid", "Paid"
+        FAILED = "failed", "Failed"
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="course_payments")
+    course = models.ForeignKey("courses.Course", on_delete=models.PROTECT, related_name="course_payments")
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    provider = models.CharField(max_length=16, choices=Provider.choices, default=Provider.PAYMOB)
+    transaction_id = models.CharField(max_length=128, unique=True)
+    payment_status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
+    verified = models.BooleanField(default=False)
+    paid_at = models.DateTimeField(null=True, blank=True)
 
 
 class InstructorWallet(TimeStampedModel):
-    instructor = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='wallet')
-    pending_balance = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
-    available_balance = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
-    withdrawn_balance = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
+    instructor = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="instructor_wallet")
+    balance = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"))
 
 
 class WalletTransaction(TimeStampedModel):
-    class Type(models.TextChoices):
-        REVENUE = 'revenue', 'Revenue'
-        RELEASE = 'release', 'Release'
-        WITHDRAW = 'withdraw', 'Withdraw'
-
-    wallet = models.ForeignKey(InstructorWallet, on_delete=models.PROTECT, related_name='transactions')
+    wallet = models.ForeignKey(InstructorWallet, on_delete=models.PROTECT, related_name="transactions")
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    tx_type = models.CharField(max_length=16, choices=Type.choices)
+    payment = models.ForeignKey(CoursePayment, on_delete=models.PROTECT, related_name="wallet_transactions")
     reference = models.CharField(max_length=128)
 
 
-class WithdrawalRequest(TimeStampedModel):
-    class Status(models.TextChoices):
-        PENDING = 'pending', 'Pending'
-        APPROVED = 'approved', 'Approved'
-        REJECTED = 'rejected', 'Rejected'
-        COMPLETED = 'completed', 'Completed'
-
-    wallet = models.ForeignKey(InstructorWallet, on_delete=models.PROTECT, related_name='withdrawal_requests')
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
-    collection_code = models.CharField(max_length=64)
-
-
 class RevenueShare(TimeStampedModel):
-    purchase = models.OneToOneField(CoursePurchase, on_delete=models.PROTECT, related_name='revenue_share')
-    gross_revenue = models.DecimalField(max_digits=12, decimal_places=2)
-    platform_fee = models.DecimalField(max_digits=12, decimal_places=2)
-    instructor_earnings = models.DecimalField(max_digits=12, decimal_places=2)
-
-
-class PayoutApproval(TimeStampedModel):
-    withdrawal_request = models.OneToOneField(WithdrawalRequest, on_delete=models.PROTECT, related_name='approval')
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='approved_payouts')
-    notes = models.TextField(blank=True)
+    payment = models.OneToOneField(CoursePayment, on_delete=models.PROTECT, related_name="revenue_share")
+    instructor_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    platform_amount = models.DecimalField(max_digits=12, decimal_places=2)
 
 
 class AuditLog(TimeStampedModel):
     actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    action = models.CharField(max_length=128)
-    entity_type = models.CharField(max_length=64)
-    entity_id = models.CharField(max_length=64)
+    action = models.CharField(max_length=120)
+    entity_type = models.CharField(max_length=80)
+    entity_id = models.CharField(max_length=80)
     metadata = models.JSONField(default=dict)

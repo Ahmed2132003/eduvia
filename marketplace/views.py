@@ -1,88 +1,76 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.db.models import Sum
+import hmac
+import json
+
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .serializers import BuyCourseSerializer, ApplyCodeSerializer, CoursePurchaseSerializer, EnrollmentSerializer
-from .models import CoursePurchase, Enrollment, InstructorWallet
-from .services import MarketplaceService
 from courses.models import Course
+from .models import CoursePayment, Enrollment
+from .serializers import ActivateCodeSerializer, EnrollmentSerializer, WebhookSerializer
+from .services import MarketplaceService
 
 
-class BuyCourseAPIView(APIView):
+class CheckoutPaymobAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        data = BuyCourseSerializer(data=request.data)
-        data.is_valid(raise_exception=True)
-        course = Course.objects.get(id=data.validated_data['course_id'])
-        purchase, _ = CoursePurchase.objects.get_or_create(
-            idempotency_key=data.validated_data['idempotency_key'],
-            defaults={'student': request.user, 'course': course, 'amount': course.price, 'currency': 'EGP'},
-        )
-        return Response(CoursePurchaseSerializer(purchase).data)
+    def post(self, request, course_id):
+        course = get_object_or_404(Course, id=course_id)
+        return Response(MarketplaceService.create_paymob_checkout(user=request.user, course=course), status=201)
 
 
-class ApplyEnrollmentCodeAPIView(APIView):
+class ActivateCodeAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        data = ApplyCodeSerializer(data=request.data)
-        data.is_valid(raise_exception=True)
-        enrollment = MarketplaceService.apply_enrollment_code(student=request.user, course_id=data.validated_data['course_id'], code_value=data.validated_data['code'])
+    def post(self, request, course_id):
+        serializer = ActivateCodeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        course = get_object_or_404(Course, id=course_id)
+        enrollment = MarketplaceService.activate_enrollment_code(user=request.user, course=course, code=serializer.validated_data["code"])
         return Response(EnrollmentSerializer(enrollment).data)
 
 
-class MyCoursesAPIView(APIView):
+class PaymentWebhookAPIView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def post(self, request):
+        serializer = WebhookSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        secret = getattr(settings, "PAYMOB_HMAC_SECRET", "")
+        expected = hmac.new(secret.encode(), serializer.validated_data["transaction_id"].encode(), "sha512").hexdigest()
+        if not hmac.compare_digest(expected, serializer.validated_data["hmac"]):
+            return Response({"detail": "invalid signature"}, status=400)
+        payment = get_object_or_404(CoursePayment, transaction_id=serializer.validated_data["transaction_id"])
+        MarketplaceService.finalize_payment(payment=payment, webhook_payload=serializer.validated_data["payload"])
+        return Response({"status": "ok"})
+
+
+class MyEnrollmentsAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        enrollments = Enrollment.objects.filter(student=request.user, is_active=True).select_related('course')
-        return Response(EnrollmentSerializer(enrollments, many=True).data)
+        rows = Enrollment.objects.filter(student=request.user, is_active=True).select_related("course")
+        return Response(EnrollmentSerializer(rows, many=True).data)
 
 
-class InstructorEarningsAPIView(APIView):
+class AccessStatusAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        total = request.user.wallet.transactions.filter(tx_type='revenue').aggregate(total=Sum('amount'))['total'] or 0
-        return Response({'total_earnings': total})
-
-
-@login_required
-def checkout_page(request):
-    courses = Course.objects.all().order_by('-created_at')
-    return render(request, 'marketplace/checkout.html', {'courses': courses})
-
-
-@login_required
-def my_courses_page(request):
-    if request.method == 'POST' and request.POST.get('action') == 'apply_code':
-        try:
-            MarketplaceService.apply_enrollment_code(
-                student=request.user,
-                course_id=int(request.POST.get('course_id')),
-                code_value=request.POST.get('code', '').strip(),
-            )
-            messages.success(request, 'Enrollment code applied successfully.')
-        except Exception as exc:
-            messages.error(request, f'Failed to apply enrollment code: {exc}')
-        return redirect('marketplace_my_courses')
-
-    enrollments = Enrollment.objects.filter(student=request.user, is_active=True).select_related('course')
-    return render(request, 'marketplace/my_courses.html', {'enrollments': enrollments})
+        return Response({"has_access": Enrollment.objects.filter(student=request.user, is_active=True).exists()})
 
 
 @login_required
 def access_restricted_page(request):
-    return render(request, 'marketplace/access_restricted.html')
+    return render(request, "marketplace/access_restricted.html")
 
 
 @login_required
-def instructor_wallet_page(request):
-    wallet, _ = InstructorWallet.objects.get_or_create(instructor=request.user)
-    transactions = wallet.transactions.all().order_by('-created_at')[:20]
-    return render(request, 'marketplace/instructor_wallet.html', {'wallet': wallet, 'transactions': transactions})
+def checkout_page(request):
+    course = get_object_or_404(Course, id=request.GET.get("course_id")) if request.GET.get("course_id") else None
+    return render(request, "marketplace/checkout.html", {"course": course, "courses": Course.objects.all().order_by("-created_at")[:20]})

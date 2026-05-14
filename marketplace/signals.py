@@ -1,0 +1,1 @@
+# Signals are intentionally kept explicit in services to guarantee single atomic transaction boundaries.

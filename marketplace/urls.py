@@ -1,22 +1,13 @@
 from django.urls import path
-from .views import (
-    BuyCourseAPIView,
-    ApplyEnrollmentCodeAPIView,
-    MyCoursesAPIView,
-    InstructorEarningsAPIView,
-    checkout_page,
-    my_courses_page,
-    access_restricted_page,
-    instructor_wallet_page,
-)
+
+from .views import AccessStatusAPIView, ActivateCodeAPIView, CheckoutPaymobAPIView, MyEnrollmentsAPIView, PaymentWebhookAPIView, access_restricted_page, checkout_page
 
 urlpatterns = [
-    path('student/buy-course/', BuyCourseAPIView.as_view()),
-    path('student/apply-code/', ApplyEnrollmentCodeAPIView.as_view()),
-    path('student/my-courses/', MyCoursesAPIView.as_view()),
-    path('instructor/earnings/', InstructorEarningsAPIView.as_view()),
-    path('checkout/', checkout_page, name='marketplace_checkout'),
-    path('my-courses/', my_courses_page, name='marketplace_my_courses'),
-    path('access-restricted/', access_restricted_page, name='marketplace_access_restricted'),
-    path('instructor/wallet/', instructor_wallet_page, name='marketplace_instructor_wallet'),
+    path("courses/<int:course_id>/checkout/paymob/", CheckoutPaymobAPIView.as_view()),
+    path("courses/<int:course_id>/activate-code/", ActivateCodeAPIView.as_view()),
+    path("payments/webhook/", PaymentWebhookAPIView.as_view()),
+    path("my/enrollments/", MyEnrollmentsAPIView.as_view()),
+    path("my/access-status/", AccessStatusAPIView.as_view()),
+    path("checkout/", checkout_page, name="marketplace_checkout"),
+    path("access-restricted/", access_restricted_page, name="marketplace_access_restricted"),
 ]

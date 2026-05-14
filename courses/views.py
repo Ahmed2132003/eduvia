@@ -82,108 +82,12 @@ def redirect_old_video_url(request, course_id, video_id):
 
 @csrf_protect
 def enroll_course(request, course_id, course_slug):
-    """
-    Enroll a user in a course using course.id and course.slug.
-    Supports both AJAX and regular HTTP requests.
-    """
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-
-    # جلب الكورس بالـ ID + slug (أمان عالي)
     course = get_object_or_404(Course, id=course_id, slug=course_slug)
-
-    # تحقق من تسجيل الدخول
     if not request.user.is_authenticated:
-        message = _('You must be logged in to enroll in a course.')
-        if is_ajax:
-            return JsonResponse({'success': False, 'message': message}, status=403)
-        messages.error(request, message)
+        messages.error(request, _('You must be logged in to continue checkout.'))
         return redirect('accounts:login')
+    return redirect(f"/courses/details/{course.id}/{course.slug}/?checkout=1")
 
-    try:
-        # جلب UserProfile (بدون get_object_or_404 لأنها موجودة دائمًا)
-        user_profile = request.user.courses_profile
-
-        # تحقق من عدد التسجيلات الحالية
-        current_enrollments = CourseEnrollment.objects.filter(user=request.user).count()
-
-        # حدود الاشتراك
-        plan_limits = {
-            'free': 1,
-            'basic': 2,
-            'pro': 4,
-            'premium': float('inf'),
-            'instructor_plan': float('inf')
-        }
-
-        max_allowed = plan_limits.get(user_profile.subscription_plan, 0)
-
-        if current_enrollments >= max_allowed:
-            message = _('You have reached the enrollment limit for your plan. Please upgrade.')
-            if is_ajax:
-                return JsonResponse({'success': False, 'message': message}, status=403)
-            messages.error(request, message)
-            return redirect('courses:courses')
-
-        # إنشاء التسجيل
-        enrollment, created = CourseEnrollment.objects.get_or_create(
-            user=request.user,
-            course=course
-        )
-
-        if not created:
-            message = _('You are already enrolled in this course.')
-            redirect_url = reverse('courses:course_details', kwargs={
-                'course_id': course.id,
-                'course_slug': course.slug
-            })
-            if is_ajax:
-                return JsonResponse({'success': False, 'message': message, 'redirect': redirect_url}, status=400)
-            messages.info(request, message)
-            return redirect(redirect_url)
-
-        # نجاح التسجيل
-        logger.info(f"User '{request.user.username}' enrolled in course '{course.title}' (ID: {course.id})")
-        message = _('Successfully joined the course!')
-        redirect_url = reverse('courses:course_details', kwargs={
-            'course_id': course.id,
-            'course_slug': course.slug
-        })
-
-        if is_ajax:
-            return JsonResponse({
-                'success': True,
-                'message': message,
-                'redirect': redirect_url
-            })
-
-        messages.success(request, message)
-        return redirect(redirect_url)
-
-    except AttributeError:
-        # لو UserProfile مش موجود (نادر جدًا)
-        logger.error(f"UserProfile missing for user: {request.user.username}")
-        message = _('User profile not found. Please contact support.')
-        if is_ajax:
-            return JsonResponse({'success': False, 'message': message}, status=500)
-        messages.error(request, message)
-        return redirect('courses:courses')
-
-    except IntegrityError as e:
-        logger.error(f"Database error during enrollment: {e}")
-        message = _('Enrollment failed. Please try again.')
-        if is_ajax:
-            return JsonResponse({'success': False, 'message': message}, status=500)
-        messages.error(request, message)
-        return redirect('courses:courses')
-
-    except Exception as e:
-        logger.error(f"Unexpected error in enroll_course: {str(e)}", exc_info=True)
-        message = _('An unexpected error occurred. Please try again later.')
-        if is_ajax:
-            return JsonResponse({'success': False, 'message': message}, status=500)
-        messages.error(request, message)
-        return redirect('courses:courses')
-    
 @login_required
 def download_certificate(request, course_id, course_title):
     course = get_object_or_404(Course, id=course_id)

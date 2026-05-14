@@ -664,7 +664,7 @@
             <h1>{{ course.title }}</h1>
             <p class="description">{{ course.description }}</p>
             {% if not is_enrolled %}
-                <a href="{% url 'courses:enroll_course' course.id course.title|custom_slugify %}" class="enroll-btn" data-translate="enroll-btn">Enroll for 300 Coins</a>
+                <a href="/api/marketplace/checkout/?course_id={{ course.id }}" class="enroll-btn" data-translate="enroll-btn">Buy this Course</a>                
             {% else %}
                 <h3 data-translate="progress-title">Course Progress</h3>
                 <progress value="{{ completed_videos_count }}" max="{{ total_videos_count }}" aria-label="Course progress"></progress>
@@ -717,7 +717,7 @@
                 "hero-desc": "Embark on your learning journey with {{ course.title }} on Eduvia.",
                 "search-placeholder": "Search for a course...",
                 "search-button": "Search",
-                "enroll-btn": "Enroll for 300 Coins",
+                "enroll-btn": "Buy this Course",                
                 "progress-title": "Course Progress",
                 "progress-text": "{{ completed_videos_count }} of {{ total_videos_count }} videos completed",
                 "certificate-btn": "Download Certificate",
@@ -752,7 +752,7 @@
                 "hero-desc": "ابدأ رحلة تعلمك مع {{ course.title }} على إدوفيا.",
                 "search-placeholder": "ابحث عن دورة...",
                 "search-button": "بحث",
-                "enroll-btn": "التسجيل مقابل 300 نقطة",
+                "enroll-btn": "شراء هذا الكورس",                
                 "progress-title": "تقدم الدورة",
                 "progress-text": "{{ completed_videos_count }} من {{ total_videos_count }} فيديو مكتمل",
                 "certificate-btn": "تحميل الشهادة",
