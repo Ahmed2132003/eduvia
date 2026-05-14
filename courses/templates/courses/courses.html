@@ -730,8 +730,8 @@
                     <div class="course-actions">
                         {% if user.is_authenticated %}
                             {% if course.id in enrolled_course_ids %}
-                                <a href="{% url 'courses:course_details' course.id course.slug %}"                            
-                                class="join-btn" data-translate="view-course">
+                                <a href="{% url 'courses:course_details' course.id course.slug %}" 
+                                    class="join-btn" data-translate="view-course">
                                 {% trans "View Course" %}</a>
                             {% else %}
                                 {% if not user.courses_profile or user.courses_profile.subscription_plan == 'free' and enrolled_course_ids|length >= 1 or user.courses_profile.subscription_plan == 'basic' and enrolled_course_ids|length >= 2 or user.courses_profile.subscription_plan == 'pro' and enrolled_course_ids|length >= 4 %}
