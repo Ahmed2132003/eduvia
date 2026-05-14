@@ -43,32 +43,27 @@ class VideoForm(forms.ModelForm):
 
     class Meta:
         model = Video
-        fields = ['title', 'video_url', 'video_file', 'description', 'order', 'duration', 'unlocked']
+        fields = ['title', 'video_url', 'description', 'order', 'duration']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter video title'}),
             'description': forms.Textarea(attrs={'placeholder': 'Enter video description'}),
             'video_url': forms.URLInput(attrs={'placeholder': 'Enter video URL (e.g., Google Drive link)'}),
-            'video_file': forms.FileInput(attrs={'placeholder': 'Upload video file (optional)'}),
             'order': forms.NumberInput(attrs={'placeholder': 'Enter video order'}),
             'duration': forms.NumberInput(attrs={'placeholder': 'Enter duration in minutes'}),
-            'unlocked': forms.CheckboxInput(),
         }
         labels = {
             'title': 'Video Title',
             'description': 'Description',
             'video_url': 'Video URL',
-            'video_file': 'Upload Video',
             'order': 'Order',
             'duration': 'Duration (minutes)',
-            'unlocked': 'Unlocked',
         }
 
     def clean(self):
         cleaned_data = super().clean()
         video_url = cleaned_data.get('video_url')
-        video_file = cleaned_data.get('video_file')
-        if not video_url and not video_file:
-            raise forms.ValidationError("يجب إدخال رابط فيديو أو رفع ملف فيديو.")
+        if not video_url:
+            raise forms.ValidationError("يجب إدخال رابط الفيديو.")
         return cleaned_data
 
     def clean_questions_json(self):
