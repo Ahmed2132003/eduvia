@@ -32,7 +32,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='course',
             name='slug',
-            field=models.SlugField(allow_unicode=True, blank=True, max_length=500, unique=True),
+            field=models.SlugField(allow_unicode=True, blank=True, max_length=500, null=True),
         ),
         migrations.RunPython(backfill_course_slugs, migrations.RunPython.noop),
+        migrations.AlterField(
+            model_name='course',
+            name='slug',
+            field=models.SlugField(allow_unicode=True, blank=True, max_length=500, unique=True),
+        ),
     ]
