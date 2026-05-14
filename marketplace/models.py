@@ -23,7 +23,7 @@ class Enrollment(TimeStampedModel):
         ENROLLMENT_CODE = "enrollment_code", "Enrollment Code"
         ADMIN = "admin", "Admin"
 
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="enrollments")
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="marketplace_enrollments")    
     course = models.ForeignKey("courses.Course", on_delete=models.PROTECT, related_name="enrollments_v2")
     enrolled_at = models.DateTimeField(auto_now_add=True)
     source = models.CharField(max_length=24, choices=Source.choices)
