@@ -130,8 +130,8 @@ def video_url(video):
     
 @register.simple_tag
 def enroll_url(course):
-    """يولّد رابط التسجيل في الكورس باستخدام slug"""
+    """يولّد رابط التسجيل في الكورس مع fallback slug آمن."""
     return reverse('courses:enroll_course', kwargs={
         'course_id': course.id,
-        'course_slug': course.slug
+        'course_slug': arabic_slug(course.title, fallback_id=course.id)
     })
