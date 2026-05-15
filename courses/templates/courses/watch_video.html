@@ -892,7 +892,7 @@
             </form>
 
             <h3 data-translate="upload-file-heading" dir="auto">Upload a File</h3>
-            <form method="post" enctype="multipart/form-data" action="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_title=slugified_video_title %}" class="upload-form">
+            <form method="post" enctype="multipart/form-data" action="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_slug=slugified_video_title %}" class="upload-form">
                 {% csrf_token %}
                 <input type="hidden" name="upload_file" value="true">
                 <label for="file" data-translate="file-label" dir="auto">Choose a file:</label>
@@ -958,7 +958,7 @@
                                                 {% else %}
                                                     {% if show_main_task %}
                                                         <p data-translate="fail-message" dir="auto">You need 50% to pass. Score: {{ score|floatformat:0 }}%. Retry the task.</p>
-                                                        <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_title=slugified_video_title %}">
+                                                        <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_slug=slugified_video_title %}">
                                                             {% csrf_token %}
                                                             <input type="hidden" name="task_id" value="{{ task.id }}">
                                                             <div class="task-container">
@@ -978,7 +978,7 @@
                                                     {% endif %}
                                                     {% if show_alternative_quiz and alternative_quiz %}
                                                         <h5 data-translate="alternative-quiz-heading" dir="auto">Alternative Quiz</h5>
-                                                        <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_title=slugified_video_title %}">
+                                                        <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_slug=slugified_video_title %}">
                                                             {% csrf_token %}
                                                             <input type="hidden" name="quiz_id" value="{{ alternative_quiz.id }}">
                                                             <p dir="auto">{{ alternative_quiz.question }}</p>
@@ -997,7 +997,7 @@
                                 {% endwith %}
                             {% else %}
                                 {% if show_main_task %}
-                                    <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_title=slugified_video_title %}">
+                                    <form method="post" action="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_slug=slugified_video_title %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="task_id" value="{{ task.id }}">
                                         <div class="task-container">
