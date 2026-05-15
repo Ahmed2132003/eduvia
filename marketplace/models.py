@@ -25,7 +25,7 @@ class Enrollment(TimeStampedModel):
 
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="marketplace_enrollments")    
     course = models.ForeignKey("courses.Course", on_delete=models.PROTECT, related_name="enrollments_v2")
-    enrolled_at = models.DateTimeField(auto_now_add=True)
+    enrolled_at = models.DateTimeField(auto_now_add=True, null=True)
     source = models.CharField(max_length=24, choices=Source.choices)
     payment_reference = models.CharField(max_length=128, blank=True)
     is_active = models.BooleanField(default=True)
@@ -76,12 +76,12 @@ class InstructorWallet(TimeStampedModel):
 class WalletTransaction(TimeStampedModel):
     wallet = models.ForeignKey(InstructorWallet, on_delete=models.PROTECT, related_name="transactions")
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    payment = models.ForeignKey(CoursePayment, on_delete=models.PROTECT, related_name="wallet_transactions")
+    payment = models.ForeignKey(CoursePayment, on_delete=models.PROTECT, related_name="wallet_transactions", null=True)
     reference = models.CharField(max_length=128)
 
 
 class RevenueShare(TimeStampedModel):
-    payment = models.OneToOneField(CoursePayment, on_delete=models.PROTECT, related_name="revenue_share")
+    payment = models.OneToOneField(CoursePayment, on_delete=models.PROTECT, related_name="revenue_share", null=True)
     instructor_amount = models.DecimalField(max_digits=12, decimal_places=2)
     platform_amount = models.DecimalField(max_digits=12, decimal_places=2)
 
