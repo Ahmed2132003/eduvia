@@ -258,13 +258,27 @@ def courses_view(request):
     courses = Course.objects.all()
     enrolled_course_ids = []
     if request.user.is_authenticated:
-        enrolled_course_ids = list(CourseEnrollment.objects.filter(user=request.user).values_list('course__id', flat=True))
+        # من النظام القديم
+        old_enrolled = list(CourseEnrollment.objects.filter(
+            user=request.user
+        ).values_list('course__id', flat=True))
+        
+        # من النظام الجديد (marketplace)
+        from marketplace.models import Enrollment as MarketplaceEnrollment
+        new_enrolled = list(MarketplaceEnrollment.objects.filter(
+            student=request.user, is_active=True
+        ).values_list('course__id', flat=True))
+        
+        # دمج الاتنين
+        enrolled_course_ids = list(set(old_enrolled + new_enrolled))
+        
     for course in courses:
-        logger.debug(f"Courses View - Course ID: {course.id}, Title: {course.title}, Slugified: {slugify(clean_text(course.title), allow_unicode=True)}")
+        logger.debug(f"Courses View - Course ID: {course.id}, Title: {course.title}")
     return render(request, 'courses/courses.html', {
         'courses': courses,
         'enrolled_course_ids': enrolled_course_ids
     })
+
 
 @login_required
 def instructor_dashboard(request):
