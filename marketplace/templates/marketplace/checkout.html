@@ -40,7 +40,7 @@ async function activateCode(courseId){
   const r = await fetch(`/api/marketplace/courses/${courseId}/activate-code/`, {
     method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':csrfToken()}, body:JSON.stringify({code})
   });
-  if(r.ok){ alert('Course activated successfully'); window.location.href='/courses/details/'+courseId+'/'; return; }
+  if(r.ok){ alert('Course activated successfully'); window.location.href='/api/marketplace/checkout/?course_id='+courseId; return; }
   const err = await r.json(); alert(err.detail || 'Invalid code');
 }
 </script>

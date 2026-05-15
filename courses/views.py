@@ -65,7 +65,7 @@ def redirect_old_course_url(request, course_id):
     slugified_title = slugify(cleaned_title, allow_unicode=True) or 'default-title'
     return HttpResponsePermanentRedirect(reverse('courses:course_details', kwargs={
         'course_id': course.id,
-        'course_title': slugified_title
+        'course_slug': slugified_title
     }))
 
 def redirect_old_video_url(request, course_id, video_id):
