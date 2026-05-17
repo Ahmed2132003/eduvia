@@ -1,9 +1,9 @@
 # access_control.py
-# ضعه في جذر المشروع (بجانب manage.py) أو في تطبيق مشترك
+# ضعه في جذر المشروع (بجانب manage.py)
 """
 منطق التحقق من أهلية المستخدم لاستخدام الشات بوت والمسابقات.
 
-القاعدة: المستخدم مؤهل إذا كان لديه Enrollment أو Purchase أو Access
+القاعدة: المستخدم مؤهل إذا كان لديه CourseEnrollment أو Purchase أو Access
 لكورس واحد على الأقل خلال آخر 60 يوماً.
 """
 
@@ -20,7 +20,7 @@ def has_active_course_access(user):
     """
     التحقق هل لدى المستخدم كورس صالح خلال آخر 60 يوم.
     يبحث في:
-    - Enrollment (التسجيل في كورس)
+    - CourseEnrollment (التسجيل في كورس)
     - Purchase (شراء كورس)
     - CourseAccess (وصول مباشر للكورس)
 
@@ -35,10 +35,10 @@ def has_active_course_access(user):
 
     cutoff = _get_cutoff_date()
 
-    # ---- Enrollment ----
+    # ---- CourseEnrollment ----
     try:
-        from courses.models import Enrollment
-        if Enrollment.objects.filter(
+        from courses.models import CourseEnrollment
+        if CourseEnrollment.objects.filter(
             user=user,
             enrolled_at__gte=cutoff
         ).exists():

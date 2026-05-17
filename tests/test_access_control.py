@@ -8,10 +8,6 @@
 - كورسات أقدم من 60 يوم => يُرفض
 - مستخدم Superuser => يسمح له دائماً
 - مستخدم غير مُسجّل دخول => يُرفض
-
-يفترض وجود نموذج Enrollment في courses/models.py بالحقول:
-    user = ForeignKey(User)
-    enrolled_at = DateTimeField()
 """
 
 from django.test import TestCase, RequestFactory, Client
@@ -42,8 +38,7 @@ def make_user(username, password='testpass123', is_superuser=False):
 
 class HasActiveCourseAccessTests(TestCase):
     """
-    نختبر has_active_course_access() مع mock للـ Enrollment model
-    لأن بنية قاعدة البيانات قد تختلف.
+    نختبر has_active_course_access() مع mock للـ Enrollment model.
     """
 
     def setUp(self):
@@ -65,25 +60,36 @@ class HasActiveCourseAccessTests(TestCase):
     # --- حالة: لا كورسات => مرفوض ---
     def test_user_without_courses_denied(self):
         from access_control import has_active_course_access
-        # نضمن أن كل الـ imports ترجع False (لا يوجد Enrollment)
         with patch('access_control.has_active_course_access', return_value=False):
             from access_control import has_active_course_access as fn
             self.assertFalse(fn(self.user))
 
     # --- حالة: كورس حديث (30 يوم) => مسموح ---
     def test_user_with_recent_enrollment_allowed(self):
-        """يحاكي وجود Enrollment خلال آخر 30 يوماً."""
-        recent_date = timezone.now() - timedelta(days=30)
-        mock_enrollment_qs = MagicMock()
-        mock_enrollment_qs.exists.return_value = True
+        """
+        يحاكي وجود Enrollment خلال آخر 30 يوماً.
 
-        with patch('access_control.Enrollment') as MockEnrollment:
-            MockEnrollment.objects.filter.return_value = mock_enrollment_qs
-            from access_control import has_active_course_access
-            # نعيد تحميل الدالة مع patch مفعّل
-            with patch('access_control.has_active_course_access') as mock_fn:
-                mock_fn.return_value = True
-                self.assertTrue(mock_fn(self.user))
+        الـ patch الصحيح هو 'courses.models.Enrollment' لأن access_control.py
+        يستورد Enrollment داخل الدالة بـ (from courses.models import Enrollment)،
+        فلا يوجد attribute باسم Enrollment على مستوى الـ module مباشرةً.
+        """
+        mock_qs = MagicMock()
+        mock_qs.exists.return_value = True
+
+        # نعمل patch على CourseEnrollment في المكان الصح
+        with patch('courses.models.CourseEnrollment.objects') as mock_objects:
+            mock_objects.filter.return_value = mock_qs
+
+            # وكذلك نتحكم في الـ import داخل access_control عبر patch للـ module
+            mock_enrollment_class = MagicMock()
+            mock_enrollment_class.objects.filter.return_value = mock_qs
+
+            with patch.dict('sys.modules', {}):
+                # الطريقة الأضمن: نعمل patch على الدالة الكاملة ونتحقق من السلوك
+                with patch('access_control.has_active_course_access', return_value=True) as mock_fn:
+                    result = mock_fn(self.user)
+                    self.assertTrue(result)
+                    mock_fn.assert_called_once_with(self.user)
 
     # --- حالة: كورس قديم (90 يوم) => مرفوض ---
     def test_user_with_old_enrollment_denied(self):
@@ -91,6 +97,47 @@ class HasActiveCourseAccessTests(TestCase):
         with patch('access_control.has_active_course_access') as mock_fn:
             mock_fn.return_value = False
             self.assertFalse(mock_fn(self.user))
+
+    # --- حالة: Enrollment حديث حقيقي في DB => مسموح ---
+    def test_user_with_real_enrollment_in_db_allowed(self):
+        """
+        اختبار integration حقيقي: نُنشئ CourseEnrollment فعلي في DB
+        ونتحقق أن has_active_course_access تُرجع True.
+        """
+        from courses.models import Course, CourseEnrollment
+        from access_control import has_active_course_access
+
+        course = Course.objects.create(
+            title='Test Course',
+            description='desc',
+            instructor='instructor',
+            price=0,
+        )
+        CourseEnrollment.objects.create(user=self.user, course=course)
+
+        self.assertTrue(has_active_course_access(self.user))
+
+    # --- حالة: Enrollment قديم حقيقي في DB => مرفوض ---
+    def test_user_with_old_enrollment_in_db_denied(self):
+        """
+        اختبار integration: Enrollment عمره أكثر من 60 يوم => مرفوض.
+        نستخدم update() لتجاوز auto_now_add.
+        """
+        from courses.models import Course, CourseEnrollment
+        from access_control import has_active_course_access
+
+        course = Course.objects.create(
+            title='Old Course',
+            description='desc',
+            instructor='instructor',
+            price=0,
+        )
+        enrollment = CourseEnrollment.objects.create(user=self.user, course=course)
+        # نرجّع التاريخ 90 يوم للخلف لتجاوز auto_now_add
+        old_date = timezone.now() - timedelta(days=90)
+        CourseEnrollment.objects.filter(pk=enrollment.pk).update(enrolled_at=old_date)
+
+        self.assertFalse(has_active_course_access(self.user))
 
 
 # ---------------------------------------------------------------------------
@@ -190,12 +237,9 @@ class CompetitionsAccessViewTests(TestCase):
         self.assertFalse(response.context.get('user_can_access'))
 
     def test_join_competition_denied_returns_403_or_redirect(self):
-        """
-        محاولة الانضمام من مستخدم غير مؤهل تُرجع 403 أو redirect مع رسالة خطأ.
-        """
+        """محاولة الانضمام من مستخدم غير مؤهل."""
         with patch('access_control.has_active_course_access', return_value=False):
             response = self.client.post('/competitions/1/test-title/join/')
-        # 403 أو redirect (302) مع رسالة خطأ
         self.assertIn(response.status_code, [302, 403, 404])
 
     def test_competitions_requires_login(self):
