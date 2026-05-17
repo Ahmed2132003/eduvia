@@ -5,92 +5,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
     <title data-translate="competitions-title">Educational Competitions | Eduvia</title>
-    <meta name="description" data-translate="competitions-meta-desc" content="Join educational competitions on the Eduvia platform and earn XP and coins! Discover fun learning challenges designed to boost your skills.">
-    <meta name="keywords" data-translate="competitions-meta-keywords" content="educational competitions, interactive learning, Eduvia platform, online learning, learning challenges, XP, coins">
+    <meta name="description" content="Join educational competitions on the Eduvia platform and earn XP and coins!" data-translate="competitions-meta-desc">
+    <meta name="keywords" content="educational competitions, interactive learning, Eduvia platform" data-translate="competitions-meta-keywords">
     <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
-    <meta http-equiv="content-language" content="ar, en">
-    <meta name="description" lang="en" data-translate="competitions-meta-desc-en" content="Join educational competitions on the Eduvia platform and earn XP and coins! Discover fun learning challenges designed to boost your skills.">
-    <meta name="keywords" lang="en" data-translate="competitions-meta-keywords-en" content="educational competitions, interactive learning, Eduvia platform, online learning, learning challenges, XP, coins">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" data-translate="competitions-og-title" content="Educational Competitions | Eduvia">
-    <meta property="og:description" data-translate="competitions-og-desc" content="Join educational competitions on the Eduvia platform and earn XP and coins!">
+    <meta property="og:title" content="Educational Competitions | Eduvia" data-translate="competitions-og-title">
+    <meta property="og:description" content="Join educational competitions on the Eduvia platform and earn XP and coins!" data-translate="competitions-og-desc">
     <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" data-translate="competitions-og-title" content="Educational Competitions | Eduvia">
-    <meta name="twitter:description" data-translate="competitions-og-desc" content="Join educational competitions on the Eduvia platform and earn XP and coins!">
+    <meta name="twitter:title" content="Educational Competitions | Eduvia">
+    <meta name="twitter:description" content="Join educational competitions on the Eduvia platform and earn XP and coins!">
     <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
 
-    <!-- 🖼️ Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
     <link rel="stylesheet" href="{% static 'competitions/competition_list.css' %}">
 
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/competitions/#webpage",
-                "url": "https://eduvia-ai.fly.dev/competitions/",
-                "name": "Educational Competitions | Eduvia",
-                "description": "Join educational competitions on the Eduvia platform and earn XP and coins! Discover fun learning challenges designed to boost your skills.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/competitions/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/competitions/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Competitions",
-                        "item": "https://eduvia-ai.fly.dev/competitions/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
+    <style>
+        /* رسالة منع الوصول */
+        .access-denied-box {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 32px 28px;
+            background: linear-gradient(145deg, #fff8f8, #ffe8e8);
+            border: 2px solid #ff6b6b;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.15);
+        }
+        .access-denied-box .lock-icon { font-size: 52px; color: #ff6b6b; margin-bottom: 16px; }
+        .access-denied-box h2 { color: #cc0000; font-size: 22px; margin-bottom: 12px; }
+        .access-denied-box p { color: #444; font-size: 17px; line-height: 1.7; margin-bottom: 20px; }
+        .access-denied-box .courses-btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #00c9a7, #12d3cf);
+            color: #fff;
+            padding: 11px 26px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .access-denied-box .courses-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 201, 167, 0.4);
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -105,7 +73,6 @@
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             {% if user.is_authenticated %}
                 {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
@@ -144,9 +111,7 @@
     <!-- Competitions Section -->
     <section class="competitions-container">
         <h1 data-translate="competitions-list-title">List of Competitions</h1>
-        <div class="subscribe-link">
-            <a href="{% url 'accounts:subscribe' %}" data-translate="subscribe-link">اشترك في خطط الدفع للوصول إلى المزيد من المسابقات</a>
-        </div>
+
         {% if messages %}
             <div class="messages">
                 {% for message in messages %}
@@ -156,11 +121,25 @@
                 {% endfor %}
             </div>
         {% endif %}
+
+        <!-- رسالة منع الوصول إذا لم يكن مؤهلاً -->
+        {% if not user_can_access and user.is_authenticated %}
+            <div class="access-denied-box">
+                <div class="lock-icon"><i class="fas fa-lock"></i></div>
+                <h2>الوصول مقيّد</h2>
+                <p>يجب الاشتراك في كورس واحد على الأقل خلال آخر شهرين لاستخدام الشات بوت أو الدخول للمسابقات.</p>
+                <a href="/courses/" class="courses-btn">
+                    <i class="fas fa-book-open"></i> تصفح الكورسات
+                </a>
+            </div>
+        {% endif %}
+
         {% if user.role == 'instructor' %}
             <div class="create-competition">
                 <a href="{% url 'competitions:create_competition' %}" data-translate="create-competition-link">Create New Competition</a>
             </div>
         {% endif %}
+
         <ul class="competitions-list">
             {% for competition in competitions %}
                 <li class="competition-card">
@@ -189,17 +168,14 @@
     </footer>
 
     <script src="{% static 'competitions/competition_list.js' %}"></script>
-    <!-- JS لإخفاء الرسائل تلقائيًا -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const messages = document.querySelectorAll('.messages p');
-            messages.forEach(function(msg) {
-                setTimeout(function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            const msgs = document.querySelectorAll('.messages p');
+            msgs.forEach(function (msg) {
+                setTimeout(function () {
                     msg.style.opacity = '0';
-                    setTimeout(function() {
-                        msg.remove();
-                    }, 500); // وقت الـ fade out
-                }, 5000); // إخفاء بعد 5 ثواني
+                    setTimeout(function () { msg.remove(); }, 500);
+                }, 5000);
             });
         });
     </script>

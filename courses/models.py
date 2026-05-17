@@ -8,6 +8,7 @@ from .utils import generate_unicode_slug, unique_model_slug
 import uuid
 import re
 from django.utils.timezone import now
+
 def clean_text(text):
     """تنظيف النص من الأحرف غير المدعومة"""
     if not text:
@@ -51,51 +52,31 @@ class UserProfile(models.Model):
             return True
         return False
 
+    # ✅ كل القيود اتشالت - كل الدوال بترجع True دايماً
     def can_enroll_in_course(self):
-        enrollments = CourseEnrollment.objects.filter(user=self.user).count()
-        if self.subscription_plan == 'free':
-            return enrollments < 1
-        elif self.subscription_plan == 'basic':
-            return enrollments < 2
-        elif self.subscription_plan == 'pro':
-            return enrollments < 4
-        elif self.subscription_plan == 'premium':
-            return True
-        return False
+        return True
 
     def can_view_video(self, course, video_order):
-        if self.subscription_plan == 'free':
-            videos_watched = VideoProgress.objects.filter(user=self.user, video__course=course).count()
-            return videos_watched < 10 and video_order <= 10
         return True
 
     def can_upload_file(self):
-        return self.subscription_plan in ['basic', 'pro', 'premium']
+        return True
 
     def can_view_files(self):
-        return self.subscription_plan in ['basic', 'pro', 'premium']
+        return True
 
     def can_download_certificate(self):
-        return self.subscription_plan in ['basic', 'pro', 'premium']
+        return True
 
     def can_add_course(self):
-        if self.subscription_plan == 'instructor_plan' and (not self.subscription_end_date or self.subscription_end_date > now()):
-            return True
-        if self.subscription_plan == 'free' and Course.objects.filter(instructor=self.user.username).count() < 1:
-            return True
-        return False
+        return True
 
     def can_add_video(self, course):
-        if self.subscription_plan == 'instructor_plan' and (not self.subscription_end_date or self.subscription_end_date > now()):
-            return True
-        if self.subscription_plan == 'free' and course and Video.objects.filter(course=course).count() < 10:
-            return True
-        return False
+        return True
 
     def can_edit_or_delete(self):
-        if self.subscription_plan == 'instructor_plan' and (not self.subscription_end_date or self.subscription_end_date > now()):
-            return True
-        return False
+        return True
+
 
 class Course(models.Model):
     CATEGORY_CHOICES = [
@@ -120,10 +101,10 @@ class Course(models.Model):
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default='beginner')
     total_lessons = models.PositiveIntegerField(default=0)
     slug = models.SlugField(max_length=500, unique=True, allow_unicode=True, blank=True)
-    
+
     def __str__(self):
         return self.title
-    
+
     def get_image_url(self):
         return self.image if self.image else 'https://via.placeholder.com/300x200?text=No+Image'
 
@@ -148,6 +129,7 @@ class Course(models.Model):
     def get_absolute_url(self):
         return reverse('courses:course_details', kwargs={'course_id': self.id, 'course_slug': self.get_slug()})
 
+
 class CourseEnrollment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='enrollments')
@@ -165,6 +147,7 @@ class CourseEnrollment(models.Model):
         videos = self.course.videos.all()
         return videos.exists() and progress.count() == videos.count() and all(p.completed for p in progress)
 
+
 class Certificate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='certificates')
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='certificates')
@@ -173,6 +156,7 @@ class Certificate(models.Model):
 
     def __str__(self):
         return f"Certificate {self.certificate_number} for {self.user.username} - {self.course.title}"
+
 
 class Video(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='videos')
@@ -205,6 +189,7 @@ class Video(models.Model):
             'video_slug': generate_unicode_slug(self.title, fallback_prefix='video', fallback_id=self.id)
         })
 
+
 class VideoProgress(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='video_progress')
     video = models.ForeignKey('Video', on_delete=models.CASCADE, related_name='progress')
@@ -221,22 +206,16 @@ class VideoProgress(models.Model):
     def get_current_progress(self):
         return self.progress_percentage
 
+
 class Comment(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='comments'
-    )
-    video = models.ForeignKey(
-        'Video',
-        on_delete=models.CASCADE,
-        related_name='comments'
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
+    video = models.ForeignKey('Video', on_delete=models.CASCADE, related_name='comments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Comment by {self.user} on {self.video}"
+
 
 class VideoRating(models.Model):
     video = models.ForeignKey('Video', on_delete=models.CASCADE)
@@ -246,6 +225,7 @@ class VideoRating(models.Model):
     class Meta:
         unique_together = ('video', 'user')
 
+
 class CourseRating(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -253,6 +233,7 @@ class CourseRating(models.Model):
 
     class Meta:
         unique_together = ('course', 'user')
+
 
 class VideoFile(models.Model):
     video = models.ForeignKey('Video', on_delete=models.CASCADE, related_name='files')
@@ -266,6 +247,7 @@ class VideoFile(models.Model):
     def __str__(self):
         return f"File {self.file.name or self.file_url} uploaded by {self.user} for {self.video}"
 
+
 class Task(models.Model):
     video = models.ForeignKey(Video, related_name='tasks', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, default="Task")
@@ -274,6 +256,7 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class AlternativeQuiz(models.Model):
     video = models.ForeignKey(Video, related_name='alternative_quizzes', on_delete=models.CASCADE)
@@ -285,6 +268,7 @@ class AlternativeQuiz(models.Model):
     def __str__(self):
         return self.question
 
+
 class UserTaskSubmission(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
@@ -295,6 +279,7 @@ class UserTaskSubmission(models.Model):
 
     class Meta:
         unique_together = ('user', 'task', 'attempt_number')
+
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):

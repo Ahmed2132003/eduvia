@@ -16,7 +16,7 @@
 
     <!-- 🌍 Open Graph -->
     <meta property="og:title" content="Chatbot - Eduvia" data-translate="chatbot-og-title">
-    <meta property="og:description" content="Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!" data-translate="chatbot-og-desc">
+    <meta property="og:description" content="Interact with Eduvia's chatbot." data-translate="chatbot-og-desc">
     <meta property="og:image" content="https://i.postimg.cc/3x8M2G1k/chat-eduvia.jpg">
     <meta property="og:url" content="https://eduvia-ai.fly.dev/chatbot/">
     <meta property="og:type" content="website">
@@ -24,7 +24,7 @@
     <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Chatbot - Eduvia" data-translate="chatbot-twitter-title">
-    <meta name="twitter:description" content="Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!" data-translate="chatbot-twitter-desc">
+    <meta name="twitter:description" content="Interact with Eduvia's chatbot." data-translate="chatbot-twitter-desc">
     <meta name="twitter:image" content="https://i.postimg.cc/3x8M2G1k/chat-eduvia.jpg">
 
     <!-- 🖼️ Favicon -->
@@ -37,10 +37,57 @@
     <!-- 🎨 Styles -->
     <link rel="stylesheet" href="{% static 'chatbot/chatbot.css' %}">
 
-    <!-- 🖼️ Hero Background -->
     <style>
         :root {
             --hero-bg-image: url("https://i.postimg.cc/3x8M2G1k/chat-eduvia.jpg");
+        }
+
+        /* رسالة منع الوصول */
+        .access-denied-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 40px 30px;
+            background: linear-gradient(145deg, #fff8f8, #ffe8e8);
+            border: 2px solid #ff6b6b;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.15);
+        }
+
+        .access-denied-container .lock-icon {
+            font-size: 56px;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+        }
+
+        .access-denied-container h2 {
+            color: #cc0000;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .access-denied-container p {
+            color: #444;
+            font-size: 17px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .access-denied-container .courses-btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #00c9a7, #12d3cf);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .access-denied-container .courses-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 201, 167, 0.4);
         }
     </style>
 
@@ -48,52 +95,9 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/chatbot/#webpage",
-                "url": "https://eduvia-ai.fly.dev/chatbot/",
-                "name": "Chatbot - Eduvia",
-                "description": "Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/chatbot/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/chatbot/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Chatbot",
-                        "item": "https://eduvia-ai.fly.dev/chatbot/"
-                    }
-                ]
-            }
-        ]
+        "@type": "WebPage",
+        "name": "Chatbot - Eduvia",
+        "url": "https://eduvia-ai.fly.dev/chatbot/"
     }
     </script>
 </head>
@@ -108,7 +112,6 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
@@ -143,7 +146,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <h1 data-translate="chatbot-hero-title">Welcome to Eduvia's Chatbot</h1>
-        <p data-translate="chatbot-hero-desc">Eduvia's Chatbot is here to help you with programming, mathematics, and English. Feel free to ask any questions related to these topics or our platform!</p>
+        <p data-translate="chatbot-hero-desc">Eduvia's Chatbot is here to help you with programming, mathematics, and English.</p>
         <a href="#chat-container" class="btn" data-translate="chatbot-hero-btn">Start Chatting</a>
     </section>
 
@@ -153,6 +156,20 @@
         <button type="submit" data-translate="search-btn">Search</button>
     </form>
 
+    {% if access_denied %}
+    <!-- ---- رسالة منع الوصول ---- -->
+    <div class="access-denied-container">
+        <div class="lock-icon"><i class="fas fa-lock"></i></div>
+        <h2>الوصول مقيّد</h2>
+        <p>{{ access_denied_message }}</p>
+        <a href="/courses/" class="courses-btn">
+            <i class="fas fa-book-open"></i> تصفح الكورسات
+        </a>
+    </div>
+
+    {% else %}
+    <!-- ---- الشات بوت ---- -->
+
     <!-- Sidebar for Chats -->
     <div class="sidebar">
         <h2 data-translate="chatbot-chats-title">Your Chats</h2>
@@ -160,7 +177,8 @@
         <ul>
             {% for chat in chats %}
                 <li>
-                    <a href="{% url 'chatbot:chatbot_page_with_id' chat_id=chat.id %}" {% if chat.id == current_chat.id %}class="active"{% endif %}>
+                    <a href="{% url 'chatbot:chatbot_page_with_id' chat_id=chat.id %}"
+                       {% if current_chat and chat.id == current_chat.id %}class="active"{% endif %}>
                         {{ chat.title }} ({{ chat.created_at|date:"Y-m-d H:i" }})
                     </a>
                 </li>
@@ -172,32 +190,31 @@
 
     <!-- Chat Container -->
     <div id="chat-container">
-        <p class="message-limit" data-translate="chatbot-message-limit">Messages today: {{ daily_message_count }} / {{ daily_limit }}</p>
+        <p class="message-limit" data-translate="chatbot-message-limit">
+            Messages today: {{ daily_message_count }} / {{ daily_limit }}
+        </p>
         <div id="chat-messages">
             {% for message in messages %}
                 <div class="message user-message">{{ message.user_message }}</div>
                 <div class="message bot-message">{{ message.bot_response }}</div>
             {% endfor %}
         </div>
-        <input type="text" id="user-input" placeholder="Type your message here..." data-translate="chatbot-input-placeholder">
-        <button id="send-button" onclick="sendMessage()" data-translate="chatbot-send">Send</button>
-        <div class="loading" id="loading" data-translate="chatbot-loading">Loading...</div>
-        <div class="error-message" id="error-message"></div>
+
         {% if daily_message_count >= daily_limit %}
             <div class="limit-reached-message">
-                {% if user.profile.subscription_plan == 'free' %}
-                    <p data-translate="chatbot-limit-reached-free">You have reached the daily message limit (5 messages). Please subscribe to continue chatting.</p>
-                    <a href="{% url 'accounts:subscribe' %}" class="btn subscribe-btn" data-translate="chatbot-subscribe">Subscribe Now</a>
-                {% elif user.profile.subscription_plan == 'basic' %}
-                    <p data-translate="chatbot-limit-reached-basic">You have reached the daily message limit (30 messages). Please upgrade to Pro to continue chatting.</p>
-                    <a href="{% url 'accounts:subscribe' %}" class="btn subscribe-btn" data-translate="chatbot-subscribe">Upgrade to Pro</a>
-                {% elif user.profile.subscription_plan == 'pro' %}
-                    <p data-translate="chatbot-limit-reached-pro">You have reached the daily message limit (60 messages). Please upgrade to Premium to continue chatting.</p>
-                    <a href="{% url 'accounts:subscribe' %}" class="btn subscribe-btn" data-translate="chatbot-subscribe">Upgrade to Premium</a>
-                {% endif %}
+                <p>لقد وصلت إلى الحد اليومي للرسائل ({{ daily_limit }} رسالة). حاول مجدداً غداً.</p>
             </div>
+        {% else %}
+            <input type="text" id="user-input"
+                   placeholder="Type your message here..."
+                   data-translate="chatbot-input-placeholder">
+            <button id="send-button" onclick="sendMessage()" data-translate="chatbot-send">Send</button>
         {% endif %}
+
+        <div class="loading" id="loading" data-translate="chatbot-loading">Loading...</div>
+        <div class="error-message" id="error-message"></div>
     </div>
+    {% endif %}
 
     <!-- Footer -->
     <footer class="footer">
@@ -207,6 +224,8 @@
     <!-- CSRF Token -->
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
+    {% if not access_denied %}
     <script src="{% static 'chatbot/chatbot.js' %}"></script>
+    {% endif %}
 </body>
 </html>
