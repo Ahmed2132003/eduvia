@@ -1,111 +1,19 @@
-{% load static mentorship_filters %}
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- 🔍 SEO -->
     <title data-translate="dashboard-title">Mentor Dashboard - Eduvia</title>
     <meta name="description" content="Mentor dashboard in Eduvia's Mentorship System.">
-    <meta name="keywords" content="mentor dashboard, Eduvia, mentorship">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/mentor_dashboard/">
-
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Mentor Dashboard - Eduvia">
-    <meta property="og:description" content="Mentor dashboard in Eduvia's Mentorship System.">
-    <meta property="og:image" content="https://i.postimg.cc/qBZnCmD1/mentor1.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/mentor_dashboard/">
-    <meta property="og:type" content="website">
-
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Mentor Dashboard - Eduvia">
-    <meta name="twitter:description" content="Mentor dashboard in Eduvia's Mentorship System.">
-    <meta name="twitter:image" content="https://i.postimg.cc/qBZnCmD1/mentor1.jpg">
-
-    <!-- 🖼️ Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'mentorship/mentor_dashboard.css' %}">
-
-    <!-- 🖼️ Hero Background -->
-    <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/qBZnCmD1/mentor1.jpg");
-        }
-    </style>
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/mentor_dashboard/#webpage",
-                "url": "https://eduvia-ai.fly.dev/mentorship/mentor_dashboard/",
-                "name": "Mentor Dashboard - Eduvia",
-                "description": "Mentor dashboard in Eduvia's Mentorship System.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/mentorship/mentor_dashboard/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/mentor_dashboard/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Mentorship",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "Mentor Dashboard",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/mentor_dashboard/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
+    <style>:root { --hero-bg-image: url("https://i.postimg.cc/qBZnCmD1/mentor1.jpg"); }</style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="logo">Eduvia</div>
         <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -115,7 +23,6 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
@@ -130,40 +37,22 @@
                         <i class="fas fa-coins coins-icon"></i>
                         <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
                     </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
                 {% endif %}
             {% else %}
                 <a href="/accounts/register/" data-translate="nav-login">Login</a>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <h1 data-translate="hero-title">Mentor Dashboard</h1>
         <p data-translate="hero-desc">Manage your mentees, groups, and mentorship activities in Eduvia</p>
     </section>
 
-    <!-- Dashboard Container -->
     <div class="dashboard-container">
         <h2 data-translate="dashboard-heading">Mentor Dashboard</h2>
-        
-        <!-- Subscription Info -->
-        <div class="section">
-            <h3>Your Current Plan: {{ subscription|capfirst }}</h3>
-            <p>Your Admin Groups: {{ current_admin }} / {% if max_admin_groups == inf %}Unlimited{% else %}{{ max_admin_groups }}{% endif %}</p>
-            <p>Your Member Groups: {{ current_member }} / {% if max_member_groups == inf %}Unlimited{% else %}{{ max_member_groups }}{% endif %}</p>
-        </div>
 
         <!-- Mentees Section -->
         <div class="section">
@@ -171,8 +60,10 @@
             {% if mentees %}
                 {% for mentorship in mentees %}
                     <div class="item">
+                        <p><strong>{{ mentorship.mentee.username }}</strong></p>
                         <p data-translate="started">Started: {{ mentorship.created_at|date:"F d, Y H:i" }}</p>
-                        <a href="{% url 'mentorship:rate_mentor' mentorship_id=mentorship.id %}" class="btn btn-sm" data-translate="rate-mentor">Rate Mentor</a>
+                        <a href="{% url 'mentorship:rate_mentor' mentorship_id=mentorship.id %}"
+                           class="btn btn-sm" data-translate="rate-mentor">Rate Mentor</a>
                     </div>
                 {% endfor %}
             {% else %}
@@ -183,13 +74,18 @@
         <!-- Admin Groups Section -->
         <div class="section">
             <h3 data-translate="admin-groups-heading">Your Admin Groups</h3>
+            <p>Admin Groups: {{ current_admin }}</p>
             {% if admin_groups %}
                 {% for group in admin_groups %}
                     <div class="item">
-                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">{{ group.name }}</a>
-                        <p data-translate="description">Description: {{ group.description|truncatewords:20 }}</p>
-                        <a href="{% url 'mentorship:manage_group_requests' group_id=group.id %}" class="btn btn-sm" data-translate="manage-requests">Manage Requests</a>
-                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">{{ group.name }}</a>
+                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">
+                            <strong>{{ group.name }}</strong>
+                        </a>
+                        <p>{{ group.description|truncatewords:20 }}</p>
+                        <a href="{% url 'mentorship:manage_group_requests' group_id=group.id %}"
+                           class="btn btn-sm" data-translate="manage-requests">Manage Requests</a>
+                        <a href="{% url 'mentorship:edit_group' group_id=group.id %}"
+                           class="btn btn-sm">Edit</a>
                     </div>
                 {% endfor %}
             {% else %}
@@ -200,11 +96,14 @@
         <!-- Member Groups Section -->
         <div class="section">
             <h3 data-translate="member-groups-heading">Groups You Are In</h3>
+            <p>Member Groups: {{ current_member }}</p>
             {% if member_groups %}
                 {% for group in member_groups %}
                     <div class="item">
-                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">{{ group.name }}</a>
-                        <p data-translate="description">Description: {{ group.description|truncatewords:20 }}</p>
+                        <a href="{% url 'mentorship:group_detail' group_id=group.id %}">
+                            <strong>{{ group.name }}</strong>
+                        </a>
+                        <p>{{ group.description|truncatewords:20 }}</p>
                     </div>
                 {% endfor %}
             {% else %}
@@ -212,42 +111,29 @@
             {% endif %}
         </div>
 
-        <!-- All Links Section -->
+        <!-- Quick Links -->
         <div class="all-links-section">
-            <h3 data-translate="all-links-heading">All Mentorship Links</h3>
+            <h3 data-translate="all-links-heading">Quick Links</h3>
             <div class="link-buttons">
                 <a href="{% url 'mentorship:find_mentor' %}" class="btn" data-translate="find-mentor">Find Mentor</a>
-                <a href="{% url 'mentorship:group_detail' group_id=1 %}" class="btn" data-translate="group-detail">Group Detail</a>
-                
-                {% if subscription != 'free' %}
-                    <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create Group</a>
-                {% endif %}
-                <a href="{% url 'mentorship:request_join_group' group_id=1 %}" class="btn" data-translate="request-join-group">Request Join Group</a>
-                <a href="{% url 'mentorship:manage_group_requests' group_id=1 %}" class="btn" data-translate="manage-group-requests">Manage Group Requests</a>
+                <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create Group</a>
                 <a href="{% url 'mentorship:become_mentor' %}" class="btn" data-translate="become-mentor">Become Mentor</a>
-                <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="mentor-dashboard">Mentor Dashboard</a>
                 <a href="{% url 'mentorship:community_feed' %}" class="btn" data-translate="community-feed">Community Feed</a>
-                <a href="{% url 'mentorship:post_comments' post_id=1 %}" class="btn" data-translate="post-comments">Post Comments</a>
             </div>
         </div>
     </div>
 
-    <!-- Action Buttons -->
     <div class="action-buttons">
         <a href="{% url 'mentorship:find_mentor' %}" class="btn" data-translate="find-mentor">Find a Mentor</a>
         {% if can_create_group %}
             <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create a Group</a>
-        {% else %}
-            <p data-translate="cannot-create-group">You cannot create a group in your current plan.</p>
         {% endif %}
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'mentorship/mentor_dashboard.js' %}"></script>
 </body>

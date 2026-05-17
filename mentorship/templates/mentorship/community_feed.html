@@ -1,111 +1,19 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- 🔍 SEO -->
     <title data-translate="page-title">Community Feed - Eduvia</title>
-    <meta name="description" content="Engage with the Eduvia community through posts and discussions in the Mentorship System.">
-    <meta name="keywords" content="community feed, Eduvia, mentorship, posts, discussions">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/community_feed/">
-
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Community Feed - Eduvia">
-    <meta property="og:description" content="Engage with the Eduvia community through posts and discussions in the Mentorship System.">
-    <meta property="og:image" content="https://i.postimg.cc/3RbkxP2b/oppo3.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/community_feed/">
-    <meta property="og:type" content="website">
-
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Community Feed - Eduvia">
-    <meta name="twitter:description" content="Engage with the Eduvia community through posts and discussions in the Mentorship System.">
-    <meta name="twitter:image" content="https://i.postimg.cc/3RbkxP2b/oppo3.jpg">
-
-    <!-- 🖼️ Favicon -->
+    <meta name="description" content="Engage with the Eduvia community through posts and discussions.">
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'mentorship/community_feed.css' %}">
-
-    <!-- 🖼️ Hero Background -->
-    <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/3RbkxP2b/oppo3.jpg");
-        }
-    </style>
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/community_feed/#webpage",
-                "url": "https://eduvia-ai.fly.dev/mentorship/community_feed/",
-                "name": "Community Feed - Eduvia",
-                "description": "Engage with the Eduvia community through posts and discussions in the Mentorship System.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/mentorship/community_feed/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/community_feed/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Mentorship",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "Community Feed",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/community_feed/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
+    <style>:root { --hero-bg-image: url("https://i.postimg.cc/3RbkxP2b/oppo3.jpg"); }</style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="logo">Eduvia</div>
         <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -115,7 +23,6 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
@@ -130,112 +37,99 @@
                         <i class="fas fa-coins coins-icon"></i>
                         <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
                     </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
                 {% endif %}
             {% else %}
                 <a href="/accounts/register/" data-translate="nav-login">Login</a>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
         </nav>
     </header>
 
-    <!-- Community Feed Section -->
     <div class="container mt-4">
         <h1 data-translate="feed-heading">Community Feed</h1>
-        <div class="messages">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-info">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- نموذج إنشاء منشور جديد - متاح لجميع المستخدمين المؤهلين -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-2">
+                        <textarea name="post_content" class="form-control" rows="3"
+                                  placeholder="Share something about programming or the job market..."
+                                  data-translate-placeholder="post-placeholder"></textarea>
+                    </div>
+                    <div class="form-group mb-2">
+                        <input type="url" name="image_file" class="form-control"
+                               placeholder="Image URL (optional - e.g., https://i.postimg.cc/...)"
+                               data-translate-placeholder="image-placeholder">
+                        <small>Upload your image to <a href="https://postimg.cc/" target="_blank">PostImage</a> and paste the link.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-translate="post-button">Post</button>
+                </form>
+            </div>
         </div>
 
-        <!-- Subscription Info -->
-        {% if subscription == 'basic' %}
-            <p data-translate="daily-posts">Daily posts: {{ daily_post_count }} / 4</p>
-        {% elif subscription == 'pro' %}
-            <p data-translate="daily-posts">Daily posts: {{ daily_post_count }} / 8</p>
-        {% elif subscription in 'premium instructor' %}
-            <p data-translate="daily-posts-unlimited">Daily posts: Unlimited</p>
-        {% endif %}
-
-        <!-- Form to create a new post -->
-        {% if subscription != 'free' %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <textarea name="post_content" class="form-control" rows="3" placeholder="Share something about programming or job market..." data-translate-placeholder="post-placeholder"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <input type="url" name="image_file" class="form-control" placeholder="Enter image URL (e.g., https://i.postimg.cc/...)" data-translate-placeholder="image-placeholder">
-                            <small data-translate="image-upload-instruction">Upload your image to <a href="https://postimg.cc/" target="_blank">PostImage</a> and paste the direct link here.</small>
-                        </div>
-                        <button type="submit" class="btn btn-primary" data-translate="post-button">Post</button>
-                    </form>
-                </div>
-            </div>
-        {% else %}
-            <p class="text-muted" data-translate="free-plan-view-only">The free plan allows viewing only. Upgrade to a paid plan to add posts.</p>
-        {% endif %}
-
-        <!-- Display posts -->
+        <!-- عرض المنشورات -->
         {% for post in posts %}
             <div class="post">
                 <div class="post-header">
-                    <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}" alt="{{ post.author.username }}'s profile" class="profile-pic">
+                    <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}"
+                         alt="{{ post.author.username }}'s profile" class="profile-pic">
                     <strong>{{ post.author.username }}</strong>
                     <small class="text-muted ms-2">{{ post.created_at }}</small>
                 </div>
                 <div class="post-content">
                     {{ post.content|urlize }}
                     {% if post.image_file %}
-                        <img src="{{ post.image_file }}" alt="Post image" class="post-image" onerror="this.src='https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png'">
+                        <img src="{{ post.image_file }}" alt="Post image" class="post-image"
+                             onerror="this.src='https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png'">
                     {% endif %}
                 </div>
                 <div class="post-actions">
-                    {% if subscription != 'free' %}
-                        <div class="post-action-btn">
-                            <form method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="post_id" value="{{ post.id }}">
-                                <input type="hidden" name="like_post" value="true">
-                                <button type="submit" class="btn btn-sm btn-{% if request.user in post.likes.all %}danger{% else %}success{% endif %}" data-translate-like="{% if request.user in post.likes.all %}unlike{% else %}like{% endif %}">
-                                    {% if request.user in post.likes.all %}Unlike{% else %}Like{% endif %} ({{ post.likes.count }})
-                                </button>
-                            </form>
-                        </div>
-                        <div class="post-action-btn">
-                            <form method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="post_id" value="{{ post.id }}">
-                                <input type="hidden" name="dislike_post" value="true">
-                                <button type="submit" class="btn btn-sm btn-{% if request.user in post.dislikes.all %}danger{% else %}warning{% endif %}" data-translate-dislike="{% if request.user in post.dislikes.all %}remove-dislike{% else %}dislike{% endif %}">
-                                    {% if request.user in post.dislikes.all %}Remove Dislike{% else %}Dislike{% endif %} ({{ post.dislikes.count }})
-                                </button>
-                            </form>
-                        </div>
-                        <div class="post-action-btn">
-                            <a href="{% url 'mentorship:post_comments' post_id=post.id %}" class="show-comments" data-translate="comments">Comments ({{ post.mentorship_comments.count }})</a>
-                        </div>
-                    {% else %}
-                        <p class="text-muted" data-translate="free-plan-no-interaction">You cannot interact with posts on the free plan.</p>
-                    {% endif %}
+                    <div class="post-action-btn">
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <input type="hidden" name="like_post" value="true">
+                            <button type="submit"
+                                    class="btn btn-sm btn-{% if request.user in post.likes.all %}danger{% else %}success{% endif %}">
+                                {% if request.user in post.likes.all %}Unlike{% else %}Like{% endif %}
+                                ({{ post.likes.count }})
+                            </button>
+                        </form>
+                    </div>
+                    <div class="post-action-btn">
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <input type="hidden" name="dislike_post" value="true">
+                            <button type="submit"
+                                    class="btn btn-sm btn-{% if request.user in post.dislikes.all %}danger{% else %}warning{% endif %}">
+                                {% if request.user in post.dislikes.all %}Remove Dislike{% else %}Dislike{% endif %}
+                                ({{ post.dislikes.count }})
+                            </button>
+                        </form>
+                    </div>
+                    <div class="post-action-btn">
+                        <a href="{% url 'mentorship:post_comments' post_id=post.id %}" class="show-comments">
+                            Comments ({{ post.mentorship_comments.count }})
+                        </a>
+                    </div>
                 </div>
+
+                <!-- تعليقات -->
                 <div class="comments-section">
                     {% for comment in post.mentorship_comments.all %}
                         <div class="comment">
-                            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}" alt="{{ comment.author.username }}'s profile" class="profile-pic">
+                            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}"
+                                 alt="{{ comment.author.username }}" class="profile-pic">
                             <div class="comment-content">
                                 <strong>{{ comment.author.username }}</strong>
                                 <p>{{ comment.content|urlize }}</p>
@@ -245,16 +139,18 @@
                     {% empty %}
                         <p class="text-muted" data-translate="no-comments">No comments yet.</p>
                     {% endfor %}
-                    {% if subscription != 'free' %}
-                        <form method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="post_id" value="{{ post.id }}">
-                            <div class="form-group">
-                                <textarea name="comment_content" class="form-control" rows="2" placeholder="Write a comment..." data-translate-placeholder="comment-placeholder"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-sm btn-secondary" data-translate="comment-button">Comment</button>
-                        </form>
-                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value="{{ post.id }}">
+                        <div class="form-group">
+                            <textarea name="comment_content" class="form-control" rows="2"
+                                      placeholder="Write a comment..."
+                                      data-translate-placeholder="comment-placeholder"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-secondary"
+                                data-translate="comment-button">Comment</button>
+                    </form>
                 </div>
             </div>
         {% empty %}
@@ -262,12 +158,10 @@
         {% endfor %}
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'mentorship/community_feed.js' %}"></script>
 </body>

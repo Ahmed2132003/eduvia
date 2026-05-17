@@ -1,7 +1,9 @@
+# accounts/urls.py
 from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+
 app_name = 'accounts'
 
 urlpatterns = [
@@ -16,6 +18,4 @@ urlpatterns = [
     path('messages/', views.user_messages, name='user_messages'),
     path('verify/', views.verify_code_view, name='verify_code'),
     path('verify-form/', views.verify_code_form_view, name='verify_code_form'),
-    path('payment-callback/', views.payment_callback, name='payment_callback'),
-    path('subscribe/', views.subscribe_view, name='subscribe'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,103 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- 🔍 SEO -->
     <title data-translate="title">User Profile - Eduvia</title>
-    <meta name="description" content="View and edit your personal profile on Eduvia. Update your full name, profile picture, and date of birth to personalize your learning experience.">
-    <meta name="keywords" content="Eduvia, user profile, online learning, education platform, profile settings">
-    <!-- SEO Meta Tags (Arabic) -->
-    <meta name="description" content="عرض وتعديل ملفك الشخصي على Eduvia. قم بتحديث اسمك الكامل، صورة الملف الشخصي، وتاريخ الميلاد لتخصيص تجربتك التعليمية.">
-    <meta name="keywords" content="Eduvia، الملف الشخصي، التعليم عبر الإنترنت، منصة تعليمية، إعدادات الملف الشخصي">
+    <meta name="description" content="View and edit your personal profile on Eduvia.">
     <meta name="author" content="Eduvia">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
-
-    <!-- 🌍 Open Graph -->
     <meta property="og:title" content="User Profile - Eduvia">
-    <meta property="og:description" content="Manage your Eduvia profile, including your full name, profile picture, and date of birth.">
     <meta property="og:image" content="https://i.postimg.cc/sxgZmKDY/profile.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
-
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="User Profile - Eduvia">
-    <meta name="twitter:description" content="Manage your Eduvia profile, including your full name, profile picture, and date of birth.">
-    <meta name="twitter:image" content="https://i.postimg.cc/sxgZmKDY/profile.jpg">
-
-    <!-- 🖼️ Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
     <link rel="stylesheet" href="{% static 'accounts/profile.css' %}">
-
-    <!-- 🖼️ Hero Background -->
     <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/sxgZmKDY/profile.jpg");
-        }
+        :root { --hero-bg-image: url("https://i.postimg.cc/sxgZmKDY/profile.jpg"); }
     </style>
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/accounts/profile/#webpage",
-                "url": "https://eduvia-ai.fly.dev/accounts/profile/",
-                "name": "User Profile - Eduvia",
-                "description": "View and edit your personal profile on Eduvia. Update your full name, profile picture, and date of birth to personalize your learning experience.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/accounts/profile/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/accounts/profile/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "User Profile",
-                        "item": "https://eduvia-ai.fly.dev/accounts/profile/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="logo" data-translate="logo">Eduvia</div>
         <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -110,7 +31,6 @@
             <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
             <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
@@ -125,31 +45,20 @@
                         <i class="fas fa-coins coins-icon"></i>
                         <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
                     </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
                 {% endif %}
             {% else %}
                 <a href="{% url 'accounts:login' %}" data-translate="nav-login">Login</a>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <h1 data-translate="hero-title">Your Profile</h1>
         <p data-translate="hero-subtitle">View and manage your personal details on Eduvia.</p>
     </section>
 
-    <!-- Profile Content -->
     {% block content %}
     <div class="profile-container">
         <h1 data-translate="profile-title">User Profile</h1>
@@ -158,22 +67,25 @@
                 <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert{% endif %}">{{ message }}</div>
             {% endfor %}
         {% endif %}
+
         <div class="profile-picture">
             {% if profile.profile_picture %}
-                <img src="{{ profile.profile_picture }}" alt="Profile Picture" onerror="this.src='{% static 'images/default_profile.jpg' %}'">
+                <img src="{{ profile.profile_picture }}" alt="Profile Picture"
+                     onerror="this.src='{% static 'images/default_profile.jpg' %}'">
             {% else %}
                 <p data-translate="no-picture">No profile picture uploaded.</p>
             {% endif %}
         </div>
+
         <div class="profile-details">
             <p><strong data-translate="label-username">Username:</strong> {{ profile.user.username }}</p>
             <p><strong data-translate="label-fullname">Full Name:</strong> {{ profile.full_name|default:"Not provided" }}</p>
             <p><strong data-translate="label-role">Role:</strong> {{ profile.user.get_role_display }}</p>
             <p><strong data-translate="label-dob">Date of Birth:</strong> {{ profile.date_of_birth|default:"Not provided" }}</p>
         </div>
+
         {% if not is_own_profile %}
             <a href="{% url 'accounts:start_chat' user_id=viewed_user.id %}" class="btn" data-translate="btn-chat">Chat</a>
-            <!-- Message Form -->
             <div class="message-form">
                 <h3 data-translate="message-form-title">Send a Message to {{ viewed_user.username }}</h3>
                 <form method="post" enctype="multipart/form-data">
@@ -189,15 +101,14 @@
                 </form>
             </div>
         {% endif %}
+
         {% if is_own_profile %}
             <a href="{% url 'accounts:edit_profile' %}" class="btn" data-translate="btn-edit">Edit Profile</a>
-            <a href="{% url 'accounts:subscribe' %}" class="btn btn-subscribe" data-translate="btn-subscribe">Subscribe</a>
         {% endif %}
         <a href="{% url 'home' %}" class="btn" data-translate="btn-home">Back to Home</a>
     </div>
     {% endblock %}
 
-    <!-- Footer -->
     <footer class="footer">
         <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
