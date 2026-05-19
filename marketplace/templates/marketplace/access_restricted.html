@@ -1,5 +1,186 @@
-<div class="container" style="max-width: 700px; margin: 4rem auto; text-align:center;">
-  <h1>Access Restricted</h1>
-  <p>You need at least one active course enrollment to access this area.</p>
-  <a href="/api/marketplace/checkout/">Buy a Course</a>
-</div>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="title">Access Restricted - Eduvia</title>
+    <meta name="description" content="Access restricted. Enroll in a course to continue.">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'marketplace/marketplace.css' %}">
+    <style>
+        :root { --hero-bg-image: url("https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg"); }
+
+        /* Page specific */
+        .restricted-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            padding: 60px 24px;
+        }
+
+        .restricted-card {
+            max-width: 560px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 56px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .restricted-card::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(0,201,167,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .restricted-card::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; left: -60px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(0,168,204,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .lock-icon-wrap {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, rgba(0,201,167,0.15), rgba(0,168,204,0.15));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 28px;
+            animation: float 3s ease-in-out infinite;
+            border: 2px solid rgba(0,201,167,0.3);
+        }
+
+        .lock-icon-wrap i {
+            font-size: 42px;
+            background: var(--btn-bg);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .restricted-card h2 {
+            font-size: 32px; font-weight: 700;
+            color: var(--card-text);
+            margin-bottom: 16px;
+            animation: slideInFromTop 0.8s ease forwards;
+        }
+
+        .restricted-card p {
+            font-size: 17px;
+            color: var(--card-secondary-text);
+            line-height: 1.7;
+            margin-bottom: 36px;
+        }
+
+        .restricted-actions {
+            display: flex; gap: 16px;
+            justify-content: center; flex-wrap: wrap;
+        }
+
+        .restricted-actions .btn { animation: bounceIn 0.8s ease 0.3s forwards; }
+        .restricted-actions .btn-secondary { opacity: 1; }
+
+        /* Floating dots background */
+        .dots-bg {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 0;
+            overflow: hidden;
+        }
+
+        .dot {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            animation: float var(--dur, 6s) ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+            background: var(--btn-bg);
+        }
+
+        .animate-on-scroll { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <!-- Floating dots -->
+    <div class="dots-bg" aria-hidden="true">
+        <div class="dot" style="width:80px;height:80px;top:10%;left:5%;--dur:7s;--delay:0s;"></div>
+        <div class="dot" style="width:50px;height:50px;top:60%;left:2%;--dur:9s;--delay:1s;"></div>
+        <div class="dot" style="width:120px;height:120px;top:20%;right:8%;--dur:8s;--delay:2s;"></div>
+        <div class="dot" style="width:60px;height:60px;bottom:15%;right:5%;--dur:6s;--delay:0.5s;"></div>
+        <div class="dot" style="width:40px;height:40px;bottom:30%;left:15%;--dur:10s;--delay:3s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo" data-translate="title">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-translate="ar-hero-title">Access Restricted</h1>
+        <p data-translate="ar-hero-sub">This area requires an active course enrollment.</p>
+    </section>
+
+    <!-- Restricted Card -->
+    <section class="restricted-section" style="position:relative;z-index:1;">
+        <div class="restricted-card">
+            <div class="lock-icon-wrap">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h2 data-translate="ar-card-title">Enrollment Required</h2>
+            <p data-translate="ar-card-desc">You need at least one active course enrollment to access this area. Start your learning journey today!</p>
+            <div class="restricted-actions">
+                <a href="/api/marketplace/checkout/" class="btn" data-translate="ar-btn-buy">Browse Courses</a>
+                <a href="/" class="btn-secondary" data-translate="nav-home">Go Home</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'marketplace/marketplace.js' %}"></script>
+</body>
+</html>

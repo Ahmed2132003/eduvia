@@ -1,17 +1,308 @@
-<div class="container" style="max-width: 900px; margin: 2rem auto;">
-  <h1>My Courses</h1>
-  <form method="post" style="display:flex; gap:8px; margin-bottom:16px;">{% csrf_token %}
-    <input type="hidden" name="action" value="apply_code" />
-    <input type="number" name="course_id" placeholder="Course ID" required />
-    <input type="text" name="code" placeholder="Enrollment Code" required />
-    <button type="submit">Apply Code</button>
-  </form>
-  {% if messages %}{% for message in messages %}<p>{{ message }}</p>{% endfor %}{% endif %}
-  <ul>
-  {% for enrollment in enrollments %}
-    <li>{{ enrollment.course.title }} — {{ enrollment.get_source_display }}</li>
-  {% empty %}
-    <li>You are not enrolled in any course yet.</li>
-  {% endfor %}
-  </ul>
-</div>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="title">My Courses - Eduvia</title>
+    <meta name="description" content="View and manage your enrolled courses on Eduvia.">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'marketplace/marketplace.css' %}">
+    <style>
+        :root { --hero-bg-image: url("https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg"); }
+
+        /* ---- Apply Code Form ---- */
+        .apply-code-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 32px 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .apply-code-section h3 {
+            font-size: 20px; font-weight: 700;
+            color: var(--card-text); margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .code-form-row {
+            display: flex; gap: 12px; flex-wrap: wrap;
+        }
+
+        .code-form-row .form-input {
+            flex: 1; min-width: 140px;
+        }
+
+        .code-form-row button {
+            background: var(--btn-bg); color: white;
+            border: none; border-radius: 50px;
+            padding: 12px 28px; font-size: 16px;
+            font-weight: 600; cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.3s ease; white-space: nowrap;
+        }
+
+        .code-form-row button:hover {
+            background: var(--btn-bg-hover);
+            transform: translateY(-3px);
+        }
+
+        /* ---- Section Header ---- */
+        .section-header {
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap;
+            gap: 12px; margin-bottom: 28px;
+        }
+
+        .section-header h2 {
+            font-size: 26px; font-weight: 700;
+            color: var(--card-text);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .course-count-badge {
+            background: var(--btn-bg);
+            color: white; font-size: 14px; font-weight: 600;
+            padding: 4px 14px; border-radius: 50px;
+        }
+
+        /* ---- Course Cards Grid ---- */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .my-course-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 28px 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            animation: fadeInUp 0.6s ease both;
+            position: relative; overflow: hidden;
+        }
+
+        .my-course-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--btn-bg);
+        }
+
+        .my-course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+        }
+
+        /* stagger */
+        .my-course-card:nth-child(1)  { animation-delay: 0.00s; }
+        .my-course-card:nth-child(2)  { animation-delay: 0.08s; }
+        .my-course-card:nth-child(3)  { animation-delay: 0.16s; }
+        .my-course-card:nth-child(4)  { animation-delay: 0.24s; }
+        .my-course-card:nth-child(5)  { animation-delay: 0.32s; }
+        .my-course-card:nth-child(6)  { animation-delay: 0.40s; }
+        .my-course-card:nth-child(7)  { animation-delay: 0.48s; }
+        .my-course-card:nth-child(8)  { animation-delay: 0.56s; }
+
+        .card-source-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 600;
+            color: var(--accent); background: rgba(0,201,167,0.1);
+            padding: 4px 12px; border-radius: 50px;
+            margin-bottom: 14px; width: fit-content;
+        }
+
+        .my-course-card h3 {
+            font-size: 20px; font-weight: 700;
+            color: var(--card-text); flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .card-actions {
+            display: flex; gap: 10px; flex-wrap: wrap;
+        }
+
+        .card-actions a {
+            flex: 1; text-align: center;
+            background: var(--btn-bg); color: white;
+            padding: 10px 16px; border-radius: 50px;
+            text-decoration: none; font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .card-actions a:hover {
+            background: var(--btn-bg-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ---- Empty State ---- */
+        .empty-state {
+            text-align: center; padding: 80px 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            animation: fadeInUp 0.7s ease forwards;
+        }
+
+        .empty-state .empty-icon {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, rgba(0,201,167,0.15), rgba(0,168,204,0.15));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            animation: float 3s ease-in-out infinite;
+            border: 2px solid rgba(0,201,167,0.2);
+        }
+
+        .empty-state .empty-icon i {
+            font-size: 40px;
+            background: var(--btn-bg);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .empty-state h3 {
+            font-size: 24px; font-weight: 700;
+            color: var(--card-text); margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px; color: var(--card-secondary-text);
+            margin-bottom: 28px;
+        }
+
+        .animate-on-scroll {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo" data-translate="title">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-translate="mc-hero-title">My Courses</h1>
+        <p data-translate="mc-hero-sub">Continue your learning journey.</p>
+    </section>
+
+    <!-- Main Content -->
+    <main class="page-content">
+
+        <!-- Alerts -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% else %}alert-info{% endif %}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Apply Code -->
+        <div class="apply-code-section">
+            <h3><i class="fas fa-key"></i> Apply Enrollment Code</h3>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="apply_code" />
+                <div class="code-form-row">
+                    <input type="number" name="course_id" class="form-input"
+                           data-translate-placeholder="mc-code-placeholder"
+                           placeholder="Course ID" required />
+                    <input type="text" name="code" class="form-input"
+                           data-translate-placeholder="mc-enroll-placeholder"
+                           placeholder="Enrollment Code" required />
+                    <button type="submit" data-translate="mc-apply-btn">Apply Code</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Enrolled Courses -->
+        <div class="section-header animate-on-scroll">
+            <h2>
+                <i class="fas fa-graduation-cap"></i>
+                Enrolled Courses
+                {% if enrollments %}
+                    <span class="course-count-badge">{{ enrollments|length }}</span>
+                {% endif %}
+            </h2>
+            <a href="/api/marketplace/checkout/" class="btn-secondary">+ Enroll New</a>
+        </div>
+
+        {% if enrollments %}
+        <div class="courses-grid">
+            {% for enrollment in enrollments %}
+            <div class="my-course-card">
+                <div class="card-source-badge">
+                    <i class="fas fa-tag"></i>
+                    {{ enrollment.get_source_display }}
+                </div>
+                <h3>{{ enrollment.course.title }}</h3>
+                <div class="card-actions">
+                    <a href="/courses/{{ enrollment.course.id }}/">
+                        <i class="fas fa-play-circle"></i> Continue
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <h3 data-translate="mc-no-courses">No Courses Yet</h3>
+            <p>You are not enrolled in any course yet. Start learning today!</p>
+            <a href="/api/marketplace/checkout/" class="btn">Browse Courses</a>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'marketplace/marketplace.js' %}"></script>
+</body>
+</html>

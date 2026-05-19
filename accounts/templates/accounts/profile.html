@@ -19,6 +19,134 @@
     <link rel="stylesheet" href="{% static 'accounts/profile.css' %}">
     <style>
         :root { --hero-bg-image: url("https://i.postimg.cc/sxgZmKDY/profile.jpg"); }
+
+        /* ---- Quick Access Cards — match home.css design ---- */
+        .quick-access-section {
+            max-width: 1100px;
+            margin: 0 auto 48px;
+            padding: 0 24px;
+        }
+
+        .quick-access-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--card-text, #00a8cc);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .qa-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 28px 20px;
+            background: var(--card-bg, linear-gradient(145deg, #fdfcfe, #d8f4ff));
+            color: var(--card-text, #00a8cc);
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qa-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--btn-bg, linear-gradient(90deg, #00c9a7, #12d3cf));
+        }
+
+        .qa-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .qa-card .qa-icon {
+            width: 64px; height: 64px;
+            background: linear-gradient(135deg, rgba(0,201,167,0.15), rgba(0,168,204,0.15));
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+            margin-bottom: 14px;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0,201,167,0.2);
+        }
+
+        .qa-card:hover .qa-icon {
+            transform: scale(1.12) rotate(-4deg);
+        }
+
+        .qa-card .qa-icon i {
+            background: var(--btn-bg, linear-gradient(90deg, #00c9a7, #12d3cf));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .qa-card h3 {
+            font-size: 18px; font-weight: 700;
+            color: var(--card-text, #00a8cc);
+            margin-bottom: 8px;
+        }
+
+        .qa-card p {
+            font-size: 14px;
+            color: var(--card-secondary-text, #444);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+
+        .qa-card .qa-btn {
+            background: var(--btn-bg, linear-gradient(90deg, #00c9a7, #12d3cf));
+            color: white;
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,201,167,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .qa-card:hover .qa-btn {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(0,201,167,0.6);
+        }
+
+        /* Dark mode overrides (inherited from profile.css via body.dark-mode) */
+        body.dark-mode .qa-card {
+            background: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+        }
+        body.dark-mode .qa-card h3 { color: #3498db; }
+        body.dark-mode .qa-card p  { color: #b0b0b0; }
+        body.dark-mode .qa-card .qa-btn { background: linear-gradient(90deg, #3498db, #2980b9); }
+        body.dark-mode .qa-card .qa-icon { background: rgba(52,152,219,0.15); border-color: rgba(52,152,219,0.2); }
+        body.dark-mode .qa-card .qa-icon i { background: linear-gradient(90deg, #3498db, #2980b9); -webkit-background-clip: text; background-clip: text; }
+
+        @media (max-width: 600px) {
+            .quick-access-grid { grid-template-columns: 1fr 1fr; }
+            .qa-card { padding: 20px 14px; }
+        }
+
+        @media (max-width: 380px) {
+            .quick-access-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -108,6 +236,51 @@
         <a href="{% url 'home' %}" class="btn" data-translate="btn-home">Back to Home</a>
     </div>
     {% endblock %}
+
+    <!-- =====================================================
+         QUICK ACCESS — Marketplace & Platform Navigation
+         Matches home.css hero-card design exactly
+         ===================================================== -->
+    <section class="quick-access-section">
+        <div class="quick-access-title">
+            <i class="fas fa-th-large"></i>
+            Quick Access
+        </div>
+
+        <div class="quick-access-grid">
+            <!-- My Courses -->
+            <a href="/marketplace/my-courses/" class="qa-card">
+                <div class="qa-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>My Courses</h3>
+                <p>View and continue your enrolled courses.</p>
+                <span class="qa-btn">Open</span>
+            </a>
+
+            <!-- Checkout -->
+            <a href="/api/marketplace/checkout/" class="qa-card">
+                <div class="qa-icon"><i class="fas fa-shopping-cart"></i></div>
+                <h3>Checkout</h3>
+                <p>Enroll in new courses and manage payments.</p>
+                <span class="qa-btn">Shop</span>
+            </a>
+
+            <!-- Instructor Wallet -->
+            <a href="/marketplace/wallet/" class="qa-card">
+                <div class="qa-icon"><i class="fas fa-wallet"></i></div>
+                <h3>Instructor Wallet</h3>
+                <p>Track your earnings and transaction history.</p>
+                <span class="qa-btn">View</span>
+            </a>
+
+            <!-- Access Restricted (info) -->
+            <a href="/marketplace/access-restricted/" class="qa-card">
+                <div class="qa-icon"><i class="fas fa-lock"></i></div>
+                <h3>Access Info</h3>
+                <p>Learn about content access and enrollment requirements.</p>
+                <span class="qa-btn">Learn</span>
+            </a>
+        </div>
+    </section>
 
     <footer class="footer">
         <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>

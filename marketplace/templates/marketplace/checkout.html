@@ -1,50 +1,345 @@
-<div class="container" style="max-width: 900px; margin: 2rem auto; font-family: Arial, sans-serif;">
-  <h1>Course Checkout</h1>
-  <p>Choose payment method or activate enrollment code.</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="title">Checkout - Eduvia</title>
+    <meta name="description" content="Secure course checkout on Eduvia.">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'marketplace/marketplace.css' %}">
+    <style>
+        :root { --hero-bg-image: url("https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg"); }
 
-  {% if course %}
-    <div style="border:1px solid #ddd; padding:16px; border-radius:12px; margin-bottom:16px;">
-      <h3>{{ course.title }}</h3>
-      <p><strong>{{ course.price }} EGP</strong></p>
-      <button onclick="proceedPaymob({{ course.id }})">Proceed to Payment</button>
-    </div>
+        /* ---- Checkout Layout ---- */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 32px;
+            align-items: start;
+        }
 
-    <div style="border:1px solid #ddd; padding:16px; border-radius:12px;">
-      <h3>Have Enrollment Code?</h3>
-      <input id="enroll-code" placeholder="Enter code" style="padding:8px; width:280px;" />
-      <button onclick="activateCode({{ course.id }})">Activate Course</button>
-    </div>
-  {% else %}
-    <div style="display:grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 16px;">
-      {% for c in courses %}
-        <div style="border:1px solid #ddd; padding:16px; border-radius:12px;">
-          <h3>{{ c.title }}</h3>
-          <p>{{ c.description|truncatewords:20 }}</p>
-          <p><strong>{{ c.price }} EGP</strong></p>
-          <a href="/api/marketplace/checkout/?course_id={{ c.id }}">Checkout</a>
+        @media (max-width: 860px) {
+            .checkout-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ---- Single Course Checkout ---- */
+        .course-summary-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.7s ease forwards;
+        }
+
+        .course-summary-card .course-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--btn-bg);
+            color: white; font-size: 13px; font-weight: 600;
+            padding: 6px 16px; border-radius: 50px;
+            margin-bottom: 20px;
+        }
+
+        .course-summary-card h2 {
+            font-size: 26px; font-weight: 700;
+            color: var(--card-text); margin-bottom: 12px;
+        }
+
+        .course-summary-card .price-tag {
+            font-size: 40px; font-weight: 700;
+            background: var(--btn-bg);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0;
+        }
+
+        .course-summary-card .price-tag span {
+            font-size: 20px; font-weight: 500;
+        }
+
+        .secure-badge {
+            display: flex; align-items: center; gap: 8px;
+            color: var(--card-secondary-text); font-size: 14px;
+            margin-top: 16px;
+        }
+        .secure-badge i { color: var(--accent); }
+
+        /* ---- Payment Panel ---- */
+        .payment-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.7s ease 0.2s both;
+        }
+
+        .payment-panel h3 {
+            font-size: 22px; font-weight: 700;
+            color: var(--card-text); margin-bottom: 24px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .divider {
+            border: none; border-top: 1px solid var(--glass-border);
+            margin: 28px 0;
+        }
+
+        .enroll-code-section h3 {
+            font-size: 18px; font-weight: 700;
+            color: var(--card-text); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .input-group {
+            display: flex; gap: 10px;
+        }
+
+        .input-group .form-input { flex: 1; }
+
+        .input-group button {
+            white-space: nowrap;
+            background: var(--btn-bg); color: white;
+            border: none; border-radius: 10px;
+            padding: 12px 20px; font-size: 15px;
+            font-weight: 600; cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .input-group button:hover {
+            background: var(--btn-bg-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ---- Course Grid (multiple courses) ---- */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 28px 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+        }
+
+        .course-card h3 {
+            font-size: 20px; font-weight: 700;
+            color: var(--card-text); margin-bottom: 10px;
+        }
+
+        .course-card p {
+            font-size: 15px; color: var(--card-secondary-text);
+            line-height: 1.6; flex-grow: 1; margin-bottom: 16px;
+        }
+
+        .course-card .price {
+            font-size: 26px; font-weight: 700;
+            background: var(--btn-bg);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .course-card a.btn {
+            animation: none; opacity: 1;
+            text-align: center; font-size: 15px;
+            padding: 10px 20px;
+        }
+
+        /* stagger */
+        .course-card:nth-child(1) { animation-delay: 0.0s; }
+        .course-card:nth-child(2) { animation-delay: 0.1s; }
+        .course-card:nth-child(3) { animation-delay: 0.2s; }
+        .course-card:nth-child(4) { animation-delay: 0.3s; }
+        .course-card:nth-child(5) { animation-delay: 0.4s; }
+        .course-card:nth-child(6) { animation-delay: 0.5s; }
+
+        .section-title {
+            font-size: 28px; font-weight: 700;
+            color: var(--card-text); margin-bottom: 28px;
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .pay-full-btn {
+            width: 100%;
+            background: var(--btn-bg); color: white;
+            border: none; border-radius: 50px;
+            padding: 16px 32px; font-size: 18px;
+            font-weight: 600; cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.4s ease;
+            display: flex; align-items: center;
+            justify-content: center; gap: 10px;
+        }
+        .pay-full-btn:hover {
+            background: var(--btn-bg-hover);
+            transform: scale(1.03) translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0,201,167,0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo" data-translate="title">Eduvia</div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <nav class="menu">
+            <a href="/" data-translate="nav-home">Home</a>
+            <a href="/courses/" data-translate="nav-courses">Courses</a>
+            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+            <a href="/about/" data-translate="nav-about">About Us</a>
+            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
+                {% endif %}
+                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+                {% if user.courses_profile %}
+                    <span class="coins-display">
+                        <i class="fas fa-coins coins-icon"></i>
+                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                    </span>
+                {% endif %}
+            {% else %}
+                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            {% endif %}
+            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-translate="co-hero-title">Course Checkout</h1>
+        <p data-translate="co-hero-sub">Secure your learning journey today.</p>
+    </section>
+
+    <!-- Main Content -->
+    <main class="page-content">
+
+        {% if course %}
+        <!-- Single course checkout -->
+        <div class="checkout-grid">
+            <!-- Left: Course Summary -->
+            <div class="course-summary-card">
+                <div class="course-badge">
+                    <i class="fas fa-graduation-cap"></i> Course Enrollment
+                </div>
+                <h2>{{ course.title }}</h2>
+                {% if course.description %}
+                    <p style="color:var(--card-secondary-text);line-height:1.7;margin-bottom:8px;">{{ course.description|truncatewords:30 }}</p>
+                {% endif %}
+                <div class="price-tag">{{ course.price }} <span>EGP</span></div>
+                <div class="secure-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure & encrypted checkout</span>
+                </div>
+                <div class="secure-badge" style="margin-top:8px;">
+                    <i class="fas fa-infinity"></i>
+                    <span>Lifetime access to course materials</span>
+                </div>
+            </div>
+
+            <!-- Right: Payment Options -->
+            <div class="payment-panel">
+                <h3><i class="fas fa-credit-card"></i> Pay with Card</h3>
+                <button class="pay-full-btn" onclick="proceedPaymob({{ course.id }})">
+                    <i class="fas fa-lock"></i>
+                    <span data-translate="co-pay-btn">Proceed to Payment</span>
+                </button>
+
+                <hr class="divider">
+
+                <div class="enroll-code-section">
+                    <h3><i class="fas fa-key"></i> <span data-translate="co-enroll-title">Activate with Code</span></h3>
+                    <div class="input-group">
+                        <input id="enroll-code" class="form-input"
+                               type="text"
+                               data-translate-placeholder="co-enroll-placeholder"
+                               placeholder="Enter enrollment code" />
+                        <button onclick="activateCode({{ course.id }})" data-translate="co-enroll-btn">Activate</button>
+                    </div>
+                </div>
+            </div>
         </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-</div>
-<script>
-function csrfToken(){return '{{ csrf_token }}'}
-async function proceedPaymob(courseId){
-  const r = await fetch(`/api/marketplace/courses/${courseId}/checkout/paymob/`, {method:'POST', headers:{'X-CSRFToken':csrfToken()}});
-  const data = await r.json();
-  if(r.ok && data.redirect_url){ window.location.href = data.redirect_url; return; }
-  alert(data.detail || 'Failed to start payment');
-}
-async function activateCode(courseId){
-  const code = document.getElementById('enroll-code').value;
-  const r = await fetch(`/api/marketplace/courses/${courseId}/activate-code/`, {
-    method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':csrfToken()}, body:JSON.stringify({code})
-  });
-  if(r.ok){ 
-    alert('تم تفعيل الكورس بنجاح!'); 
-    window.location.href='/courses/';  // ← روح لصفحة الكورسات مش details
-    return; 
-  }
-  const err = await r.json(); alert(err.detail || 'Invalid code');
-}
-</script>
+
+        {% else %}
+        <!-- Multiple courses listing -->
+        <h2 class="section-title">
+            <i class="fas fa-book-open"></i> Available Courses
+        </h2>
+        <div class="courses-grid">
+            {% for c in courses %}
+            <div class="course-card">
+                <h3>{{ c.title }}</h3>
+                <p>{{ c.description|truncatewords:20 }}</p>
+                <div class="price">{{ c.price }} EGP</div>
+                <a href="/api/marketplace/checkout/?course_id={{ c.id }}" class="btn">Enroll Now</a>
+            </div>
+            {% empty %}
+            <p style="color:var(--card-secondary-text);font-size:18px;">No courses available at the moment.</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'marketplace/marketplace.js' %}"></script>
+    <script>
+        function csrfToken() { return '{{ csrf_token }}'; }
+
+        async function proceedPaymob(courseId) {
+            const btn = document.querySelector('.pay-full-btn');
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; }
+            try {
+                const r = await fetch(`/api/marketplace/courses/${courseId}/checkout/paymob/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrfToken() }
+                });
+                const data = await r.json();
+                if (r.ok && data.redirect_url) { window.location.href = data.redirect_url; return; }
+                alert(data.detail || 'Failed to start payment');
+            } catch (e) { alert('Network error. Please try again.'); }
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Payment'; }
+        }
+
+        async function activateCode(courseId) {
+            const code = document.getElementById('enroll-code').value.trim();
+            if (!code) { alert('Please enter an enrollment code.'); return; }
+            const r = await fetch(`/api/marketplace/courses/${courseId}/activate-code/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken() },
+                body: JSON.stringify({ code })
+            });
+            if (r.ok) {
+                alert('تم تفعيل الكورس بنجاح!');
+                window.location.href = '/courses/';
+                return;
+            }
+            const err = await r.json();
+            alert(err.detail || 'Invalid code');
+        }
+    </script>
+</body>
+</html>
