@@ -154,7 +154,7 @@
     <div class="content">
         <div class="videos-card">
             <h1 data-translate="card-title">Videos for {{ course.title }}</h1>
-            <a href="{% url 'courses:add_video' course_id=course.id course_title=course.title|arabic_slug %}" class="add-btn" data-translate="add-btn">Add New Video</a>
+            <a href="{% url 'courses:add_video' course_id=course.id course_slug=course_slug|arabic_slug %}" class="add-btn" data-translate="add-btn">Add New Video</a>
             {% if videos %}
                 <div class="video-list">
                     {% for video in videos %}
@@ -163,10 +163,10 @@
                             <p>{{ video.description|truncatewords:20 }}</p>
                             <p data-translate="order-label">Order: {{ video.order }}</p>
                             <div class="links">
-                                <a href="{% url 'courses:watch_video' course_id=course.id course_title=course.title|arabic_slug video_id=video.id video_title=video.title|arabic_slug %}" data-translate="watch-link">Watch</a>
-                                <a href="{% url 'courses:edit_video' course_id=course.id course_title=course.title|arabic_slug video_id=video.id video_title=video.title|arabic_slug %}" class="edit-link" data-translate="edit-link">Edit</a>
-                                <a href="{% url 'courses:add_task' course_id=course.id course_title=course.title|arabic_slug video_id=video.id video_title=video.title|arabic_slug %}" class="btn add-task-btn">Add Task (Admin Style)</a>
-                                <a href="{% url 'courses:add_alternative_quiz' course_id=course.id course_title=course.title|arabic_slug video_id=video.id video_title=video.title|arabic_slug %}" data-translate="add-alternative-quiz">Add Alternative Quiz</a>
+                                <a href="{% url 'courses:watch_video' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}" data-translate="watch-link">Watch</a>
+                                <a href="{% url 'courses:edit_video' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}" class="edit-link" data-translate="edit-link">Edit</a>
+                                <a href="{% url 'courses:add_task' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}" class="btn add-task-btn">Add Task (Admin Style)</a>
+                                <a href="{% url 'courses:add_alternative_quiz' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}" data-translate="add-alternative-quiz">Add Alternative Quiz</a>
                             </div>
                         </div>
                     {% endfor %}

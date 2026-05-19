@@ -8,8 +8,8 @@ def health_check(request):
     return HttpResponse("OK")
 
 urlpatterns = [
-    path('admin/', admin.site.urls , name='admin_dashboard'),
-    path('accounts/',include('accounts.urls', namespace='accounts')),
+    path('admin/', admin.site.urls, name='admin_dashboard'),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
     path('healthcheck/', health_check),
     path('', include('pages.urls')),
     path('courses/', include('courses.urls')),
@@ -20,8 +20,18 @@ urlpatterns = [
     path('skills_market/', include('skills_market.urls')),
     path("mentorship/", include("mentorship.urls")),
     path('workshops/', include('workshops.urls')),
-    path('api/marketplace/', include('marketplace.urls')) ,
+
+    # ── API namespace (existing — untouched) ──────────────────────────────────
+    path('api/marketplace/', include('marketplace.urls')),
+
+    # ── Friendly HTML URLs  /marketplace/...  ────────────────────────────────
+    # Uses a separate urls file to avoid name conflicts.
+    # Gives you:
+    #   /marketplace/access-restricted/
+    #   /marketplace/wallet/
+    #   /marketplace/my-courses/
+    path('marketplace/', include('marketplace.html_urls')),
 ]
 
-# خدمة ملفات الـ media في الإنتاج والتطوير
+# Media files
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

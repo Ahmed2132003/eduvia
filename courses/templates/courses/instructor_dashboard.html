@@ -148,7 +148,6 @@
         <p data-translate="hero-subtitle">Manage your courses and videos with ease</p>
         {% if can_add_course %}
             <a href="{% url 'courses:add_course' %}" class="btn" data-translate="hero-btn">Add New Course</a>
-        {% else %}
         {% endif %}
     </section>
 
@@ -174,40 +173,43 @@
                         </thead>
                         <tbody>
                             {% for course in courses %}
+                                {# ── استخدام course.get_slug بدل الـ filter القديم ── #}
+                                {% with course_slug=course.get_slug %}
                                 <tr class="course-item">
                                     <td>{{ course.title }}</td>
                                     <td>
-                                        {% if subscription_plan == 'free' and course.video_list.count >= 10 %}
-                                            <p class="text-danger" data-translate="video-limit">You have reached the maximum limit of 10 videos in this course. Upgrade to add more.</p>
-                                        {% endif %}
                                         {% for video in course.video_list %}
-                                            <a href="{% url 'courses:watch_video' course_id=course.id course_title=course.title|arabic_slug:course.id video_id=video.id video_title=video.title|arabic_slug:video.id %}">
+                                            {# ── video slug آمن ── #}
+                                            {% with video_slug=video.title|slugify %}
+                                            <a href="{% url 'courses:watch_video' course_id=course.id course_slug=course_slug video_id=video.id video_slug=video_slug %}">
                                                 {{ video.title|default:'Untitled Video' }}
                                             </a><br>
+                                            {% endwith %}
                                         {% empty %}
                                             <span data-translate="no-videos">No videos available</span>
                                         {% endfor %}
                                     </td>
                                     <td>
                                         <!-- Edit -->
-                                        <a href="{% url 'courses:edit_course' course_id=course.id course_title=course.title|arabic_slug:course.id %}" 
+                                        <a href="{% url 'courses:edit_course' course_id=course.id course_slug=course_slug %}"
                                            class="btn btn-sm btn-warning" data-translate="edit-btn">Edit</a>
 
                                         <!-- Delete -->
-                                        <a href="{% url 'courses:delete_course' course_id=course.id course_title=course.title|arabic_slug:course.id %}" 
-                                            class="btn btn-sm btn-danger" data-translate="delete-btn">Delete</a>
+                                        <a href="{% url 'courses:delete_course' course_id=course.id course_slug=course_slug %}"
+                                           class="btn btn-sm btn-danger" data-translate="delete-btn">Delete</a>
 
                                         <!-- Add Video -->
                                         {% if can_add_video %}
-                                            <a href="{% url 'courses:add_video' course_id=course.id course_title=course.title|arabic_slug:course.id %}" 
+                                            <a href="{% url 'courses:add_video' course_id=course.id course_slug=course_slug %}"
                                                class="btn btn-sm btn-success" data-translate="add-video-btn">Add Video</a>
                                         {% endif %}
 
                                         <!-- View Videos -->
-                                        <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|arabic_slug:course.id %}" 
+                                        <a href="{% url 'courses:course_videos' course_id=course.id course_slug=course_slug %}"
                                            class="btn btn-sm btn-info" data-translate="view-videos-btn">View Videos</a>
                                     </td>
                                 </tr>
+                                {% endwith %}
                             {% endfor %}
                         </tbody>
                     </table>
