@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="title">Instructor Wallet - Eduvia</title>
-    <meta name="description" content="Manage your instructor earnings and transactions on Eduvia.">
+    <title data-translate="title">Instructor Wallet — Eduvia</title>
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
@@ -13,165 +12,163 @@
     <style>
         :root { --hero-bg-image: url("https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg"); }
 
-        /* ---- Stats Grid ---- */
+        /* ── Stats Grid ── */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            gap: 22px;
             margin-bottom: 40px;
         }
-
-        @media (max-width: 700px) {
-            .stats-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr; } }
 
         .stat-card {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 32px 28px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            padding: 28px 24px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.1);
+            position: relative; overflow: hidden;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
             animation: fadeInUp 0.6s ease both;
         }
-
         .stat-card:nth-child(1) { animation-delay: 0s; }
-        .stat-card:nth-child(2) { animation-delay: 0.12s; }
-        .stat-card:nth-child(3) { animation-delay: 0.24s; }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 18px 40px rgba(0,0,0,0.18);
-        }
-
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.2s; }
+        .stat-card:hover { transform: translateY(-7px); box-shadow: 0 18px 40px rgba(0,0,0,0.17); }
         .stat-card::before {
-            content: '';
-            position: absolute; top: -30px; right: -30px;
-            width: 100px; height: 100px;
-            border-radius: 50%;
-            background: var(--stat-color, rgba(0,201,167,0.12));
+            content: ''; position: absolute; top: -28px; right: -28px;
+            width: 90px; height: 90px; border-radius: 50%;
+            background: var(--stat-color, rgba(0,201,167,0.1));
         }
-
         .stat-card .stat-icon {
-            width: 52px; height: 52px;
-            border-radius: 14px;
+            width: 48px; height: 48px; border-radius: 13px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 22px; color: white;
+            font-size: 20px; color: white;
             background: var(--stat-gradient, var(--btn-bg));
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
-
         .stat-card .stat-label {
-            font-size: 14px; font-weight: 600;
-            color: var(--card-secondary-text);
-            text-transform: uppercase; letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--card-secondary-text); margin-bottom: 6px;
         }
-
         .stat-card .stat-value {
-            font-size: 36px; font-weight: 700;
+            font-size: 32px; font-weight: 700;
             background: var(--stat-gradient, var(--btn-bg));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        .stat-card .stat-currency { font-size: 16px; font-weight: 500; }
 
-        .stat-card .stat-currency {
-            font-size: 18px; font-weight: 500;
-        }
+        .stat-card.balance  { --stat-gradient: linear-gradient(135deg,#00c9a7,#12d3cf); --stat-color: rgba(0,201,167,0.1); }
+        .stat-card.withdrawn{ --stat-gradient: linear-gradient(135deg,#3498db,#2980b9); --stat-color: rgba(52,152,219,0.1); }
+        .stat-card.courses  { --stat-gradient: linear-gradient(135deg,#9b59b6,#8e44ad); --stat-color: rgba(155,89,182,0.1); }
 
-        /* Pending */
-        .stat-card.pending {
-            --stat-gradient: linear-gradient(135deg, #f39c12, #e67e22);
-            --stat-color: rgba(243,156,18,0.12);
-        }
-        /* Available */
-        .stat-card.available {
-            --stat-gradient: linear-gradient(135deg, #00c9a7, #12d3cf);
-            --stat-color: rgba(0,201,167,0.12);
-        }
-        /* Withdrawn */
-        .stat-card.withdrawn {
-            --stat-gradient: linear-gradient(135deg, #3498db, #2980b9);
-            --stat-color: rgba(52,152,219,0.12);
-        }
-
-        /* ---- Transactions Table ---- */
+        /* ── Section Header ── */
         .section-header {
             display: flex; align-items: center; gap: 12px;
-            font-size: 24px; font-weight: 700;
-            color: var(--card-text); margin-bottom: 20px;
+            font-size: 21px; font-weight: 700; color: var(--card-text);
+            margin-bottom: 18px;
         }
 
-        .tx-table-wrap {
+        /* ── Course Stats Table ── */
+        .data-table-wrap {
             background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 18px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.09);
             overflow: hidden;
-            animation: fadeInUp 0.7s ease 0.3s both;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease 0.2s both;
         }
-
-        .tx-table {
-            width: 100%; border-collapse: collapse;
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead { background: var(--btn-bg); }
+        .data-table thead th {
+            color: white; font-size: 13px; font-weight: 600;
+            padding: 14px 20px; text-align: left;
+            text-transform: uppercase; letter-spacing: 0.4px;
         }
-
-        .tx-table thead {
-            background: var(--btn-bg);
-        }
-
-        .tx-table thead th {
-            color: white; font-size: 14px; font-weight: 600;
-            padding: 16px 20px; text-align: left;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-
-        html[dir="rtl"] .tx-table thead th { text-align: right; }
-
-        .tx-table tbody tr {
+        html[dir="rtl"] .data-table thead th { text-align: right; }
+        .data-table tbody tr {
             border-bottom: 1px solid var(--glass-border);
-            transition: background 0.2s ease;
+            transition: background 0.2s;
         }
+        .data-table tbody tr:last-child { border-bottom: none; }
+        .data-table tbody tr:hover { background: rgba(0,201,167,0.04); }
+        .data-table td { padding: 14px 20px; font-size: 14px; color: var(--text-color); }
+        .data-table td strong { color: var(--card-text); }
 
-        .tx-table tbody tr:hover { background: rgba(0,201,167,0.05); }
-        .tx-table tbody tr:last-child { border-bottom: none; }
-
-        .tx-table td {
-            padding: 16px 20px; font-size: 15px;
-            color: var(--text-color);
-        }
-
-        .tx-type-badge {
-            display: inline-block; padding: 4px 12px;
-            border-radius: 50px; font-size: 13px; font-weight: 600;
-            background: rgba(0,201,167,0.15); color: var(--accent);
-        }
-
-        .tx-amount {
-            font-weight: 700; font-size: 16px;
+        .amount-text {
+            font-weight: 700;
             background: var(--btn-bg);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .tx-empty {
-            text-align: center; padding: 60px 20px;
-            color: var(--card-secondary-text); font-size: 16px;
-        }
+        .table-empty { text-align: center; padding: 48px 20px; color: var(--card-secondary-text); }
+        .table-empty i { font-size: 40px; opacity: 0.25; display: block; margin-bottom: 12px; }
 
-        .tx-empty i {
-            font-size: 48px; margin-bottom: 16px;
-            opacity: 0.3; display: block;
+        /* ── Withdrawal Form ── */
+        .withdrawal-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 32px 36px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.09);
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease 0.3s both;
         }
+        .withdrawal-section h3 {
+            font-size: 20px; font-weight: 700;
+            color: var(--card-text); margin-bottom: 6px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .withdrawal-section .subtitle {
+            font-size: 14px; color: var(--card-secondary-text); margin-bottom: 24px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 14px; align-items: end;
+        }
+        @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+        .form-group label {
+            display: block; font-size: 13px; font-weight: 600;
+            color: var(--card-secondary-text); margin-bottom: 7px; text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .form-group .required-star { color: #e74c3c; margin-left: 3px; }
+        .form-group .form-input { background: var(--card-bg); }
+        .submit-btn {
+            background: var(--btn-bg); color: white;
+            border: none; border-radius: 50px;
+            padding: 13px 32px; font-size: 15px; font-weight: 700;
+            cursor: pointer; font-family: 'Cairo', sans-serif;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.3s ease; white-space: nowrap;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .submit-btn:hover { background: var(--btn-bg-hover); transform: translateY(-3px); }
 
-        /* Animate on scroll */
-        .animate-on-scroll {
-            opacity: 0; transform: translateY(24px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+        /* balance hint */
+        .balance-hint {
+            font-size: 13px; color: var(--card-secondary-text);
+            margin-top: 6px; display: flex; align-items: center; gap: 6px;
         }
-        .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+        .balance-hint span { color: var(--accent); font-weight: 700; }
+
+        /* ── Withdrawal History ── */
+        .wr-badge {
+            display: inline-block; padding: 3px 12px;
+            border-radius: 50px; font-size: 12px; font-weight: 700;
+        }
+        .wr-badge.pending  { background: rgba(243,156,18,0.12); color: #f39c12; }
+        .wr-badge.approved { background: rgba(39,174,96,0.12); color: #27ae60; }
+        .wr-badge.rejected { background: rgba(231,76,60,0.12); color: #e74c3c; }
+
+        /* ── Animate on scroll ── */
+        .animate-on-scroll { opacity:0; transform:translateY(24px); transition:opacity .6s ease,transform .6s ease; }
+        .animate-on-scroll.visible { opacity:1; transform:translateY(0); }
     </style>
 </head>
 <body>
+
     <!-- Header -->
     <header class="header">
         <div class="logo" data-translate="title">Eduvia</div>
@@ -185,9 +182,7 @@
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
             {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
+                <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
                 <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
                 <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
                 {% if user.courses_profile %}
@@ -206,46 +201,183 @@
 
     <!-- Hero -->
     <section class="hero">
-        <h1 data-translate="wa-hero-title">Instructor Wallet</h1>
-        <p data-translate="wa-hero-sub">Track your earnings and transactions.</p>
+        <h1 data-translate="wa-hero-title"><i class="fas fa-wallet" style="margin-right:12px;"></i>Instructor Wallet</h1>
+        <p data-translate="wa-hero-sub">Manage your earnings, course revenue, and withdrawal requests.</p>
     </section>
 
-    <!-- Main Content -->
+    <!-- Main -->
     <main class="page-content">
 
-        <!-- Stats -->
+        <!-- Flash messages -->
+        {% if withdrawal_success %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> {{ withdrawal_success }}
+        </div>
+        {% endif %}
+        {% if withdrawal_error %}
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> {{ withdrawal_error }}
+        </div>
+        {% endif %}
+
+        <!-- ── Stats ── -->
         <div class="stats-grid">
-            <div class="stat-card pending">
-                <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                <div class="stat-label" data-translate="wa-pending">Pending</div>
-                <div class="stat-value">{{ wallet.pending_balance }} <span class="stat-currency">EGP</span></div>
-            </div>
-
-            <div class="stat-card available">
+            <div class="stat-card balance">
                 <div class="stat-icon"><i class="fas fa-wallet"></i></div>
-                <div class="stat-label" data-translate="wa-available">Available</div>
-                <div class="stat-value">{{ wallet.available_balance }} <span class="stat-currency">EGP</span></div>
+                <div class="stat-label" data-translate="wa-available">Available Balance</div>
+                <div class="stat-value">{{ wallet.balance|floatformat:2 }} <span class="stat-currency">EGP</span></div>
             </div>
-
             <div class="stat-card withdrawn">
-                <div class="stat-icon"><i class="fas fa-arrow-up"></i></div>
-                <div class="stat-label" data-translate="wa-withdrawn">Withdrawn</div>
-                <div class="stat-value">{{ wallet.withdrawn_balance }} <span class="stat-currency">EGP</span></div>
+                <div class="stat-icon"><i class="fas fa-arrow-circle-up"></i></div>
+                <div class="stat-label" data-translate="wa-withdrawn">Total Withdrawn</div>
+                <div class="stat-value">{{ total_withdrawn|floatformat:2 }} <span class="stat-currency">EGP</span></div>
+            </div>
+            <div class="stat-card courses">
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
+                <div class="stat-label">Total Courses</div>
+                <div class="stat-value">{{ course_stats|length }}</div>
             </div>
         </div>
 
-        <!-- Transactions -->
+        <!-- ── Per-Course Revenue ── -->
         <div class="animate-on-scroll">
             <div class="section-header">
-                <i class="fas fa-receipt"></i>
-                <span data-translate="wa-tx-title">Recent Transactions</span>
+                <i class="fas fa-chart-bar" style="color:var(--accent);"></i>
+                Course Revenue Breakdown
             </div>
+            <div class="data-table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Price</th>
+                            <th>Students</th>
+                            <th>Total Revenue</th>
+                            <th>Your Share (70%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in course_stats %}
+                        <tr>
+                            <td><strong>{{ item.course.title }}</strong></td>
+                            <td>{{ item.course.price|floatformat:2 }} EGP</td>
+                            <td>
+                                <span style="background:rgba(0,201,167,0.1);color:var(--accent);padding:2px 10px;border-radius:50px;font-weight:600;font-size:13px;">
+                                    {{ item.student_count }}
+                                </span>
+                            </td>
+                            <td>{{ item.revenue|floatformat:2 }} EGP</td>
+                            <td><span class="amount-text">{{ item.instructor_share|floatformat:2 }} EGP</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="table-empty">
+                                <i class="fas fa-book-open"></i>
+                                No courses found. Start creating courses to see revenue.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-            <div class="tx-table-wrap">
-                <table class="tx-table">
+        <!-- ── Withdrawal Request Form ── -->
+        <div class="withdrawal-section animate-on-scroll">
+            <h3><i class="fas fa-paper-plane" style="color:var(--accent);"></i> Request Withdrawal</h3>
+            <p class="subtitle">Submit a withdrawal request. All requests are reviewed within 1–3 business days.</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Amount (EGP) <span class="required-star">*</span></label>
+                        <input type="number" name="amount" min="1" step="0.01"
+                               max="{{ wallet.balance }}"
+                               class="form-input" placeholder="e.g. 500.00" required />
+                        <div class="balance-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Available: <span>{{ wallet.balance|floatformat:2 }} EGP</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Withdrawal Code <span class="required-star">*</span></label>
+                        <input type="text" name="withdrawal_code" class="form-input"
+                               placeholder="Enter your withdrawal code" required />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- ── Withdrawal History ── -->
+        <div class="animate-on-scroll">
+            <div class="section-header">
+                <i class="fas fa-history" style="color:var(--accent);"></i>
+                Withdrawal History
+            </div>
+            <div class="data-table-wrap">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>Date</th>
+                            <th>Amount</th>
+                            <th>Code</th>
+                            <th>Status</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for wr in withdrawal_requests %}
+                        <tr>
+                            <td>{{ wr.created_at|date:"M d, Y" }}</td>
+                            <td><span class="amount-text">{{ wr.amount|floatformat:2 }} EGP</span></td>
+                            <td>
+                                <code style="font-size:12px;background:rgba(0,201,167,0.08);padding:2px 8px;border-radius:6px;">
+                                    {{ wr.withdrawal_code|slice:":12" }}…
+                                </code>
+                            </td>
+                            <td>
+                                <span class="wr-badge {{ wr.status }}">
+                                    {% if wr.status == 'pending' %}<i class="fas fa-clock"></i>
+                                    {% elif wr.status == 'approved' %}<i class="fas fa-check"></i>
+                                    {% else %}<i class="fas fa-times"></i>{% endif %}
+                                    {{ wr.get_status_display }}
+                                </span>
+                            </td>
+                            <td style="color:var(--card-secondary-text);font-size:13px;">
+                                {{ wr.note|default:"—" }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="table-empty">
+                                <i class="fas fa-inbox"></i>
+                                <span data-translate="wa-no-tx">No withdrawal requests yet.</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── Recent Wallet Transactions ── -->
+        <div class="animate-on-scroll">
+            <div class="section-header">
+                <i class="fas fa-receipt" style="color:var(--accent);"></i>
+                <span data-translate="wa-tx-title">Recent Transactions</span>
+            </div>
+            <div class="data-table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Course</th>
                             <th>Type</th>
                             <th>Amount</th>
                         </tr>
@@ -254,12 +386,21 @@
                         {% for tx in transactions %}
                         <tr>
                             <td>{{ tx.created_at|date:"M d, Y" }}</td>
-                            <td><span class="tx-type-badge">{{ tx.tx_type }}</span></td>
-                            <td><span class="tx-amount">{{ tx.amount }} EGP</span></td>
+                            <td>
+                                {% if tx.payment and tx.payment.course %}
+                                    {{ tx.payment.course.title }}
+                                {% else %}—{% endif %}
+                            </td>
+                            <td>
+                                <span style="background:rgba(0,201,167,0.1);color:var(--accent);padding:3px 10px;border-radius:50px;font-size:12px;font-weight:600;">
+                                    {{ tx.get_tx_type_display|default:"Earning" }}
+                                </span>
+                            </td>
+                            <td><span class="amount-text">{{ tx.amount|floatformat:2 }} EGP</span></td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="3" class="tx-empty">
+                            <td colspan="4" class="table-empty">
                                 <i class="fas fa-inbox"></i>
                                 <span data-translate="wa-no-tx">No transactions yet.</span>
                             </td>
@@ -272,7 +413,6 @@
 
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
     </footer>
