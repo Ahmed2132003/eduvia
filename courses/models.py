@@ -21,13 +21,6 @@ class UserProfile(models.Model):
         ('student', 'Student'),
         ('instructor', 'Instructor'),
     ]
-    SUBSCRIPTION_PLANS = [
-        ('free', 'Free'),
-        ('basic', 'Basic'),
-        ('pro', 'Pro'),
-        ('premium', 'Premium'),
-        ('instructor_plan', 'Instructor Plan'),
-    ]
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -35,8 +28,6 @@ class UserProfile(models.Model):
     )
     coins = models.PositiveIntegerField(default=300)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
-    subscription_plan = models.CharField(max_length=20, choices=SUBSCRIPTION_PLANS, default='free')
-    subscription_end_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}'s profile"

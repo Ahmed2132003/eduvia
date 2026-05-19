@@ -4,12 +4,10 @@ tests/test_access.py
 اختبارات منطق الوصول الجديد (بدون نظام اشتراكات).
 """
 
-from datetime import timedelta
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
-from django.utils.timezone import now
 
 User = get_user_model()
 
@@ -21,7 +19,6 @@ class HasRecentCourseAccessTests(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpass123', email='test@test.com'
         )
-        self.factory = RequestFactory()
 
     # ------------------------------------------------------------------
     # حالات النجاح
@@ -29,13 +26,20 @@ class HasRecentCourseAccessTests(TestCase):
 
     def test_user_with_enrollment_within_60_days_has_access(self):
         """مستخدم لديه تسجيل خلال آخر 60 يوم => يُسمح له."""
+        import core.access as access_module
         from core.access import has_recent_course_access
 
-        mock_qs = MagicMock()
-        mock_qs.filter.return_value.exists.return_value = True
+        mock_manager = MagicMock()
+        mock_manager.filter.return_value.exists.return_value = True
 
-        with patch('core.access.CourseEnrollment.objects', mock_qs):
+        original = access_module.CourseEnrollment
+        try:
+            mock_model = MagicMock()
+            mock_model.objects = mock_manager
+            access_module.CourseEnrollment = mock_model
             result = has_recent_course_access(self.user)
+        finally:
+            access_module.CourseEnrollment = original
 
         self.assertTrue(result)
 
@@ -45,31 +49,43 @@ class HasRecentCourseAccessTests(TestCase):
 
         self.user.is_superuser = True
         self.user.save()
-        result = has_recent_course_access(self.user)
+        # أعِد تحميل المستخدم من DB
+        user = User.objects.get(pk=self.user.pk)
+        result = has_recent_course_access(user)
         self.assertTrue(result)
 
     def test_staff_always_has_access(self):
         """staff دائمًا مسموح له."""
         from core.access import has_recent_course_access
 
-        self.user.is_staff = True
-        self.user.save()
-        result = has_recent_course_access(self.user)
+        # update مباشر في DB لتجاوز أي override في الـ custom User model
+        User.objects.filter(pk=self.user.pk).update(is_staff=True)
+        user = User.objects.get(pk=self.user.pk)
+        result = has_recent_course_access(user)
         self.assertTrue(result)
 
     def test_user_with_video_progress_within_60_days(self):
         """مستخدم لديه نشاط فيديو حديث => يُسمح له."""
+        import core.access as access_module
         from core.access import has_recent_course_access
 
-        mock_enrollment_qs = MagicMock()
-        mock_enrollment_qs.filter.return_value.exists.return_value = False
+        # CourseEnrollment لا يُعيد شيئًا
+        mock_enrollment = MagicMock()
+        mock_enrollment.objects.filter.return_value.exists.return_value = False
 
-        mock_progress_qs = MagicMock()
-        mock_progress_qs.filter.return_value.exists.return_value = True
+        # VideoProgress يُعيد نتيجة
+        mock_progress = MagicMock()
+        mock_progress.objects.filter.return_value.exists.return_value = True
 
-        with patch('core.access.CourseEnrollment.objects', mock_enrollment_qs), \
-             patch('core.access.VideoProgress.objects', mock_progress_qs):
+        original_enrollment = access_module.CourseEnrollment
+        original_progress = access_module.VideoProgress
+        try:
+            access_module.CourseEnrollment = mock_enrollment
+            access_module.VideoProgress = mock_progress
             result = has_recent_course_access(self.user)
+        finally:
+            access_module.CourseEnrollment = original_enrollment
+            access_module.VideoProgress = original_progress
 
         self.assertTrue(result)
 
@@ -95,28 +111,48 @@ class HasRecentCourseAccessTests(TestCase):
 
     def test_user_with_no_courses_has_no_access(self):
         """مستخدم بلا كورسات => مرفوض."""
+        import core.access as access_module
         from core.access import has_recent_course_access
 
-        mock_qs = MagicMock()
-        mock_qs.filter.return_value.exists.return_value = False
+        mock_enrollment = MagicMock()
+        mock_enrollment.objects.filter.return_value.exists.return_value = False
 
-        with patch('core.access.CourseEnrollment.objects', mock_qs), \
-             patch('core.access.VideoProgress.objects', mock_qs):
+        mock_progress = MagicMock()
+        mock_progress.objects.filter.return_value.exists.return_value = False
+
+        original_enrollment = access_module.CourseEnrollment
+        original_progress = access_module.VideoProgress
+        try:
+            access_module.CourseEnrollment = mock_enrollment
+            access_module.VideoProgress = mock_progress
             result = has_recent_course_access(self.user)
+        finally:
+            access_module.CourseEnrollment = original_enrollment
+            access_module.VideoProgress = original_progress
 
         self.assertFalse(result)
 
     def test_user_with_old_enrollment_has_no_access(self):
         """مستخدم لديه تسجيل أقدم من 60 يوم => مرفوض."""
+        import core.access as access_module
         from core.access import has_recent_course_access
 
-        # نحاكي أن الفلتر بتاريخ آخر 60 يوم لا يُعيد شيئًا
-        mock_qs = MagicMock()
-        mock_qs.filter.return_value.exists.return_value = False
+        # الفلتر بتاريخ آخر 60 يوم لا يُعيد شيئًا
+        mock_enrollment = MagicMock()
+        mock_enrollment.objects.filter.return_value.exists.return_value = False
 
-        with patch('core.access.CourseEnrollment.objects', mock_qs), \
-             patch('core.access.VideoProgress.objects', mock_qs):
+        mock_progress = MagicMock()
+        mock_progress.objects.filter.return_value.exists.return_value = False
+
+        original_enrollment = access_module.CourseEnrollment
+        original_progress = access_module.VideoProgress
+        try:
+            access_module.CourseEnrollment = mock_enrollment
+            access_module.VideoProgress = mock_progress
             result = has_recent_course_access(self.user)
+        finally:
+            access_module.CourseEnrollment = original_enrollment
+            access_module.VideoProgress = original_progress
 
         self.assertFalse(result)
 
@@ -186,11 +222,10 @@ class AccessDeniedResponseTests(TestCase):
         """Projects تُعيد redirect لمستخدم غير مؤهل عند طلب HTML."""
         with patch('core.access.has_recent_course_access', return_value=False):
             response = self.client.get('/projects/project/1/test-project/')
-        # يجب أن يُعيد redirect (302) أو الصفحة الرئيسية
         self.assertIn(response.status_code, [302, 404])
 
     def test_access_denied_message_content(self):
-        """رسالة الرفض تحتوي على النص الصحيح."""
+        """رسالة الرفض تحتوي على '60' و'كورس'."""
         from core.access import ACCESS_DENIED_MESSAGE
         self.assertIn('60', ACCESS_DENIED_MESSAGE)
         self.assertIn('كورس', ACCESS_DENIED_MESSAGE)
