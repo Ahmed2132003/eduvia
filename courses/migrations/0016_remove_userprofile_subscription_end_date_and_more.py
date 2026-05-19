@@ -10,12 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='userprofile',
-            name='subscription_end_date',
-        ),
-        migrations.RemoveField(
-            model_name='userprofile',
-            name='subscription_plan',
-        ),
+        # الحقول subscription_end_date و subscription_plan
+        # لم تكن موجودة في قاعدة البيانات فعلياً، لذا لا يلزم حذفها.
     ]

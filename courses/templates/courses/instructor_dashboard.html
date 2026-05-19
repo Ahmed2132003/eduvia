@@ -149,7 +149,6 @@
         {% if can_add_course %}
             <a href="{% url 'courses:add_course' %}" class="btn" data-translate="hero-btn">Add New Course</a>
         {% else %}
-            <a href="{% url 'accounts:subscribe' %}" class="btn" data-translate="upgrade-btn">Upgrade Your Plan</a>
         {% endif %}
     </section>
 
@@ -157,14 +156,8 @@
     <div class="dashboard-container">
         <div class="dashboard-card">
             <h2 data-translate="welcome-text">Welcome, {{ user.username }}!</h2>
-            <p data-translate="plan-text">Subscription Plan: {{ subscription_plan }}</p>
             <p data-translate="courses-count">Total Courses: {{ total_courses }}</p>
             <p data-translate="videos-count">Total Videos: {{ total_videos }}</p>
-
-            {% if subscription_plan == 'free' and total_courses >= 1 %}
-                <p class="text-danger" data-translate="free-plan-limit">You have reached the maximum limit of one course in the free plan. Upgrade to the Instructor Plan for unlimited courses.</p>
-                <a href="{% url 'accounts:subscribe' %}" class="btn btn-secondary" data-translate="upgrade-btn">Upgrade Your Plan</a>
-            {% endif %}
         </div>
 
         <div class="courses-list">

@@ -97,7 +97,6 @@
             <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
             <a href="/about/" data-translate="nav-about">About Us</a>
             <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
             {% if user.is_authenticated %}
                 {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
                     <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
