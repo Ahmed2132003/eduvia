@@ -1,182 +1,128 @@
 {% load static i18n projects_filters %}
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- 🔍 SEO -->
   <title data-translate="page-title">Open Source Projects - Eduvia</title>
-  <meta name="description" data-translate="meta-desc" content="Explore open-source projects on Eduvia. Contribute to exciting tasks, earn rewards, and collaborate with instructors and students.">
-  <meta name="keywords" data-translate="meta-keywords" content="open source projects, Eduvia projects, programming projects, student collaboration, coding tasks, instructor-led projects">
-  <meta name="author" content="Eduvia">
-  <meta name="robots" content="index, follow, noarchive">
+  <meta name="description" content="Explore open-source projects on Eduvia.">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/projects/">
-
-  <!-- 🌍 Open Graph -->
-  <meta property="og:title" data-translate="og-title" content="Open Source Projects - Eduvia">
-  <meta property="og:description" data-translate="og-desc" content="Join Eduvia's open-source projects to collaborate, contribute, and grow your coding skills.">
+  <meta property="og:title" content="Open Source Projects - Eduvia">
   <meta property="og:image" content="https://i.postimg.cc/nLFyYtVd/projects1.jpg">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/projects/">
   <meta property="og:type" content="website">
-
-  <!-- 🐦 Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" data-translate="twitter-title" content="Open Source Projects - Eduvia">
-  <meta name="twitter:description" data-translate="twitter-desc" content="Join Eduvia's open-source projects to collaborate, contribute, and grow your coding skills.">
-  <meta name="twitter:image" content="https://i.postimg.cc/nLFyYtVd/projects1.jpg">
-
-  <!-- 🖼️ Favicon -->
   <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-  <!-- 🌐 Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <!-- 🎨 Styles -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'projects/project_list.css' %}">
-
-  <!-- 🖼️ Hero Background -->
   <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/nLFyYtVd/projects1.jpg");
+    :root { --hero-bg-image: url("https://i.postimg.cc/nLFyYtVd/projects1.jpg"); }
+    .access-notice {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 700px;
+      text-align: center;
+      font-family: 'Cairo', sans-serif;
     }
+    .access-notice p { margin: 0 0 10px; font-size: 16px; color: #856404; }
+    .access-notice a { color: #0d6efd; font-weight: bold; }
   </style>
-
-  <!-- 📊 Structured Data -->
-  <script type="application/ld+json" id="schema-markup">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Open Source Projects - Eduvia",
-    "description": "Explore open-source projects on Eduvia. Contribute to exciting tasks, earn rewards, and collaborate with instructors and students.",
-    "url": "https://eduvia-ai.fly.dev/projects/",
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "{{ request.scheme|default:'https' }}://{{ request.get_host|default:'eduvia-ai.fly.dev' }}/home/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Projects"
-        }
-      ]
-    }
-  }
-  </script>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Open Source Projects</h1>
-        <p data-translate="hero-desc">Collaborate on exciting open-source projects, contribute to tasks, and earn rewards!</p>
-        {% if user.is_authenticated and user.courses_profile.role == 'instructor' %}
-            <div style="text-align: center; margin: 20px 0;">
-                <a href="{% url 'projects:add_project' %}" class="btn" data-translate="contribute-btn">Start Contributing!</a>
-            </div>
+  <header class="header">
+    <div class="logo">Eduvia</div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <nav class="menu">
+      <a href="/" data-translate="nav-home">Home</a>
+      <a href="/courses/" data-translate="nav-courses">Courses</a>
+      <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+      <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+      <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+      <a href="/about/" data-translate="nav-about">About Us</a>
+      <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+      {% if user.is_authenticated %}
+        {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+          <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
         {% endif %}
-    </section>
+        <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+        <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+        {% if user.courses_profile %}
+          <span class="coins-display">
+            <i class="fas fa-coins coins-icon"></i>
+            <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
+          </span>
+        {% endif %}
+      {% else %}
+        <a href="/accounts/register/" data-translate="nav-login">Login</a>
+      {% endif %}
+      <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+      <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
+    </nav>
+  </header>
 
-    <!-- Messages -->
-    {% if messages %}
-        <div class="container">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message|safe }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        </div>
+  <section class="hero">
+    <h1 data-translate="hero-title">Open Source Projects</h1>
+    <p data-translate="hero-desc">Collaborate on exciting open-source projects, contribute to tasks, and earn rewards!</p>
+    {% if user.is_authenticated and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'projects:add_project' %}" class="btn" data-translate="contribute-btn">Start Contributing!</a>
     {% endif %}
+  </section>
 
-    <!-- Cards Container -->
-    <div class="cards-container">
-        {% for project in projects %}
-            <section class="project-card">
-                <h2>
-                    {% if user.is_authenticated and user.courses_profile.subscription_plan != 'free' %}
-                        <a href="{% url 'projects:project_details' project.id project.slugified_title %}">{{ project.title|default:"Project" }}</a>
-                    {% else %}
-                        <a href="{% url 'accounts:subscribe' %}" class="upgrade-link" onclick="alert('يجب الاشتراك في خطة مدفوعة لعرض تفاصيل المشروع.')">{{ project.title|default:"Project" }}</a>
-                    {% endif %}
-                </h2>
-                <p>{{ project.description|truncatewords:30|default:"No description available." }}</p>
-                <p><span data-translate="category-label">Category:</span> {{ project.get_category_display|default:"Unknown" }}</p>
-                <p><span data-translate="status-label">Status:</span> {{ project.get_status_display|default:"Unknown" }}</p>
-                {% if user.is_authenticated and user.courses_profile.subscription_plan != 'free' %}
-                    <a href="{% url 'projects:project_details' project.id project.slugified_title %}" class="btn" data-translate="view-details">View Details</a>
-                {% else %}
-                    <a href="{% url 'accounts:subscribe' %}" class="btn btn-warning" data-translate="upgrade-plan">Upgrade Plan</a>
-                {% endif %}
-            </section>
-        {% empty %}
-            <p class="no-projects" data-translate="no-projects">No projects available.</p>
-        {% endfor %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message|safe }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
     </div>
+  {% endif %}
 
-    <!-- Add Project Button for Instructors -->
-    {% if user.is_authenticated and user.courses_profile.role == 'instructor' and user.courses_profile.subscription_plan == 'instructor' %}
-        <div style="text-align: center; margin: 40px 0;">
-            <a href="{% url 'projects:add_project' %}" class="btn" data-translate="add-project">Add New Project</a>
-        </div>
-    {% endif %}
+  {# ---- إشعار لغير المسجَّلين في كورسات ---- #}
+  {% if not user.is_authenticated %}
+    <div class="access-notice">
+      <p>سجِّل دخولك وانضم لكورس للوصول إلى تفاصيل المشاريع والتفاعل معها.</p>
+      <a href="/accounts/register/">سجِّل الآن</a>
+    </div>
+  {% endif %}
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+  <div class="cards-container">
+    {% for project in projects %}
+      <section class="project-card">
+        <h2>
+          {# الوصول للتفاصيل يتطلب كورسًا - الحماية الفعلية في الـ view #}
+          <a href="{% url 'projects:project_details' project.id project.slugified_title %}">
+            {{ project.title|default:"Project" }}
+          </a>
+        </h2>
+        <p>{{ project.description|truncatewords:30|default:"No description available." }}</p>
+        <p><span data-translate="category-label">Category:</span> {{ project.get_category_display|default:"Unknown" }}</p>
+        <p><span data-translate="status-label">Status:</span> {{ project.get_status_display|default:"Unknown" }}</p>
+        <a href="{% url 'projects:project_details' project.id project.slugified_title %}"
+           class="btn" data-translate="view-details">View Details</a>
+      </section>
+    {% empty %}
+      <p class="no-projects" data-translate="no-projects">No projects available.</p>
+    {% endfor %}
+  </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'projects/project_list.js' %}"></script>
+  {% if user.is_authenticated and user.courses_profile.role == 'instructor' %}
+    <div style="text-align:center; margin:40px 0;">
+      <a href="{% url 'projects:add_project' %}" class="btn" data-translate="add-project">Add New Project</a>
+    </div>
+  {% endif %}
+
+  <footer class="footer">
+    <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'projects/project_list.js' %}"></script>
 </body>
 </html>

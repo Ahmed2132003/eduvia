@@ -1,223 +1,112 @@
 {% load static i18n widget_tweaks projects_filters %}
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- 🔍 SEO -->
   <title data-translate="page-title">Skills List - Eduvia</title>
-  <meta name="description" content="Discover a wide range of skills offered by students on Eduvia's Skills Market and explore their services.">
-  <meta name="keywords" content="skills, student skills, Eduvia, freelance skills, skills marketplace, microservices">
-  <meta name="author" content="Eduvia">
+  <meta name="description" content="Discover a wide range of skills offered by students on Eduvia's Skills Market.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/skills_market/skills/">
-
-  <!-- 🌍 Open Graph -->
   <meta property="og:title" content="Skills List - Eduvia">
-  <meta property="og:description" content="Explore skills shared by Eduvia students. Connect with providers and discover what they offer.">
   <meta property="og:image" content="https://i.postimg.cc/vmzFRNj1/skils.jpg">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/skills_market/skills/">
   <meta property="og:type" content="website">
-
-  <!-- 🐦 Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Skills List - Eduvia">
-  <meta name="twitter:description" content="Discover a wide range of skills offered by students on Eduvia's Skills Market.">
-  <meta name="twitter:image" content="https://i.postimg.cc/vmzFRNj1/skils.jpg">
-
-  <!-- 🖼️ Favicon -->
   <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-  <!-- 🌐 Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <!-- 🎨 Styles -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'skills_market/skills_list.css' %}">
-
-  <!-- 🖼️ Hero Background -->
   <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/vmzFRNj1/skils.jpg");
-    }
+    :root { --hero-bg-image: url("https://i.postimg.cc/vmzFRNj1/skils.jpg"); }
   </style>
-
-  <!-- 📊 Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://eduvia-ai.fly.dev/#organization",
-        "name": "Eduvia",
-        "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-        },
-        "sameAs": [
-          "https://www.facebook.com/share/18iRSctdxN/",
-          "https://x.com/Eduvia7",
-          "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-        ]
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/skills/#webpage",
-        "url": "https://eduvia-ai.fly.dev/skills_market/skills/",
-        "name": "Skills List - Eduvia",
-        "description": "Discover a wide range of freelance and student-provided skills inside Eduvia's digital marketplace.",
-        "breadcrumb": {
-          "@id": "https://eduvia-ai.fly.dev/skills_market/skills/#breadcrumb"
-        },
-        "inLanguage": "en"
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/skills/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Skills Market",
-            "item": "https://eduvia-ai.fly.dev/skills_market/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Skills",
-            "item": "https://eduvia-ai.fly.dev/skills_market/skills/"
-          }
-        ]
-      }
-    ]
-  }
-  </script>
 </head>
-
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Explore Skills on Eduvia</h1>
-        <p data-translate="hero-desc">Discover a variety of skills offered by our community</p>
-    </section>
-
-    <!-- Subscription Plan Notice for Free Plan -->
-    {% if subscription_plan == 'free' %}
-        <div class="alert alert-warning text-center" data-translate="free-plan-notice">
-            أنت تستخدم الخطة المجانية. قم بترقية خطتك لفتح ميزات مثل إضافة المهارات، طلب الخدمات، والدردشة. 
-            <a href="/accounts/subscribe/" class="btn btn-primary">ترقية الآن</a>
-        </div>
-    {% endif %}
-
-    <!-- Search Bar -->
-    {% if subscription_plan in 'premium,instructor' %}
-        <div class="search-container">
-            <form class="search-form" method="POST" action="{% url 'skills_market:skills_list' %}">
-                {% csrf_token %}
-                {{ form.search_query|add_class:"form-control"|attr:"data-translate=search-placeholder" }}
-                <button type="submit"><i class="fas fa-search"></i> {% trans "Search" %}</button>
-            </form>
-        </div>
-    {% else %}
-        <div class="search-container">
-            <p class="text-center" data-translate="search-restricted">البحث المتقدم متاح فقط في خطط Premium وInstructor.</p>
-        </div>
-    {% endif %}
-
-    <!-- Messages -->
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} fadeIn">{{ message }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <!-- Cards Container -->
-    <div class="cards-container">
-        {% for skill in skills %}
-            <section class="hero-card">
-                <h1>{{ skill.name|default:"Skill" }}</h1>
-                <p>
-                    <span data-translate="card-provider">Provider:</span> {{ skill.user.username|default:"Unknown" }}<br>
-                    <span data-translate="card-level">Level:</span> {{ skill.get_level_display|default:"Beginner" }}<br>
-                    <span data-translate="card-description">Description:</span> {{ skill.description|truncatewords:20|default:"No description" }}
-                </p>
-                <a href="{% url 'skills_market:services_list' %}?skill={{ skill.id }}" class="btn" data-translate="card-services">View Services</a>
-            </section>
-        {% empty %}
-            <p class="text-center" data-translate="cards-empty">No skills available.</p>
-        {% endfor %}
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{% url 'skills_market:services_list' %}" class="btn" data-translate="btn-services">View Services</a>
-        {% if user.is_authenticated and subscription_plan != 'free' %}
-            <a href="{% url 'skills_market:add_skill' %}" class="btn" data-translate="btn-add-skill">Add Skill</a>
+  <header class="header">
+    <div class="logo">Eduvia</div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <nav class="menu">
+      <a href="/" data-translate="nav-home">Home</a>
+      <a href="/courses/" data-translate="nav-courses">Courses</a>
+      <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+      <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+      <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+      <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
+      <a href="/about/" data-translate="nav-about">About Us</a>
+      <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+      {% if user.is_authenticated %}
+        {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+          <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
         {% endif %}
+        <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+        <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+        {% if user.courses_profile %}
+          <span class="coins-display">
+            <i class="fas fa-coins coins-icon"></i>
+            <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
+          </span>
+        {% endif %}
+      {% else %}
+        <a href="/accounts/register/" data-translate="nav-login">Login</a>
+      {% endif %}
+      <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+      <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1 data-translate="hero-title">Explore Skills on Eduvia</h1>
+    <p data-translate="hero-desc">Discover a variety of skills offered by our community</p>
+  </section>
+
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+          {{ message|safe }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
     </div>
+  {% endif %}
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+  {# بحث متاح لجميع المسجَّلين المؤهَّلين #}
+  <div class="search-container">
+    <form class="search-form" method="POST" action="{% url 'skills_market:skills_list' %}">
+      {% csrf_token %}
+      {{ form.search_query|add_class:"form-control"|attr:"data-translate=search-placeholder" }}
+      <button type="submit"><i class="fas fa-search"></i> {% trans "Search" %}</button>
+    </form>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'skills_market/skills_list.js' %}"></script>
+  <div class="cards-container">
+    {% for skill in skills %}
+      <section class="hero-card">
+        <h1>{{ skill.name|default:"Skill" }}</h1>
+        <p>
+          <span data-translate="card-provider">Provider:</span> {{ skill.user.username|default:"Unknown" }}<br>
+          <span data-translate="card-level">Level:</span> {{ skill.get_level_display|default:"Beginner" }}<br>
+          <span data-translate="card-description">Description:</span> {{ skill.description|truncatewords:20|default:"No description" }}
+        </p>
+        <a href="{% url 'skills_market:services_list' %}?skill={{ skill.id }}" class="btn" data-translate="card-services">View Services</a>
+      </section>
+    {% empty %}
+      <p class="text-center" data-translate="cards-empty">No skills available.</p>
+    {% endfor %}
+  </div>
+
+  <div class="action-buttons">
+    <a href="{% url 'skills_market:services_list' %}" class="btn" data-translate="btn-services">View Services</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'skills_market:add_skill' %}" class="btn" data-translate="btn-add-skill">Add Skill</a>
+    {% endif %}
+  </div>
+
+  <footer class="footer">
+    <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'skills_market/skills_list.js' %}"></script>
 </body>
 </html>
