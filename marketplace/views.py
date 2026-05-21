@@ -1,13 +1,3 @@
-"""
-marketplace/views.py
-====================
-Preserves all existing API views exactly.
-Adds three new HTML page views:
-  - access_info_page        → /api/marketplace/my/access-info/
-  - my_courses_page         → /api/marketplace/my/courses/
-  - instructor_wallet_page  → /api/marketplace/wallet/
-"""
-
 from __future__ import annotations
 
 import hmac
@@ -25,6 +15,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from courses.models import Course, CourseEnrollment
+from core.ownership import is_course_owner
 from .models import (
     CoursePayment,
     Enrollment,
@@ -110,13 +101,15 @@ class AccessStatusAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response(
-            {
-                "has_access": Enrollment.objects.filter(
-                    student=request.user, is_active=True
-                ).exists()
-            }
+        # ── Owner bypass: instructor always has access ────────────────────────
+        has_access = (
+            Course.objects.filter(instructor=request.user.username).exists()
+            or Course.objects.filter(instructor_user=request.user).exists()
+            or Enrollment.objects.filter(
+                student=request.user, is_active=True
+            ).exists()
         )
+        return Response({"has_access": has_access})
 
 
 @login_required
@@ -131,6 +124,16 @@ def checkout_page(request):
         if request.GET.get("course_id")
         else None
     )
+    # Instructors don't need to checkout their own courses
+    if course and request.user.is_authenticated and is_course_owner(request.user, course):
+        messages.info(request, "أنت صاحب هذا الكورس، لديك وصول كامل تلقائياً.")
+        from django.utils.text import slugify
+        from courses.utils import clean_text
+        return redirect(
+            'courses:course_details',
+            course_id=course.id,
+            course_slug=slugify(clean_text(course.title), allow_unicode=True) or 'default-title',
+        )
     return render(
         request,
         "marketplace/checkout.html",
@@ -183,7 +186,14 @@ def access_info_page(request):
     legacy_course_ids = set(
         legacy_enrollments.values_list("course_id", flat=True)
     )
-    all_active_ids = active_course_ids | legacy_course_ids
+    # ── Instructor-owned courses also count as active ─────────────────────────
+    owned_course_ids = set(
+        Course.objects.filter(instructor=user.username).values_list("id", flat=True)
+    ) | set(
+        Course.objects.filter(instructor_user=user).values_list("id", flat=True)
+    )
+
+    all_active_ids = active_course_ids | legacy_course_ids | owned_course_ids
 
     total_active = len(all_active_ids)
     has_any_access = total_active > 0
@@ -344,20 +354,29 @@ def my_courses_page(request):
         code = request.POST.get("code", "").strip()
         try:
             course = get_object_or_404(Course, id=int(course_id))
-            MarketplaceService.activate_enrollment_code(
-                user=user, course=course, code=code
-            )
-            messages.success(request, f"Enrolled in '{course.title}' successfully!")
+            # Instructors don't need codes for their own courses
+            if is_course_owner(user, course):
+                messages.info(request, f"أنت صاحب كورس '{course.title}'، لديك وصول كامل تلقائياً.")
+            else:
+                MarketplaceService.activate_enrollment_code(
+                    user=user, course=course, code=code
+                )
+                messages.success(request, f"Enrolled in '{course.title}' successfully!")
         except Exception as exc:
             messages.error(request, str(exc))
         return redirect(request.path)
 
     if is_instructor:
         # ── INSTRUCTOR BRANCH ──
-        # Courses created by this instructor (strictly filtered)
-        instructor_courses = Course.objects.filter(instructor_user=user).order_by(
-            "-created_at"
+        # Courses created by this instructor (strictly filtered by BOTH fields)
+        owned_by_username = Course.objects.filter(instructor=user.username)
+        owned_by_fk = Course.objects.filter(instructor_user=user)
+        # Union without duplicates
+        instructor_course_ids = set(
+            list(owned_by_username.values_list('id', flat=True)) +
+            list(owned_by_fk.values_list('id', flat=True))
         )
+        instructor_courses = Course.objects.filter(id__in=instructor_course_ids).order_by("-created_at")
 
         course_data = []
         for course in instructor_courses:
@@ -389,6 +408,7 @@ def my_courses_page(request):
                     "course": course,
                     "student_count": total_students,
                     "revenue": revenue,
+                    "is_owner": True,       # always True in instructor branch
                 }
             )
 
@@ -425,6 +445,7 @@ def my_courses_page(request):
                         "source": e.get_source_display(),
                         "enrolled_at": e.enrolled_at,
                         "is_marketplace": True,
+                        "is_owner": False,
                     }
                 )
         for e in legacy_enrollments:
@@ -436,6 +457,7 @@ def my_courses_page(request):
                         "source": "Direct",
                         "enrolled_at": e.enrolled_at,
                         "is_marketplace": False,
+                        "is_owner": False,
                     }
                 )
 

@@ -1,12 +1,4 @@
-"""
-core/access.py
-==============
-منطق التحقق من صلاحية الوصول الجديد.
-يستبدل نظام الاشتراكات والخطط بالكامل.
 
-القاعدة: يُسمح للمستخدم بالوصول إذا كان لديه
-كورس مسجَّل أو نشط خلال آخر 60 يومًا.
-"""
 
 from datetime import timedelta
 from django.utils.timezone import now
@@ -30,43 +22,78 @@ ACCESS_DENIED_MESSAGE = (
 )
 
 
+def _is_instructor_owner(user) -> bool:
+    """
+    يُرجع True إذا كان المستخدم instructor ويملك كورساً واحداً على الأقل.
+    يُمنح وصولاً فورياً دون الحاجة لفحص التاريخ.
+    """
+    try:
+        from courses.models import Course
+        if Course.objects.filter(instructor=user.username).exists():
+            return True
+        if Course.objects.filter(instructor_user=user).exists():
+            return True
+    except Exception:
+        pass
+    return False
+
+
 def has_recent_course_access(user) -> bool:
     """
     يرجع True إذا كان المستخدم لديه كورس صالح خلال آخر 60 يومًا.
-    يفحص: CourseEnrollment ثم VideoProgress.
+    يفحص (بالترتيب):
+      1. superuser / staff → True دائماً
+      2. Instructor صاحب كورس → True دائماً
+      3. CourseEnrollment في آخر 60 يوم
+      4. Marketplace Enrollment نشط
+      5. VideoProgress في آخر 60 يوم
     """
     if not user or not user.is_authenticated:
         return False
 
-    # superuser / staff دائمًا مسموح لهم
+    # ── 1. superuser / staff دائمًا مسموح لهم ──
     if getattr(user, 'is_superuser', False) or getattr(user, 'is_staff', False):
+        return True
+
+    # ── 2. Instructor owner — وصول فوري ──
+    if _is_instructor_owner(user):
         return True
 
     cutoff = now() - timedelta(days=COURSE_ACCESS_DAYS)
 
-    # ── فحص CourseEnrollment ──
+    # ── 3. فحص CourseEnrollment ──
     if CourseEnrollment is not None:
         try:
-            # محاولة الفلتر بتاريخ التسجيل
             if CourseEnrollment.objects.filter(
                 user=user,
-                enrolled_at__gte=cutoff
+                enrolled_at__gte=cutoff,
             ).exists():
                 return True
         except Exception:
-            # حقل enrolled_at غير موجود → أي تسجيل يكفي
             try:
                 if CourseEnrollment.objects.filter(user=user).exists():
                     return True
             except Exception:
                 pass
 
-    # ── فحص VideoProgress ──
+    # ── 4. فحص Marketplace Enrollment ──
+    try:
+        from marketplace.models import Enrollment as MarketplaceEnrollment
+        if MarketplaceEnrollment.objects.filter(
+            student=user,
+            is_active=True,
+            enrolled_at__gte=cutoff,
+        ).exists():
+            return True
+    except Exception:
+        pass
+
+    # ── 5. فحص VideoProgress ──
     if VideoProgress is not None:
         try:
             if VideoProgress.objects.filter(
                 user=user,
-                last_watched__gte=cutoff
+                last_watched__gte=cutoff,
             ).exists():
                 return True
         except Exception:

@@ -1,11 +1,3 @@
-# access_control.py
-# ضعه في جذر المشروع (بجانب manage.py)
-"""
-منطق التحقق من أهلية المستخدم لاستخدام الشات بوت والمسابقات.
-
-القاعدة: المستخدم مؤهل إذا كان لديه CourseEnrollment أو Purchase أو Access
-لكورس واحد على الأقل خلال آخر 60 يوماً.
-"""
 
 from django.utils import timezone
 from datetime import timedelta
@@ -16,6 +8,29 @@ def _get_cutoff_date():
     return timezone.now() - timedelta(days=60)
 
 
+def is_instructor_with_course(user) -> bool:
+    """
+    يُرجع True إذا كان المستخدم instructor ويملك كورساً واحداً على الأقل.
+    هذا يمنحه وصولاً تلقائياً للشات بوت والمسابقات.
+    """
+    if not user or not user.is_authenticated:
+        return False
+
+    try:
+        from courses.models import Course
+        return Course.objects.filter(instructor=user.username).exists()
+    except Exception:
+        pass
+
+    try:
+        from courses.models import Course
+        return Course.objects.filter(instructor_user=user).exists()
+    except Exception:
+        pass
+
+    return False
+
+
 def has_active_course_access(user):
     """
     التحقق هل لدى المستخدم كورس صالح خلال آخر 60 يوم.
@@ -23,6 +38,7 @@ def has_active_course_access(user):
     - CourseEnrollment (التسجيل في كورس)
     - Purchase (شراء كورس)
     - CourseAccess (وصول مباشر للكورس)
+    - Instructor ownership (صاحب الكورس دائماً مؤهل)
 
     يُرجع True إذا وُجد أي منها، وإلا False.
     """
@@ -33,6 +49,10 @@ def has_active_course_access(user):
     if user.is_superuser:
         return True
 
+    # ---- Instructor Owner: دائماً مؤهل إذا كان صاحب كورس ----
+    if is_instructor_with_course(user):
+        return True
+
     cutoff = _get_cutoff_date()
 
     # ---- CourseEnrollment ----
@@ -41,6 +61,18 @@ def has_active_course_access(user):
         if CourseEnrollment.objects.filter(
             user=user,
             enrolled_at__gte=cutoff
+        ).exists():
+            return True
+    except Exception:
+        pass
+
+    # ---- Marketplace Enrollment ----
+    try:
+        from marketplace.models import Enrollment as MarketplaceEnrollment
+        if MarketplaceEnrollment.objects.filter(
+            student=user,
+            is_active=True,
+            enrolled_at__gte=cutoff,
         ).exists():
             return True
     except Exception:
@@ -85,7 +117,8 @@ def has_active_course_access(user):
 def can_access_chatbot(user):
     """
     هل يمكن للمستخدم استخدام الشات بوت؟
-    يُرجع True إذا كان لديه كورس صالح خلال آخر 60 يوم.
+    يُرجع True إذا كان لديه كورس صالح خلال آخر 60 يوم
+    أو كان instructor صاحب كورس.
     """
     return has_active_course_access(user)
 
@@ -93,7 +126,8 @@ def can_access_chatbot(user):
 def can_access_competitions(user):
     """
     هل يمكن للمستخدم المشاركة في المسابقات؟
-    يُرجع True إذا كان لديه كورس صالح خلال آخر 60 يوم.
+    يُرجع True إذا كان لديه كورس صالح خلال آخر 60 يوم
+    أو كان instructor صاحب كورس.
     """
     return has_active_course_access(user)
 
