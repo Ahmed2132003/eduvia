@@ -1,0 +1,354 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied - Eduvia</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* ── CSS Variables (matches Eduvia palette) ── */
+        :root {
+            --primary:    #00b4d8;
+            --primary-dk: #0077b6;
+            --accent:     #f77f00;
+            --danger:     #e63946;
+            --bg-dark:    #0a0e1a;
+            --bg-card:    #111827;
+            --text-main:  #e2e8f0;
+            --text-muted: #94a3b8;
+            --border:     rgba(0, 180, 216, 0.18);
+            --glow:       0 0 40px rgba(0, 180, 216, 0.25);
+        }
+
+        /* ── Reset & Base ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* ── Animated starfield background ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,119,182,0.35) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,180,216,0.18) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Header (mirrors platform header) ── */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 64px;
+            background: rgba(10, 14, 26, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dk));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .header nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-left: 1.5rem;
+            transition: color 0.2s;
+        }
+        .header nav a:hover { color: var(--primary); }
+
+        /* ── Main page wrapper ── */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 1rem 3rem;
+        }
+
+        /* ── Card ── */
+        .access-card {
+            width: 100%;
+            max-width: 560px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem 2.5rem 2.5rem;
+            text-align: center;
+            box-shadow: var(--glow), 0 24px 64px rgba(0,0,0,0.5);
+            animation: slideUp 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+
+        /* ── Lock icon badge ── */
+        .icon-badge {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 1.75rem;
+            background: linear-gradient(135deg, rgba(230,57,70,0.15), rgba(230,57,70,0.05));
+            border: 2px solid rgba(230,57,70,0.35);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-ring 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0%, 100% { box-shadow: 0 0 0 0   rgba(230,57,70,0.4); }
+            50%       { box-shadow: 0 0 0 16px rgba(230,57,70,0);  }
+        }
+
+        .icon-badge i {
+            font-size: 2.4rem;
+            color: var(--danger);
+        }
+
+        /* ── 403 badge ── */
+        .error-code {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--danger);
+            background: rgba(230,57,70,0.12);
+            border: 1px solid rgba(230,57,70,0.3);
+            border-radius: 999px;
+            padding: 0.25rem 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .access-card h1 {
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .access-card p.subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Info box ── */
+        .info-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            background: rgba(0,180,216,0.07);
+            border: 1px solid rgba(0,180,216,0.2);
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .info-box i {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .info-box p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .info-box p strong {
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        /* ── Buttons ── */
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dk));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 0.85rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.18s, box-shadow 0.18s, opacity 0.18s;
+            box-shadow: 0 4px 20px rgba(0,180,216,0.35);
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 0.85rem;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0,180,216,0.5);
+            color: #fff;
+            opacity: 0.95;
+        }
+
+        .btn-courses {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.18s, color 0.18s, background 0.18s;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-courses:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(0,180,216,0.06);
+        }
+
+        /* ── Footer note ── */
+        .footer-note {
+            margin-top: 1.75rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-note a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .access-card {
+                padding: 2.25rem 1.5rem 2rem;
+                border-radius: 18px;
+            }
+            .access-card h1 { font-size: 1.5rem; }
+            .header nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Header ── -->
+    <header class="header">
+        <div class="logo">Eduvia</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/courses/">Courses</a>
+            {% if user.is_authenticated %}
+                <a href="/accounts/profile/">Profile</a>
+                <a href="/accounts/logout/">Logout</a>
+            {% else %}
+                <a href="/accounts/login/">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- ── Main Content ── -->
+    <main class="page-wrapper">
+        <div class="access-card">
+
+            <!-- Lock icon -->
+            <div class="icon-badge">
+                <i class="fas fa-lock"></i>
+            </div>
+
+            <!-- Error code badge -->
+            <span class="error-code">403 — Access Denied</span>
+
+            <!-- Heading -->
+            <h1>Instructor Area Only</h1>
+
+            <!-- Subtitle -->
+            <p class="subtitle">
+                The page you're trying to reach is reserved exclusively for
+                <strong style="color:#fff;">Instructors</strong>.
+                Your current account does not have the required permissions.
+            </p>
+
+            <!-- Info box -->
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <p>
+                    <strong>Why am I seeing this?</strong>
+                    This section allows instructors to manage courses, upload videos,
+                    and track student progress. It is not accessible to student accounts.
+                    If you believe this is an error, please contact support.
+                </p>
+            </div>
+
+            <!-- CTA buttons -->
+            <a href="/" class="btn-home">
+                <i class="fas fa-home"></i> Return to Home
+            </a>
+            <a href="/courses/" class="btn-courses">
+                <i class="fas fa-graduation-cap"></i> Browse Courses
+            </a>
+        </div>
+
+        <!-- Footer note -->
+        <p class="footer-note">
+            Need instructor access?
+            <a href="/contact_us/">Contact our team</a> &nbsp;·&nbsp;
+            <a href="/accounts/profile/">View your profile</a>
+        </p>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

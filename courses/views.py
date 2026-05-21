@@ -83,7 +83,6 @@ def download_certificate(request, course_id, course_slug):
             'course_slug': slugified_title
         }))
 
-    # ✅ شيلنا قيد الـ subscription - أي حد يقدر يحمّل الشهادة
     enrollment = get_object_or_404(CourseEnrollment, user=request.user, course=course)
     if not enrollment.is_course_completed():
         messages.error(request, 'You must complete all videos to download the certificate.')
@@ -248,9 +247,20 @@ def courses_view(request):
     })
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# ACCESS DENIED — 403 page for students trying to reach instructor-only views
+# ─────────────────────────────────────────────────────────────────────────────
+def access_denied(request):
+    """Renders the 403 Access Denied page for non-instructors."""
+    return render(request, 'courses/access_denied.html', status=403)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# INSTRUCTOR DASHBOARD  — protected by @instructor_required
+# ─────────────────────────────────────────────────────────────────────────────
 @login_required
+@instructor_required
 def instructor_dashboard(request):
-    # ✅ شيلنا قيد الـ role - أي يوزر يقدر يوصل للـ dashboard
     try:
         user_profile = request.user.courses_profile
     except UserProfile.DoesNotExist:
@@ -275,8 +285,8 @@ def instructor_dashboard(request):
 
 
 @login_required
+@instructor_required
 def add_course(request):
-    # ✅ شيلنا كل قيود الـ plan
     if request.method == 'POST':
         form = CourseForm(request.POST)
         if form.is_valid():
@@ -292,6 +302,8 @@ def add_course(request):
     return render(request, 'courses/add_course.html', {'form': form})
 
 
+@login_required
+@instructor_required
 def edit_course(request, course_id, course_slug=None):
     course = get_object_or_404(Course, id=course_id)
     if not request.user.is_superuser and course.instructor != request.user.username:
@@ -310,6 +322,7 @@ def edit_course(request, course_id, course_slug=None):
 
 
 @login_required
+@instructor_required
 def delete_course(request, course_id, course_slug=None):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
     if request.method == 'POST':
@@ -320,6 +333,7 @@ def delete_course(request, course_id, course_slug=None):
 
 
 @login_required
+@instructor_required
 def add_video(request, course_id, course_slug):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
     slugified_title = slugify(clean_text(course.title), allow_unicode=True) or 'default-title'
@@ -364,6 +378,7 @@ def add_video(request, course_id, course_slug):
 
 
 @login_required
+@instructor_required
 def course_videos(request, course_id, course_slug):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
     slugified_title = slugify(clean_text(course.title), allow_unicode=True) or 'default-title'
@@ -379,6 +394,7 @@ def course_videos(request, course_id, course_slug):
 
 
 @login_required
+@instructor_required
 def edit_video(request, course_id, course_slug, video_id, video_slug):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
     slugified_course_title = slugify(clean_text(course.title), allow_unicode=True) or 'default-title'
@@ -412,6 +428,7 @@ def edit_video(request, course_id, course_slug, video_id, video_slug):
 
 
 @login_required
+@instructor_required
 def delete_video(request, course_id, course_slug, video_id, video_slug):
     course = get_object_or_404(Course, id=course_id, instructor=request.user.username)
     slugified_course_title = slugify(clean_text(course.title), allow_unicode=True) or 'default-title'
@@ -484,7 +501,7 @@ def course_details_view(request, course_id, course_slug):
         "is_enrolled": enrolled,
         "completed_videos_count": completed_videos_count,
         "total_videos_count": total_videos_count,
-        "can_download_certificate": True,  # ✅ مفتوح للكل
+        "can_download_certificate": True,
         "slugified_course_title": slugified_title,
     }
     return render(request, 'courses/course_details.html', context)
@@ -653,7 +670,7 @@ def watch_video(request, course_id, course_slug, video_id, video_slug):
     completed_videos_count = VideoProgress.objects.filter(user=request.user, video__course=course, completed=True).count()
     total_videos_count = videos.count()
 
-    uploaded_files = video.files.all()  # ✅ كل الملفات مرئية للكل
+    uploaded_files = video.files.all()
     user_rating = VideoRating.objects.filter(video=video, user=request.user).first()
     user_rating = user_rating.rating if user_rating else None
     comments = Comment.objects.filter(video=video).order_by('-created_at')
@@ -796,6 +813,7 @@ def search_courses(request):
 
 
 @login_required
+@instructor_required
 def add_task(request, course_id, course_slug, video_id=None, video_slug=None):
     course = get_object_or_404(Course, id=course_id)
 
@@ -837,6 +855,7 @@ def add_task(request, course_id, course_slug, video_id=None, video_slug=None):
 
 
 @login_required
+@instructor_required
 def add_alternative_quiz(request, course_id, course_slug, video_id, video_slug):
     video = get_object_or_404(Video, id=video_id, course__id=course_id, course__instructor=request.user.username)
     slugified_video_title = slugify(clean_text(video.title), allow_unicode=True) or 'default-title'

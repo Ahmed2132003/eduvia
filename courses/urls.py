@@ -7,6 +7,9 @@ urlpatterns = [
     path('', views.courses_view, name='courses'),
     path('search/', views.search_courses, name='search_courses'),
 
+    # ─── Access Denied (403) ────────────────────────────────────────────────
+    path('access-denied/', views.access_denied, name='access_denied'),
+
     path('enroll/<int:course_id>/<path:course_slug>/', views.enroll_course, name='enroll_course'),
 
     # Course details - يقبل عربي وانجليزي
