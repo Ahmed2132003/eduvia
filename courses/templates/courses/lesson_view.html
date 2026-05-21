@@ -1,0 +1,429 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ lesson.title }} — {{ course.title }} | Eduvia</title>
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --primary:   #00a8cc;
+  --primary-d: #0087a3;
+  --accent:    #00c9a7;
+  --bg:        #f0f4f8;
+  --card:      #ffffff;
+  --border:    #d1dde8;
+  --text:      #2d3748;
+  --muted:     #718096;
+  --success:   #27ae60;
+  --sidebar-w: 320px;
+}
+body { font-family:'Cairo',sans-serif; background:#1a2332; color:var(--text); }
+
+/* ── Top Bar ───────────────────────────────────────────────────────────── */
+.topbar {
+  background:#0d1b2a; color:#fff; height:56px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; position:sticky; top:0; z-index:300;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.topbar-left { display:flex; align-items:center; gap:14px; }
+.topbar .logo { font-size:20px; font-weight:700; color:#00c9a7; }
+.topbar .course-name { font-size:13px; color:rgba(255,255,255,.7); }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.btn { display:inline-flex; align-items:center; gap:5px;
+  padding:7px 14px; border-radius:6px; font-size:13px; font-weight:600;
+  cursor:pointer; border:none; text-decoration:none; transition:all .2s; }
+.btn-outline { border:1.5px solid rgba(255,255,255,.3); color:#fff; background:transparent; }
+.btn-outline:hover { border-color:#fff; }
+.btn-accent  { background:var(--accent); color:#fff; }
+.btn-accent:hover { filter:brightness(.9); }
+.btn-primary { background:var(--primary); color:#fff; }
+
+/* ── Main Layout ───────────────────────────────────────────────────────── */
+.lesson-layout { display:flex; height:calc(100vh - 56px); }
+
+/* ── Content Area ──────────────────────────────────────────────────────── */
+.content-area { flex:1; overflow-y:auto; display:flex; flex-direction:column; }
+
+/* ── Video Player ──────────────────────────────────────────────────────── */
+.video-wrap {
+  background:#000; position:relative;
+  aspect-ratio:16/9; max-height:65vh; width:100%;
+}
+.video-wrap iframe,
+.video-wrap video {
+  width:100%; height:100%; border:none; display:block;
+}
+.video-placeholder {
+  width:100%; height:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; color:rgba(255,255,255,.6);
+  background:linear-gradient(135deg,#0d1b2a,#1a3348);
+}
+.video-placeholder i  { font-size:64px; margin-bottom:12px; opacity:.4; }
+.video-placeholder p  { font-size:16px; }
+
+/* ── Lesson Body ───────────────────────────────────────────────────────── */
+.lesson-body { flex:1; background:#fff; }
+.lesson-body-inner { max-width:860px; margin:0 auto; padding:28px 24px 60px; }
+.lesson-title-bar { margin-bottom:20px; }
+.lesson-title-bar h1 { font-size:22px; font-weight:700; line-height:1.35; }
+.lesson-title-bar .lesson-meta {
+  display:flex; gap:12px; align-items:center; margin-top:8px; font-size:13px;
+  color:var(--muted);
+}
+.badge { padding:2px 9px; border-radius:20px; font-size:12px; font-weight:600; }
+.badge-video   { background:#e8f6fb; color:var(--primary); }
+.badge-text    { background:#f3e8ff; color:#8e44ad; }
+.badge-article { background:#fef3e2; color:#e67e22; }
+.badge-preview { background:#e8faf4; color:#00a86b; }
+
+/* ── Article / Text Content ────────────────────────────────────────────── */
+.text-content {
+  line-height:1.8; font-size:15px; color:#2d3748;
+}
+.text-content h1,.text-content h2,.text-content h3 {
+  margin:24px 0 12px; font-weight:700; color:#1a202c;
+}
+.text-content h1 { font-size:22px; }
+.text-content h2 { font-size:19px; }
+.text-content h3 { font-size:17px; }
+.text-content p  { margin-bottom:14px; }
+.text-content ul,.text-content ol { padding-left:22px; margin-bottom:14px; }
+.text-content li { margin-bottom:6px; }
+.text-content code {
+  background:#f1f5f9; padding:1px 6px; border-radius:4px;
+  font-family:monospace; font-size:13px; color:#c7254e;
+}
+.text-content pre {
+  background:#1a202c; color:#e2e8f0; padding:16px;
+  border-radius:8px; overflow-x:auto; margin-bottom:14px;
+  font-size:13px; line-height:1.6;
+}
+.text-content a { color:var(--primary); }
+.text-content blockquote {
+  border-left:4px solid var(--primary); padding:8px 16px;
+  color:var(--muted); background:#f7fafc;
+  margin:0 0 14px; border-radius:0 6px 6px 0;
+}
+
+/* ── Nav Buttons ───────────────────────────────────────────────────────── */
+.nav-btns {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 24px; background:#f7fafc; border-top:1px solid var(--border);
+  margin-top:auto;
+}
+.nav-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:10px 20px; border-radius:8px; font-size:14px; font-weight:600;
+  text-decoration:none; border:1.5px solid var(--border); color:var(--text);
+  background:#fff; transition:all .2s; cursor:pointer;
+}
+.nav-btn:hover { border-color:var(--primary); color:var(--primary); }
+.nav-btn.primary { background:var(--primary); color:#fff; border-color:var(--primary); }
+.nav-btn.primary:hover { background:var(--primary-d); }
+.nav-btn:disabled, .nav-btn.disabled { opacity:.4; cursor:not-allowed; }
+
+/* ── Progress Bar (below video) ────────────────────────────────────────── */
+.video-progress-bar { height:4px; background:#e2e8f0; }
+.video-progress-fill { height:100%; background:var(--accent); transition:width .3s; width:0; }
+
+/* ── Sidebar ───────────────────────────────────────────────────────────── */
+.sidebar {
+  width:var(--sidebar-w); background:#fff; border-left:1px solid var(--border);
+  overflow-y:auto; display:flex; flex-direction:column;
+}
+.sidebar-header {
+  padding:14px 16px; font-weight:700; font-size:14px;
+  border-bottom:1px solid var(--border); background:#f7fafc; position:sticky; top:0;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.sidebar-progress { font-size:12px; color:var(--muted); font-weight:400; }
+
+.sb-section-title {
+  padding:10px 16px; background:#f0f4f8;
+  font-size:12px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.5px; color:var(--muted);
+  border-bottom:1px solid var(--border);
+}
+.sb-lesson {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 16px; border-bottom:1px solid #eef2f5;
+  text-decoration:none; color:var(--text);
+  transition:background .15s;
+}
+.sb-lesson:hover { background:#f7fbfd; }
+.sb-lesson.active  { background:#e8f6fb; border-left:3px solid var(--primary); }
+.sb-lesson.completed .sb-check { border-color:var(--success); background:var(--success); color:#fff; }
+.sb-check {
+  width:18px; height:18px; border-radius:50%; border:2px solid var(--border);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:9px;
+}
+.sb-type-icon { font-size:12px; color:var(--muted); }
+.sb-type-icon.video   { color:var(--primary); }
+.sb-type-icon.text    { color:#8e44ad; }
+.sb-type-icon.article { color:#e67e22; }
+.sb-info { flex:1; min-width:0; }
+.sb-name { font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sb-dur  { font-size:11px; color:var(--muted); }
+
+/* ── Sidebar Toggle (mobile) ───────────────────────────────────────────── */
+.sidebar-toggle {
+  display:none; position:fixed; bottom:20px; right:20px; z-index:400;
+  background:var(--primary); color:#fff; border:none; border-radius:50%;
+  width:52px; height:52px; font-size:20px; cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,168,204,.4);
+}
+@media(max-width:900px){
+  .lesson-layout { flex-direction:column; height:auto; }
+  .sidebar { width:100%; border-left:none; border-top:2px solid var(--border);
+    max-height:50vh; display:none; }
+  .sidebar.open { display:flex; flex-direction:column; }
+  .sidebar-toggle { display:flex; align-items:center; justify-content:center; }
+  .video-wrap { aspect-ratio:16/9; max-height:55vw; }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">Eduvia</span>
+    <span class="course-name">{{ course.title|truncatechars:45 }}</span>
+  </div>
+  <div class="topbar-right">
+    <a href="{% url 'courses:course_curriculum' course_id=course.id course_slug=course_slug %}"
+       class="btn btn-outline"><i class="fas fa-list"></i> Curriculum</a>
+    {% if is_owner %}
+    <a href="{% url 'courses:curriculum_builder' course_id=course.id course_slug=course_slug %}"
+       class="btn btn-accent"><i class="fas fa-edit"></i> Edit</a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Main Layout -->
+<div class="lesson-layout">
+
+  <!-- ═══ Content Area ════════════════════════════════════════════════════ -->
+  <div class="content-area">
+
+    <!-- Video Player -->
+    {% if lesson.lesson_type == 'video' %}
+    <div class="video-wrap" id="video-wrap">
+      {% if lesson.video_url %}
+        {% with url=lesson.video_url %}
+        {% if 'youtube.com' in url or 'youtu.be' in url %}
+          {% comment %}Convert YouTube URL to embed{% endcomment %}
+          <iframe src="{{ url|replace:'watch?v=':'embed/'|replace:'youtu.be/':'www.youtube.com/embed/' }}"
+            allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        {% elif 'drive.google.com' in url %}
+          <iframe src="{{ url|replace:'view':'preview' }}" allowfullscreen></iframe>
+        {% else %}
+          <video id="lesson-video" controls preload="metadata"
+            style="width:100%;height:100%;background:#000;"
+            onloadedmetadata="videoReady()" ontimeupdate="videoTimeUpdate()">
+            <source src="{{ url }}">
+            Your browser does not support the video tag.
+          </video>
+        {% endif %}
+        {% endwith %}
+      {% else %}
+        <div class="video-placeholder">
+          <i class="fas fa-video-slash"></i>
+          <p>Video not available</p>
+        </div>
+      {% endif %}
+    </div>
+    <!-- Video Progress Strip -->
+    <div class="video-progress-bar">
+      <div class="video-progress-fill" id="vid-progress-fill"
+           style="width:{{ lesson_progress.progress_percentage|default:0 }}%"></div>
+    </div>
+    {% endif %}
+
+    <!-- Lesson Body -->
+    <div class="lesson-body">
+      <div class="lesson-body-inner">
+
+        <!-- Title Bar -->
+        <div class="lesson-title-bar">
+          <h1>{{ lesson.title }}</h1>
+          <div class="lesson-meta">
+            <span class="badge badge-{{ lesson.lesson_type }}">
+              <i class="{{ lesson.get_icon }}"></i> {{ lesson.get_type_label }}
+            </span>
+            {% if lesson.is_preview %}
+              <span class="badge badge-preview"><i class="fas fa-eye"></i> Free Preview</span>
+            {% endif %}
+            {% if lesson.lesson_type == 'video' and lesson.video_duration %}
+              <span><i class="fas fa-clock"></i> {{ lesson.get_duration_display }}</span>
+            {% endif %}
+            {% if lesson_progress.completed %}
+              <span style="color:var(--success);font-weight:600;">
+                <i class="fas fa-check-circle"></i> Completed
+              </span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Description -->
+        {% if lesson.description %}
+        <p style="color:var(--muted);font-size:14px;margin-bottom:20px;line-height:1.7;">
+          {{ lesson.description }}
+        </p>
+        {% endif %}
+
+        <!-- Text / Article Content -->
+        {% if lesson.lesson_type != 'video' and lesson.content %}
+        <div class="text-content">
+          {{ lesson.content|safe }}
+        </div>
+        {% endif %}
+
+        <!-- Mark Complete Button (video lessons) -->
+        {% if lesson.lesson_type == 'video' and not lesson_progress.completed %}
+        <div style="margin-top:24px;">
+          <button class="btn btn-primary" onclick="markComplete()" id="mark-complete-btn">
+            <i class="fas fa-check"></i> Mark as Complete
+          </button>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- Nav Buttons -->
+    <div class="nav-btns">
+      {% if prev_lesson %}
+        <a href="{% url 'courses:lesson_view' course_id=course.id course_slug=course_slug lesson_id=prev_lesson.id %}"
+           class="nav-btn"><i class="fas fa-arrow-left"></i> Previous</a>
+      {% else %}
+        <span class="nav-btn disabled"><i class="fas fa-arrow-left"></i> Previous</span>
+      {% endif %}
+
+      <span style="font-size:13px;color:var(--muted);">
+        <a href="{% url 'courses:course_curriculum' course_id=course.id course_slug=course_slug %}"
+           style="color:var(--primary);text-decoration:none;">
+          <i class="fas fa-list"></i> Back to Curriculum
+        </a>
+      </span>
+
+      {% if next_lesson %}
+        <a href="{% url 'courses:lesson_view' course_id=course.id course_slug=course_slug lesson_id=next_lesson.id %}"
+           class="nav-btn primary">Next <i class="fas fa-arrow-right"></i></a>
+      {% else %}
+        <a href="{% url 'courses:course_curriculum' course_id=course.id course_slug=course_slug %}"
+           class="nav-btn primary"><i class="fas fa-trophy"></i> Finish Course</a>
+      {% endif %}
+    </div>
+
+  </div><!-- /content-area -->
+
+  <!-- ═══ Sidebar ═════════════════════════════════════════════════════════ -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>Course Content</span>
+      <span class="sidebar-progress">{{ completed_ids|length }} completed</span>
+    </div>
+
+    {% for item in sidebar_sections %}
+    {% with section=item.section lessons=item.lessons %}
+    <div class="sb-section-title">
+      <i class="fas fa-folder" style="margin-right:5px;"></i>
+      {{ forloop.counter }}. {{ section.title }}
+    </div>
+    {% for l in lessons %}
+    <a href="{% url 'courses:lesson_view' course_id=course.id course_slug=course_slug lesson_id=l.id %}"
+       class="sb-lesson {% if l.is_completed %}completed{% endif %} {% if l.is_active %}active{% endif %}">
+      <div class="sb-check">{% if l.is_completed %}<i class="fas fa-check"></i>{% endif %}</div>
+      <div class="sb-type-icon {{ l.lesson_type }}"><i class="{{ l.get_icon }}"></i></div>
+      <div class="sb-info">
+        <div class="sb-name">{{ l.title }}</div>
+        {% if l.lesson_type == 'video' and l.video_duration %}
+          <div class="sb-dur"><i class="fas fa-clock"></i> {{ l.get_duration_display }}</div>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+    {% endwith %}
+    {% endfor %}
+  </div><!-- /sidebar -->
+
+</div><!-- /lesson-layout -->
+
+<!-- Sidebar Toggle (mobile) -->
+<button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+  <i class="fas fa-bars"></i>
+</button>
+
+<script>
+const LESSON_ID = {{ lesson.id }};
+const CSRF      = '{{ csrf_token }}';
+let progressTimer = null;
+
+/* ── Sidebar toggle ────────────────────────────────────────────────────── */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+/* ── Video Progress ────────────────────────────────────────────────────── */
+function videoReady() {
+  const v = document.getElementById('lesson-video');
+  if (!v) return;
+  const saved = {{ lesson_progress.current_time|default:0 }};
+  if (saved > 5) v.currentTime = saved;
+}
+
+function videoTimeUpdate() {
+  const v = document.getElementById('lesson-video');
+  if (!v || !v.duration) return;
+  const pct = (v.currentTime / v.duration) * 100;
+  document.getElementById('vid-progress-fill').style.width = pct + '%';
+  clearTimeout(progressTimer);
+  progressTimer = setTimeout(() => sendProgress(v.currentTime), 3000);
+}
+
+async function sendProgress(currentTime) {
+  try {
+    await fetch(`/courses/lesson/progress/${LESSON_ID}/`, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'X-CSRFToken': CSRF },
+      body: JSON.stringify({ current_time: currentTime }),
+    });
+  } catch(e) {}
+}
+
+async function markComplete() {
+  const v = document.getElementById('lesson-video');
+  const t = v ? v.duration : 0;
+  const res = await fetch(`/courses/lesson/progress/${LESSON_ID}/`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'X-CSRFToken': CSRF },
+    body: JSON.stringify({ current_time: t }),
+  });
+  const data = await res.json();
+  if (data.ok && data.completed) {
+    document.getElementById('mark-complete-btn').textContent = '✓ Completed!';
+    document.getElementById('mark-complete-btn').style.background = '#27ae60';
+    document.getElementById('vid-progress-fill').style.width = '100%';
+  }
+}
+
+/* ── Send progress on page unload ───────────────────────────────────────── */
+window.addEventListener('beforeunload', () => {
+  const v = document.getElementById('lesson-video');
+  if (v) {
+    navigator.sendBeacon(
+      `/courses/lesson/progress/${LESSON_ID}/`,
+      JSON.stringify({ current_time: v.currentTime })
+    );
+  }
+});
+</script>
+</body>
+</html>

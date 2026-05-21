@@ -344,3 +344,53 @@ class UserProfileAdmin(BaseModelAdmin):
     list_filter = ('role',)
     search_fields = ('user__username',)
     list_per_page = 25
+    
+from .models import Section, Lesson, LessonProgress
+
+
+class LessonInline(admin.TabularInline):
+    model = Lesson
+    extra = 0
+    fields = ('title', 'lesson_type', 'order', 'video_url', 'video_duration', 'is_preview')
+    ordering = ('order',)
+
+
+@admin.register(Section)
+class SectionAdmin(admin.ModelAdmin):
+    list_display  = ('title', 'course', 'order', 'get_lessons_count')
+    list_filter   = ('course',)
+    search_fields = ('title', 'course__title')
+    ordering      = ('course', 'order')
+    inlines       = [LessonInline]
+
+    def get_lessons_count(self, obj):
+        return obj.lessons.count()
+    get_lessons_count.short_description = 'Lessons'
+
+
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
+    list_display  = ('title', 'section', 'lesson_type', 'order', 'is_preview', 'video_duration')
+    list_filter   = ('lesson_type', 'is_preview', 'section__course')
+    search_fields = ('title', 'section__title', 'section__course__title')
+    ordering      = ('section', 'order')
+    fieldsets = (
+        (None, {
+            'fields': ('section', 'title', 'lesson_type', 'order', 'description')
+        }),
+        ('Video Settings', {
+            'fields': ('video_url', 'video_duration', 'is_preview'),
+            'classes': ('collapse',),
+        }),
+        ('Text / Article Content', {
+            'fields': ('content',),
+            'classes': ('collapse',),
+        }),
+    )
+
+
+@admin.register(LessonProgress)
+class LessonProgressAdmin(admin.ModelAdmin):
+    list_display  = ('user', 'lesson', 'completed', 'progress_percentage')
+    list_filter   = ('completed',)
+    search_fields = ('user__username', 'lesson__title')

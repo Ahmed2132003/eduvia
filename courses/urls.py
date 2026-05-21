@@ -1,5 +1,6 @@
 from django.urls import path, re_path
 from . import views
+from . import views_curriculum
 
 app_name = 'courses'
 
@@ -12,10 +13,11 @@ urlpatterns = [
 
     path('enroll/<int:course_id>/<path:course_slug>/', views.enroll_course, name='enroll_course'),
 
-    # Course details - يقبل عربي وانجليزي
+    # Course details
     path('details/<int:course_id>/<path:course_slug>/', views.course_details_view, name='course_details'),
     path('details/<int:course_id>/', views.redirect_old_course_url, name='redirect_old_course_url'),
 
+    # ── Legacy video paths (kept intact) ────────────────────────────────────
     path('instructor/dashboard/', views.instructor_dashboard, name='instructor_dashboard'),
     path('instructor/add_course/', views.add_course, name='add_course'),
     path('instructor/edit_course/<int:course_id>/<path:course_slug>/', views.edit_course, name='edit_course'),
@@ -34,4 +36,48 @@ urlpatterns = [
     path('get_rating/<int:video_id>/<path:video_slug>/', views.get_rating, name='get_rating'),
     path('instructor/course_videos/<int:course_id>/<path:course_slug>/add_task/<int:video_id>/<path:video_slug>/', views.add_task, name='add_task'),
     path('instructor/add_alternative_quiz/<int:course_id>/<path:course_slug>/<int:video_id>/<path:video_slug>/', views.add_alternative_quiz, name='add_alternative_quiz'),
+
+    # ════════════════════════════════════════════════════════════════════════
+    # ── NEW CURRICULUM SYSTEM ────────────────────────────────────────────────
+    # ════════════════════════════════════════════════════════════════════════
+
+    # Instructor — builder page
+    path(
+        'instructor/curriculum/<int:course_id>/<path:course_slug>/',
+        views_curriculum.curriculum_builder,
+        name='curriculum_builder',
+    ),
+
+    # Instructor — Section AJAX
+    path('instructor/curriculum/<int:course_id>/section/create/',          views_curriculum.section_create,  name='section_create'),
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/update/', views_curriculum.section_update, name='section_update'),
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/delete/', views_curriculum.section_delete, name='section_delete'),
+    path('instructor/curriculum/<int:course_id>/section/reorder/',         views_curriculum.section_reorder, name='section_reorder'),
+
+    # Instructor — Lesson AJAX
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/create/', views_curriculum.lesson_create,  name='lesson_create'),
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/<int:lesson_id>/update/', views_curriculum.lesson_update, name='lesson_update'),
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/<int:lesson_id>/delete/', views_curriculum.lesson_delete, name='lesson_delete'),
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/reorder/', views_curriculum.lesson_reorder, name='lesson_reorder'),
+
+    # Student — Curriculum overview
+    path(
+        'curriculum/<int:course_id>/<path:course_slug>/',
+        views_curriculum.course_curriculum_view,
+        name='course_curriculum',
+    ),
+
+    # Student — Lesson view
+    path(
+        'lesson/<int:course_id>/<path:course_slug>/<int:lesson_id>/',
+        views_curriculum.lesson_view,
+        name='lesson_view',
+    ),
+
+    # Student — Lesson progress AJAX
+    path(
+        'lesson/progress/<int:lesson_id>/',
+        views_curriculum.lesson_progress_update,
+        name='lesson_progress_update',
+    ),
 ]

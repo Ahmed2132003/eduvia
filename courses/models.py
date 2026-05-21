@@ -9,12 +9,14 @@ import uuid
 import re
 from django.utils.timezone import now
 
+
 def clean_text(text):
     """تنظيف النص من الأحرف غير المدعومة"""
     if not text:
         return 'default'
     text = re.sub(r'[^\w\s-]', '', text).strip()
     return text if text else 'default'
+
 
 class UserProfile(models.Model):
     ROLE_CHOICES = [
@@ -43,30 +45,14 @@ class UserProfile(models.Model):
             return True
         return False
 
-    # ✅ كل القيود اتشالت - كل الدوال بترجع True دايماً
-    def can_enroll_in_course(self):
-        return True
-
-    def can_view_video(self, course, video_order):
-        return True
-
-    def can_upload_file(self):
-        return True
-
-    def can_view_files(self):
-        return True
-
-    def can_download_certificate(self):
-        return True
-
-    def can_add_course(self):
-        return True
-
-    def can_add_video(self, course):
-        return True
-
-    def can_edit_or_delete(self):
-        return True
+    def can_enroll_in_course(self): return True
+    def can_view_video(self, course, video_order): return True
+    def can_upload_file(self): return True
+    def can_view_files(self): return True
+    def can_download_certificate(self): return True
+    def can_add_course(self): return True
+    def can_add_video(self, course): return True
+    def can_edit_or_delete(self): return True
 
 
 class Course(models.Model):
@@ -83,7 +69,10 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     instructor = models.CharField(max_length=100)
-    instructor_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='instructed_courses')
+    instructor_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='instructed_courses'
+    )
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='programming')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -105,24 +94,52 @@ class Course(models.Model):
         return generate_unicode_slug(self.title, fallback_prefix='course', fallback_id=self.id)
 
     def get_enroll_url(self):
-        return reverse('courses:enroll_course', kwargs={'course_id': self.id, 'course_slug': self.get_slug()})
+        return reverse('courses:enroll_course', kwargs={
+            'course_id': self.id, 'course_slug': self.get_slug()
+        })
 
     def save(self, *args, **kwargs):
         super_result = None
         if not self.pk:
             super_result = super().save(*args, **kwargs)
         if not self.slug:
-            self.slug = unique_model_slug(Course, self.title, fallback_prefix='course', fallback_id=self.pk, instance_pk=self.pk)
+            self.slug = unique_model_slug(
+                Course, self.title,
+                fallback_prefix='course', fallback_id=self.pk, instance_pk=self.pk
+            )
             super_result = super().save(update_fields=['slug'])
             return super_result
         return super_result or super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('courses:course_details', kwargs={'course_id': self.id, 'course_slug': self.get_slug()})
+        return reverse('courses:course_details', kwargs={
+            'course_id': self.id, 'course_slug': self.get_slug()
+        })
+
+    # ── Curriculum helpers ───────────────────────────────────────────────────
+
+    def get_curriculum(self):
+        """Return sections with prefetched lessons — single optimized query."""
+        return self.sections.prefetch_related('lessons').order_by('order')
+
+    def get_total_lessons_count(self):
+        from django.db.models import Count
+        result = self.sections.aggregate(total=Count('lessons'))
+        return result['total'] or 0
+
+    def get_total_duration(self):
+        """Total duration in minutes across all video lessons."""
+        from django.db.models import Sum
+        result = Lesson.objects.filter(
+            section__course=self, lesson_type='video'
+        ).aggregate(total=Sum('video_duration'))
+        return result['total'] or 0
 
 
 class CourseEnrollment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments'
+    )
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='enrollments')
     enrolled_at = models.DateTimeField(auto_now_add=True)
     certificate_issued = models.BooleanField(default=False)
@@ -136,11 +153,17 @@ class CourseEnrollment(models.Model):
     def is_course_completed(self):
         progress = VideoProgress.objects.filter(user=self.user, video__course=self.course)
         videos = self.course.videos.all()
-        return videos.exists() and progress.count() == videos.count() and all(p.completed for p in progress)
+        return (
+            videos.exists()
+            and progress.count() == videos.count()
+            and all(p.completed for p in progress)
+        )
 
 
 class Certificate(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='certificates')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='certificates'
+    )
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='certificates')
     certificate_number = models.CharField(max_length=36, unique=True, default=uuid.uuid4)
     issued_at = models.DateTimeField(auto_now_add=True)
@@ -182,7 +205,9 @@ class Video(models.Model):
 
 
 class VideoProgress(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='video_progress')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='video_progress'
+    )
     video = models.ForeignKey('Video', on_delete=models.CASCADE, related_name='progress')
     completed = models.BooleanField(default=False)
     progress_percentage = models.FloatField(default=0.0)
@@ -199,7 +224,9 @@ class VideoProgress(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments'
+    )
     video = models.ForeignKey('Video', on_delete=models.CASCADE, related_name='comments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -242,7 +269,10 @@ class VideoFile(models.Model):
 class Task(models.Model):
     video = models.ForeignKey(Video, related_name='tasks', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, default="Task")
-    questions = models.JSONField(default=list, help_text="List of questions as dictionaries with 'question', 'options', and 'correct_answer'")
+    questions = models.JSONField(
+        default=list,
+        help_text="List of questions as dictionaries with 'question', 'options', and 'correct_answer'"
+    )
     order = models.PositiveIntegerField(default=0)
 
     def __str__(self):
@@ -272,7 +302,140 @@ class UserTaskSubmission(models.Model):
         unique_together = ('user', 'task', 'attempt_number')
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# NEW CURRICULUM MODELS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class Section(models.Model):
+    """
+    A Section (Module) inside a Course.
+    Example: "Section 1 — Introduction to Python"
+    """
+    course = models.ForeignKey(
+        'Course',
+        on_delete=models.CASCADE,
+        related_name='sections',
+    )
+    title = models.CharField(max_length=300)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"[{self.course.title}] Section {self.order}: {self.title}"
+
+    def get_lessons_count(self):
+        return self.lessons.count()
+
+    def get_duration(self):
+        """Total minutes for video lessons in this section."""
+        from django.db.models import Sum
+        result = self.lessons.filter(lesson_type='video').aggregate(
+            total=Sum('video_duration')
+        )
+        return result['total'] or 0
+
+
+class Lesson(models.Model):
+    """
+    A Lesson inside a Section.
+    Can be: Video | Text | Article
+    """
+    LESSON_TYPE_CHOICES = [
+        ('video', 'Video Lesson'),
+        ('text', 'Text Lesson'),
+        ('article', 'Article'),
+    ]
+
+    section = models.ForeignKey(
+        'Section',
+        on_delete=models.CASCADE,
+        related_name='lessons',
+    )
+    title = models.CharField(max_length=300)
+    lesson_type = models.CharField(
+        max_length=20,
+        choices=LESSON_TYPE_CHOICES,
+        default='video',
+    )
+    order = models.PositiveIntegerField(default=0)
+
+    # ── Video fields ──────────────────────────────────────────────────────────
+    video_url = models.URLField(max_length=500, blank=True, null=True)
+    video_duration = models.FloatField(
+        default=0,
+        help_text='Duration in minutes',
+    )
+    is_preview = models.BooleanField(
+        default=False,
+        help_text='Free preview — visible before enrollment',
+    )
+
+    # ── Text / Article fields ──────────────────────────────────────────────────
+    content = models.TextField(blank=True)  # Rich text / HTML content
+
+    # ── Shared ────────────────────────────────────────────────────────────────
+    description = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"[{self.section.title}] Lesson {self.order}: {self.title}"
+
+    def get_icon(self):
+        icons = {
+            'video': 'fas fa-play-circle',
+            'text': 'fas fa-file-alt',
+            'article': 'fas fa-newspaper',
+        }
+        return icons.get(self.lesson_type, 'fas fa-file')
+
+    def get_type_label(self):
+        labels = {
+            'video': 'Video',
+            'text': 'Text',
+            'article': 'Article',
+        }
+        return labels.get(self.lesson_type, 'Lesson')
+
+    def get_duration_display(self):
+        if self.lesson_type == 'video' and self.video_duration:
+            mins = int(self.video_duration)
+            secs = int((self.video_duration - mins) * 60)
+            if secs:
+                return f"{mins}m {secs}s"
+            return f"{mins}m"
+        return ''
+
+
+class LessonProgress(models.Model):
+    """Tracks a student's progress on a Lesson."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='lesson_progress',
+    )
+    lesson = models.ForeignKey(
+        'Lesson',
+        on_delete=models.CASCADE,
+        related_name='progress',
+    )
+    completed = models.BooleanField(default=False)
+    current_time = models.FloatField(default=0.0)
+    progress_percentage = models.FloatField(default=0.0)
+
+    class Meta:
+        unique_together = ('user', 'lesson')
+
+    def __str__(self):
+        return f"{self.user.username} — {self.lesson.title} ({self.progress_percentage:.0f}%)"
+
+
+# ── Signal ────────────────────────────────────────────────────────────────────
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
+        UserProfile.objects.get_or_create(user=instance)

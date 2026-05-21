@@ -1,0 +1,872 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Curriculum — {{ course.title }} | Eduvia</title>
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary:   #00a8cc;
+  --primary-d: #0087a3;
+  --accent:    #00c9a7;
+  --danger:    #e74c3c;
+  --warning:   #f39c12;
+  --bg:        #f0f4f8;
+  --card:      #ffffff;
+  --border:    #d1dde8;
+  --text:      #2d3748;
+  --muted:     #718096;
+  --radius:    10px;
+  --shadow:    0 2px 12px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
+}
+body {
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* ── Top Bar ───────────────────────────────────────────────────────────── */
+.topbar {
+  background: linear-gradient(90deg,#00a8cc,#00c9a7);
+  color:#fff;
+  padding:0 24px;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:200;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.topbar-left { display:flex; align-items:center; gap:16px; }
+.topbar .logo { font-size:22px; font-weight:700; letter-spacing:.5px; }
+.topbar .breadcrumb { font-size:13px; opacity:.85; }
+.topbar .breadcrumb a { color:#fff; text-decoration:none; }
+.topbar .breadcrumb span { margin:0 6px; }
+.topbar-right { display:flex; gap:10px; }
+.btn { display:inline-flex; align-items:center; gap:6px; padding:8px 18px;
+  border-radius:6px; font-size:14px; font-weight:600; cursor:pointer;
+  border:none; transition:all .2s; text-decoration:none; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background:var(--primary-d); }
+.btn-accent  { background:var(--accent); color:#fff; }
+.btn-accent:hover { filter:brightness(.92); }
+.btn-white   { background:#fff; color:var(--primary); }
+.btn-white:hover { background:#e8f6fb; }
+.btn-danger  { background:var(--danger); color:#fff; }
+.btn-danger:hover { filter:brightness(.9); }
+.btn-ghost   { background:transparent; color:var(--primary); border:1.5px solid var(--primary); }
+.btn-ghost:hover { background:var(--primary); color:#fff; }
+.btn-sm { padding:5px 12px; font-size:12px; }
+.btn-icon { padding:6px 10px; }
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.page-wrap { max-width:900px; margin:32px auto; padding:0 16px 60px; }
+.page-header { margin-bottom:28px; }
+.page-header h1 { font-size:24px; font-weight:700; color:var(--text); }
+.page-header p { color:var(--muted); font-size:14px; margin-top:4px; }
+
+/* ── Section Card ──────────────────────────────────────────────────────── */
+.section-card {
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  margin-bottom:16px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:box-shadow .2s;
+}
+.section-card:hover { box-shadow:var(--shadow-lg); }
+
+.section-header {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 18px;
+  background:linear-gradient(90deg,#f0f9fb,#e8f8f5);
+  border-bottom:1.5px solid var(--border);
+  cursor:pointer;
+  user-select:none;
+}
+.section-drag-handle { color:var(--muted); cursor:grab; font-size:16px; }
+.section-toggle-icon { color:var(--primary); font-size:14px; transition:transform .25s; }
+.section-toggle-icon.collapsed { transform:rotate(-90deg); }
+.section-header-title {
+  flex:1;
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+}
+.section-meta { font-size:12px; color:var(--muted); white-space:nowrap; }
+.section-actions { display:flex; gap:6px; }
+
+/* ── Inline Edit ───────────────────────────────────────────────────────── */
+.inline-edit-form {
+  display:none;
+  padding:12px 18px;
+  background:#f7fafb;
+  border-bottom:1px solid var(--border);
+  gap:8px;
+  align-items:center;
+}
+.inline-edit-form.active { display:flex; }
+.inline-edit-form input {
+  flex:1;
+  padding:8px 12px;
+  border:1.5px solid var(--border);
+  border-radius:6px;
+  font-size:14px;
+  font-family:'Cairo',sans-serif;
+  outline:none;
+  transition:border-color .2s;
+}
+.inline-edit-form input:focus { border-color:var(--primary); }
+
+/* ── Lesson List ───────────────────────────────────────────────────────── */
+.lesson-list { padding:0; list-style:none; }
+.lesson-list:empty::after {
+  content:'No lessons yet. Add your first lesson below.';
+  display:block;
+  padding:16px 20px;
+  color:var(--muted);
+  font-size:13px;
+  font-style:italic;
+}
+.lesson-item {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 18px;
+  border-bottom:1px solid #eef2f5;
+  transition:background .15s;
+}
+.lesson-item:last-child { border-bottom:none; }
+.lesson-item:hover { background:#f7fbfd; }
+.lesson-drag-handle { color:#b0bec5; cursor:grab; font-size:14px; }
+.lesson-type-icon { width:28px; text-align:center; }
+.lesson-type-icon.video   { color:var(--primary); }
+.lesson-type-icon.text    { color:#8e44ad; }
+.lesson-type-icon.article { color:#e67e22; }
+.lesson-title { flex:1; font-size:14px; font-weight:500; }
+.lesson-meta  { font-size:12px; color:var(--muted); display:flex; gap:8px; align-items:center; }
+.badge {
+  font-size:11px; padding:2px 7px; border-radius:20px; font-weight:600;
+  background:#e8f6fb; color:var(--primary);
+}
+.badge.preview { background:#e8faf4; color:#00a86b; }
+.lesson-actions { display:flex; gap:4px; }
+
+/* ── Add Lesson Bar ────────────────────────────────────────────────────── */
+.add-lesson-bar {
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  padding:12px 18px;
+  background:#f9fbfc;
+  border-top:1px dashed var(--border);
+}
+.add-lesson-bar span { font-size:13px; color:var(--muted); font-weight:600; margin-right:4px; }
+
+/* ── Modal ─────────────────────────────────────────────────────────────── */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.45); z-index:500;
+  justify-content:center; align-items:center; padding:16px;
+}
+.modal-overlay.active { display:flex; }
+.modal-box {
+  background:#fff; border-radius:12px;
+  width:100%; max-width:540px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  animation:modalIn .22s ease;
+}
+@keyframes modalIn { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 22px; border-bottom:1px solid var(--border);
+}
+.modal-header h2 { font-size:17px; font-weight:700; }
+.modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--muted); }
+.modal-body { padding:22px; }
+.modal-footer { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; }
+
+/* ── Form ──────────────────────────────────────────────────────────────── */
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:#4a5568; }
+.form-control {
+  width:100%; padding:9px 13px;
+  border:1.5px solid var(--border); border-radius:6px;
+  font-size:14px; font-family:'Cairo',sans-serif;
+  outline:none; transition:border-color .2s;
+  background:#fff;
+}
+.form-control:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,168,204,.1); }
+.form-control.textarea { min-height:100px; resize:vertical; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.type-tabs { display:flex; gap:8px; margin-bottom:4px; }
+.type-tab {
+  flex:1; padding:9px; border:1.5px solid var(--border);
+  border-radius:6px; text-align:center; cursor:pointer;
+  font-size:13px; font-weight:600; transition:all .2s; background:#f9fbfc;
+}
+.type-tab.active { border-color:var(--primary); background:#e8f6fb; color:var(--primary); }
+.type-tab:hover:not(.active) { border-color:var(--primary); }
+.type-tab i { display:block; font-size:18px; margin-bottom:3px; }
+.field-group { display:none; }
+.field-group.active { display:block; }
+.check-label { display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer; }
+.check-label input[type=checkbox] { width:16px; height:16px; cursor:pointer; }
+
+/* ── Add Section Bar ───────────────────────────────────────────────────── */
+.add-section-bar {
+  border:2px dashed var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  text-align:center;
+  cursor:pointer;
+  color:var(--primary);
+  font-size:15px;
+  font-weight:600;
+  transition:all .2s;
+  background:#fff;
+  margin-bottom:24px;
+}
+.add-section-bar:hover { border-color:var(--primary); background:#e8f6fb; }
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+.toast-container {
+  position:fixed; bottom:24px; right:24px; z-index:900;
+  display:flex; flex-direction:column; gap:8px;
+}
+.toast {
+  padding:12px 18px; border-radius:8px; font-size:14px; font-weight:600;
+  color:#fff; box-shadow:0 4px 16px rgba(0,0,0,.15);
+  animation:toastIn .3s ease;
+}
+.toast.success { background:#27ae60; }
+.toast.error   { background:var(--danger); }
+@keyframes toastIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
+
+/* ── Rich Text Editor placeholder ─────────────────────────────────────── */
+.rich-editor-wrap { border:1.5px solid var(--border); border-radius:6px; overflow:hidden; }
+.rich-editor-toolbar {
+  display:flex; flex-wrap:wrap; gap:2px; padding:6px;
+  background:#f7fafc; border-bottom:1px solid var(--border);
+}
+.rich-editor-toolbar button {
+  padding:4px 8px; border:none; background:none; cursor:pointer;
+  border-radius:4px; color:var(--text); font-size:13px;
+}
+.rich-editor-toolbar button:hover { background:#e2e8f0; }
+#lesson-content-editor {
+  min-height:160px; padding:12px; outline:none;
+  font-size:14px; font-family:'Cairo',sans-serif; line-height:1.7;
+}
+
+/* Sortable ghost */
+.sortable-ghost { opacity:.4; background:#e8f6fb; }
+
+/* Responsive */
+@media(max-width:600px){
+  .form-row { grid-template-columns:1fr; }
+  .section-actions .btn span { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">Eduvia</span>
+    <div class="breadcrumb">
+      <a href="{% url 'courses:instructor_dashboard' %}">Dashboard</a>
+      <span>›</span>
+      <span>{{ course.title|truncatechars:40 }}</span>
+      <span>›</span>
+      <span>Curriculum</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <a href="{% url 'courses:course_curriculum' course_id=course.id course_slug=course_slug %}"
+       class="btn btn-white" target="_blank">
+      <i class="fas fa-eye"></i> Preview
+    </a>
+    <a href="{% url 'courses:instructor_dashboard' %}" class="btn btn-white">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1><i class="fas fa-list-ul" style="color:var(--primary)"></i> Course Curriculum</h1>
+    <p>Build your course sections and lessons. Drag to reorder.</p>
+  </div>
+
+  <!-- Sections Container -->
+  <div id="sections-container">
+    {% for section in sections %}
+    <div class="section-card" data-section-id="{{ section.id }}">
+
+      <!-- Section Header -->
+      <div class="section-header" onclick="toggleSection(this)">
+        <i class="fas fa-grip-vertical section-drag-handle" onclick="event.stopPropagation()"></i>
+        <i class="fas fa-chevron-down section-toggle-icon"></i>
+        <div class="section-header-title">
+          <span class="section-title-text">{{ section.title }}</span>
+        </div>
+        <span class="section-meta">
+          {{ section.lessons.count }} lesson{{ section.lessons.count|pluralize }}
+        </span>
+        <div class="section-actions" onclick="event.stopPropagation()">
+          <button class="btn btn-ghost btn-sm btn-icon" title="Edit" onclick="openEditSection({{ section.id }}, '{{ section.title|escapejs }}')">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="btn btn-danger btn-sm btn-icon" title="Delete" onclick="deleteSection({{ section.id }})">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Inline Edit Form -->
+      <div class="inline-edit-form" id="edit-section-{{ section.id }}">
+        <input type="text" id="edit-section-input-{{ section.id }}" placeholder="Section title…" value="{{ section.title|escapejs }}">
+        <button class="btn btn-primary btn-sm" onclick="saveSection({{ section.id }})">Save</button>
+        <button class="btn btn-ghost btn-sm" onclick="cancelEditSection({{ section.id }})">Cancel</button>
+      </div>
+
+      <!-- Lesson List -->
+      <ul class="lesson-list" id="lessons-{{ section.id }}" data-section-id="{{ section.id }}">
+        {% for lesson in section.lessons.all %}
+        <li class="lesson-item" data-lesson-id="{{ lesson.id }}">
+          <i class="fas fa-grip-vertical lesson-drag-handle"></i>
+          <div class="lesson-type-icon {{ lesson.lesson_type }}">
+            <i class="{{ lesson.get_icon }}"></i>
+          </div>
+          <div class="lesson-title">{{ lesson.title }}</div>
+          <div class="lesson-meta">
+            <span class="badge">{{ lesson.get_type_label }}</span>
+            {% if lesson.is_preview %}<span class="badge preview">Preview</span>{% endif %}
+            {% if lesson.lesson_type == 'video' and lesson.video_duration %}
+              <span>{{ lesson.get_duration_display }}</span>
+            {% endif %}
+          </div>
+          <div class="lesson-actions">
+            <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
+              onclick="openEditLesson({{ section.id }}, {{ lesson.id }},
+                '{{ lesson.title|escapejs }}',
+                '{{ lesson.lesson_type }}',
+                '{{ lesson.video_url|default:''|escapejs }}',
+                {{ lesson.video_duration }},
+                {{ lesson.is_preview|lower }},
+                '{{ lesson.description|escapejs }}',
+                `{{ lesson.content|escapejs }}`)">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button class="btn btn-danger btn-sm btn-icon" title="Delete"
+              onclick="deleteLesson({{ section.id }}, {{ lesson.id }})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <!-- Add Lesson Bar -->
+      <div class="add-lesson-bar">
+        <span>Add:</span>
+        <button class="btn btn-primary btn-sm" onclick="openAddLesson({{ section.id }}, 'video')">
+          <i class="fas fa-play-circle"></i> Video
+        </button>
+        <button class="btn btn-sm" style="background:#8e44ad;color:#fff;" onclick="openAddLesson({{ section.id }}, 'text')">
+          <i class="fas fa-file-alt"></i> Text
+        </button>
+        <button class="btn btn-sm" style="background:#e67e22;color:#fff;" onclick="openAddLesson({{ section.id }}, 'article')">
+          <i class="fas fa-newspaper"></i> Article
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Add Section Bar -->
+  <div class="add-section-bar" onclick="openAddSection()">
+    <i class="fas fa-plus-circle"></i> Add New Section
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ═══════ MODAL: Add / Edit Section ════════════════════════════════════ -->
+<div class="modal-overlay" id="section-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="section-modal-title">Add Section</h2>
+      <button class="modal-close" onclick="closeModal('section-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Section Title *</label>
+        <input type="text" id="section-title-input" class="form-control" placeholder="e.g. Introduction to the Course">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('section-modal')">Cancel</button>
+      <button class="btn btn-primary" id="section-modal-save" onclick="saveNewSection()">Add Section</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MODAL: Add / Edit Lesson ═════════════════════════════════════ -->
+<div class="modal-overlay" id="lesson-modal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <h2 id="lesson-modal-title">Add Lesson</h2>
+      <button class="modal-close" onclick="closeModal('lesson-modal')">×</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Type Tabs -->
+      <div class="form-group">
+        <label>Lesson Type</label>
+        <div class="type-tabs">
+          <div class="type-tab active" data-type="video" onclick="switchType('video')">
+            <i class="fas fa-play-circle"></i> Video
+          </div>
+          <div class="type-tab" data-type="text" onclick="switchType('text')">
+            <i class="fas fa-file-alt"></i> Text
+          </div>
+          <div class="type-tab" data-type="article" onclick="switchType('article')">
+            <i class="fas fa-newspaper"></i> Article
+          </div>
+        </div>
+        <input type="hidden" id="lesson-type-hidden" value="video">
+      </div>
+
+      <div class="form-group">
+        <label>Lesson Title *</label>
+        <input type="text" id="lesson-title-input" class="form-control" placeholder="e.g. Introduction to Variables">
+      </div>
+
+      <!-- Video Fields -->
+      <div class="field-group active" id="field-video">
+        <div class="form-group">
+          <label>Video URL *</label>
+          <input type="url" id="lesson-video-url" class="form-control" placeholder="https://...">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Duration (minutes)</label>
+            <input type="number" id="lesson-duration" class="form-control" placeholder="e.g. 10.5" step="0.1" min="0">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px;">
+            <label class="check-label">
+              <input type="checkbox" id="lesson-is-preview">
+              Free Preview (visible before purchase)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text / Article Fields -->
+      <div class="field-group" id="field-text">
+        <div class="form-group">
+          <label>Content *</label>
+          <div class="rich-editor-wrap">
+            <div class="rich-editor-toolbar">
+              <button type="button" onclick="execCmd('bold')" title="Bold"><b>B</b></button>
+              <button type="button" onclick="execCmd('italic')" title="Italic"><i>I</i></button>
+              <button type="button" onclick="execCmd('underline')" title="Underline"><u>U</u></button>
+              <button type="button" onclick="execCmd('insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+              <button type="button" onclick="execCmd('insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+              <button type="button" onclick="insertHeading()" title="Heading"><i class="fas fa-heading"></i></button>
+              <button type="button" onclick="insertCode()" title="Code"><i class="fas fa-code"></i></button>
+              <button type="button" onclick="insertLink()" title="Link"><i class="fas fa-link"></i></button>
+            </div>
+            <div id="lesson-content-editor" contenteditable="true" spellcheck="false"
+                 data-placeholder="Write your lesson content here…"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <textarea id="lesson-description" class="form-control textarea" rows="2"
+          placeholder="Brief description of this lesson…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('lesson-modal')">Cancel</button>
+      <button class="btn btn-primary" id="lesson-modal-save" onclick="saveLesson()">Add Lesson</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ Sortable.js ═══════════════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script>
+/* ── State ─────────────────────────────────────────────────────────────── */
+const COURSE_ID = {{ course.id }};
+const CSRF = '{{ csrf_token }}';
+let lessonModalMode   = 'add';   // 'add' | 'edit'
+let lessonSectionId   = null;
+let lessonEditId      = null;
+
+/* ── AJAX Helper ───────────────────────────────────────────────────────── */
+async function api(url, body=null, method='POST') {
+  const opts = {
+    method,
+    headers: { 'Content-Type':'application/json', 'X-CSRFToken': CSRF },
+  };
+  if (body !== null) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  return r.json();
+}
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type='success') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+/* ── Modal helpers ─────────────────────────────────────────────────────── */
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id){ document.getElementById(id).classList.remove('active'); }
+document.querySelectorAll('.modal-overlay').forEach(o =>
+  o.addEventListener('click', e => { if(e.target===o) o.classList.remove('active'); })
+);
+
+/* ── Section toggle ────────────────────────────────────────────────────── */
+function toggleSection(header) {
+  const list   = header.closest('.section-card').querySelector('.lesson-list');
+  const addBar = header.closest('.section-card').querySelector('.add-lesson-bar');
+  const icon   = header.querySelector('.section-toggle-icon');
+  const hidden = list.style.display === 'none';
+  list.style.display    = hidden ? '' : 'none';
+  addBar.style.display  = hidden ? '' : 'none';
+  icon.classList.toggle('collapsed', !hidden);
+}
+
+/* ── Section CRUD ──────────────────────────────────────────────────────── */
+function openAddSection() {
+  document.getElementById('section-modal-title').textContent = 'Add New Section';
+  document.getElementById('section-title-input').value = '';
+  document.getElementById('section-modal-save').onclick = saveNewSection;
+  openModal('section-modal');
+}
+
+async function saveNewSection() {
+  const title = document.getElementById('section-title-input').value.trim();
+  if (!title) { toast('Please enter a section title.','error'); return; }
+  const res = await api(`/courses/instructor/curriculum/${COURSE_ID}/section/create/`, { title });
+  if (!res.ok) { toast(res.error,'error'); return; }
+  closeModal('section-modal');
+  renderNewSection(res.section);
+  toast('Section added!');
+}
+
+function openEditSection(id, currentTitle) {
+  const form  = document.getElementById(`edit-section-${id}`);
+  const input = document.getElementById(`edit-section-input-${id}`);
+  input.value = currentTitle;
+  form.classList.add('active');
+}
+function cancelEditSection(id) {
+  document.getElementById(`edit-section-${id}`).classList.remove('active');
+}
+async function saveSection(id) {
+  const input = document.getElementById(`edit-section-input-${id}`);
+  const title = input.value.trim();
+  if (!title) { toast('Title required.','error'); return; }
+  const res = await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${id}/update/`, { title });
+  if (!res.ok) { toast(res.error,'error'); return; }
+  // Update UI
+  const card = document.querySelector(`[data-section-id="${id}"]`);
+  card.querySelector('.section-title-text').textContent = title;
+  cancelEditSection(id);
+  toast('Section updated!');
+}
+
+async function deleteSection(id) {
+  if (!confirm('Delete this section and ALL its lessons?')) return;
+  const res = await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${id}/delete/`);
+  if (!res.ok) { toast(res.error,'error'); return; }
+  document.querySelector(`[data-section-id="${id}"]`).remove();
+  toast('Section deleted.');
+}
+
+/* ── Lesson CRUD ───────────────────────────────────────────────────────── */
+function openAddLesson(sectionId, type='video') {
+  lessonModalMode   = 'add';
+  lessonSectionId   = sectionId;
+  lessonEditId      = null;
+  document.getElementById('lesson-modal-title').textContent = 'Add Lesson';
+  document.getElementById('lesson-modal-save').textContent  = 'Add Lesson';
+  clearLessonForm();
+  switchType(type);
+  openModal('lesson-modal');
+}
+
+function openEditLesson(sectionId, lessonId, title, type, videoUrl, duration, isPreview, desc, content) {
+  lessonModalMode   = 'edit';
+  lessonSectionId   = sectionId;
+  lessonEditId      = lessonId;
+  document.getElementById('lesson-modal-title').textContent = 'Edit Lesson';
+  document.getElementById('lesson-modal-save').textContent  = 'Save Changes';
+  // Fill form
+  document.getElementById('lesson-title-input').value    = title;
+  document.getElementById('lesson-video-url').value      = videoUrl;
+  document.getElementById('lesson-duration').value       = duration || '';
+  document.getElementById('lesson-is-preview').checked   = isPreview;
+  document.getElementById('lesson-description').value    = desc;
+  document.getElementById('lesson-content-editor').innerHTML = content;
+  switchType(type);
+  openModal('lesson-modal');
+}
+
+function clearLessonForm() {
+  ['lesson-title-input','lesson-video-url','lesson-duration','lesson-description']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('lesson-is-preview').checked = false;
+  document.getElementById('lesson-content-editor').innerHTML = '';
+}
+
+function switchType(type) {
+  document.getElementById('lesson-type-hidden').value = type;
+  document.querySelectorAll('.type-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.type === type);
+  });
+  document.querySelectorAll('.field-group').forEach(g => g.classList.remove('active'));
+  if (type === 'video') {
+    document.getElementById('field-video').classList.add('active');
+  } else {
+    document.getElementById('field-text').classList.add('active');
+  }
+}
+
+async function saveLesson() {
+  const type        = document.getElementById('lesson-type-hidden').value;
+  const title       = document.getElementById('lesson-title-input').value.trim();
+  const video_url   = document.getElementById('lesson-video-url').value.trim();
+  const duration    = parseFloat(document.getElementById('lesson-duration').value) || 0;
+  const is_preview  = document.getElementById('lesson-is-preview').checked;
+  const description = document.getElementById('lesson-description').value.trim();
+  const content     = document.getElementById('lesson-content-editor').innerHTML.trim();
+
+  if (!title) { toast('Lesson title is required.','error'); return; }
+  if (type === 'video' && !video_url) { toast('Video URL is required.','error'); return; }
+  if (type !== 'video' && !content) { toast('Content is required.','error'); return; }
+
+  const body = { title, lesson_type:type, video_url, video_duration:duration,
+                 is_preview, description, content };
+
+  let res;
+  if (lessonModalMode === 'add') {
+    res = await api(
+      `/courses/instructor/curriculum/${COURSE_ID}/section/${lessonSectionId}/lesson/create/`,
+      body
+    );
+    if (!res.ok) { toast(res.error,'error'); return; }
+    appendLessonItem(lessonSectionId, res.lesson);
+    updateSectionMeta(lessonSectionId);
+    toast('Lesson added!');
+  } else {
+    res = await api(
+      `/courses/instructor/curriculum/${COURSE_ID}/section/${lessonSectionId}/lesson/${lessonEditId}/update/`,
+      body
+    );
+    if (!res.ok) { toast(res.error,'error'); return; }
+    updateLessonItem(lessonEditId, res.lesson);
+    toast('Lesson updated!');
+  }
+  closeModal('lesson-modal');
+}
+
+async function deleteLesson(sectionId, lessonId) {
+  if (!confirm('Delete this lesson?')) return;
+  const res = await api(
+    `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/${lessonId}/delete/`
+  );
+  if (!res.ok) { toast(res.error,'error'); return; }
+  document.querySelector(`[data-lesson-id="${lessonId}"]`).remove();
+  updateSectionMeta(sectionId);
+  toast('Lesson deleted.');
+}
+
+/* ── Render helpers ────────────────────────────────────────────────────── */
+const TYPE_ICONS = { video:'fas fa-play-circle', text:'fas fa-file-alt', article:'fas fa-newspaper' };
+const TYPE_LABELS = { video:'Video', text:'Text', article:'Article' };
+
+function lessonItemHTML(l) {
+  const dur = l.lesson_type==='video'&&l.video_duration
+    ? `<span>${l.duration_display||l.video_duration+'m'}</span>` : '';
+  const prev = l.is_preview ? `<span class="badge preview">Preview</span>` : '';
+  return `
+  <li class="lesson-item" data-lesson-id="${l.id}">
+    <i class="fas fa-grip-vertical lesson-drag-handle"></i>
+    <div class="lesson-type-icon ${l.lesson_type}"><i class="${TYPE_ICONS[l.lesson_type]}"></i></div>
+    <div class="lesson-title">${l.title}</div>
+    <div class="lesson-meta">
+      <span class="badge">${TYPE_LABELS[l.lesson_type]}</span>
+      ${prev}${dur}
+    </div>
+    <div class="lesson-actions">
+      <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
+        onclick="openEditLesson(${lessonSectionId||l.section_id},${l.id},
+          '${l.title.replace(/'/g,"\\'")}','${l.lesson_type}',
+          '${(l.video_url||'').replace(/'/g,"\\'")}',
+          ${l.video_duration},${l.is_preview},
+          '${l.description.replace(/'/g,"\\'")}',
+          \`${l.content.replace(/`/g,'\\`')}\`)">
+        <i class="fas fa-pen"></i>
+      </button>
+      <button class="btn btn-danger btn-sm btn-icon" title="Delete"
+        onclick="deleteLesson(${lessonSectionId||l.section_id},${l.id})">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  </li>`;
+}
+
+function appendLessonItem(sectionId, lesson) {
+  const ul = document.getElementById(`lessons-${sectionId}`);
+  lessonSectionId = sectionId; // needed for lessonItemHTML
+  ul.insertAdjacentHTML('beforeend', lessonItemHTML(lesson));
+  initLessonSortable(sectionId);
+}
+
+function updateLessonItem(lessonId, lesson) {
+  const li = document.querySelector(`[data-lesson-id="${lessonId}"]`);
+  if (!li) return;
+  lessonSectionId = lessonSectionId; // keep
+  li.outerHTML = lessonItemHTML(lesson);
+}
+
+function updateSectionMeta(sectionId) {
+  const count = document.getElementById(`lessons-${sectionId}`).querySelectorAll('.lesson-item').length;
+  const card  = document.querySelector(`[data-section-id="${sectionId}"]`);
+  if (card) card.querySelector('.section-meta').textContent = `${count} lesson${count!==1?'s':''}`;
+}
+
+function renderNewSection(section) {
+  const container = document.getElementById('sections-container');
+  const html = `
+  <div class="section-card" data-section-id="${section.id}">
+    <div class="section-header" onclick="toggleSection(this)">
+      <i class="fas fa-grip-vertical section-drag-handle" onclick="event.stopPropagation()"></i>
+      <i class="fas fa-chevron-down section-toggle-icon"></i>
+      <div class="section-header-title"><span class="section-title-text">${section.title}</span></div>
+      <span class="section-meta">0 lessons</span>
+      <div class="section-actions" onclick="event.stopPropagation()">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditSection(${section.id},'${section.title.replace(/'/g,"\\'")}')">
+          <i class="fas fa-pen"></i>
+        </button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteSection(${section.id})">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+    <div class="inline-edit-form" id="edit-section-${section.id}">
+      <input type="text" id="edit-section-input-${section.id}" value="${section.title.replace(/'/g,"\\'")}">
+      <button class="btn btn-primary btn-sm" onclick="saveSection(${section.id})">Save</button>
+      <button class="btn btn-ghost btn-sm" onclick="cancelEditSection(${section.id})">Cancel</button>
+    </div>
+    <ul class="lesson-list" id="lessons-${section.id}" data-section-id="${section.id}"></ul>
+    <div class="add-lesson-bar">
+      <span>Add:</span>
+      <button class="btn btn-primary btn-sm" onclick="openAddLesson(${section.id},'video')">
+        <i class="fas fa-play-circle"></i> Video
+      </button>
+      <button class="btn btn-sm" style="background:#8e44ad;color:#fff;" onclick="openAddLesson(${section.id},'text')">
+        <i class="fas fa-file-alt"></i> Text
+      </button>
+      <button class="btn btn-sm" style="background:#e67e22;color:#fff;" onclick="openAddLesson(${section.id},'article')">
+        <i class="fas fa-newspaper"></i> Article
+      </button>
+    </div>
+  </div>`;
+  container.insertAdjacentHTML('beforeend', html);
+  initLessonSortable(section.id);
+  initSectionSortable();
+}
+
+/* ── Rich Text Editor ──────────────────────────────────────────────────── */
+function execCmd(cmd, val=null) {
+  document.getElementById('lesson-content-editor').focus();
+  document.execCommand(cmd, false, val);
+}
+function insertHeading() {
+  execCmd('formatBlock', 'h3');
+}
+function insertCode() {
+  const sel = window.getSelection();
+  if (sel && sel.toString()) {
+    document.execCommand('insertHTML', false, `<code>${sel.toString()}</code>`);
+  } else {
+    document.execCommand('insertHTML', false, '<code>code here</code>');
+  }
+}
+function insertLink() {
+  const url = prompt('Enter URL:');
+  if (url) execCmd('createLink', url);
+}
+// Placeholder
+document.getElementById('lesson-content-editor').addEventListener('focus', function() {
+  if (this.innerHTML === '') this.style.setProperty('--ph','none');
+});
+
+/* ── Sortable Drag-Drop ────────────────────────────────────────────────── */
+function initSectionSortable() {
+  Sortable.create(document.getElementById('sections-container'), {
+    animation: 150,
+    handle: '.section-drag-handle',
+    ghostClass: 'sortable-ghost',
+    onEnd: async () => {
+      const ids = [...document.querySelectorAll('[data-section-id]')]
+        .map(el => parseInt(el.dataset.sectionId));
+      await api(`/courses/instructor/curriculum/${COURSE_ID}/section/reorder/`, { order: ids });
+    }
+  });
+}
+
+function initLessonSortable(sectionId) {
+  const el = document.getElementById(`lessons-${sectionId}`);
+  if (!el || el._sortable) return;
+  el._sortable = Sortable.create(el, {
+    animation: 150,
+    handle: '.lesson-drag-handle',
+    ghostClass: 'sortable-ghost',
+    onEnd: async () => {
+      const ids = [...el.querySelectorAll('[data-lesson-id]')]
+        .map(li => parseInt(li.dataset.lessonId));
+      await api(
+        `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/reorder/`,
+        { order: ids }
+      );
+    }
+  });
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  initSectionSortable();
+  document.querySelectorAll('[id^="lessons-"]').forEach(ul => {
+    initLessonSortable(ul.dataset.sectionId);
+  });
+});
+</script>
+</body>
+</html>
