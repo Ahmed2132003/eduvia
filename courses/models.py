@@ -433,13 +433,6 @@ class LessonProgress(models.Model):
         return f"{self.user.username} — {self.lesson.title} ({self.progress_percentage:.0f}%)"
 
 
-# ── Signal ────────────────────────────────────────────────────────────────────
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.get_or_create(user=instance)
-
 class LessonComment(models.Model):
     """Comments on a Lesson (new curriculum system)."""
     lesson = models.ForeignKey(
