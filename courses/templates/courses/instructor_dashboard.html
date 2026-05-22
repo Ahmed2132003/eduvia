@@ -160,7 +160,7 @@
                             <!-- Legacy Videos -->
                             <td>
                                 {% for video in course.video_list %}
-                                    {% with video_slug=video.title|slugify %}
+                                    {% with video_slug=video.title|arabic_slug:video.id %}                    
                                     <a href="{% url 'courses:watch_video' course_id=course.id course_slug=course_slug video_id=video.id video_slug=video_slug %}"
                                        style="font-size:13px;display:block;margin-bottom:3px;">
                                         <i class="fas fa-play-circle" style="color:#00a8cc;"></i>
