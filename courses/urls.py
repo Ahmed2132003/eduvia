@@ -47,6 +47,12 @@ urlpatterns = [
         views_curriculum.curriculum_builder,
         name='curriculum_builder',
     ),
+    path(
+        'instructor/curriculum/<int:course_id>/videos/json/',
+        views.videos_json,
+        name='videos_json',
+    ),
+
 
     # Instructor — Section AJAX
     path('instructor/curriculum/<int:course_id>/section/create/',          views_curriculum.section_create,  name='section_create'),

@@ -26,25 +26,14 @@
   --shadow:    0 2px 12px rgba(0,0,0,.08);
   --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
 }
-body {
-  font-family:'Cairo',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-}
+body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
 /* ── Top Bar ───────────────────────────────────────────────────────────── */
 .topbar {
   background: linear-gradient(90deg,#00a8cc,#00c9a7);
-  color:#fff;
-  padding:0 24px;
-  height:58px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  position:sticky;
-  top:0;
-  z-index:200;
+  color:#fff; padding:0 24px; height:58px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:200;
   box-shadow:0 2px 8px rgba(0,0,0,.15);
 }
 .topbar-left { display:flex; align-items:center; gap:16px; }
@@ -53,9 +42,12 @@ body {
 .topbar .breadcrumb a { color:#fff; text-decoration:none; }
 .topbar .breadcrumb span { margin:0 6px; }
 .topbar-right { display:flex; gap:10px; }
-.btn { display:inline-flex; align-items:center; gap:6px; padding:8px 18px;
-  border-radius:6px; font-size:14px; font-weight:600; cursor:pointer;
-  border:none; transition:all .2s; text-decoration:none; }
+
+.btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 18px; border-radius:6px; font-size:14px; font-weight:600;
+  cursor:pointer; border:none; transition:all .2s; text-decoration:none;
+}
 .btn-primary { background:var(--primary); color:#fff; }
 .btn-primary:hover { background:var(--primary-d); }
 .btn-accent  { background:var(--accent); color:#fff; }
@@ -77,57 +69,36 @@ body {
 
 /* ── Section Card ──────────────────────────────────────────────────────── */
 .section-card {
-  background:var(--card);
-  border:1.5px solid var(--border);
-  border-radius:var(--radius);
-  margin-bottom:16px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  transition:box-shadow .2s;
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:var(--radius); margin-bottom:16px;
+  box-shadow:var(--shadow); overflow:hidden; transition:box-shadow .2s;
 }
 .section-card:hover { box-shadow:var(--shadow-lg); }
 
 .section-header {
-  display:flex;
-  align-items:center;
-  gap:10px;
+  display:flex; align-items:center; gap:10px;
   padding:14px 18px;
   background:linear-gradient(90deg,#f0f9fb,#e8f8f5);
   border-bottom:1.5px solid var(--border);
-  cursor:pointer;
-  user-select:none;
+  cursor:pointer; user-select:none;
 }
 .section-drag-handle { color:var(--muted); cursor:grab; font-size:16px; }
 .section-toggle-icon { color:var(--primary); font-size:14px; transition:transform .25s; }
 .section-toggle-icon.collapsed { transform:rotate(-90deg); }
-.section-header-title {
-  flex:1;
-  font-size:15px;
-  font-weight:700;
-  color:var(--text);
-}
+.section-header-title { flex:1; font-size:15px; font-weight:700; color:var(--text); }
 .section-meta { font-size:12px; color:var(--muted); white-space:nowrap; }
 .section-actions { display:flex; gap:6px; }
 
 /* ── Inline Edit ───────────────────────────────────────────────────────── */
 .inline-edit-form {
-  display:none;
-  padding:12px 18px;
-  background:#f7fafb;
-  border-bottom:1px solid var(--border);
-  gap:8px;
-  align-items:center;
+  display:none; padding:12px 18px; background:#f7fafb;
+  border-bottom:1px solid var(--border); gap:8px; align-items:center;
 }
 .inline-edit-form.active { display:flex; }
 .inline-edit-form input {
-  flex:1;
-  padding:8px 12px;
-  border:1.5px solid var(--border);
-  border-radius:6px;
-  font-size:14px;
-  font-family:'Cairo',sans-serif;
-  outline:none;
-  transition:border-color .2s;
+  flex:1; padding:8px 12px; border:1.5px solid var(--border);
+  border-radius:6px; font-size:14px; font-family:'Cairo',sans-serif;
+  outline:none; transition:border-color .2s;
 }
 .inline-edit-form input:focus { border-color:var(--primary); }
 
@@ -135,19 +106,12 @@ body {
 .lesson-list { padding:0; list-style:none; }
 .lesson-list:empty::after {
   content:'No lessons yet. Add your first lesson below.';
-  display:block;
-  padding:16px 20px;
-  color:var(--muted);
-  font-size:13px;
-  font-style:italic;
+  display:block; padding:16px 20px; color:var(--muted);
+  font-size:13px; font-style:italic;
 }
 .lesson-item {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:11px 18px;
-  border-bottom:1px solid #eef2f5;
-  transition:background .15s;
+  display:flex; align-items:center; gap:10px;
+  padding:11px 18px; border-bottom:1px solid #eef2f5; transition:background .15s;
 }
 .lesson-item:last-child { border-bottom:none; }
 .lesson-item:hover { background:#f7fbfd; }
@@ -168,9 +132,7 @@ body {
 /* ── Add Lesson Bar ────────────────────────────────────────────────────── */
 .add-lesson-bar {
   display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-  padding:12px 18px;
-  background:#f9fbfc;
-  border-top:1px dashed var(--border);
+  padding:12px 18px; background:#f9fbfc; border-top:1px dashed var(--border);
 }
 .add-lesson-bar span { font-size:13px; color:var(--muted); font-weight:600; margin-right:4px; }
 
@@ -182,20 +144,25 @@ body {
 }
 .modal-overlay.active { display:flex; }
 .modal-box {
-  background:#fff; border-radius:12px;
-  width:100%; max-width:540px;
+  background:#fff; border-radius:12px; width:100%; max-width:540px;
   box-shadow:0 20px 60px rgba(0,0,0,.2);
   animation:modalIn .22s ease;
+  max-height:90vh; overflow-y:auto;
 }
 @keyframes modalIn { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
 .modal-header {
   display:flex; align-items:center; justify-content:space-between;
   padding:18px 22px; border-bottom:1px solid var(--border);
+  position:sticky; top:0; background:#fff; z-index:1;
 }
 .modal-header h2 { font-size:17px; font-weight:700; }
 .modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--muted); }
 .modal-body { padding:22px; }
-.modal-footer { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; }
+.modal-footer {
+  padding:16px 22px; border-top:1px solid var(--border);
+  display:flex; gap:8px; justify-content:flex-end;
+  position:sticky; bottom:0; background:#fff;
+}
 
 /* ── Form ──────────────────────────────────────────────────────────────── */
 .form-group { margin-bottom:16px; }
@@ -204,12 +171,12 @@ body {
   width:100%; padding:9px 13px;
   border:1.5px solid var(--border); border-radius:6px;
   font-size:14px; font-family:'Cairo',sans-serif;
-  outline:none; transition:border-color .2s;
-  background:#fff;
+  outline:none; transition:border-color .2s; background:#fff;
 }
 .form-control:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,168,204,.1); }
 .form-control.textarea { min-height:100px; resize:vertical; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
 .type-tabs { display:flex; gap:8px; margin-bottom:4px; }
 .type-tab {
   flex:1; padding:9px; border:1.5px solid var(--border);
@@ -219,26 +186,57 @@ body {
 .type-tab.active { border-color:var(--primary); background:#e8f6fb; color:var(--primary); }
 .type-tab:hover:not(.active) { border-color:var(--primary); }
 .type-tab i { display:block; font-size:18px; margin-bottom:3px; }
+
 .field-group { display:none; }
 .field-group.active { display:block; }
+
 .check-label { display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer; }
 .check-label input[type=checkbox] { width:16px; height:16px; cursor:pointer; }
 
+/* ── Existing Video Picker ─────────────────────────────────────────────── */
+.video-picker-section {
+  background:#f0f9fb; border:1.5px solid #b2e4f0;
+  border-radius:8px; padding:14px; margin-bottom:16px;
+}
+.video-picker-section h4 {
+  font-size:13px; font-weight:700; color:var(--primary); margin-bottom:10px;
+}
+.video-picker-section select {
+  width:100%; padding:8px 12px;
+  border:1.5px solid var(--border); border-radius:6px;
+  font-size:13px; font-family:'Cairo',sans-serif; outline:none;
+  background:#fff; cursor:pointer;
+}
+.video-picker-section select:focus { border-color:var(--primary); }
+.video-picker-hint { font-size:11px; color:var(--muted); margin-top:6px; }
+.divider-or {
+  text-align:center; font-size:12px; color:var(--muted);
+  margin:12px 0; position:relative;
+}
+.divider-or::before, .divider-or::after {
+  content:''; position:absolute; top:50%; width:44%; height:1px;
+  background:var(--border);
+}
+.divider-or::before { left:0; }
+.divider-or::after  { right:0; }
+
 /* ── Add Section Bar ───────────────────────────────────────────────────── */
 .add-section-bar {
-  border:2px dashed var(--border);
-  border-radius:var(--radius);
-  padding:18px;
-  text-align:center;
-  cursor:pointer;
-  color:var(--primary);
-  font-size:15px;
-  font-weight:600;
-  transition:all .2s;
-  background:#fff;
-  margin-bottom:24px;
+  border:2px dashed var(--border); border-radius:var(--radius);
+  padding:18px; text-align:center; cursor:pointer;
+  color:var(--primary); font-size:15px; font-weight:600;
+  transition:all .2s; background:#fff; margin-bottom:24px;
 }
 .add-section-bar:hover { border-color:var(--primary); background:#e8f6fb; }
+
+/* ── Spinner inside button ─────────────────────────────────────────────── */
+.btn-loading { opacity:.7; pointer-events:none; }
+.btn-loading::after {
+  content:''; display:inline-block; width:12px; height:12px;
+  border:2px solid rgba(255,255,255,.5); border-top-color:#fff;
+  border-radius:50%; animation:spin .7s linear infinite; margin-left:6px;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
 
 /* ── Toast ─────────────────────────────────────────────────────────────── */
 .toast-container {
@@ -248,13 +246,14 @@ body {
 .toast {
   padding:12px 18px; border-radius:8px; font-size:14px; font-weight:600;
   color:#fff; box-shadow:0 4px 16px rgba(0,0,0,.15);
-  animation:toastIn .3s ease;
+  animation:toastIn .3s ease; max-width:320px;
 }
 .toast.success { background:#27ae60; }
 .toast.error   { background:var(--danger); }
+.toast.warning { background:var(--warning); }
 @keyframes toastIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
 
-/* ── Rich Text Editor placeholder ─────────────────────────────────────── */
+/* ── Rich Text Editor ──────────────────────────────────────────────────── */
 .rich-editor-wrap { border:1.5px solid var(--border); border-radius:6px; overflow:hidden; }
 .rich-editor-toolbar {
   display:flex; flex-wrap:wrap; gap:2px; padding:6px;
@@ -269,11 +268,13 @@ body {
   min-height:160px; padding:12px; outline:none;
   font-size:14px; font-family:'Cairo',sans-serif; line-height:1.7;
 }
+#lesson-content-editor:empty::before {
+  content: attr(data-placeholder); color:#a0aec0; pointer-events:none;
+}
 
 /* Sortable ghost */
 .sortable-ghost { opacity:.4; background:#e8f6fb; }
 
-/* Responsive */
 @media(max-width:600px){
   .form-row { grid-template-columns:1fr; }
   .section-actions .btn span { display:none; }
@@ -323,14 +324,14 @@ body {
         <div class="section-header-title">
           <span class="section-title-text">{{ section.title }}</span>
         </div>
-        <span class="section-meta">
-          {{ section.lessons.count }} lesson{{ section.lessons.count|pluralize }}
-        </span>
+        <span class="section-meta">{{ section.lessons.count }} lesson{{ section.lessons.count|pluralize }}</span>
         <div class="section-actions" onclick="event.stopPropagation()">
-          <button class="btn btn-ghost btn-sm btn-icon" title="Edit" onclick="openEditSection({{ section.id }}, '{{ section.title|escapejs }}')">
+          <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
+            onclick="openEditSection({{ section.id }}, '{{ section.title|escapejs }}')">
             <i class="fas fa-pen"></i>
           </button>
-          <button class="btn btn-danger btn-sm btn-icon" title="Delete" onclick="deleteSection({{ section.id }})">
+          <button class="btn btn-danger btn-sm btn-icon" title="Delete"
+            onclick="deleteSection({{ section.id }})">
             <i class="fas fa-trash"></i>
           </button>
         </div>
@@ -338,7 +339,8 @@ body {
 
       <!-- Inline Edit Form -->
       <div class="inline-edit-form" id="edit-section-{{ section.id }}">
-        <input type="text" id="edit-section-input-{{ section.id }}" placeholder="Section title…" value="{{ section.title|escapejs }}">
+        <input type="text" id="edit-section-input-{{ section.id }}"
+               placeholder="Section title…" value="{{ section.title|escapejs }}">
         <button class="btn btn-primary btn-sm" onclick="saveSection({{ section.id }})">Save</button>
         <button class="btn btn-ghost btn-sm" onclick="cancelEditSection({{ section.id }})">Cancel</button>
       </div>
@@ -361,7 +363,8 @@ body {
           </div>
           <div class="lesson-actions">
             <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
-              onclick="openEditLesson({{ section.id }}, {{ lesson.id }},
+              onclick="openEditLesson(
+                {{ section.id }}, {{ lesson.id }},
                 '{{ lesson.title|escapejs }}',
                 '{{ lesson.lesson_type }}',
                 '{{ lesson.video_url|default:''|escapejs }}',
@@ -386,10 +389,12 @@ body {
         <button class="btn btn-primary btn-sm" onclick="openAddLesson({{ section.id }}, 'video')">
           <i class="fas fa-play-circle"></i> Video
         </button>
-        <button class="btn btn-sm" style="background:#8e44ad;color:#fff;" onclick="openAddLesson({{ section.id }}, 'text')">
+        <button class="btn btn-sm" style="background:#8e44ad;color:#fff;"
+                onclick="openAddLesson({{ section.id }}, 'text')">
           <i class="fas fa-file-alt"></i> Text
         </button>
-        <button class="btn btn-sm" style="background:#e67e22;color:#fff;" onclick="openAddLesson({{ section.id }}, 'article')">
+        <button class="btn btn-sm" style="background:#e67e22;color:#fff;"
+                onclick="openAddLesson({{ section.id }}, 'article')">
           <i class="fas fa-newspaper"></i> Article
         </button>
       </div>
@@ -398,7 +403,7 @@ body {
   </div>
 
   <!-- Add Section Bar -->
-  <div class="add-section-bar" onclick="openAddSection()">
+  <div class="add-section-bar" id="add-section-bar" onclick="openAddSection()">
     <i class="fas fa-plus-circle"></i> Add New Section
   </div>
 </div>
@@ -415,13 +420,17 @@ body {
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label>Section Title *</label>
-        <input type="text" id="section-title-input" class="form-control" placeholder="e.g. Introduction to the Course">
+        <label for="section-title-input">Section Title *</label>
+        <input type="text" id="section-title-input" class="form-control"
+               placeholder="e.g. Introduction to the Course"
+               onkeydown="if(event.key==='Enter') document.getElementById('section-modal-save').click()">
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('section-modal')">Cancel</button>
-      <button class="btn btn-primary" id="section-modal-save" onclick="saveNewSection()">Add Section</button>
+      <button class="btn btn-primary" id="section-modal-save" onclick="saveNewSection()">
+        <i class="fas fa-plus"></i> Add Section
+      </button>
     </div>
   </div>
 </div>
@@ -452,21 +461,36 @@ body {
         <input type="hidden" id="lesson-type-hidden" value="video">
       </div>
 
+      <!-- ── Existing Video Picker (shows only for type=video in add mode) ── -->
+      <div id="existing-video-picker" class="video-picker-section" style="display:none;">
+        <h4><i class="fas fa-film"></i> Use an existing course video</h4>
+        <select id="existing-video-select" onchange="onExistingVideoSelected()">
+          <option value="">— Select a video —</option>
+        </select>
+        <p class="video-picker-hint">
+          Selecting a video will auto-fill title, URL and duration below.
+        </p>
+        <div class="divider-or">OR</div>
+      </div>
+
       <div class="form-group">
-        <label>Lesson Title *</label>
-        <input type="text" id="lesson-title-input" class="form-control" placeholder="e.g. Introduction to Variables">
+        <label for="lesson-title-input">Lesson Title *</label>
+        <input type="text" id="lesson-title-input" class="form-control"
+               placeholder="e.g. Introduction to Variables">
       </div>
 
       <!-- Video Fields -->
       <div class="field-group active" id="field-video">
         <div class="form-group">
-          <label>Video URL *</label>
-          <input type="url" id="lesson-video-url" class="form-control" placeholder="https://...">
+          <label for="lesson-video-url">Video URL *</label>
+          <input type="url" id="lesson-video-url" class="form-control"
+                 placeholder="https://...">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Duration (minutes)</label>
-            <input type="number" id="lesson-duration" class="form-control" placeholder="e.g. 10.5" step="0.1" min="0">
+            <label for="lesson-duration">Duration (minutes)</label>
+            <input type="number" id="lesson-duration" class="form-control"
+                   placeholder="e.g. 10.5" step="0.1" min="0">
           </div>
           <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px;">
             <label class="check-label">
@@ -486,11 +510,11 @@ body {
               <button type="button" onclick="execCmd('bold')" title="Bold"><b>B</b></button>
               <button type="button" onclick="execCmd('italic')" title="Italic"><i>I</i></button>
               <button type="button" onclick="execCmd('underline')" title="Underline"><u>U</u></button>
-              <button type="button" onclick="execCmd('insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
-              <button type="button" onclick="execCmd('insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
-              <button type="button" onclick="insertHeading()" title="Heading"><i class="fas fa-heading"></i></button>
-              <button type="button" onclick="insertCode()" title="Code"><i class="fas fa-code"></i></button>
-              <button type="button" onclick="insertLink()" title="Link"><i class="fas fa-link"></i></button>
+              <button type="button" onclick="execCmd('insertOrderedList')"><i class="fas fa-list-ol"></i></button>
+              <button type="button" onclick="execCmd('insertUnorderedList')"><i class="fas fa-list-ul"></i></button>
+              <button type="button" onclick="insertHeading()"><i class="fas fa-heading"></i></button>
+              <button type="button" onclick="insertCode()"><i class="fas fa-code"></i></button>
+              <button type="button" onclick="insertLink()"><i class="fas fa-link"></i></button>
             </div>
             <div id="lesson-content-editor" contenteditable="true" spellcheck="false"
                  data-placeholder="Write your lesson content here…"></div>
@@ -499,14 +523,21 @@ body {
       </div>
 
       <div class="form-group">
-        <label>Description <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <label for="lesson-description">
+          Description <span style="color:var(--muted);font-weight:400">(optional)</span>
+        </label>
         <textarea id="lesson-description" class="form-control textarea" rows="2"
           placeholder="Brief description of this lesson…"></textarea>
       </div>
+
+      <!-- Hidden: tracks which existing video was chosen -->
+      <input type="hidden" id="existing-video-id" value="">
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('lesson-modal')">Cancel</button>
-      <button class="btn btn-primary" id="lesson-modal-save" onclick="saveLesson()">Add Lesson</button>
+      <button class="btn btn-primary" id="lesson-modal-save" onclick="saveLesson()">
+        <i class="fas fa-plus"></i> Add Lesson
+      </button>
     </div>
   </div>
 </div>
@@ -514,118 +545,305 @@ body {
 <!-- ═══════ Sortable.js ═══════════════════════════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 <script>
-/* ── State ─────────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════════════════ */
 const COURSE_ID = {{ course.id }};
-const CSRF = '{{ csrf_token }}';
-let lessonModalMode   = 'add';   // 'add' | 'edit'
-let lessonSectionId   = null;
-let lessonEditId      = null;
+const CSRF      = '{{ csrf_token }}';
 
-/* ── AJAX Helper ───────────────────────────────────────────────────────── */
-async function api(url, body=null, method='POST') {
-  const opts = {
-    method,
-    headers: { 'Content-Type':'application/json', 'X-CSRFToken': CSRF },
-  };
-  if (body !== null) opts.body = JSON.stringify(body);
-  const r = await fetch(url, opts);
-  return r.json();
+let lessonModalMode = 'add';   // 'add' | 'edit'
+let lessonSectionId = null;
+let lessonEditId    = null;
+
+// Cache of legacy videos fetched from server
+let legacyVideos = [];
+
+/* ════════════════════════════════════════════════════════════════════════
+   AJAX HELPER  — fixed: correct error handling + returns parsed JSON
+   ════════════════════════════════════════════════════════════════════════ */
+async function api(url, body = null, method = 'POST') {
+  try {
+    const opts = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': CSRF,
+      },
+    };
+    if (body !== null) opts.body = JSON.stringify(body);
+
+    const response = await fetch(url, opts);
+
+    // Parse JSON regardless of status
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error(`Server returned non-JSON response (status ${response.status})`);
+    }
+
+    if (!response.ok) {
+      // Server returned 4xx/5xx
+      throw new Error(data.error || `HTTP ${response.status}`);
+    }
+
+    return data;   // { ok: true, ... }
+
+  } catch (err) {
+    // Network error or thrown above
+    console.error('[api] error:', err);
+    return { ok: false, error: err.message || 'Network error' };
+  }
 }
 
-/* ── Toast ─────────────────────────────────────────────────────────────── */
-function toast(msg, type='success') {
-  const c = document.getElementById('toast-container');
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => t.remove(), 3500);
+/* ════════════════════════════════════════════════════════════════════════
+   TOAST
+   ════════════════════════════════════════════════════════════════════════ */
+function toast(msg, type = 'success') {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 400); }, 3500);
 }
 
-/* ── Modal helpers ─────────────────────────────────────────────────────── */
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id){ document.getElementById(id).classList.remove('active'); }
-document.querySelectorAll('.modal-overlay').forEach(o =>
-  o.addEventListener('click', e => { if(e.target===o) o.classList.remove('active'); })
-);
+/* ════════════════════════════════════════════════════════════════════════
+   MODAL HELPERS
+   ════════════════════════════════════════════════════════════════════════ */
+function openModal(id)  { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-/* ── Section toggle ────────────────────────────────────────────────────── */
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+  }
+});
+
+/* ════════════════════════════════════════════════════════════════════════
+   BUTTON LOADING STATE
+   ════════════════════════════════════════════════════════════════════════ */
+function setLoading(btn, loading) {
+  if (loading) {
+    btn.classList.add('btn-loading');
+    btn._origText = btn.innerHTML;
+    btn.innerHTML = 'Saving…';
+  } else {
+    btn.classList.remove('btn-loading');
+    if (btn._origText) btn.innerHTML = btn._origText;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   SECTION TOGGLE
+   ════════════════════════════════════════════════════════════════════════ */
 function toggleSection(header) {
-  const list   = header.closest('.section-card').querySelector('.lesson-list');
-  const addBar = header.closest('.section-card').querySelector('.add-lesson-bar');
+  const card   = header.closest('.section-card');
+  const list   = card.querySelector('.lesson-list');
+  const addBar = card.querySelector('.add-lesson-bar');
   const icon   = header.querySelector('.section-toggle-icon');
-  const hidden = list.style.display === 'none';
-  list.style.display    = hidden ? '' : 'none';
-  addBar.style.display  = hidden ? '' : 'none';
-  icon.classList.toggle('collapsed', !hidden);
+
+  const isHidden = list.style.display === 'none';
+  list.style.display    = isHidden ? '' : 'none';
+  addBar.style.display  = isHidden ? '' : 'none';
+  icon.classList.toggle('collapsed', !isHidden);
 }
 
-/* ── Section CRUD ──────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════════════
+   SECTION CRUD
+   ════════════════════════════════════════════════════════════════════════ */
 function openAddSection() {
   document.getElementById('section-modal-title').textContent = 'Add New Section';
   document.getElementById('section-title-input').value = '';
-  document.getElementById('section-modal-save').onclick = saveNewSection;
+  const btn = document.getElementById('section-modal-save');
+  btn.innerHTML = '<i class="fas fa-plus"></i> Add Section';
+  btn.onclick = saveNewSection;
   openModal('section-modal');
+  setTimeout(() => document.getElementById('section-title-input').focus(), 80);
 }
 
 async function saveNewSection() {
   const title = document.getElementById('section-title-input').value.trim();
-  if (!title) { toast('Please enter a section title.','error'); return; }
-  const res = await api(`/courses/instructor/curriculum/${COURSE_ID}/section/create/`, { title });
-  if (!res.ok) { toast(res.error,'error'); return; }
+  if (!title) {
+    toast('Please enter a section title.', 'error');
+    document.getElementById('section-title-input').focus();
+    return;
+  }
+
+  const btn = document.getElementById('section-modal-save');
+  setLoading(btn, true);
+
+  const res = await api(
+    `/courses/instructor/curriculum/${COURSE_ID}/section/create/`,
+    { title }
+  );
+
+  setLoading(btn, false);
+
+  if (!res.ok) {
+    toast(res.error || 'Failed to create section.', 'error');
+    return;
+  }
+
   closeModal('section-modal');
   renderNewSection(res.section);
-  toast('Section added!');
+  toast('Section added successfully!');
 }
 
 function openEditSection(id, currentTitle) {
   const form  = document.getElementById(`edit-section-${id}`);
   const input = document.getElementById(`edit-section-input-${id}`);
+  if (!form || !input) return;
   input.value = currentTitle;
   form.classList.add('active');
+  input.focus();
 }
+
 function cancelEditSection(id) {
-  document.getElementById(`edit-section-${id}`).classList.remove('active');
+  const form = document.getElementById(`edit-section-${id}`);
+  if (form) form.classList.remove('active');
 }
+
 async function saveSection(id) {
   const input = document.getElementById(`edit-section-input-${id}`);
-  const title = input.value.trim();
-  if (!title) { toast('Title required.','error'); return; }
-  const res = await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${id}/update/`, { title });
-  if (!res.ok) { toast(res.error,'error'); return; }
-  // Update UI
+  const title = input ? input.value.trim() : '';
+  if (!title) { toast('Title is required.', 'error'); return; }
+
+  const res = await api(
+    `/courses/instructor/curriculum/${COURSE_ID}/section/${id}/update/`,
+    { title }
+  );
+
+  if (!res.ok) { toast(res.error || 'Update failed.', 'error'); return; }
+
+  // Update UI in-place
   const card = document.querySelector(`[data-section-id="${id}"]`);
-  card.querySelector('.section-title-text').textContent = title;
+  if (card) card.querySelector('.section-title-text').textContent = title;
   cancelEditSection(id);
   toast('Section updated!');
 }
 
 async function deleteSection(id) {
-  if (!confirm('Delete this section and ALL its lessons?')) return;
-  const res = await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${id}/delete/`);
-  if (!res.ok) { toast(res.error,'error'); return; }
-  document.querySelector(`[data-section-id="${id}"]`).remove();
+  if (!confirm('Delete this section and ALL its lessons? This cannot be undone.')) return;
+
+  const res = await api(
+    `/courses/instructor/curriculum/${COURSE_ID}/section/${id}/delete/`
+  );
+
+  if (!res.ok) { toast(res.error || 'Delete failed.', 'error'); return; }
+
+  const card = document.querySelector(`[data-section-id="${id}"]`);
+  if (card) {
+    card.style.opacity = '0';
+    card.style.transition = 'opacity .3s';
+    setTimeout(() => card.remove(), 300);
+  }
   toast('Section deleted.');
 }
 
-/* ── Lesson CRUD ───────────────────────────────────────────────────────── */
-function openAddLesson(sectionId, type='video') {
-  lessonModalMode   = 'add';
-  lessonSectionId   = sectionId;
-  lessonEditId      = null;
+/* ════════════════════════════════════════════════════════════════════════
+   LEGACY VIDEOS  — fetch once and cache
+   ════════════════════════════════════════════════════════════════════════ */
+async function fetchLegacyVideos() {
+  if (legacyVideos.length > 0) return legacyVideos; // cached
+
+  try {
+    const r = await fetch(
+      `/courses/instructor/curriculum/${COURSE_ID}/videos/json/`,
+      { headers: { 'X-CSRFToken': CSRF } }
+    );
+    const data = await r.json();
+    legacyVideos = data.videos || [];
+  } catch {
+    legacyVideos = [];
+  }
+  return legacyVideos;
+}
+
+function populateVideoDropdown(videos) {
+  const sel = document.getElementById('existing-video-select');
+  // Clear old options except first placeholder
+  while (sel.options.length > 1) sel.remove(1);
+
+  videos.forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v.id;
+    opt.textContent = `${v.title}${v.duration ? ' (' + v.duration + ' min)' : ''}`;
+    opt.dataset.url      = v.video_url || '';
+    opt.dataset.title    = v.title;
+    opt.dataset.duration = v.duration || 0;
+    sel.appendChild(opt);
+  });
+}
+
+function onExistingVideoSelected() {
+  const sel = document.getElementById('existing-video-select');
+  const selectedOpt = sel.options[sel.selectedIndex];
+
+  if (!selectedOpt || !selectedOpt.value) {
+    // Clear pre-fill
+    document.getElementById('existing-video-id').value = '';
+    document.getElementById('lesson-title-input').value = '';
+    document.getElementById('lesson-video-url').value   = '';
+    document.getElementById('lesson-duration').value    = '';
+    return;
+  }
+
+  // Pre-fill fields from selected video's data attributes
+  document.getElementById('existing-video-id').value  = selectedOpt.value;
+  document.getElementById('lesson-title-input').value = selectedOpt.dataset.title;
+  document.getElementById('lesson-video-url').value   = selectedOpt.dataset.url;
+  document.getElementById('lesson-duration').value    = selectedOpt.dataset.duration || '';
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   LESSON CRUD
+   ════════════════════════════════════════════════════════════════════════ */
+async function openAddLesson(sectionId, type = 'video') {
+  lessonModalMode = 'add';
+  lessonSectionId = sectionId;
+  lessonEditId    = null;
+
   document.getElementById('lesson-modal-title').textContent = 'Add Lesson';
-  document.getElementById('lesson-modal-save').textContent  = 'Add Lesson';
+  const saveBtn = document.getElementById('lesson-modal-save');
+  saveBtn.innerHTML = '<i class="fas fa-plus"></i> Add Lesson';
+  saveBtn.onclick = saveLesson;
+
   clearLessonForm();
   switchType(type);
+
+  // Show video picker only in add mode for video type
+  const picker = document.getElementById('existing-video-picker');
+  if (type === 'video') {
+    picker.style.display = '';
+    const videos = await fetchLegacyVideos();
+    populateVideoDropdown(videos);
+  } else {
+    picker.style.display = 'none';
+  }
+
   openModal('lesson-modal');
+  setTimeout(() => document.getElementById('lesson-title-input').focus(), 80);
 }
 
 function openEditLesson(sectionId, lessonId, title, type, videoUrl, duration, isPreview, desc, content) {
-  lessonModalMode   = 'edit';
-  lessonSectionId   = sectionId;
-  lessonEditId      = lessonId;
+  lessonModalMode = 'edit';
+  lessonSectionId = sectionId;
+  lessonEditId    = lessonId;
+
   document.getElementById('lesson-modal-title').textContent = 'Edit Lesson';
-  document.getElementById('lesson-modal-save').textContent  = 'Save Changes';
+  const saveBtn = document.getElementById('lesson-modal-save');
+  saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+  saveBtn.onclick = saveLesson;
+
   // Fill form
   document.getElementById('lesson-title-input').value    = title;
   document.getElementById('lesson-video-url').value      = videoUrl;
@@ -633,45 +851,84 @@ function openEditLesson(sectionId, lessonId, title, type, videoUrl, duration, is
   document.getElementById('lesson-is-preview').checked   = isPreview;
   document.getElementById('lesson-description').value    = desc;
   document.getElementById('lesson-content-editor').innerHTML = content;
+  document.getElementById('existing-video-id').value     = '';
+
+  // Hide video picker in edit mode
+  document.getElementById('existing-video-picker').style.display = 'none';
+
   switchType(type);
   openModal('lesson-modal');
 }
 
 function clearLessonForm() {
-  ['lesson-title-input','lesson-video-url','lesson-duration','lesson-description']
-    .forEach(id => document.getElementById(id).value = '');
+  ['lesson-title-input', 'lesson-video-url', 'lesson-duration', 'lesson-description']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.getElementById('lesson-is-preview').checked = false;
   document.getElementById('lesson-content-editor').innerHTML = '';
+  document.getElementById('existing-video-id').value = '';
+  // Reset video picker
+  const sel = document.getElementById('existing-video-select');
+  if (sel) sel.selectedIndex = 0;
 }
 
 function switchType(type) {
   document.getElementById('lesson-type-hidden').value = type;
+
   document.querySelectorAll('.type-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.type === type);
   });
   document.querySelectorAll('.field-group').forEach(g => g.classList.remove('active'));
+
   if (type === 'video') {
     document.getElementById('field-video').classList.add('active');
+    // Show picker only in add mode
+    if (lessonModalMode === 'add') {
+      document.getElementById('existing-video-picker').style.display = '';
+    }
   } else {
     document.getElementById('field-text').classList.add('active');
+    document.getElementById('existing-video-picker').style.display = 'none';
   }
 }
 
 async function saveLesson() {
-  const type        = document.getElementById('lesson-type-hidden').value;
-  const title       = document.getElementById('lesson-title-input').value.trim();
-  const video_url   = document.getElementById('lesson-video-url').value.trim();
-  const duration    = parseFloat(document.getElementById('lesson-duration').value) || 0;
-  const is_preview  = document.getElementById('lesson-is-preview').checked;
-  const description = document.getElementById('lesson-description').value.trim();
-  const content     = document.getElementById('lesson-content-editor').innerHTML.trim();
+  const type           = document.getElementById('lesson-type-hidden').value;
+  const title          = document.getElementById('lesson-title-input').value.trim();
+  const video_url      = document.getElementById('lesson-video-url').value.trim();
+  const duration       = parseFloat(document.getElementById('lesson-duration').value) || 0;
+  const is_preview     = document.getElementById('lesson-is-preview').checked;
+  const description    = document.getElementById('lesson-description').value.trim();
+  const content        = document.getElementById('lesson-content-editor').innerHTML.trim();
+  const existing_video = document.getElementById('existing-video-id').value;
 
-  if (!title) { toast('Lesson title is required.','error'); return; }
-  if (type === 'video' && !video_url) { toast('Video URL is required.','error'); return; }
-  if (type !== 'video' && !content) { toast('Content is required.','error'); return; }
+  // Client-side validation
+  if (!title) { toast('Lesson title is required.', 'error'); return; }
+  if (type === 'video' && !video_url && !existing_video) {
+    toast('Please enter a video URL or select an existing video.', 'error');
+    return;
+  }
+  if (type !== 'video' && !content) {
+    toast('Content is required for text/article lessons.', 'error');
+    return;
+  }
 
-  const body = { title, lesson_type:type, video_url, video_duration:duration,
-                 is_preview, description, content };
+  const saveBtn = document.getElementById('lesson-modal-save');
+  setLoading(saveBtn, true);
+
+  const body = {
+    title,
+    lesson_type: type,
+    video_url,
+    video_duration: duration,
+    is_preview,
+    description,
+    content,
+  };
+
+  // Include existing video id if user picked one (add mode only)
+  if (lessonModalMode === 'add' && existing_video) {
+    body.existing_video_id = parseInt(existing_video);
+  }
 
   let res;
   if (lessonModalMode === 'add') {
@@ -679,166 +936,215 @@ async function saveLesson() {
       `/courses/instructor/curriculum/${COURSE_ID}/section/${lessonSectionId}/lesson/create/`,
       body
     );
-    if (!res.ok) { toast(res.error,'error'); return; }
-    appendLessonItem(lessonSectionId, res.lesson);
-    updateSectionMeta(lessonSectionId);
-    toast('Lesson added!');
+    if (res.ok) {
+      appendLessonItem(lessonSectionId, res.lesson);
+      updateSectionMeta(lessonSectionId);
+      toast('Lesson added!');
+    }
   } else {
     res = await api(
       `/courses/instructor/curriculum/${COURSE_ID}/section/${lessonSectionId}/lesson/${lessonEditId}/update/`,
       body
     );
-    if (!res.ok) { toast(res.error,'error'); return; }
-    updateLessonItem(lessonEditId, res.lesson);
-    toast('Lesson updated!');
+    if (res.ok) {
+      updateLessonItem(lessonEditId, res.lesson);
+      toast('Lesson updated!');
+    }
   }
+
+  setLoading(saveBtn, false);
+
+  if (!res.ok) {
+    toast(res.error || 'Failed to save lesson.', 'error');
+    return;
+  }
+
   closeModal('lesson-modal');
 }
 
 async function deleteLesson(sectionId, lessonId) {
   if (!confirm('Delete this lesson?')) return;
+
   const res = await api(
     `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/${lessonId}/delete/`
   );
-  if (!res.ok) { toast(res.error,'error'); return; }
-  document.querySelector(`[data-lesson-id="${lessonId}"]`).remove();
-  updateSectionMeta(sectionId);
+
+  if (!res.ok) { toast(res.error || 'Delete failed.', 'error'); return; }
+
+  const li = document.querySelector(`[data-lesson-id="${lessonId}"]`);
+  if (li) {
+    li.style.opacity = '0'; li.style.transition = 'opacity .3s';
+    setTimeout(() => { li.remove(); updateSectionMeta(sectionId); }, 300);
+  }
   toast('Lesson deleted.');
 }
 
-/* ── Render helpers ────────────────────────────────────────────────────── */
-const TYPE_ICONS = { video:'fas fa-play-circle', text:'fas fa-file-alt', article:'fas fa-newspaper' };
+/* ════════════════════════════════════════════════════════════════════════
+   RENDER HELPERS
+   ════════════════════════════════════════════════════════════════════════ */
+const TYPE_ICONS  = { video:'fas fa-play-circle', text:'fas fa-file-alt', article:'fas fa-newspaper' };
 const TYPE_LABELS = { video:'Video', text:'Text', article:'Article' };
+const TYPE_COLORS = { video:'var(--primary)', text:'#8e44ad', article:'#e67e22' };
 
-function lessonItemHTML(l) {
-  const dur = l.lesson_type==='video'&&l.video_duration
-    ? `<span>${l.duration_display||l.video_duration+'m'}</span>` : '';
-  const prev = l.is_preview ? `<span class="badge preview">Preview</span>` : '';
+function escapeSingleQuotes(str) {
+  return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+function escapeBackticks(str) {
+  return (str || '').replace(/`/g, '\\`').replace(/\\/g, '\\\\');
+}
+
+function lessonItemHTML(l, sId) {
+  const dur  = (l.lesson_type === 'video' && l.video_duration)
+    ? `<span>${l.duration_display || l.video_duration + 'm'}</span>` : '';
+  const prev = l.is_preview
+    ? `<span class="badge preview">Preview</span>` : '';
+
   return `
-  <li class="lesson-item" data-lesson-id="${l.id}">
-    <i class="fas fa-grip-vertical lesson-drag-handle"></i>
-    <div class="lesson-type-icon ${l.lesson_type}"><i class="${TYPE_ICONS[l.lesson_type]}"></i></div>
-    <div class="lesson-title">${l.title}</div>
-    <div class="lesson-meta">
-      <span class="badge">${TYPE_LABELS[l.lesson_type]}</span>
-      ${prev}${dur}
-    </div>
-    <div class="lesson-actions">
-      <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
-        onclick="openEditLesson(${lessonSectionId||l.section_id},${l.id},
-          '${l.title.replace(/'/g,"\\'")}','${l.lesson_type}',
-          '${(l.video_url||'').replace(/'/g,"\\'")}',
-          ${l.video_duration},${l.is_preview},
-          '${l.description.replace(/'/g,"\\'")}',
-          \`${l.content.replace(/`/g,'\\`')}\`)">
-        <i class="fas fa-pen"></i>
-      </button>
-      <button class="btn btn-danger btn-sm btn-icon" title="Delete"
-        onclick="deleteLesson(${lessonSectionId||l.section_id},${l.id})">
-        <i class="fas fa-trash"></i>
-      </button>
-    </div>
-  </li>`;
+<li class="lesson-item" data-lesson-id="${l.id}">
+  <i class="fas fa-grip-vertical lesson-drag-handle"></i>
+  <div class="lesson-type-icon ${l.lesson_type}">
+    <i class="${TYPE_ICONS[l.lesson_type] || 'fas fa-file'}"></i>
+  </div>
+  <div class="lesson-title">${l.title}</div>
+  <div class="lesson-meta">
+    <span class="badge">${TYPE_LABELS[l.lesson_type] || l.lesson_type}</span>
+    ${prev}${dur}
+  </div>
+  <div class="lesson-actions">
+    <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
+      onclick="openEditLesson(
+        ${sId}, ${l.id},
+        '${escapeSingleQuotes(l.title)}',
+        '${l.lesson_type}',
+        '${escapeSingleQuotes(l.video_url || '')}',
+        ${l.video_duration || 0},
+        ${l.is_preview ? 'true' : 'false'},
+        '${escapeSingleQuotes(l.description || '')}',
+        \`${escapeBackticks(l.content || '')}\`)">
+      <i class="fas fa-pen"></i>
+    </button>
+    <button class="btn btn-danger btn-sm btn-icon" title="Delete"
+      onclick="deleteLesson(${sId}, ${l.id})">
+      <i class="fas fa-trash"></i>
+    </button>
+  </div>
+</li>`;
 }
 
 function appendLessonItem(sectionId, lesson) {
   const ul = document.getElementById(`lessons-${sectionId}`);
-  lessonSectionId = sectionId; // needed for lessonItemHTML
-  ul.insertAdjacentHTML('beforeend', lessonItemHTML(lesson));
+  if (!ul) return;
+  ul.insertAdjacentHTML('beforeend', lessonItemHTML(lesson, sectionId));
   initLessonSortable(sectionId);
 }
 
 function updateLessonItem(lessonId, lesson) {
   const li = document.querySelector(`[data-lesson-id="${lessonId}"]`);
   if (!li) return;
-  lessonSectionId = lessonSectionId; // keep
-  li.outerHTML = lessonItemHTML(lesson);
+  li.outerHTML = lessonItemHTML(lesson, lessonSectionId);
 }
 
 function updateSectionMeta(sectionId) {
-  const count = document.getElementById(`lessons-${sectionId}`).querySelectorAll('.lesson-item').length;
+  const ul    = document.getElementById(`lessons-${sectionId}`);
+  const count = ul ? ul.querySelectorAll('.lesson-item').length : 0;
   const card  = document.querySelector(`[data-section-id="${sectionId}"]`);
-  if (card) card.querySelector('.section-meta').textContent = `${count} lesson${count!==1?'s':''}`;
+  if (card) {
+    card.querySelector('.section-meta').textContent =
+      `${count} lesson${count !== 1 ? 's' : ''}`;
+  }
 }
 
 function renderNewSection(section) {
   const container = document.getElementById('sections-container');
   const html = `
-  <div class="section-card" data-section-id="${section.id}">
-    <div class="section-header" onclick="toggleSection(this)">
-      <i class="fas fa-grip-vertical section-drag-handle" onclick="event.stopPropagation()"></i>
-      <i class="fas fa-chevron-down section-toggle-icon"></i>
-      <div class="section-header-title"><span class="section-title-text">${section.title}</span></div>
-      <span class="section-meta">0 lessons</span>
-      <div class="section-actions" onclick="event.stopPropagation()">
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditSection(${section.id},'${section.title.replace(/'/g,"\\'")}')">
-          <i class="fas fa-pen"></i>
-        </button>
-        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteSection(${section.id})">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
+<div class="section-card" data-section-id="${section.id}" style="opacity:0;transition:opacity .3s;">
+  <div class="section-header" onclick="toggleSection(this)">
+    <i class="fas fa-grip-vertical section-drag-handle" onclick="event.stopPropagation()"></i>
+    <i class="fas fa-chevron-down section-toggle-icon"></i>
+    <div class="section-header-title">
+      <span class="section-title-text">${section.title}</span>
     </div>
-    <div class="inline-edit-form" id="edit-section-${section.id}">
-      <input type="text" id="edit-section-input-${section.id}" value="${section.title.replace(/'/g,"\\'")}">
-      <button class="btn btn-primary btn-sm" onclick="saveSection(${section.id})">Save</button>
-      <button class="btn btn-ghost btn-sm" onclick="cancelEditSection(${section.id})">Cancel</button>
-    </div>
-    <ul class="lesson-list" id="lessons-${section.id}" data-section-id="${section.id}"></ul>
-    <div class="add-lesson-bar">
-      <span>Add:</span>
-      <button class="btn btn-primary btn-sm" onclick="openAddLesson(${section.id},'video')">
-        <i class="fas fa-play-circle"></i> Video
+    <span class="section-meta">0 lessons</span>
+    <div class="section-actions" onclick="event.stopPropagation()">
+      <button class="btn btn-ghost btn-sm btn-icon"
+        onclick="openEditSection(${section.id}, '${escapeSingleQuotes(section.title)}')">
+        <i class="fas fa-pen"></i>
       </button>
-      <button class="btn btn-sm" style="background:#8e44ad;color:#fff;" onclick="openAddLesson(${section.id},'text')">
-        <i class="fas fa-file-alt"></i> Text
-      </button>
-      <button class="btn btn-sm" style="background:#e67e22;color:#fff;" onclick="openAddLesson(${section.id},'article')">
-        <i class="fas fa-newspaper"></i> Article
+      <button class="btn btn-danger btn-sm btn-icon"
+        onclick="deleteSection(${section.id})">
+        <i class="fas fa-trash"></i>
       </button>
     </div>
-  </div>`;
+  </div>
+  <div class="inline-edit-form" id="edit-section-${section.id}">
+    <input type="text" id="edit-section-input-${section.id}"
+           value="${escapeSingleQuotes(section.title)}" placeholder="Section title…">
+    <button class="btn btn-primary btn-sm" onclick="saveSection(${section.id})">Save</button>
+    <button class="btn btn-ghost btn-sm" onclick="cancelEditSection(${section.id})">Cancel</button>
+  </div>
+  <ul class="lesson-list" id="lessons-${section.id}" data-section-id="${section.id}"></ul>
+  <div class="add-lesson-bar">
+    <span>Add:</span>
+    <button class="btn btn-primary btn-sm" onclick="openAddLesson(${section.id},'video')">
+      <i class="fas fa-play-circle"></i> Video
+    </button>
+    <button class="btn btn-sm" style="background:#8e44ad;color:#fff;"
+            onclick="openAddLesson(${section.id},'text')">
+      <i class="fas fa-file-alt"></i> Text
+    </button>
+    <button class="btn btn-sm" style="background:#e67e22;color:#fff;"
+            onclick="openAddLesson(${section.id},'article')">
+      <i class="fas fa-newspaper"></i> Article
+    </button>
+  </div>
+</div>`;
+
   container.insertAdjacentHTML('beforeend', html);
+  // Fade in
+  const card = container.lastElementChild;
+  requestAnimationFrame(() => { card.style.opacity = '1'; });
+
   initLessonSortable(section.id);
   initSectionSortable();
 }
 
-/* ── Rich Text Editor ──────────────────────────────────────────────────── */
-function execCmd(cmd, val=null) {
+/* ════════════════════════════════════════════════════════════════════════
+   RICH TEXT EDITOR HELPERS
+   ════════════════════════════════════════════════════════════════════════ */
+function execCmd(cmd, val = null) {
   document.getElementById('lesson-content-editor').focus();
   document.execCommand(cmd, false, val);
 }
-function insertHeading() {
-  execCmd('formatBlock', 'h3');
-}
+function insertHeading() { execCmd('formatBlock', 'h3'); }
 function insertCode() {
   const sel = window.getSelection();
-  if (sel && sel.toString()) {
-    document.execCommand('insertHTML', false, `<code>${sel.toString()}</code>`);
-  } else {
-    document.execCommand('insertHTML', false, '<code>code here</code>');
-  }
+  const txt = sel && sel.toString() ? sel.toString() : 'code here';
+  document.execCommand('insertHTML', false, `<code>${txt}</code>`);
 }
 function insertLink() {
   const url = prompt('Enter URL:');
   if (url) execCmd('createLink', url);
 }
-// Placeholder
-document.getElementById('lesson-content-editor').addEventListener('focus', function() {
-  if (this.innerHTML === '') this.style.setProperty('--ph','none');
-});
 
-/* ── Sortable Drag-Drop ────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════════════
+   DRAG-DROP  (Sortable.js)
+   ════════════════════════════════════════════════════════════════════════ */
 function initSectionSortable() {
-  Sortable.create(document.getElementById('sections-container'), {
+  const container = document.getElementById('sections-container');
+  if (!container || container._sortable) return;
+  container._sortable = Sortable.create(container, {
     animation: 150,
     handle: '.section-drag-handle',
     ghostClass: 'sortable-ghost',
     onEnd: async () => {
       const ids = [...document.querySelectorAll('[data-section-id]')]
         .map(el => parseInt(el.dataset.sectionId));
-      await api(`/courses/instructor/curriculum/${COURSE_ID}/section/reorder/`, { order: ids });
-    }
+      const res = await api(
+        `/courses/instructor/curriculum/${COURSE_ID}/section/reorder/`,
+        { order: ids }
+      );
+      if (!res.ok) toast('Reorder save failed.', 'warning');
+    },
   });
 }
 
@@ -852,20 +1158,26 @@ function initLessonSortable(sectionId) {
     onEnd: async () => {
       const ids = [...el.querySelectorAll('[data-lesson-id]')]
         .map(li => parseInt(li.dataset.lessonId));
-      await api(
+      const res = await api(
         `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/reorder/`,
         { order: ids }
       );
-    }
+      if (!res.ok) toast('Reorder save failed.', 'warning');
+    },
   });
 }
 
-/* ── Init ──────────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   initSectionSortable();
   document.querySelectorAll('[id^="lessons-"]').forEach(ul => {
     initLessonSortable(ul.dataset.sectionId);
   });
+
+  // Pre-fetch videos in background so dropdown is instant when opened
+  fetchLegacyVideos();
 });
 </script>
 </body>

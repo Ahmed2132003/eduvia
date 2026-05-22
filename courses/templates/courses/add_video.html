@@ -1,109 +1,86 @@
 <!DOCTYPE html>
-{% load static i18n course_tags %} 
+{% load static i18n course_tags %}
 
 <html lang="en" dir="ltr" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
     <title data-translate="add-video-title">Add Video - Eduvia</title>
-    <meta name="description" content="Add a new video to your course on Eduvia's Instructor Dashboard. Enhance your course with engaging video content." data-translate="add-video-meta-desc-en">
-    <meta name="keywords" content="Eduvia, add video, instructor dashboard, online teaching, video management" data-translate="add-video-meta-keywords-en">
-    <meta name="description" lang="ar" content="أضف فيديو جديد إلى دورتك على لوحة تحكم المدربين في Eduvia. عزز دورتك بمحتوى فيديو جذاب." data-translate="add-video-meta-desc-ar">
-    <meta name="keywords" lang="ar" content="Eduvia، إضافة فيديو، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الفيديو" data-translate="add-video-meta-keywords-ar">
+    <meta name="description" content="Add a new video to your course on Eduvia's Instructor Dashboard." data-translate="add-video-meta-desc-en">
     <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
-    <meta http-equiv="content-language" content="ar, en">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
-
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Add Video - Eduvia" data-translate="add-video-og-title">
-    <meta property="og:description" content="Create and add new video content to your course on Eduvia's Instructor Dashboard." data-translate="add-video-og-desc">
+    <meta property="og:title" content="Add Video - Eduvia">
     <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
-
-    <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Add Video - Eduvia" data-translate="add-video-twitter-title">
-    <meta name="twitter:description" content="Create and add new video content to your course on Eduvia's Instructor Dashboard." data-translate="add-video-twitter-desc">
     <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
 
-    <!-- 🖼️ Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
     <link rel="stylesheet" href="{% static 'courses/add_video.css' %}">
 
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/add_video/#webpage",
-                "url": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/add_video/",
-                "name": "Add Video - Eduvia",
-                "description": "Add a new video to your course on Eduvia's Instructor Dashboard. Enhance your course with engaging video content.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/add_video/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/add_video/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Courses",
-                        "item": "https://eduvia-ai.fly.dev/courses/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "{{ course.title }}",
-                        "item": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 4,
-                        "name": "Add Video",
-                        "item": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/add_video/"
-                    }
-                ]
-            }
-        ]
+    <style>
+    /* ── Section Selector Card ─────────────────────────────────────────── */
+    .section-selector-card {
+        background: linear-gradient(135deg, #f0f9fb, #e8f8f5);
+        border: 1.5px solid #b2e4f0;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
     }
-    </script>
+    .section-selector-card h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #00a8cc;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .section-selector-card p {
+        font-size: 13px;
+        color: #718096;
+        margin-bottom: 14px;
+    }
+    .section-selector-card select {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid #d1dde8;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: 'Cairo', sans-serif;
+        outline: none;
+        background: #fff;
+        cursor: pointer;
+        transition: border-color .2s;
+    }
+    .section-selector-card select:focus { border-color: #00a8cc; }
+    .section-selector-card .hint {
+        font-size: 12px;
+        color: #a0aec0;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .no-sections-msg {
+        font-size: 13px;
+        color: #e67e22;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 14px;
+        background: #fef9f0;
+        border: 1px solid #f5c67a;
+        border-radius: 8px;
+    }
+    .no-sections-msg a { color: #00a8cc; text-decoration: none; font-weight: 600; }
+    .no-sections-msg a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -154,9 +131,7 @@
     {% if messages %}
         <div class="messages">
             {% for message in messages %}
-                <div class="message {{ message.tags }}">
-                    {{ message }}
-                </div>
+                <div class="message {{ message.tags }}">{{ message }}</div>
             {% endfor %}
         </div>
     {% endif %}
@@ -166,128 +141,118 @@
             <h1 data-translate="form-title">Add Video to {{ course.title }}</h1>
             <form method="post" enctype="multipart/form-data" id="add-video-form">
                 {% csrf_token %}
+
+                <!-- ══════════════════════════════════════════════════════
+                     NEW: Section Selector (optional)
+                     ══════════════════════════════════════════════════════ -->
+                <div class="section-selector-card">
+                    <h3><i class="fas fa-layer-group"></i> Add to Curriculum Section <span style="font-weight:400;font-size:13px;color:#718096;">(optional)</span></h3>
+                    <p>
+                        If you select a section, a Lesson will be automatically created inside it
+                        with the same title, URL and duration. Leave blank to add the video to the
+                        legacy video list only.
+                    </p>
+
+                    {% if sections %}
+                        <select name="section_id" id="section_id">
+                            <option value="">— Don't add to any section —</option>
+                            {% for section in sections %}
+                                <option value="{{ section.id }}">{{ section.title }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="hint">
+                            <i class="fas fa-info-circle"></i>
+                            You can also add lessons directly from the
+                            <a href="{% url 'courses:curriculum_builder' course_id=course.id course_slug=course.title|slugify %}">Curriculum Builder</a>.
+                        </p>
+                    {% else %}
+                        <div class="no-sections-msg">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            No sections yet. Create sections first in the
+                            <a href="{% url 'courses:curriculum_builder' course_id=course.id course_slug=course.title|slugify %}">Curriculum Builder</a>
+                            to link videos to them.
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- ══════════════════════════════════════════════════════ -->
+
                 <div class="form-group">
                     <label for="id_title"><i class="fas fa-heading"></i> <span data-translate="form-label-title">Video Title</span></label>
                     {{ form.title }}
                     {% if form.title.errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.title.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.title.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                 </div>
+
                 <div class="form-group">
                     <label for="id_description"><i class="fas fa-align-left"></i> <span data-translate="form-label-description">Description</span></label>
                     {{ form.description }}
                     {% if form.description.errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.description.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.description.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                 </div>
+
                 <div class="form-group">
                     <label for="id_video_url"><i class="fas fa-link"></i> <span data-translate="form-label-video-url">Video URL (Optional)</span></label>
                     {{ form.video_url }}
                     {% if form.video_url.errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.video_url.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.video_url.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                 </div>
+
                 <div class="form-group">
                     <label for="id_video_file"><i class="fas fa-upload"></i> <span data-translate="form-label-video-file">Upload Video (Optional)</span></label>
                     <label for="id_video_file" class="custom-file-upload">
                         <i class="fas fa-upload"></i> Choose File
                     </label>
-                    {{ form.video_file }}  <!-- استخدم {{ form.video_file }} بدل الـ input اليدوي -->
+                    {{ form.video_file }}
                     <video class="video-preview" controls></video>
                     {% if form.video_file.errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.video_file.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.video_file.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                     {% if form.non_field_errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.non_field_errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                 </div>
+
                 <div class="form-group">
                     <label for="id_order"><i class="fas fa-sort-numeric-up"></i> <span data-translate="form-label-order">Order</span></label>
                     {{ form.order }}
                     {% if form.order.errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.order.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.order.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                 </div>
+
                 <div class="form-group">
                     <label for="id_duration"><i class="fas fa-clock"></i> <span data-translate="form-label-duration">Duration (minutes)</span></label>
                     {{ form.duration }}
                     {% if form.duration.errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.duration.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.duration.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                 </div>
+
                 <div class="form-group checkbox-group">
                     <label>
-                        {{ form.unlocked }}  <!-- استخدم {{ form.unlocked }} بدل الـ input اليدوي -->
+                        {{ form.unlocked }}
                         <span data-translate="form-label-unlocked">Unlocked</span>
                     </label>
                     {% if form.unlocked.errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.unlocked.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.unlocked.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                 </div>
+
                 <div class="form-group">
                     <label for="id_questions_json"><i class="fas fa-question-circle"></i> <span data-translate="form-label-questions">Questions for Task (JSON, Optional)</span></label>
                     {{ form.questions_json }}
                     {% if form.questions_json.errors %}
-                        <div class="form-errors">
-                            <ul>
-                                {% for error in form.questions_json.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        <div class="form-errors"><ul>{% for error in form.questions_json.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
                     {% endif %}
                 </div>
+
                 <div class="buttons">
                     <button type="submit" data-translate="form-submit">Add Video</button>
-                    <a href="{% url 'courses:course_videos' course_id=course.id course_slug=slugified_course_title|arabic_slug:course.id %}" class="cancel" data-translate="form-cancel">Cancel</a>
+                    <a href="{% url 'courses:course_videos' course_id=course.id course_slug=slugified_course_title|arabic_slug:course.id %}"
+                       class="cancel" data-translate="form-cancel">Cancel</a>
                 </div>
             </form>
         </div>

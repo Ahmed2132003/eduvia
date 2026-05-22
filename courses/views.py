@@ -1138,3 +1138,124 @@ def add_alternative_quiz(request, course_id, course_slug, video_id, video_slug):
     else:
         form = AlternativeQuizForm()
     return render(request, 'courses/add_alternative_quiz.html', {'form': form, 'video': video})
+
+@login_required
+@instructor_required
+def videos_json(request, course_id):
+    """
+    GET /courses/instructor/curriculum/<course_id>/videos/json/
+    يرجع JSON بجميع الفيديوهات الخاصة بالكورس ده للـ Instructor.
+    """
+    course = get_object_or_404(Course, id=course_id)
+    if not is_course_owner(request.user, course):
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+ 
+    videos_qs = course.videos.order_by('order').values(
+        'id', 'title', 'video_url', 'duration', 'order'
+    )
+    return JsonResponse({'videos': list(videos_qs)})
+ 
+ 
+# ─────────────────────────────────────────────────────────────────────────────
+# [2]  استبدل دالة add_video الموجودة بالنسخة الجديدة دي
+#      (الإضافة الوحيدة: حقل section_id اختياري في POST يُنشئ Lesson)
+# ─────────────────────────────────────────────────────────────────────────────
+ 
+# ↓↓  ضع هذا الكود بدلاً من دالة add_video الموجودة  ↓↓
+ 
+@login_required
+@instructor_required
+def add_video(request, course_id, course_slug):
+    """
+    Instructor: add a legacy Video to a course.
+    New optional field: section_id  →  if provided, also creates a Lesson
+    inside that Section with the same title / URL / duration.
+    """
+    # Import here to avoid circular import at module level
+    from .models import Section, Lesson
+ 
+    course = get_object_or_404(Course, id=course_id)
+    if not is_course_owner(request.user, course):
+        messages.error(request, "غير مصرح لك بإضافة فيديو لهذا الكورس.")
+        return redirect('courses:instructor_dashboard')
+ 
+    slugified_title = slugify(clean_text(course.title), allow_unicode=True) or 'default-title'
+ 
+    if slugified_title != course_slug:
+        return HttpResponsePermanentRedirect(
+            reverse('courses:add_video', kwargs={
+                'course_id': course_id,
+                'course_slug': slugified_title,
+            })
+        )
+ 
+    # Sections لعرضها في الـ dropdown
+    sections = Section.objects.filter(course=course).order_by('order')
+ 
+    if request.method == 'POST':
+        form = VideoForm(request.POST, request.FILES)
+        if form.is_valid():
+            video = form.save(commit=False)
+            video.course = course
+            video.save()
+ 
+            # ── Task من الـ JSON لو موجود ─────────────────────────────────
+            questions = form.cleaned_data.get('questions_json')
+            if questions:
+                Task.objects.create(
+                    video=video,
+                    title=f"Task for {video.title}",
+                    questions=questions,
+                    order=video.order,
+                )
+ 
+            # ── إنشاء Lesson في Section لو الـ Instructor اختار Section ──
+            section_id = request.POST.get('section_id', '').strip()
+            if section_id:
+                try:
+                    section = Section.objects.get(id=int(section_id), course=course)
+                    last_order = section.lessons.count()
+                    Lesson.objects.create(
+                        section=section,
+                        title=video.title,
+                        lesson_type='video',
+                        video_url=video.video_url or '',
+                        video_duration=float(video.duration) if video.duration else 0,
+                        is_preview=getattr(video, 'unlocked', False),
+                        description=video.description or '',
+                        order=last_order,
+                    )
+                    messages.success(
+                        request,
+                        f'تم إنشاء Lesson تلقائياً في القسم "{section.title}".'
+                    )
+                except (Section.DoesNotExist, ValueError):
+                    messages.warning(request, 'لم يتم العثور على القسم المحدد — تم حفظ الفيديو فقط.')
+ 
+            messages.success(request, 'تم إضافة الفيديو بنجاح!')
+            video_slug = slugify(clean_text(video.title), allow_unicode=True) or 'default-video'
+            return redirect(
+                'courses:watch_video',
+                course_id=course.id,
+                course_slug=slugified_title,
+                video_id=video.id,
+                video_slug=video_slug,
+            )
+        else:
+            messages.error(request, 'من فضلك، صحح الأخطاء أدناه.')
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{form.fields[field].label}: {error}")
+    else:
+        form = VideoForm()
+ 
+    return render(request, 'courses/add_video.html', {
+        'form': form,
+        'course': course,
+        'sections': sections,          # ← جديد
+    })
+ 
+
+
+
+

@@ -232,36 +232,63 @@ def section_reorder(request, course_id):
 @instructor_required
 @require_POST
 def lesson_create(request, course_id, section_id):
+    """
+    POST (AJAX): create a new Lesson inside a Section.
+ 
+    Optional field: existing_video_id
+      - If provided, pre-fills title / video_url / video_duration
+        from the matching legacy Video model.
+      - The caller may still override title, is_preview, description.
+    """
+    from .models import Video  # local import to avoid circulars
+ 
     course = get_object_or_404(Course, id=course_id)
     if not is_course_owner(request.user, course):
         return _json_error('Unauthorized', 403)
-
+ 
     section = get_object_or_404(Section, id=section_id, course=course)
-
+ 
     try:
         data = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
         data = request.POST.dict()
-
-    title = (data.get('title') or '').strip()
+ 
+    # ── Optional: pull data from an existing Video ────────────────────────
+    existing_video_id = data.get('existing_video_id')
+    legacy_video = None
+    if existing_video_id:
+        try:
+            legacy_video = Video.objects.get(id=int(existing_video_id), course=course)
+        except (Video.DoesNotExist, ValueError, TypeError):
+            return _json_error('الفيديو المحدد غير موجود في هذا الكورس.')
+ 
+    # ── Field resolution (legacy video takes precedence for url/duration) ─
+    title = (data.get('title') or (legacy_video.title if legacy_video else '')).strip()
     lesson_type = data.get('lesson_type', 'video')
-    video_url = (data.get('video_url') or '').strip()
-    video_duration = 0
-    try:
-        video_duration = float(data.get('video_duration', 0) or 0)
-    except (ValueError, TypeError):
+ 
+    if legacy_video:
+        video_url = legacy_video.video_url or ''
+        video_duration = float(legacy_video.duration) if legacy_video.duration else 0
+    else:
+        video_url = (data.get('video_url') or '').strip()
         video_duration = 0
-
+        try:
+            video_duration = float(data.get('video_duration', 0) or 0)
+        except (ValueError, TypeError):
+            video_duration = 0
+ 
     is_preview = bool(data.get('is_preview', False))
-    description = (data.get('description') or '').strip()
+    description = (data.get('description') or (legacy_video.description if legacy_video else '')).strip()
     content = (data.get('content') or '').strip()
-
+ 
+    # ── Validation ────────────────────────────────────────────────────────
     if not title:
         return _json_error('Lesson title is required.')
-
     if lesson_type == 'video' and not video_url:
         return _json_error('Video URL is required for video lessons.')
-
+    if lesson_type != 'video' and not content:
+        return _json_error('Content is required for text/article lessons.')
+ 
     last_order = section.lessons.count()
     lesson = Lesson.objects.create(
         section=section,
