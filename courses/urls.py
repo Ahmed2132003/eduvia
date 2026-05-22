@@ -101,4 +101,39 @@ urlpatterns = [
         views_curriculum.lesson_progress_update,
         name='lesson_progress_update',
     ),
+    path(
+        'lesson/<int:lesson_id>/comment/',
+        views_curriculum.lesson_comment_add,
+        name='lesson_comment_add',
+    ),
+    path(
+        'lesson/<int:lesson_id>/comment/<int:comment_id>/delete/',
+        views_curriculum.lesson_comment_delete,
+        name='lesson_comment_delete',
+    ),
+ 
+    # ── Lesson Ratings ────────────────────────────────────────────────────────
+    path(
+        'lesson/<int:lesson_id>/rate/',
+        views_curriculum.lesson_rate,
+        name='lesson_rate',
+    ),
+    path(
+        'lesson/<int:lesson_id>/rating-status/',
+        views_curriculum.lesson_rating_status,
+        name='lesson_rating_status',
+    ),
+ 
+    # ── Lesson Attachments ────────────────────────────────────────────────────
+    path(
+        'lesson/<int:lesson_id>/attachment/upload/',
+        views_curriculum.lesson_attachment_upload,
+        name='lesson_attachment_upload',
+    ),
+    path(
+        'lesson/<int:lesson_id>/attachment/<int:attachment_id>/delete/',
+        views_curriculum.lesson_attachment_delete,
+        name='lesson_attachment_delete',
+    ),
+
 ]

@@ -439,3 +439,88 @@ class LessonProgress(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.get_or_create(user=instance)
+
+class LessonComment(models.Model):
+    """Comments on a Lesson (new curriculum system)."""
+    lesson = models.ForeignKey(
+        'Lesson',
+        on_delete=models.CASCADE,
+        related_name='comments',
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='lesson_comments',
+    )
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+ 
+    class Meta:
+        ordering = ['-created_at']
+ 
+    def __str__(self):
+        return f"{self.user.username} on {self.lesson.title}"
+class LessonRating(models.Model):
+    """
+    Per-student rating on a Lesson (1-5 stars).
+    One rating per (user, lesson) — enforced at DB level.
+    The course.average_rating is recalculated on every save via signal.
+    """
+    lesson = models.ForeignKey(
+        'Lesson',
+        on_delete=models.CASCADE,
+        related_name='ratings',
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='lesson_ratings',
+    )
+    rating = models.PositiveSmallIntegerField()   # 1 – 5
+ 
+    class Meta:
+        unique_together = ('lesson', 'user')
+ 
+    def __str__(self):
+        return f"{self.user.username} → {self.lesson.title}: {self.rating}★"
+ 
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if not (1 <= self.rating <= 5):
+            raise ValidationError("Rating must be between 1 and 5.")
+ 
+class LessonAttachment(models.Model):
+    """
+    Files attached to a Lesson.
+    Instructor can pre-upload resources; students can upload their own work.
+    """
+    lesson = models.ForeignKey(
+        'Lesson',
+        on_delete=models.CASCADE,
+        related_name='attachments',
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='lesson_attachments',
+    )
+    file_url = models.URLField(max_length=500, blank=True)
+    file = models.FileField(upload_to='lesson_attachments/', blank=True, null=True)
+    description = models.CharField(max_length=300, blank=True)
+    is_instructor_upload = models.BooleanField(default=False)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+ 
+    class Meta:
+        ordering = ['-uploaded_at']
+ 
+    def __str__(self):
+        name = self.file.name if self.file else self.file_url
+        return f"{name} — {self.lesson.title}"
+ 
+    def get_display_name(self):
+        if self.file and self.file.name:
+            return self.file.name.split('/')[-1]
+        if self.file_url:
+            return self.file_url.split('/')[-1] or self.file_url
+        return "Attachment"
+ 

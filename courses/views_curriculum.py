@@ -510,7 +510,7 @@ def lesson_view(request, course_id, course_slug, lesson_id):
     """Renders a single lesson — video player OR rich-text reader."""
     course = get_object_or_404(Course, id=course_id)
     slugified = slugify(clean_text(course.title), allow_unicode=True) or 'default'
-
+ 
     if slugified != course_slug:
         return HttpResponsePermanentRedirect(
             reverse('courses:lesson_view', kwargs={
@@ -519,27 +519,30 @@ def lesson_view(request, course_id, course_slug, lesson_id):
                 'lesson_id': lesson_id,
             })
         )
-
+ 
     lesson = get_object_or_404(Lesson, id=lesson_id, section__course=course)
-
+ 
     is_owner = has_full_course_access(request.user, course)
     enrolled = is_owner or _is_enrolled(request.user, course)
-
+ 
     if not enrolled and not lesson.is_preview:
         messages.error(request, 'يجب شراء هذه الدورة لمشاهدة هذا الدرس.')
         return redirect('courses:courses')
-
+ 
+    # ── Lesson Progress ───────────────────────────────────────────────────────
     lesson_progress, _ = LessonProgress.objects.get_or_create(
         user=request.user,
         lesson=lesson,
         defaults={'completed': False, 'progress_percentage': 0.0},
     )
-
+ 
+    # Text / Article auto-complete
     if lesson.lesson_type in ('text', 'article') and not lesson_progress.completed:
         lesson_progress.completed = True
         lesson_progress.progress_percentage = 100.0
         lesson_progress.save()
-
+ 
+    # ── Sidebar data ──────────────────────────────────────────────────────────
     sections = course.sections.prefetch_related('lessons').order_by('order')
     completed_ids = set(
         LessonProgress.objects.filter(
@@ -548,31 +551,43 @@ def lesson_view(request, course_id, course_slug, lesson_id):
             completed=True,
         ).values_list('lesson_id', flat=True)
     )
-
+ 
     sidebar_sections = []
     for section in sections:
-        lessons = list(section.lessons.order_by('order'))
-        for l in lessons:
+        lessons_qs = list(section.lessons.order_by('order'))
+        for l in lessons_qs:
             l.is_completed = l.id in completed_ids
             l.is_active = l.id == lesson.id
-        sidebar_sections.append({'section': section, 'lessons': lessons})
-
+        sidebar_sections.append({'section': section, 'lessons': lessons_qs})
+ 
+    # ── Prev / Next ────────────────────────────────────────────────────────────
     all_lessons = [l for s in sections for l in s.lessons.order_by('order')]
     lesson_ids  = [l.id for l in all_lessons]
     current_idx = lesson_ids.index(lesson.id) if lesson.id in lesson_ids else -1
     prev_lesson = all_lessons[current_idx - 1] if current_idx > 0 else None
     next_lesson = all_lessons[current_idx + 1] if current_idx < len(all_lessons) - 1 else None
-
+ 
+    # ── Comments (new LessonComment model) ────────────────────────────────────
+    from .models import LessonComment, LessonAttachment
+    comments = LessonComment.objects.filter(lesson=lesson).select_related('user')[:50]
+ 
+    # ── Attachments ────────────────────────────────────────────────────────────
+    attachments = LessonAttachment.objects.filter(lesson=lesson).select_related('user')
+ 
     context = {
-        'course': course,
-        'lesson': lesson,
+        'course':          course,
+        'lesson':          lesson,
         'lesson_progress': lesson_progress,
         'sidebar_sections': sidebar_sections,
-        'prev_lesson': prev_lesson,
-        'next_lesson': next_lesson,
-        'is_owner': is_owner,
-        'is_enrolled': enrolled,
-        'course_slug': slugified,
+        'completed_ids':   completed_ids,        # ← set of lesson IDs completed
+        'prev_lesson':     prev_lesson,
+        'next_lesson':     next_lesson,
+        'is_owner':        is_owner,
+        'is_enrolled':     enrolled,
+        'course_slug':     slugified,
+        # New features
+        'comments':        comments,
+        'attachments':     attachments,
     }
     return render(request, 'courses/lesson_view.html', context)
 
@@ -583,47 +598,325 @@ def lesson_view(request, course_id, course_slug, lesson_id):
 
 @login_required
 def lesson_progress_update(request, lesson_id):
-    """AJAX: update lesson progress (current_time, progress_pct, completed)."""
+    """
+    AJAX: update lesson video progress.
+    
+    Request body: { "current_time": float (seconds) }
+    
+    Returns: {
+        ok: bool,
+        progress: float (0-100),
+        completed: bool,
+        threshold_reached: bool,   ← true when ≥85% watched
+    }
+    
+    Anti-cheat rules (enforced server-side):
+    - Progress percentage cannot decrease if already higher (no rewind exploit).
+    - Completion only triggered at ≥90% — frontend shows button at 85%.
+    - current_time > duration is capped at duration.
+    """
     if request.method != 'POST':
         return _json_error('Method not allowed.', 405)
-
+ 
     lesson = get_object_or_404(Lesson, id=lesson_id)
     course = lesson.section.course
-
+ 
     is_owner = has_full_course_access(request.user, course)
     enrolled = is_owner or _is_enrolled(request.user, course)
     if not enrolled:
         return _json_error('Not enrolled', 403)
-
+ 
     data = _parse_body(request)
-
     try:
         current_time = float(data.get('current_time') or 0)
     except (ValueError, TypeError):
         current_time = 0
-
+ 
+    # Duration in seconds
     duration_secs = (lesson.video_duration or 0) * 60
-    progress_pct  = (current_time / duration_secs * 100) if duration_secs else 0
-    progress_pct  = min(progress_pct, 100)
-    completed     = progress_pct >= 90
-
-    lesson_progress, _ = LessonProgress.objects.get_or_create(
+    if duration_secs > 0:
+        # Cap time at duration
+        current_time = min(current_time, duration_secs)
+        raw_pct = (current_time / duration_secs) * 100
+    else:
+        raw_pct = 0
+ 
+    lesson_progress, created = LessonProgress.objects.get_or_create(
         user=request.user,
         lesson=lesson,
     )
-    lesson_progress.current_time       = current_time
-    lesson_progress.progress_percentage = progress_pct
-
-    if completed and not lesson_progress.completed:
+ 
+    # Anti-cheat: never allow progress to be sent backwards
+    # (skip attack: attacker refreshes page mid-video repeatedly at 0%)
+    if raw_pct < lesson_progress.progress_percentage and not created:
+        # Ignore the update — return existing state
+        return _json_ok({
+            'progress': round(lesson_progress.progress_percentage, 1),
+            'completed': lesson_progress.completed,
+            'threshold_reached': lesson_progress.progress_percentage >= 85,
+        })
+ 
+    # Update progress
+    lesson_progress.current_time = current_time
+    lesson_progress.progress_percentage = raw_pct
+    threshold_reached = raw_pct >= 85
+ 
+    # Auto-complete at 90%
+    newly_completed = False
+    if raw_pct >= 90 and not lesson_progress.completed:
         lesson_progress.completed = True
+        newly_completed = True
+        # Award coins on first completion
         try:
             request.user.courses_profile.add_coins(30)
         except Exception:
             pass
-
+ 
     lesson_progress.save()
-
+ 
     return _json_ok({
-        'progress': round(progress_pct, 1),
-        'completed': lesson_progress.completed,
+        'progress':          round(raw_pct, 1),
+        'completed':         lesson_progress.completed,
+        'threshold_reached': threshold_reached,
+        'newly_completed':   newly_completed,
     })
+
+
+@login_required
+def lesson_comment_add(request, lesson_id):
+    """
+    POST /courses/lesson/<lesson_id>/comment/
+    Body: JSON { "content": "..." }  OR  form POST
+    Returns: JSON { ok, comment: { id, user, content, created_at } }
+    """
+    if request.method != 'POST':
+        return _json_error('Method not allowed.', 405)
+ 
+    from .models import LessonComment, Lesson as _Lesson
+    lesson = get_object_or_404(_Lesson, id=lesson_id)
+ 
+    # enrollment check
+    if not _is_enrolled(request.user, lesson.section.course) and not has_full_course_access(request.user, lesson.section.course):
+        return _json_error('Not enrolled.', 403)
+ 
+    data = _parse_body(request)
+    content = str(data.get('content') or '').strip()
+    if not content:
+        return _json_error('Comment content is required.')
+    if len(content) > 2000:
+        return _json_error('Comment too long (max 2000 chars).')
+ 
+    comment = LessonComment.objects.create(
+        lesson=lesson,
+        user=request.user,
+        content=content,
+    )
+    return _json_ok({
+        'comment': {
+            'id': comment.id,
+            'user': request.user.get_full_name() or request.user.username,
+            'username': request.user.username,
+            'content': comment.content,
+            'created_at': comment.created_at.strftime('%b %d, %Y'),
+        }
+    })
+ 
+ 
+@login_required
+def lesson_comment_delete(request, lesson_id, comment_id):
+    """
+    POST /courses/lesson/<lesson_id>/comment/<comment_id>/delete/
+    Only the comment author or a superuser can delete.
+    """
+    if request.method != 'POST':
+        return _json_error('Method not allowed.', 405)
+ 
+    from .models import LessonComment
+    comment = get_object_or_404(LessonComment, id=comment_id, lesson_id=lesson_id)
+ 
+    if comment.user != request.user and not request.user.is_superuser:
+        return _json_error('Permission denied.', 403)
+ 
+    comment.delete()
+    return _json_ok({'deleted': comment_id})
+ 
+ 
+# ─────────────────────────────────────────────────────────────────────────────
+# LESSON RATINGS  (AJAX)
+# ─────────────────────────────────────────────────────────────────────────────
+ 
+@login_required
+def lesson_rate(request, lesson_id):
+    """
+    POST /courses/lesson/<lesson_id>/rate/
+    Body: JSON { "rating": 4 }
+    Returns: JSON {
+        ok, your_rating, avg_rating, total_ratings,
+        already_rated (bool), updated (bool)
+    }
+ 
+    Rules:
+    - Must be enrolled (or owner).
+    - rating must be integer 1-5.
+    - A user can update their rating (not frozen).
+    - avg_rating is the true DB average across ALL lessons in the course.
+    """
+    if request.method != 'POST':
+        return _json_error('Method not allowed.', 405)
+ 
+    from .models import LessonRating, Lesson as _Lesson
+    from django.db.models import Avg, Count
+ 
+    lesson = get_object_or_404(_Lesson, id=lesson_id)
+    course = lesson.section.course
+ 
+    is_owner = has_full_course_access(request.user, course)
+    if not is_owner and not _is_enrolled(request.user, course):
+        return _json_error('Not enrolled.', 403)
+ 
+    data = _parse_body(request)
+    try:
+        rating_val = int(data.get('rating') or 0)
+    except (TypeError, ValueError):
+        return _json_error('Invalid rating value.')
+ 
+    if not (1 <= rating_val <= 5):
+        return _json_error('Rating must be 1–5.')
+ 
+    existing = LessonRating.objects.filter(lesson=lesson, user=request.user).first()
+    updated = bool(existing)
+ 
+    if existing:
+        existing.rating = rating_val
+        existing.save()
+    else:
+        LessonRating.objects.create(
+            lesson=lesson,
+            user=request.user,
+            rating=rating_val,
+        )
+ 
+    # Aggregate: average across ALL lessons in this course
+    agg = LessonRating.objects.filter(
+        lesson__section__course=course
+    ).aggregate(avg=Avg('rating'), total=Count('id'))
+ 
+    avg = round(agg['avg'] or 0, 1)
+    total = agg['total'] or 0
+ 
+    return _json_ok({
+        'your_rating': rating_val,
+        'avg_rating': avg,
+        'total_ratings': total,
+        'already_rated': True,
+        'updated': updated,
+    })
+ 
+ 
+@login_required
+def lesson_rating_status(request, lesson_id):
+    """
+    GET /courses/lesson/<lesson_id>/rating-status/
+    Returns the current user's rating + course average.
+    """
+    from .models import LessonRating, Lesson as _Lesson
+    from django.db.models import Avg, Count
+ 
+    lesson = get_object_or_404(_Lesson, id=lesson_id)
+    course = lesson.section.course
+ 
+    existing = LessonRating.objects.filter(lesson=lesson, user=request.user).first()
+ 
+    agg = LessonRating.objects.filter(
+        lesson__section__course=course
+    ).aggregate(avg=Avg('rating'), total=Count('id'))
+ 
+    return _json_ok({
+        'your_rating': existing.rating if existing else None,
+        'avg_rating': round(agg['avg'] or 0, 1),
+        'total_ratings': agg['total'] or 0,
+    })
+ 
+ 
+# ─────────────────────────────────────────────────────────────────────────────
+# LESSON ATTACHMENTS  (AJAX + Form POST)
+# ─────────────────────────────────────────────────────────────────────────────
+ 
+@login_required
+def lesson_attachment_upload(request, lesson_id):
+    """
+    POST /courses/lesson/<lesson_id>/attachment/upload/
+    multipart/form-data: file (optional), file_url (optional), description
+    Returns: JSON { ok, attachment: { id, name, url, description, ... } }
+    """
+    if request.method != 'POST':
+        return _json_error('Method not allowed.', 405)
+ 
+    from .models import LessonAttachment, Lesson as _Lesson
+    lesson = get_object_or_404(_Lesson, id=lesson_id)
+    course = lesson.section.course
+ 
+    is_owner = has_full_course_access(request.user, course)
+    if not is_owner and not _is_enrolled(request.user, course):
+        return _json_error('Not enrolled.', 403)
+ 
+    uploaded_file = request.FILES.get('file')
+    file_url = request.POST.get('file_url', '').strip()
+    description = request.POST.get('description', '').strip()[:300]
+ 
+    if not uploaded_file and not file_url:
+        return _json_error('Please provide a file or a URL.')
+ 
+    # Limit file size: 20 MB
+    if uploaded_file and uploaded_file.size > 20 * 1024 * 1024:
+        return _json_error('File size must not exceed 20 MB.')
+ 
+    attachment = LessonAttachment(
+        lesson=lesson,
+        user=request.user,
+        description=description,
+        is_instructor_upload=is_owner,
+        file_url=file_url or '',
+    )
+    if uploaded_file:
+        attachment.file = uploaded_file
+    attachment.save()
+ 
+    file_display_url = attachment.file.url if attachment.file else attachment.file_url
+ 
+    return _json_ok({
+        'attachment': {
+            'id': attachment.id,
+            'name': attachment.get_display_name(),
+            'url': file_display_url,
+            'description': attachment.description,
+            'is_instructor_upload': attachment.is_instructor_upload,
+            'uploaded_at': attachment.uploaded_at.strftime('%b %d, %Y'),
+            'uploader': request.user.get_full_name() or request.user.username,
+        }
+    })
+ 
+ 
+@login_required
+def lesson_attachment_delete(request, lesson_id, attachment_id):
+    """
+    POST /courses/lesson/<lesson_id>/attachment/<attachment_id>/delete/
+    Only uploader, course owner, or superuser can delete.
+    """
+    if request.method != 'POST':
+        return _json_error('Method not allowed.', 405)
+ 
+    from .models import LessonAttachment
+    attachment = get_object_or_404(LessonAttachment, id=attachment_id, lesson_id=lesson_id)
+    course = attachment.lesson.section.course
+ 
+    can_delete = (
+        attachment.user == request.user
+        or request.user.is_superuser
+        or has_full_course_access(request.user, course)
+    )
+    if not can_delete:
+        return _json_error('Permission denied.', 403)
+ 
+    attachment.delete()
+    return _json_ok({'deleted': attachment_id})

@@ -33,3 +33,21 @@ def create_user_profile(sender, instance, created, **kwargs):
                     instance.save()
         except UserProfile.DoesNotExist:
             pass
+        
+from django.db.models.signals import post_save, post_delete
+ 
+@receiver(post_save, sender=LessonRating)
+@receiver(post_delete, sender=LessonRating)
+def recalculate_course_average_rating(sender, instance, **kwargs):
+    """
+    After any LessonRating is saved or deleted, recompute the parent
+    Course.average_rating from all ratings in that course.
+    Uses a single aggregation query — safe & optimised.
+    """
+    from django.db.models import Avg
+    course = instance.lesson.section.course
+    result = LessonRating.objects.filter(
+        lesson__section__course=course
+    ).aggregate(avg=Avg('rating'))
+    course.average_rating = round(result['avg'] or 0, 2)
+    course.save(update_fields=['average_rating'])
