@@ -44,14 +44,14 @@ def custom_slugify(value):
     if not value or not str(value).strip():
         logger.debug(f"Empty title in custom_slugify: {value}")
         return 'default-title'
-    
+
     # Use Django's slugify with allow_unicode=True
     result = slugify(str(value), allow_unicode=True)
-    
+
     if not result or result == '':
         logger.debug(f"Slugify returned empty for: {value}")
         return 'default-title'
-    
+
     # Clean extra dashes
     result = re.sub(r'-+', '-', result.strip('-'))
     logger.debug(f"custom_slugify: '{value}' -> '{result}'")
@@ -95,17 +95,21 @@ def count_true(value):
     return sum(1 for x in value if x)
 
 
-# === NEW: Safe Arabic Slug for URLs (Main Fix) ===
+# === Arabic Slug for URLs ===
 @register.filter
 def arabic_slug(value, fallback_id=None):
     """
     Generate URL-safe slug for Arabic & English titles.
-    If title is empty or slugify fails → use fallback_id or 'course'
+    If title is empty or slugify fails → use fallback_id or 'course'.
+
+    Usage in templates:
+        {{ course.title|arabic_slug:course.id }}
     """
     if not value or not str(value).strip():
         return str(fallback_id) if fallback_id else 'course'
-    
+
     return generate_unicode_slug(value, fallback_prefix='course', fallback_id=fallback_id)
+
 
 @register.simple_tag
 def course_url(course):
@@ -113,6 +117,7 @@ def course_url(course):
         'course_id': course.id,
         'course_slug': course.slug
     })
+
 
 @register.simple_tag
 def video_url(video):
@@ -122,7 +127,8 @@ def video_url(video):
         'video_id': video.id,
         'video_slug': video.slug
     })
-    
+
+
 @register.simple_tag
 def enroll_url(course):
     """يولّد رابط التسجيل في الكورس مع fallback slug آمن."""
