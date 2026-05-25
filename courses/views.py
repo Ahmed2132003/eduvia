@@ -531,7 +531,22 @@ def course_videos(request, course_id, course_slug):
             'course_slug': slugified_title,
         }))
 
-    videos = course.videos.all()
+    videos = list(course.videos.all())
+
+    video_titles = [video.title for video in videos]
+    lesson_pairs = Lesson.objects.filter(
+        section__course=course,
+        lesson_type='video',
+        title__in=video_titles,
+    ).values_list('title', 'id')
+
+    lesson_map = {}
+    for title, lesson_id in lesson_pairs:
+        lesson_map.setdefault(title, lesson_id)
+
+    for video in videos:
+        video.lesson_id = lesson_map.get(video.title)
+
     return render(request, 'courses/course_videos.html', {
         'course': course,
         'videos': videos,
@@ -1269,6 +1284,5 @@ def add_video(request, course_id, course_slug):
         'sections': sections,          # ← جديد
     })
  
-
 
 
