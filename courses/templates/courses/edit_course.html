@@ -681,7 +681,7 @@ body {
           <span data-i18n="danger_zone">Danger Zone</span>
         </div>
         <p data-i18n="danger_desc">Deleting this course is permanent and cannot be undone. All lessons, progress data, and attachments will be removed.</p>
-        <a href="{% url 'courses:delete_course' course.id %}"
+        <a href="{% url 'courses:delete_course' course_id=course.id course_slug=course.title|arabic_slug:course.id %}"        
            class="btn-danger"
            onclick="return confirm('{% if request.LANGUAGE_CODE == 'ar' %}هل أنت متأكد من حذف هذا الكورس؟{% else %}Are you sure you want to delete this course? This action cannot be undone.{% endif %}')">
           <i class="fas fa-trash-alt"></i>

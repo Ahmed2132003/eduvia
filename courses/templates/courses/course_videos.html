@@ -1,188 +1,690 @@
 <!DOCTYPE html>
 {% load static i18n course_tags %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
     <title data-translate="page-title">Course Videos - Eduvia</title>
-    <meta name="description" content="Manage videos for your course on Eduvia's Instructor Dashboard. Add, edit, and organize your video content." data-translate="meta-desc">
-    <meta name="keywords" content="Eduvia, course videos, instructor dashboard, online teaching, video management" data-translate="meta-keywords">
-    <meta name="description" lang="ar" content="إدارة فيديوهات دورتك على لوحة تحكم المدربين في إدوفيا. أضف، حرر، ونظم محتوى الفيديو الخاص بك." data-translate="meta-desc-ar">
-    <meta name="keywords" lang="ar" content="إدوفيا، فيديوهات الدورة، لوحة تحكم المدربين، التعليم عبر الإنترنت، إدارة الفيديو" data-translate="meta-keywords-ar">
+    <meta name="description" content="Manage videos for your course on Eduvia's Instructor Dashboard.">
     <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
-    <meta http-equiv="content-language" content="ar, en">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
-
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Course Videos - Eduvia" data-translate="og-title">
-    <meta property="og:description" content="Organize and manage your course videos on Eduvia's Instructor Dashboard." data-translate="og-desc">
+    <meta property="og:title" content="Course Videos - Eduvia">
     <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
-
-    <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Course Videos - Eduvia" data-translate="twitter-title">
-    <meta name="twitter:description" content="Organize and manage your course videos on Eduvia's Instructor Dashboard." data-translate="twitter-desc">
     <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
 
-    <!-- 🖼️ Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
-    <link rel="stylesheet" href="{% static 'courses/course_videos.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- 📊 Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/videos/#webpage",
-                "url": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/videos/",
-                "name": "Course Videos - Eduvia",
-                "description": "Manage videos for your course on Eduvia's Instructor Dashboard. Add, edit, and organize your video content.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/videos/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/videos/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Courses",
-                        "item": "https://eduvia-ai.fly.dev/courses/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "{{ course.title }}",
-                        "item": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 4,
-                        "name": "Course Videos",
-                        "item": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/videos/"
-                    }
-                ]
-            }
-        ]
+        "@type": "WebPage",
+        "name": "Course Videos - Eduvia",
+        "description": "Manage videos for your course on Eduvia's Instructor Dashboard.",
+        "url": "https://eduvia-ai.fly.dev/courses/{{ course.id }}/videos/"
     }
     </script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  white-space: nowrap; overflow: hidden;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .sep { opacity: .4; }
+.topbar-breadcrumb .current { color: var(--text-p); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ═══ PAGE LAYOUT ════════════════════════════════════════════════════════ */
+.page-wrap {
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ═══ HERO ════════════════════════════════════════════════════════════════ */
+.hero {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 32px 28px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.12), transparent 70%);
+  pointer-events: none;
+}
+.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.hero-left {}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 99px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  color: var(--violet-400); text-transform: uppercase; margin-bottom: 12px;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800;
+  color: var(--text-h); letter-spacing: -.5px; margin-bottom: 6px;
+}
+.hero p {
+  font-size: 14px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+}
+.hero p i { color: var(--accent); }
+.hero-stats {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+.hero-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 20px; text-align: center;
+  min-width: 90px;
+}
+.hero-stat-val {
+  font-family: var(--font-display);
+  font-size: 24px; font-weight: 800;
+  color: var(--text-h); display: block; line-height: 1;
+}
+.hero-stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* ═══ CONTENT AREA ════════════════════════════════════════════════════════ */
+.content-area {
+  flex: 1; max-width: 1100px; width: 100%;
+  margin: 28px auto; padding: 0 24px 60px;
+}
+
+/* ═══ TOP ACTION BAR ══════════════════════════════════════════════════════ */
+.action-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
+}
+.action-bar-left { display: flex; align-items: center; gap: 10px; }
+.action-bar h2 {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--text-h);
+}
+.video-count-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 99px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  font-size: 12px; font-weight: 700; color: var(--violet-400);
+}
+.btn-add-video {
+  padding: 11px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans);
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+  text-decoration: none; position: relative; overflow: hidden;
+}
+.btn-add-video::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.btn-add-video:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+/* ═══ VIDEO GRID ══════════════════════════════════════════════════════════ */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+/* ═══ VIDEO CARD ══════════════════════════════════════════════════════════ */
+.video-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: var(--trans);
+  animation: cardReveal .4s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow: var(--glow);
+  display: flex; flex-direction: column;
+}
+.video-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(139,92,246,.2);
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Card thumbnail / order banner */
+.video-card-thumb {
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-hover));
+  border-bottom: 1px solid var(--border);
+  padding: 20px 20px 16px;
+  display: flex; align-items: center; gap: 14px; position: relative;
+}
+.video-card-order {
+  width: 40px; height: 40px; border-radius: var(--radius-md); flex-shrink: 0;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 16px; font-weight: 800;
+  color: var(--violet-400);
+}
+.video-card-title {
+  flex: 1; font-size: 15px; font-weight: 700; color: var(--text-h);
+  line-height: 1.3; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+
+/* Card body */
+.video-card-body {
+  padding: 14px 20px;
+  flex: 1;
+}
+.video-card-desc {
+  font-size: 13px; color: var(--text-muted); line-height: 1.6;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  margin-bottom: 12px;
+}
+.video-card-meta {
+  display: flex; flex-wrap: wrap; gap: 10px;
+}
+.video-meta-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--text-muted);
+}
+.video-meta-tag i { color: var(--accent); }
+
+/* Card footer — action buttons */
+.video-card-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.vid-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  text-decoration: none; transition: var(--trans);
+  font-family: inherit; border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-muted);
+}
+.vid-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+.vid-btn.watch  { border-color: rgba(56,189,248,.3); color: var(--sky-400); background: rgba(56,189,248,.06); }
+.vid-btn.watch:hover { background: rgba(56,189,248,.12); border-color: var(--sky-400); }
+.vid-btn.edit   { border-color: rgba(251,191,36,.3); color: var(--gold-400); background: rgba(251,191,36,.06); }
+.vid-btn.edit:hover { background: rgba(251,191,36,.12); border-color: var(--gold-400); }
+.vid-btn.task   { border-color: rgba(52,211,153,.3); color: var(--success); background: rgba(52,211,153,.06); }
+.vid-btn.task:hover { background: rgba(52,211,153,.12); border-color: var(--success); }
+.vid-btn.quiz   { border-color: rgba(139,92,246,.3); color: var(--violet-400); background: rgba(139,92,246,.06); }
+.vid-btn.quiz:hover { background: rgba(139,92,246,.12); border-color: var(--violet-400); }
+
+/* ═══ EMPTY STATE ══════════════════════════════════════════════════════════ */
+.empty-state-card {
+  background: var(--bg-card);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-xl);
+  padding: 60px 40px;
+  text-align: center;
+  animation: cardReveal .5s ease both;
+}
+.empty-state-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; color: var(--violet-400);
+  margin: 0 auto 20px;
+}
+.empty-state-card h3 {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700; color: var(--text-h); margin-bottom: 8px;
+}
+.empty-state-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+
+/* ═══ BACK LINK BAR ══════════════════════════════════════════════════════ */
+.back-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);
+}
+.back-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600;
+  background: var(--bg-card); color: var(--text-muted);
+  border: 1px solid var(--border);
+  text-decoration: none; transition: var(--trans);
+}
+.back-link:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ CURRICULUM BUILDER LINK ════════════════════════════════════════════ */
+.curriculum-cta {
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, rgba(139,92,246,.08), rgba(251,191,36,.05));
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-lg); padding: 16px 20px;
+  margin-bottom: 24px; text-decoration: none;
+  transition: var(--trans);
+}
+.curriculum-cta:hover { background: var(--violet-glow); border-color: var(--violet-400); }
+.curriculum-cta-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--violet-400); flex-shrink: 0;
+}
+.curriculum-cta-info { flex: 1; }
+.curriculum-cta-title { font-size: 14px; font-weight: 700; color: var(--text-h); }
+.curriculum-cta-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.curriculum-cta-arrow { color: var(--accent); font-size: 14px; }
+
+/* ═══ FOOTER ══════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ═══ MOBILE ═════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-breadcrumb { display: none; }
+  .hero { padding: 24px 18px 20px; }
+  .hero h1 { font-size: 22px; }
+  .hero-stats { display: none; }
+  .content-area { padding: 0 14px 40px; }
+  .video-grid { grid-template-columns: 1fr; }
+  .action-bar { flex-direction: column; align-items: flex-start; }
+}
+</style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
+
+    <!-- ── TOPBAR ─────────────────────────────────────────────────────── -->
+    <header class="topbar">
+        <a href="/" class="topbar-logo">Eduvia</a>
+        <div class="topbar-sep"></div>
+        <div class="topbar-breadcrumb">
+            <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-gauge-high"></i> Dashboard</a>
+            <span class="sep">/</span>
+            <span class="current">{{ course.title }} — Videos</span>
+        </div>
+        <div class="topbar-actions">
+            <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+            <button class="ctrl-btn" id="lang-btn" onclick="toggleLang()" title="Toggle language">
                 <i class="fas fa-globe"></i>
-            </div>
-        </nav>
+            </button>
+            {% if user.is_authenticated %}
+                <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-ghost">
+                    <i class="fas fa-gauge-high"></i> Dashboard
+                </a>
+                <a href="/accounts/profile/" class="tb-btn tb-btn-accent">
+                    {% if user.courses_profile %}
+                        <i class="fas fa-coins"></i> {{ user.courses_profile.coins }}
+                    {% else %}
+                        <i class="fas fa-user"></i> Profile
+                    {% endif %}
+                </a>
+            {% else %}
+                <a href="/accounts/register/" class="tb-btn tb-btn-accent">
+                    <i class="fas fa-right-to-bracket"></i> Login
+                </a>
+            {% endif %}
+        </div>
     </header>
 
-    <section class="hero">
-        <h1 data-translate="hero-title">Course Videos</h1>
-        <p data-translate="hero-desc">Manage and organize the videos for your course: {{ course.title }}.</p>
-    </section>
+    <div class="page-wrap">
 
-    <div class="content">
-        <div class="videos-card">
-            <h1 data-translate="card-title">Videos for {{ course.title }}</h1>
-            <a href="{% url 'courses:add_video' course_id=course.id course_slug=course_slug|arabic_slug %}" class="add-btn" data-translate="add-btn">Add New Video</a>
-            {% if videos %}
-                <div class="video-list">
-                    {% for video in videos %}
-                        <div class="video-item">
-                            <h3>{{ video.title }}</h3>
-                            <p>{{ video.description|truncatewords:20 }}</p>
-                            <p data-translate="order-label">Order: {{ video.order }}</p>
-                            <div class="links">
-                                <a href="{% url 'courses:watch_video' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}" data-translate="watch-link">Watch</a>
-                                <a href="{% url 'courses:edit_video' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}" class="edit-link" data-translate="edit-link">Edit</a>
-                                <a href="{% url 'courses:add_task' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}" class="btn add-task-btn">Add Task (Admin Style)</a>
-                                <a href="{% url 'courses:add_alternative_quiz' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}" data-translate="add-alternative-quiz">Add Alternative Quiz</a>
-                            </div>
-                        </div>
-                    {% endfor %}
+        <!-- ── HERO ─────────────────────────────────────────────────────── -->
+        <section class="hero">
+            <div class="hero-inner">
+                <div class="hero-left">
+                    <div class="hero-badge"><i class="fas fa-film"></i> Course Manager</div>
+                    <h1 data-translate="hero-title">Course Videos</h1>
+                    <p><i class="fas fa-book-open"></i> <span data-translate="hero-desc">{{ course.title }}</span></p>
                 </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-val">{{ videos|length }}</span>
+                        <div class="hero-stat-lbl">Videos</div>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-val" style="color:var(--success);">
+                            <i class="fas fa-check" style="font-size:18px;"></i>
+                        </span>
+                        <div class="hero-stat-lbl">Active</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── CONTENT ───────────────────────────────────────────────────── -->
+        <div class="content-area">
+
+            <!-- Curriculum Builder CTA -->
+            <a href="{% url 'courses:curriculum_builder' course_id=course.id course_slug=course_slug|arabic_slug %}" class="curriculum-cta">
+                <div class="curriculum-cta-icon"><i class="fas fa-cubes"></i></div>
+                <div class="curriculum-cta-info">
+                    <div class="curriculum-cta-title">Curriculum Builder</div>
+                    <div class="curriculum-cta-sub">Organize sections, lessons and quizzes with drag-and-drop</div>
+                </div>
+                <i class="fas fa-arrow-right curriculum-cta-arrow"></i>
+            </a>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-bar-left">
+                    <h2 data-translate="card-title">Videos for {{ course.title }}</h2>
+                    <span class="video-count-badge"><i class="fas fa-video"></i> {{ videos|length }}</span>
+                </div>
+                <a href="{% url 'courses:add_video' course_id=course.id course_slug=course_slug|arabic_slug %}" class="btn-add-video" data-translate="add-btn">
+                    <i class="fas fa-circle-plus"></i> Add New Video
+                </a>
+            </div>
+
+            <!-- Video Grid -->
+            {% if videos %}
+            <div class="video-grid" id="video-grid">
+                {% for video in videos %}
+                <div class="video-card" style="animation-delay:{{ forloop.counter0 }}00ms">
+
+                    <!-- Thumb / Header -->
+                    <div class="video-card-thumb">
+                        <div class="video-card-order">{{ video.order }}</div>
+                        <div class="video-card-title">{{ video.title }}</div>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="video-card-body">
+                        {% if video.description %}
+                        <div class="video-card-desc">{{ video.description|truncatewords:20 }}</div>
+                        {% endif %}
+                        <div class="video-card-meta">
+                            <span class="video-meta-tag">
+                                <i class="fas fa-sort-numeric-up"></i>
+                                Order {{ video.order }}
+                            </span>
+                            {% if video.duration %}
+                            <span class="video-meta-tag">
+                                <i class="fas fa-clock"></i>
+                                {{ video.duration }} min
+                            </span>
+                            {% endif %}
+                            {% if video.video_url %}
+                            <span class="video-meta-tag">
+                                <i class="fas fa-link"></i>
+                                Has URL
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <div class="video-card-footer">
+                        <a href="{% url 'courses:watch_video' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}"
+                           class="vid-btn watch" data-translate="watch-link">
+                            <i class="fas fa-play"></i> Watch
+                        </a>
+                        <a href="{% url 'courses:edit_video' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}"
+                           class="vid-btn edit" data-translate="edit-link">
+                            <i class="fas fa-pen"></i> Edit
+                        </a>
+                        <a href="{% url 'courses:add_task' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}"
+                           class="vid-btn task">
+                            <i class="fas fa-list-check"></i> Add Task
+                        </a>
+                        <a href="{% url 'courses:add_alternative_quiz' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}"
+                           class="vid-btn quiz" data-translate="add-alternative-quiz">
+                            <i class="fas fa-question-circle"></i> Quiz
+                        </a>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
             {% else %}
-                <p class="empty" data-translate="empty-text">No videos found. Add your first video!</p>
+            <!-- Empty State -->
+            <div class="empty-state-card">
+                <div class="empty-state-icon"><i class="fas fa-video-slash"></i></div>
+                <h3 data-translate="empty-title">No Videos Yet</h3>
+                <p data-translate="empty-text">Add your first video to get started and engage your students.</p>
+                <a href="{% url 'courses:add_video' course_id=course.id course_slug=course_slug|arabic_slug %}" class="btn-add-video" style="display:inline-flex;">
+                    <i class="fas fa-circle-plus"></i> Add First Video
+                </a>
+            </div>
             {% endif %}
-            <a href="{% url 'courses:instructor_dashboard' %}" class="back-link" data-translate="back-link">Back to Dashboard</a>
-        </div>
-    </div>
 
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+            <!-- Back Link Bar -->
+            <div class="back-bar">
+                <a href="{% url 'courses:instructor_dashboard' %}" class="back-link" data-translate="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <a href="{% url 'courses:add_video' course_id=course.id course_slug=course_slug|arabic_slug %}" class="btn-add-video">
+                    <i class="fas fa-circle-plus"></i> Add New Video
+                </a>
+            </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'courses/course_videos.js' %}"></script>
+        </div><!-- /content-area -->
+
+        <!-- ── FOOTER ────────────────────────────────────────────────────── -->
+        <footer class="site-footer">
+            <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+        </footer>
+
+    </div><!-- /page-wrap -->
+
+<script>
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Lang ──────────────────────────────────────────────────────────────── */
+const I18N = {
+    en: {
+        'page-title': 'Course Videos - Eduvia',
+        'hero-title': 'Course Videos',
+        'hero-desc': '{{ course.title }}',
+        'card-title': 'Videos for {{ course.title }}',
+        'add-btn': 'Add New Video',
+        'watch-link': 'Watch',
+        'edit-link': 'Edit',
+        'add-alternative-quiz': 'Quiz',
+        'empty-title': 'No Videos Yet',
+        'empty-text': 'Add your first video to get started and engage your students.',
+        'back-link': 'Back to Dashboard',
+        'footer-text': '© 2025 Eduvia and creativitycode. All rights reserved.',
+    },
+    ar: {
+        'page-title': 'فيديوهات الكورس - إيدوفيا',
+        'hero-title': 'فيديوهات الكورس',
+        'hero-desc': '{{ course.title }}',
+        'card-title': 'فيديوهات {{ course.title }}',
+        'add-btn': 'إضافة فيديو جديد',
+        'watch-link': 'مشاهدة',
+        'edit-link': 'تعديل',
+        'add-alternative-quiz': 'اختبار',
+        'empty-title': 'لا توجد فيديوهات بعد',
+        'empty-text': 'أضف أول فيديو لك وابدأ في إشراك طلابك.',
+        'back-link': 'العودة للوحة التحكم',
+        'footer-text': '© 2025 إيدوفيا وكريتيفيتي كود. جميع الحقوق محفوظة.',
+    }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+function applyLang(lang) {
+    currentLang = lang;
+    const root = document.getElementById('html-root');
+    root.setAttribute('lang', lang);
+    root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+    });
+    localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    applyLang(localStorage.getItem('lang') || 'en');
+
+    /* Stagger video cards */
+    document.querySelectorAll('.video-card').forEach((card, i) => {
+        card.style.animationDelay = `${i * 60}ms`;
+    });
+});
+</script>
 </body>
 </html>
