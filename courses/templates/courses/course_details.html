@@ -2,518 +2,851 @@
 {% load i18n %}
 {% load course_tags %}
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="course-title">{{ course.title }} - Eduvia</title>
+    <title>{{ course.title }} - Eduvia</title>
     <meta name="description" content="Explore {{ course.title }} on Eduvia.">
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'courses/course_details.css' %}">
 
-    <style>
-    /* ── Curriculum Preview ─────────────────────────────────────────────── */
-    .curriculum-preview {
-        margin-top: 28px;
-        border: 1.5px solid var(--border, #d1dde8);
-        border-radius: 12px;
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 2px 12px rgba(0,0,0,.07);
-    }
-    .curriculum-preview-header {
-        background: linear-gradient(90deg, #f0f9fb, #eaf8f4);
-        padding: 14px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #d1dde8;
-    }
-    .curriculum-preview-header h3 {
-        font-size: 16px;
-        font-weight: 700;
-        margin: 0;
-        color: #2d3748;
-    }
-    .curriculum-preview-header .stats {
-        font-size: 13px;
-        color: #718096;
-        display: flex;
-        gap: 14px;
-    }
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (matches lesson_view.html)
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .curr-section { border-bottom: 1px solid #eef2f5; }
-    .curr-section:last-child { border-bottom: none; }
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-    .curr-section-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 20px;
-        background: #f7fafc;
-        font-size: 14px;
-        font-weight: 700;
-        color: #2d3748;
-        cursor: pointer;
-        border-bottom: 1px solid #eef2f5;
-        user-select: none;
-    }
-    .curr-section-title:hover { background: #edf4f7; }
-    .curr-section-title i.toggle { color: #00a8cc; transition: transform .2s; }
-    .curr-section-title.collapsed i.toggle { transform: rotate(-90deg); }
-    .curr-section-meta { margin-left: auto; font-size: 12px; color: #718096; font-weight: 400; }
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
 
-    .curr-lessons { list-style: none; padding: 0; }
-    .curr-lesson {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 20px 10px 32px;
-        border-bottom: 1px solid #f0f4f8;
-        font-size: 13px;
-        color: #4a5568;
-        transition: background .12s;
-    }
-    .curr-lesson:last-child { border-bottom: none; }
-    .curr-lesson:hover { background: #f7fbfd; }
-    .curr-lesson a {
-        color: #4a5568;
-        text-decoration: none;
-        flex: 1;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .curr-lesson a:hover { color: #00a8cc; }
-    .lesson-icon-video   { color: #00a8cc; }
-    .lesson-icon-text    { color: #8e44ad; }
-    .lesson-icon-article { color: #e67e22; }
-    .lesson-dur { margin-left: auto; font-size: 11px; color: #a0aec0; }
-    .badge-preview-sm {
-        font-size: 10px; padding: 1px 6px; border-radius: 10px;
-        background: #e8faf4; color: #00a86b; font-weight: 600;
-    }
-    .lock-sm { color: #ccc; font-size: 12px; }
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
 
-    .curriculum-cta {
-        padding: 16px 20px;
-        text-align: center;
-        background: #f7fafc;
-        border-top: 1px dashed #d1dde8;
-    }
-    .curriculum-cta a {
-        color: #00a8cc;
-        font-size: 14px;
-        font-weight: 600;
-        text-decoration: none;
-    }
-    .curriculum-cta a:hover { text-decoration: underline; }
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
 
-    /* ── Progress Bar ── */
-    .progress-wrap { margin: 16px 0; }
-    .progress-label {
-        display: flex; justify-content: space-between;
-        font-size: 13px; margin-bottom: 5px; color: #4a5568;
-    }
-    .progress-bar-outer {
-        height: 10px; background: #e2e8f0; border-radius: 20px; overflow: hidden;
-    }
-    .progress-bar-inner {
-        height: 100%; border-radius: 20px;
-        background: linear-gradient(90deg, #00c9a7, #00a8cc);
-        transition: width .4s;
-    }
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
 
-    /* ── Legacy Videos Section ─────────────────────────────────────────── */
-    .legacy-section {
-        margin-top: 28px;
-        border: 1.5px solid #e8d5b7;
-        border-radius: 12px;
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 2px 12px rgba(0,0,0,.06);
-    }
-    .legacy-section-header {
-        background: linear-gradient(90deg, #fef9f0, #fdf3e0);
-        padding: 14px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #e8d5b7;
-        cursor: pointer;
-        user-select: none;
-    }
-    .legacy-section-header h3 {
-        font-size: 15px;
-        font-weight: 700;
-        color: #7d4e00;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .legacy-section-header .legacy-badge {
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 10px;
-        background: #fde8b2;
-        color: #7d4e00;
-        font-weight: 600;
-    }
-    .legacy-section-header .toggle-icon {
-        color: #e67e22;
-        transition: transform .2s;
-    }
-    .legacy-section-header.collapsed .toggle-icon { transform: rotate(-90deg); }
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
 
-    .legacy-video-list { list-style: none; padding: 0; }
-    .legacy-video-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        border-bottom: 1px solid #f5ebe0;
-        font-size: 13px;
-        color: #4a5568;
-        transition: background .12s;
-    }
-    .legacy-video-item:last-child { border-bottom: none; }
-    .legacy-video-item:hover { background: #fdf8f0; }
-    .legacy-video-item a {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #4a5568;
-        text-decoration: none;
-        flex: 1;
-    }
-    .legacy-video-item a:hover { color: #e67e22; }
-    .legacy-note {
-        padding: 12px 20px;
-        background: #fef9f0;
-        border-top: 1px dashed #e8d5b7;
-        font-size: 12px;
-        color: #a0856a;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .legacy-note a { color: #00a8cc; text-decoration: none; }
-    .legacy-note a:hover { text-decoration: underline; }
-    </style>
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ═══════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px; gap: 8px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+
+.nav-links {
+  display: flex; align-items: center; gap: 2px; flex: 1;
+}
+.nav-link {
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+.nav-link.active { color: var(--accent); }
+
+.topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.coins-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2);
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700; color: var(--gold-400);
+}
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans); font-family: inherit;
+}
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); color: #fff; }
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Hamburger */
+.hamburger {
+  display: none; background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-p); width: 36px; height: 36px; border-radius: var(--radius-sm);
+  font-size: 16px; cursor: pointer; align-items: center; justify-content: center;
+  transition: var(--trans); margin-left: auto;
+}
+.hamburger:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Mobile nav */
+@media (max-width: 900px) {
+  .nav-links { display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0;
+    flex-direction: column; align-items: stretch; background: var(--bg-panel);
+    border-bottom: 1px solid var(--border); padding: 12px 16px; gap: 4px; z-index: 500; }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 10px 14px; }
+  .topbar-sep { display: none; }
+  .hamburger { display: flex; }
+  .topbar-right .nav-link { display: none; }
+}
+
+/* ═══ HERO ══════════════════════════════════════════════════════ */
+.hero {
+  margin-top: var(--topbar-h);
+  padding: 80px 28px 60px;
+  background: linear-gradient(160deg, #080b14 0%, #0f0a1e 50%, #080d1a 100%);
+  position: relative; overflow: hidden; text-align: center;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(139,92,246,.18), transparent 70%);
+  pointer-events: none;
+}
+[data-theme="light"] .hero {
+  background: linear-gradient(160deg, #f0eeff 0%, #e8f0ff 50%, #f0f4ff 100%);
+}
+[data-theme="light"] .hero::before {
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(139,92,246,.1), transparent 70%);
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.hero-eyebrow::before,.hero-eyebrow::after { content:''; width:32px; height:1px; background:var(--accent); opacity:.4; }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 52px); font-weight: 800; color: var(--text-h);
+  letter-spacing: -1px; line-height: 1.15; max-width: 800px; margin: 0 auto 16px;
+}
+.hero p {
+  font-size: 16px; color: var(--text-p); max-width: 600px; margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* Search */
+.search-form {
+  display: flex; max-width: 500px; margin: 28px auto 0; gap: 0;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+  transition: var(--trans);
+}
+.search-form:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.search-form input {
+  flex: 1; background: transparent; border: none; outline: none;
+  padding: 12px 16px; font-size: 14px; color: var(--text-h); font-family: inherit;
+}
+.search-form input::placeholder { color: var(--text-muted); }
+.search-form button {
+  background: var(--accent); color: #fff; border: none; cursor: pointer;
+  padding: 12px 20px; font-size: 13px; font-weight: 600;
+  transition: var(--trans); font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+}
+.search-form button:hover { background: var(--accent-d); }
+
+/* ═══ CONTENT ═══════════════════════════════════════════════════ */
+.content-wrap {
+  max-width: 960px; margin: 0 auto; padding: 40px 24px 80px;
+}
+
+/* ═══ COURSE CARD ═══════════════════════════════════════════════ */
+.course-card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow);
+}
+
+.course-card-header {
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  padding: 28px 32px; border-bottom: 1px solid var(--border);
+}
+.course-card-header h1 {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -.5px; line-height: 1.2; margin-bottom: 12px;
+}
+.course-desc {
+  font-size: 15px; color: var(--text-p); line-height: 1.75;
+  max-width: 680px;
+}
+
+.course-card-body { padding: 28px 32px; }
+
+/* ═══ ENROLL BUTTON ═════════════════════════════════════════════ */
+.enroll-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 36px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; font-size: 15px; font-weight: 700;
+  text-decoration: none; transition: var(--trans);
+  box-shadow: 0 4px 24px rgba(139,92,246,.4);
+  margin-bottom: 28px; font-family: var(--font-display);
+  position: relative; overflow: hidden;
+}
+.enroll-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.15), transparent);
+}
+.enroll-btn:hover {
+  color: #fff; transform: translateY(-2px);
+  box-shadow: 0 8px 36px rgba(139,92,246,.5);
+}
+.enroll-btn .price-tag {
+  background: rgba(255,255,255,.2); padding: 3px 10px; border-radius: 99px;
+  font-size: 13px; font-weight: 600;
+}
+
+/* ═══ PROGRESS ══════════════════════════════════════════════════ */
+.progress-block {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 24px;
+}
+.progress-block-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.progress-block-title {
+  font-size: 14px; font-weight: 700; color: var(--text-h);
+  display: flex; align-items: center; gap: 8px;
+}
+.progress-block-title i { color: var(--accent); }
+.progress-fraction { font-size: 13px; color: var(--text-muted); }
+.progress-bar-outer {
+  height: 8px; background: var(--bg-card-2); border-radius: 99px; overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--violet-500), var(--gold-400));
+  transition: width .4s ease;
+}
+
+/* ═══ CERTIFICATE BTN ═══════════════════════════════════════════ */
+.certificate-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 28px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--gold-400), #f59e0b);
+  color: #1a0f00; font-size: 14px; font-weight: 800;
+  text-decoration: none; transition: var(--trans);
+  box-shadow: 0 4px 20px rgba(251,191,36,.3); margin-bottom: 24px;
+  font-family: var(--font-display);
+}
+.certificate-btn:hover { color: #1a0f00; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(251,191,36,.4); }
+
+/* ═══ CURRICULUM PREVIEW ════════════════════════════════════════ */
+.curriculum-block {
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden; margin-bottom: 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.2);
+}
+.curriculum-block-header {
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  padding: 16px 22px; display: flex; justify-content: space-between;
+  align-items: center; border-bottom: 1px solid var(--border);
+}
+.curriculum-block-header h3 {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
+  display: flex; align-items: center; gap: 8px; margin: 0;
+}
+.curriculum-block-header h3 i { color: var(--accent); }
+.curr-stats { display: flex; gap: 14px; font-size: 12px; color: var(--text-muted); }
+.curr-stats span { display: flex; align-items: center; gap: 5px; }
+.curr-stats i { color: var(--accent); }
+
+/* Section */
+.curr-section { border-bottom: 1px solid var(--border); }
+.curr-section:last-child { border-bottom: none; }
+
+.curr-section-title {
+  display: flex; align-items: center; gap: 8px;
+  padding: 13px 22px; background: var(--bg-card);
+  font-size: 13px; font-weight: 700; color: var(--text-h);
+  cursor: pointer; user-select: none; transition: var(--trans);
+  border-bottom: 1px solid var(--border);
+}
+.curr-section-title:hover { background: var(--bg-hover); }
+.curr-section-title i.toggle { color: var(--accent); transition: transform .2s; font-size: 11px; }
+.curr-section-title.collapsed i.toggle { transform: rotate(-90deg); }
+.curr-section-meta {
+  margin-left: auto; font-size: 11px; color: var(--text-muted); font-weight: 400;
+}
+
+/* Lessons */
+.curr-lessons { list-style: none; padding: 0; }
+.curr-lesson {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 22px 11px 36px; border-bottom: 1px solid rgba(255,255,255,.03);
+  font-size: 13px; color: var(--text-p); transition: var(--trans);
+}
+[data-theme="light"] .curr-lesson { border-bottom-color: rgba(0,0,0,.04); }
+.curr-lesson:last-child { border-bottom: none; }
+.curr-lesson:hover { background: var(--bg-hover); }
+.curr-lesson a {
+  color: var(--text-p); text-decoration: none; flex: 1;
+  display: flex; align-items: center; gap: 8px; transition: var(--trans);
+}
+.curr-lesson a:hover { color: var(--accent); }
+.lesson-icon-video   { color: var(--sky-400); }
+.lesson-icon-text    { color: var(--violet-400); }
+.lesson-icon-article { color: var(--gold-400); }
+
+.lesson-dur { margin-left: auto; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.lock-sm { color: var(--text-muted); font-size: 12px; }
+
+.badge-preview-sm {
+  font-size: 10px; padding: 2px 8px; border-radius: 99px;
+  background: rgba(52,211,153,.1); color: var(--success);
+  border: 1px solid rgba(52,211,153,.2); font-weight: 700;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+
+/* CTA row */
+.curriculum-cta {
+  padding: 14px 22px; text-align: center;
+  background: var(--bg-card); border-top: 1px dashed var(--border);
+}
+.curriculum-cta a {
+  color: var(--accent); font-size: 13px; font-weight: 600;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--trans);
+}
+.curriculum-cta a:hover { color: var(--violet-400); text-decoration: underline; }
+
+/* ═══ LEGACY VIDEOS ═════════════════════════════════════════════ */
+.legacy-block {
+  border: 1px solid rgba(251,191,36,.15); border-radius: var(--radius-lg);
+  overflow: hidden; margin-bottom: 24px; box-shadow: 0 2px 16px rgba(0,0,0,.15);
+}
+.legacy-block-header {
+  background: linear-gradient(135deg, rgba(251,191,36,.06), rgba(251,191,36,.03));
+  padding: 14px 22px; display: flex; justify-content: space-between;
+  align-items: center; border-bottom: 1px solid rgba(251,191,36,.12);
+  cursor: pointer; user-select: none; transition: var(--trans);
+}
+.legacy-block-header:hover { background: rgba(251,191,36,.08); }
+.legacy-block-header h3 {
+  font-size: 14px; font-weight: 700; color: var(--gold-400);
+  margin: 0; display: flex; align-items: center; gap: 8px;
+}
+.legacy-badge {
+  font-size: 10px; padding: 2px 8px; border-radius: 99px;
+  background: rgba(251,191,36,.1); color: var(--gold-400);
+  border: 1px solid rgba(251,191,36,.2); font-weight: 700;
+}
+.legacy-toggle { color: var(--gold-400); font-size: 11px; transition: transform .2s; }
+.legacy-block-header.collapsed .legacy-toggle { transform: rotate(-90deg); }
+
+.legacy-video-list { list-style: none; padding: 0; }
+.legacy-video-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 22px; border-bottom: 1px solid rgba(255,255,255,.03);
+  font-size: 13px; color: var(--text-p); transition: var(--trans);
+}
+[data-theme="light"] .legacy-video-item { border-bottom-color: rgba(0,0,0,.04); }
+.legacy-video-item:last-child { border-bottom: none; }
+.legacy-video-item:hover { background: rgba(251,191,36,.04); }
+.legacy-video-item a {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-p); text-decoration: none; flex: 1; transition: var(--trans);
+}
+.legacy-video-item a:hover { color: var(--gold-400); }
+.done-tag {
+  font-size: 11px; color: var(--success); font-weight: 600;
+  display: flex; align-items: center; gap: 4px; white-space: nowrap;
+}
+.legacy-note {
+  padding: 12px 22px; background: var(--bg-card);
+  border-top: 1px dashed rgba(251,191,36,.15);
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 7px;
+}
+.legacy-note a { color: var(--accent); text-decoration: none; }
+.legacy-note a:hover { text-decoration: underline; }
+
+/* ═══ ACTIONS ════════════════════════════════════════════════════ */
+.actions-row {
+  display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
+  align-items: center;
+}
+.action-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; text-decoration: none;
+  transition: var(--trans); border: none; cursor: pointer; font-family: inherit;
+}
+.action-btn-purple {
+  background: linear-gradient(135deg, #6c3483, #9b59b6);
+  color: #fff; box-shadow: 0 4px 16px rgba(108,52,131,.3);
+}
+.action-btn-purple:hover { color: #fff; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(108,52,131,.45); }
+
+/* ═══ BACK BUTTON ═══════════════════════════════════════════════ */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: var(--radius-md);
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 13px; font-weight: 600;
+  text-decoration: none; transition: var(--trans); margin-top: 8px;
+}
+.back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ DIVIDER ════════════════════════════════════════════════════ */
+.section-divider {
+  height: 1px; background: var(--border); margin: 24px 0;
+}
+
+/* ═══ FOOTER ════════════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 24px 28px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: inline-block; margin-bottom: 6px;
+}
+
+/* ═══ TOAST ══════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.toast-info { background:rgba(139,92,246,.12); color:var(--violet-400); border:1px solid rgba(139,92,246,.25); }
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <nav class="menu">
-            <a href="/">Home</a>
-            <a href="/courses/">Courses</a>
-            <a href="/chatbot/">Chatbot</a>
-            <a href="/competitions/">Competitions</a>
-            <a href="/performance/dashboard/">Performance</a>
-            <a href="/about/">About Us</a>
-            <a href="/contact_us/">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/">Profile</a>
-                <a href="/accounts/logout/">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i> Coins: {{ user.courses_profile.coins }}
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/">Login</a>
+
+<!-- ═══ TOPBAR ════════════════════════════════════════════════════ -->
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+
+    <nav class="nav-links" id="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/courses/" class="nav-link active">Courses</a>
+        <a href="/chatbot/" class="nav-link">Chatbot</a>
+        <a href="/competitions/" class="nav-link">Competitions</a>
+        <a href="/performance/dashboard/" class="nav-link">Performance</a>
+        <a href="/about/" class="nav-link">About Us</a>
+        <a href="/contact_us/" class="nav-link">Contact Us</a>
+        {% if user.is_authenticated %}
+            {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link">Dashboard</a>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
-            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
-        </nav>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-    </header>
+            <a href="/accounts/profile/" class="nav-link">Profile</a>
+            <a href="/accounts/logout/" class="nav-link">Logout</a>
+        {% else %}
+            <a href="/accounts/register/" class="nav-link">Login</a>
+        {% endif %}
+    </nav>
 
-    <!-- Hero -->
-    <section class="hero">
-        <h1>{{ course.title }}</h1>
-        <p>Embark on your learning journey with {{ course.title }} on Eduvia.</p>
-    </section>
+    <div class="topbar-right">
+        {% if user.is_authenticated and user.courses_profile %}
+        <div class="coins-chip">
+            <i class="fas fa-coins"></i> {{ user.courses_profile.coins }}
+        </div>
+        {% endif %}
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" title="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+</header>
 
-    <!-- Content -->
-    <main class="content">
-        <article class="course-card">
+<!-- ═══ HERO ══════════════════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-eyebrow"><i class="fas fa-graduation-cap"></i> Course Details</div>
+    <h1>{{ course.title }}</h1>
+    <p>Embark on your learning journey with <strong>{{ course.title }}</strong> on Eduvia.</p>
 
-            <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
-                <input type="text" name="q" placeholder="Search for a course…">
-                <button type="submit">Search</button>
-            </form>
+    <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
+        <input type="text" name="q" placeholder="Search for a course…">
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+    </form>
+</section>
 
+<!-- ═══ CONTENT ════════════════════════════════════════════════════ -->
+<main class="content-wrap">
+    <div class="course-card">
+
+        <!-- Header -->
+        <div class="course-card-header">
             <h1>{{ course.title }}</h1>
-            <p class="description">{{ course.description }}</p>
+            <p class="course-desc">{{ course.description }}</p>
+        </div>
+
+        <!-- Body -->
+        <div class="course-card-body">
 
             {% if not is_enrolled %}
-            <!-- ══════════════════════════════════════════════════════════
-                 NOT ENROLLED — show buy button + curriculum preview
-                 ══════════════════════════════════════════════════════════ -->
-                <a href="/api/marketplace/checkout/?course_id={{ course.id }}" class="enroll-btn">
-                    Buy this Course
-                    {% if course.price %} — {{ course.price }} EGP{% endif %}
-                </a>
+            <!-- ══ NOT ENROLLED ══════════════════════════════════════ -->
 
-                {% with sections=course.get_curriculum %}
-                {% if sections %}
-                <div class="curriculum-preview" style="margin-top:20px;">
-                    <div class="curriculum-preview-header">
-                        <h3><i class="fas fa-list-ul" style="color:#00a8cc;margin-right:6px;"></i>Course Curriculum</h3>
-                        <div class="stats">
-                            <span><i class="fas fa-layer-group"></i> {{ sections|length }} sections</span>
-                            <span><i class="fas fa-play-circle"></i> {{ course.get_total_lessons_count }} lessons</span>
-                        </div>
-                    </div>
-                    {% for section in sections %}
-                    <div class="curr-section">
-                        <div class="curr-section-title" onclick="toggleCurrSection(this)">
-                            <i class="fas fa-chevron-down toggle"></i>
-                            <span>{{ forloop.counter }}. {{ section.title }}</span>
-                            <span class="curr-section-meta">{{ section.lessons.count }} lesson{{ section.lessons.count|pluralize }}</span>
-                        </div>
-                        <ul class="curr-lessons">
-                            {% for lesson in section.lessons.all %}
-                            <li class="curr-lesson">
-                                {% if lesson.is_preview %}
-                                    <a href="{% url 'courses:lesson_view' course_id=course.id course_slug=slugified_course_title lesson_id=lesson.id %}">
-                                        <i class="fas {{ lesson.get_icon }} lesson-icon-{{ lesson.lesson_type }}"></i>
-                                        {{ lesson.title }}
-                                        <span class="badge-preview-sm"><i class="fas fa-eye"></i> Free</span>
-                                    </a>
-                                {% else %}
-                                    <span style="display:flex;align-items:center;gap:8px;flex:1;">
-                                        <i class="fas {{ lesson.get_icon }} lesson-icon-{{ lesson.lesson_type }}"></i>
-                                        {{ lesson.title }}
-                                    </span>
-                                    <span class="lock-sm"><i class="fas fa-lock"></i></span>
-                                {% endif %}
-                                {% if lesson.lesson_type == 'video' and lesson.video_duration %}
-                                    <span class="lesson-dur"><i class="fas fa-clock"></i> {{ lesson.get_duration_display }}</span>
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endfor %}
-                    <div class="curriculum-cta">
-                        <a href="/api/marketplace/checkout/?course_id={{ course.id }}">
-                            <i class="fas fa-lock-open"></i> Enroll to unlock all {{ course.get_total_lessons_count }} lessons
-                        </a>
-                    </div>
-                </div>
+            <a href="/api/marketplace/checkout/?course_id={{ course.id }}" class="enroll-btn">
+                <i class="fas fa-lock-open"></i>
+                Buy this Course
+                {% if course.price %}
+                <span class="price-tag">{{ course.price }} EGP</span>
                 {% endif %}
-                {% endwith %}
+            </a>
 
-            {% else %}
-            <!-- ══════════════════════════════════════════════════════════
-                 ENROLLED / OWNER
-                 ══════════════════════════════════════════════════════════ -->
-
-                <!-- Progress Bar (legacy videos) -->
-                <div class="progress-wrap">
-                    <h3 style="font-size:16px;margin-bottom:8px;">
-                        <i class="fas fa-chart-line" style="color:#00a8cc;"></i> Course Progress
-                    </h3>
-                    <div class="progress-label">
-                        <span>{{ completed_videos_count }} of {{ total_videos_count }} videos completed</span>
-                        <span>{{ completed_videos_count }} / {{ total_videos_count }}</span>
-                    </div>
-                    <div class="progress-bar-outer">
-                        <div class="progress-bar-inner"
-                             style="width:{% if total_videos_count and total_videos_count > 0 %}{% widthratio completed_videos_count total_videos_count 100 %}{% else %}0{% endif %}%">
-                        </div>
+            {% with sections=course.get_curriculum %}
+            {% if sections %}
+            <div class="curriculum-block">
+                <div class="curriculum-block-header">
+                    <h3><i class="fas fa-list-ul"></i> Course Curriculum</h3>
+                    <div class="curr-stats">
+                        <span><i class="fas fa-layer-group"></i> {{ sections|length }} sections</span>
+                        <span><i class="fas fa-play-circle"></i> {{ course.get_total_lessons_count }} lessons</span>
                     </div>
                 </div>
 
-                {% if completed_videos_count == total_videos_count and total_videos_count > 0 %}
-                    <a href="{% url 'courses:download_certificate' course.id slugified_course_title %}"
-                       class="certificate-btn">
-                        <i class="fas fa-certificate"></i> Download Certificate
-                    </a>
-                {% endif %}
-
-                <!-- ════════════════════════════════════════════════════════
-                     STRUCTURED CURRICULUM  (Sections → Lessons)
-                     ════════════════════════════════════════════════════════ -->
-                {% with sections=course.get_curriculum %}
-                {% if sections %}
-                <div class="curriculum-preview">
-                    <div class="curriculum-preview-header">
-                        <h3><i class="fas fa-list-ul" style="color:#00a8cc;margin-right:6px;"></i>Course Curriculum</h3>
-                        <div class="stats">
-                            <span><i class="fas fa-layer-group"></i> {{ sections|length }} sections</span>
-                            <span><i class="fas fa-play-circle"></i> {{ course.get_total_lessons_count }} lessons</span>
-                        </div>
+                {% for section in sections %}
+                <div class="curr-section">
+                    <div class="curr-section-title" onclick="toggleCurrSection(this)">
+                        <i class="fas fa-chevron-down toggle"></i>
+                        <span>{{ forloop.counter }}. {{ section.title }}</span>
+                        <span class="curr-section-meta">{{ section.lessons.count }} lesson{{ section.lessons.count|pluralize }}</span>
                     </div>
-
-                    {% for section in sections %}
-                    <div class="curr-section">
-                        <div class="curr-section-title" onclick="toggleCurrSection(this)">
-                            <i class="fas fa-chevron-down toggle"></i>
-                            <span>{{ forloop.counter }}. {{ section.title }}</span>
-                            <span class="curr-section-meta">{{ section.lessons.count }} lesson{{ section.lessons.count|pluralize }}</span>
-                        </div>
-                        <ul class="curr-lessons">
-                            {% for lesson in section.lessons.all %}
-                            <li class="curr-lesson">
+                    <ul class="curr-lessons">
+                        {% for lesson in section.lessons.all %}
+                        <li class="curr-lesson">
+                            {% if lesson.is_preview %}
                                 <a href="{% url 'courses:lesson_view' course_id=course.id course_slug=slugified_course_title lesson_id=lesson.id %}">
                                     <i class="fas {{ lesson.get_icon }} lesson-icon-{{ lesson.lesson_type }}"></i>
-                                    {{ forloop.parentloop.counter }}.{{ forloop.counter }} {{ lesson.title }}
-                                    {% if lesson.is_preview %}
-                                        <span class="badge-preview-sm"><i class="fas fa-eye"></i> Preview</span>
-                                    {% endif %}
+                                    {{ lesson.title }}
+                                    <span class="badge-preview-sm"><i class="fas fa-eye"></i> Free</span>
                                 </a>
-                                {% if lesson.lesson_type == 'video' and lesson.video_duration %}
-                                    <span class="lesson-dur"><i class="fas fa-clock"></i> {{ lesson.get_duration_display }}</span>
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endfor %}
-
-                    <div class="curriculum-cta">
-                        <a href="{% url 'courses:course_curriculum' course_id=course.id course_slug=slugified_course_title %}">
-                            <i class="fas fa-expand-arrows-alt"></i> View Full Curriculum Page
-                        </a>
-                    </div>
-                </div>
-                {% endif %}
-                {% endwith %}
-
-                <!-- ════════════════════════════════════════════════════════
-                     LEGACY VIDEOS  — always show if exist, in separate block
-                     ════════════════════════════════════════════════════════ -->
-                {% if videos %}
-                <div class="legacy-section">
-                    <div class="legacy-section-header" onclick="toggleLegacySection(this)">
-                        <h3>
-                            <i class="fas fa-film"></i>
-                            Course Videos
-                            <span class="legacy-badge">{{ videos|length }} video{{ videos|length|pluralize }}</span>
-                        </h3>
-                        <i class="fas fa-chevron-down toggle-icon"></i>
-                    </div>
-
-                    <ul class="legacy-video-list" id="legacy-video-list">
-                        {% for video in videos %}
-                        <li class="legacy-video-item">
-                            {% if video|is_video_unlocked:request.user %}
-                                <a href="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_slug=video.slugified_title %}">
-                                    <i class="fas fa-play-circle" style="color:#00a8cc;"></i>
-                                    {{ video.title }}
-                                </a>
-                                {% if video.duration %}
-                                    <span class="lesson-dur"><i class="fas fa-clock"></i> {{ video.duration }} min</span>
-                                {% endif %}
-                                {% if video.id|in_video_progress:request.user %}
-                                    <span style="font-size:12px;color:#27ae60;white-space:nowrap;">✅ Done</span>
-                                {% endif %}
                             {% else %}
                                 <span style="display:flex;align-items:center;gap:8px;flex:1;">
-                                    <i class="fas fa-lock" style="color:#ccc;"></i>
-                                    {{ video.title }}
+                                    <i class="fas {{ lesson.get_icon }} lesson-icon-{{ lesson.lesson_type }}"></i>
+                                    {{ lesson.title }}
                                 </span>
+                                <span class="lock-sm"><i class="fas fa-lock"></i></span>
+                            {% endif %}
+                            {% if lesson.lesson_type == 'video' and lesson.video_duration %}
+                                <span class="lesson-dur"><i class="fas fa-clock"></i> {{ lesson.get_duration_display }}</span>
                             {% endif %}
                         </li>
                         {% endfor %}
                     </ul>
-
-                    <div class="legacy-note">
-                        <i class="fas fa-info-circle"></i>
-                        These are standalone course videos.
-                        {% if is_owner %}
-                            Use the
-                            <a href="{% url 'courses:curriculum_builder' course_id=course.id course_slug=slugified_course_title %}">Curriculum Builder</a>
-                            to organise them into structured sections.
-                        {% endif %}
-                    </div>
                 </div>
-                {% endif %}
-                <!-- ════════════════════════════════════════════════════════ -->
+                {% endfor %}
 
-                <!-- Owner: Curriculum Builder Button -->
-                {% if is_owner %}
-                <div style="margin-top:20px;text-align:center;">
-                    <a href="{% url 'courses:curriculum_builder' course_id=course.id course_slug=slugified_course_title %}"
-                       class="certificate-btn" style="background:linear-gradient(90deg,#6c3483,#9b59b6);">
-                        <i class="fas fa-list-ul"></i> Edit Curriculum Builder
+                <div class="curriculum-cta">
+                    <a href="/api/marketplace/checkout/?course_id={{ course.id }}">
+                        <i class="fas fa-lock-open"></i> Enroll to unlock all {{ course.get_total_lessons_count }} lessons
                     </a>
                 </div>
-                {% endif %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {% else %}
+            <!-- ══ ENROLLED / OWNER ══════════════════════════════════ -->
+
+            <!-- Progress Bar -->
+            <div class="progress-block">
+                <div class="progress-block-header">
+                    <div class="progress-block-title">
+                        <i class="fas fa-chart-line"></i> Course Progress
+                    </div>
+                    <div class="progress-fraction">{{ completed_videos_count }} / {{ total_videos_count }} videos</div>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner"
+                         style="width:{% if total_videos_count and total_videos_count > 0 %}{% widthratio completed_videos_count total_videos_count 100 %}{% else %}0{% endif %}%">
+                    </div>
+                </div>
+            </div>
+
+            {% if completed_videos_count == total_videos_count and total_videos_count > 0 %}
+            <div class="actions-row">
+                <a href="{% url 'courses:download_certificate' course.id slugified_course_title %}" class="certificate-btn">
+                    <i class="fas fa-certificate"></i> Download Certificate
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Structured Curriculum -->
+            {% with sections=course.get_curriculum %}
+            {% if sections %}
+            <div class="curriculum-block">
+                <div class="curriculum-block-header">
+                    <h3><i class="fas fa-list-ul"></i> Course Curriculum</h3>
+                    <div class="curr-stats">
+                        <span><i class="fas fa-layer-group"></i> {{ sections|length }} sections</span>
+                        <span><i class="fas fa-play-circle"></i> {{ course.get_total_lessons_count }} lessons</span>
+                    </div>
+                </div>
+
+                {% for section in sections %}
+                <div class="curr-section">
+                    <div class="curr-section-title" onclick="toggleCurrSection(this)">
+                        <i class="fas fa-chevron-down toggle"></i>
+                        <span>{{ forloop.counter }}. {{ section.title }}</span>
+                        <span class="curr-section-meta">{{ section.lessons.count }} lesson{{ section.lessons.count|pluralize }}</span>
+                    </div>
+                    <ul class="curr-lessons">
+                        {% for lesson in section.lessons.all %}
+                        <li class="curr-lesson">
+                            <a href="{% url 'courses:lesson_view' course_id=course.id course_slug=slugified_course_title lesson_id=lesson.id %}">
+                                <i class="fas {{ lesson.get_icon }} lesson-icon-{{ lesson.lesson_type }}"></i>
+                                {{ forloop.parentloop.counter }}.{{ forloop.counter }} {{ lesson.title }}
+                                {% if lesson.is_preview %}
+                                    <span class="badge-preview-sm"><i class="fas fa-eye"></i> Preview</span>
+                                {% endif %}
+                            </a>
+                            {% if lesson.lesson_type == 'video' and lesson.video_duration %}
+                                <span class="lesson-dur"><i class="fas fa-clock"></i> {{ lesson.get_duration_display }}</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+
+                <div class="curriculum-cta">
+                    <a href="{% url 'courses:course_curriculum' course_id=course.id course_slug=slugified_course_title %}">
+                        <i class="fas fa-expand-arrows-alt"></i> View Full Curriculum Page
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <!-- Legacy Videos -->
+            {% if videos %}
+            <div class="legacy-block">
+                <div class="legacy-block-header" onclick="toggleLegacySection(this)">
+                    <h3>
+                        <i class="fas fa-film"></i>
+                        Course Videos
+                        <span class="legacy-badge">{{ videos|length }} video{{ videos|length|pluralize }}</span>
+                    </h3>
+                    <i class="fas fa-chevron-down legacy-toggle"></i>
+                </div>
+
+                <ul class="legacy-video-list" id="legacy-video-list">
+                    {% for video in videos %}
+                    <li class="legacy-video-item">
+                        {% if video|is_video_unlocked:request.user %}
+                            <a href="{% url 'courses:watch_video' course_id=course.id course_slug=slugified_course_title video_id=video.id video_slug=video.slugified_title %}">
+                                <i class="fas fa-play-circle" style="color:var(--sky-400);"></i>
+                                {{ video.title }}
+                            </a>
+                            {% if video.duration %}
+                                <span class="lesson-dur"><i class="fas fa-clock"></i> {{ video.duration }} min</span>
+                            {% endif %}
+                            {% if video.id|in_video_progress:request.user %}
+                                <span class="done-tag"><i class="fas fa-check-circle"></i> Done</span>
+                            {% endif %}
+                        {% else %}
+                            <span style="display:flex;align-items:center;gap:8px;flex:1;">
+                                <i class="fas fa-lock" style="color:var(--text-muted);"></i>
+                                {{ video.title }}
+                            </span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="legacy-note">
+                    <i class="fas fa-info-circle"></i>
+                    Standalone course videos.
+                    {% if is_owner %}
+                        Use the
+                        <a href="{% url 'courses:curriculum_builder' course_id=course.id course_slug=slugified_course_title %}">Curriculum Builder</a>
+                        to organise them.
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Owner: Curriculum Builder -->
+            {% if is_owner %}
+            <div class="actions-row">
+                <a href="{% url 'courses:curriculum_builder' course_id=course.id course_slug=slugified_course_title %}"
+                   class="action-btn action-btn-purple">
+                    <i class="fas fa-list-ul"></i> Edit Curriculum Builder
+                </a>
+            </div>
+            {% endif %}
 
             {% endif %}
 
+            <div class="section-divider"></div>
             <a href="{% url 'courses:courses' %}" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Back to Courses
             </a>
-        </article>
-    </main>
+        </div>
+    </div>
+</main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+<!-- ═══ FOOTER ═════════════════════════════════════════════════════ -->
+<footer class="footer">
+    <div class="footer-logo">Eduvia</div>
+    <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-    function toggleMenu() { document.querySelector('.menu').classList.toggle('active'); }
+<div class="toast-wrap" id="toast-wrap"></div>
 
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        const icon = document.querySelector('.dark-mode-toggle i');
-        icon.classList.toggle('fa-moon');
-        icon.classList.toggle('fa-sun');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    }
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ── Theme ─────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
 
-    function toggleLanguage() {
-        const html = document.getElementById('html-root');
-        const lang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
-        html.setAttribute('lang', lang);
-        html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        localStorage.setItem('language', lang);
-    }
+/* ── Language ──────────────────────────────────────────────────── */
+function toggleLang() {
+    const html = document.getElementById('html-root');
+    const lang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    localStorage.setItem('language', lang);
+}
 
-    /* ── Curriculum Section accordion ── */
-    function toggleCurrSection(el) {
-        const ul = el.nextElementSibling;
-        const collapsed = el.classList.toggle('collapsed');
-        ul.style.display = collapsed ? 'none' : '';
-    }
+/* ── Mobile menu ───────────────────────────────────────────────── */
+function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+}
 
-    /* ── Legacy Videos accordion ── */
-    function toggleLegacySection(header) {
-        const list = document.getElementById('legacy-video-list');
-        const icon = header.querySelector('.toggle-icon');
-        const collapsed = header.classList.toggle('collapsed');
-        list.style.display = collapsed ? 'none' : '';
-        icon.style.transform = collapsed ? 'rotate(-90deg)' : '';
-    }
+/* ── Curriculum accordion ──────────────────────────────────────── */
+function toggleCurrSection(el) {
+    const ul = el.nextElementSibling;
+    const collapsed = el.classList.toggle('collapsed');
+    ul.style.display = collapsed ? 'none' : '';
+}
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Theme
-        const theme = localStorage.getItem('theme');
-        if (theme === 'dark') {
-            document.body.classList.add('dark-mode');
-            const icon = document.querySelector('.dark-mode-toggle i');
-            if (icon) icon.classList.replace('fa-moon', 'fa-sun');
-        }
-        // Language
-        const lang = localStorage.getItem('language') || 'en';
-        document.getElementById('html-root').setAttribute('lang', lang);
-        document.getElementById('html-root').setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-    });
-    </script>
+/* ── Legacy Videos accordion ──────────────────────────────────── */
+function toggleLegacySection(header) {
+    const list = document.getElementById('legacy-video-list');
+    const icon = header.querySelector('.legacy-toggle');
+    const collapsed = header.classList.toggle('collapsed');
+    list.style.display = collapsed ? 'none' : '';
+}
+
+/* ── Init ──────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    const lang = localStorage.getItem('language') || 'en';
+    const html = document.getElementById('html-root');
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+});
+</script>
 </body>
 </html>

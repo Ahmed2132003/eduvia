@@ -2,273 +2,796 @@
 {% load static %}
 {% load i18n %}
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-translate="page-title">{% trans "Courses - Eduvia" %}</title>
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <meta name="description" data-translate="meta-desc" content="{% trans 'Explore a wide range of online courses on Eduvia. Find expert-led courses tailored to your interests and start learning today.' %}">
-    <meta name="keywords" data-translate="meta-keywords" content="{% trans 'Eduvia, online courses, education platform, learning, course catalog' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="{% trans 'Explore a wide range of online courses on Eduvia.' %}">
     <meta name="author" content="Eduvia">
-    <meta http-equiv="content-language" content="ar, en">
-    <meta property="og:title" data-translate="og-title" content="{% trans 'Courses - Eduvia' %}">
-    <meta property="og:description" data-translate="og-desc" content="{% trans 'Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.' %}">
+    <meta property="og:title" content="{% trans 'Courses - Eduvia' %}">
     <meta property="og:image" content="{% static 'images/course_page1.jpg' %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" data-translate="twitter-title" content="{% trans 'Courses - Eduvia' %}">
-    <meta name="twitter:description" data-translate="twitter-desc" content="{% trans 'Discover and enroll in online courses on Eduvia to enhance your skills and knowledge.' %}">
-    <meta name="twitter:image" content="{% static 'images/course_page1.jpg' %}">
+
     <style>
-        :root {
-            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
-            --text-color: #333;
-            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
-            --header-text: #ffffff;
-            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/course_page1.jpg" %}') no-repeat center center/cover;
-            --hero-text: #ffffff;
-            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
-            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
-            --card-text: #00a8cc;
-            --card-secondary-text: #444;
-            --card-title-text: #001a33;
-            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
-            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
-            --join-bg: linear-gradient(to right, #ff6f61, #ff9f43);
-            --join-bg-hover: linear-gradient(to right, #e65a50, #e68a3a);
-            --btn-shadow: 0 4px 12px rgba(0, 201, 167, 0.5);
-            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
-            --footer-text: #333;
-            --input-border: #00a8cc;
-            --input-focus-border: #12d3cf;
-            --input-focus-shadow: 0 0 8px rgba(0, 201, 167, 0.3);
-            --message-success-bg: #d4edda;
-            --message-success-text: #155724;
-            --message-error-bg: #f8d7da;
-            --message-error-text: #721c24;
-            --message-info-bg: #d1ecf1;
-            --message-info-text: #0c5460;
-        }
-        body.dark-mode {
-            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
-            --text-color: #e0e0e0;
-            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
-            --header-text: #e0e0e0;
-            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/course_page1.jpg" %}') no-repeat center center/cover;
-            --hero-text: #e0e0e0;
-            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
-            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            --card-text: #3498db;
-            --card-secondary-text: #b0b0b0;
-            --card-title-text: #e0e0e0;
-            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
-            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --join-bg: linear-gradient(to right, #e74c3c, #e67e22);
-            --join-bg-hover: linear-gradient(to right, #c0392b, #d35400);
-            --btn-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
-            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            --footer-text: #e0e0e0;
-            --input-border: #555;
-            --input-focus-border: #3498db;
-            --input-focus-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
-            --message-success-bg: #2e4a2c;
-            --message-success-text: #c3e6cb;
-            --message-error-bg: #4a2c2e;
-            --message-error-text: #f5c6cb;
-            --message-info-bg: #2c4a4e;
-            --message-info-text: #d1ecf1;
-        }
-        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background-gradient); color: var(--text-color); transition: background 0.3s ease, color 0.3s ease; }
-        html[dir="rtl"] body { text-align: right; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: var(--header-bg); color: var(--header-text); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); animation: slideDown 0.8s ease-out forwards; }
-        @keyframes slideDown { 0% { transform: translateY(-100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-        .header a { color: var(--header-text); text-decoration: none; margin: 0 15px; font-size: 18px; font-weight: 500; position: relative; transition: color 0.3s ease; }
-        .header a::after { content: ''; position: absolute; width: 0; height: 2px; background-color: var(--header-text); left: 0; bottom: -5px; transition: width 0.3s ease; }
-        html[dir="rtl"] .header a::after { left: unset; right: 0; }
-        .header a:hover::after { width: 100%; }
-        .header a:hover { color: #f0f8ff; }
-        .logo { font-size: 28px; font-weight: 700; letter-spacing: 1px; transition: transform 0.3s ease; }
-        .logo:hover { transform: scale(1.05); }
-        .menu { display: flex; align-items: center; }
-        html[dir="rtl"] .menu { flex-direction: row-reverse; }
-        .coins-display { margin-left: 10px; font-weight: bold; color: var(--header-text); background: var(--header-bg); padding: 5px 10px; border-radius: 5px; display: flex; align-items: center; gap: 5px; }
-        html[dir="rtl"] .coins-display { margin-left: 0; margin-right: 10px; }
-        .coins-icon { font-size: 16px; color: #ffd700; animation: spin 2s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .dark-mode-toggle, .language-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 0 10px; }
-        .dark-mode-toggle i, .language-toggle i { font-size: 20px; color: var(--header-text); transition: color 0.3s ease; }
-        .hamburger { display: none; font-size: 24px; background: none; border: none; color: var(--header-text); cursor: pointer; }
-        @media (max-width: 768px) {
-            .menu { display: none; flex-direction: column; position: absolute; top: 60px; left: 0; width: 100%; background: var(--header-bg); padding: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-            html[dir="rtl"] .menu { flex-direction: column; left: unset; right: 0; }
-            .menu.active { display: flex; }
-            .menu a { margin: 10px 0; font-size: 20px; }
-            .hamburger { display: block; }
-            .coins-display { margin: 10px 0; justify-content: center; }
-        }
-        .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; background: var(--hero-bg); color: var(--hero-text); text-align: center; padding: 0 20px; position: relative; z-index: 1; overflow: hidden; }
-        .hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%); z-index: -1; animation: pulse 6s infinite ease-in-out; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.2); opacity: 0.3; } 100% { transform: scale(1); opacity: 0.7; } }
-        .hero h1 { font-size: 48px; font-weight: 700; margin: 0; text-shadow: var(--hero-text-shadow); animation: slideInFromTop 1s ease-out forwards; letter-spacing: 1px; }
-        .hero p { font-size: 24px; font-weight: 400; margin: 20px 0 30px; max-width: 800px; line-height: 1.6; text-shadow: var(--hero-text-shadow); animation: fadeIn 1.2s ease-out 0.3s forwards; opacity: 0; }
-        @keyframes slideInFromTop { 0% { transform: translateY(-50px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-        @keyframes fadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-        .search-form { margin: 20px 0; display: flex; justify-content: center; align-items: center; animation: fadeIn 1.2s ease-out forwards; }
-        .search-form input { padding: 10px; width: 300px; border: 1px solid var(--input-border); border-radius: 5px; font-size: 16px; margin-right: 10px; background-color: #ffffff; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        html[dir="rtl"] .search-form input { margin-right: 0; margin-left: 10px; }
-        body.dark-mode .search-form input { background-color: #333; color: var(--text-color); }
-        .search-form input:focus { border-color: var(--input-focus-border); box-shadow: var(--input-focus-shadow); outline: none; }
-        .search-form button { background: var(--btn-bg); color: white; padding: 10px 20px; font-size: 16px; border-radius: 5px; border: none; cursor: pointer; transition: all 0.4s ease; animation: bounceIn 1s ease-out 0.6s forwards; opacity: 0; }
-        .search-form button:hover { background: var(--btn-bg-hover); transform: scale(1.1) translateY(-5px); box-shadow: var(--btn-shadow); }
-        @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
-        .cards-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
-        .course-card { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 20px; background: var(--card-bg); color: var(--card-title-text); text-align: center; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: transform 0.4s ease, box-shadow 0.4s ease; flex: 1 1 calc(33.33% - 20px); box-sizing: border-box; min-width: 280px; max-width: 360px; height: 500px; animation: fadeIn 1.2s ease-out forwards; }
-        .course-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
-        .course-card h2 { color: var(--card-text); font-size: 24px; margin: 10px 0; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: 100%; }
-        .course-card p { font-size: 16px; color: var(--card-secondary-text); line-height: 1.5; margin: 0 0 10px; flex-grow: 1; overflow: hidden; text-overflow: ellipsis; max-height: 100px; }
-        .course-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; transition: transform 0.3s ease; }
-        .course-card img:hover { transform: scale(1.05); }
-        .course-card a { color: white; padding: 10px 25px; border-radius: 50px; font-size: 16px; text-decoration: none; box-shadow: var(--btn-shadow); transition: all 0.3s ease; margin: 5px 10px; }
-        .join-btn { background: var(--join-bg); }
-        .join-btn:hover { background: var(--join-bg-hover); transform: scale(1.1); }
-        .buy-btn { background: var(--btn-bg); }
-        .buy-btn:hover { background: var(--btn-bg-hover); transform: scale(1.1); }
-        .footer { background: var(--footer-bg); text-align: center; padding: 10px 0; font-size: 14px; color: var(--footer-text); margin-top: 40px; transition: background 0.3s ease, color 0.3s ease; }
-        .messages { text-align: center; margin: 20px; }
-        .messages p { padding: 10px; border-radius: 5px; display: inline-block; margin: 5px 0; }
-        .messages .success { background-color: var(--message-success-bg); color: var(--message-success-text); }
-        .messages .error { background-color: var(--message-error-bg); color: var(--message-error-text); }
-        .messages .info { background-color: var(--message-info-bg); color: var(--message-info-text); }
-        @media (max-width: 900px) { .hero h1 { font-size: 36px; } .hero p { font-size: 20px; } .course-card { flex: 1 1 calc(50% - 20px); } }
-        @media (max-width: 600px) { .hero h1 { font-size: 28px; } .hero p { font-size: 18px; } .course-card { flex: 1 1 100%; } .search-form input { width: 200px; } .course-actions { display: flex; flex-direction: column; gap: 10px; } }
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (matches lesson_view.html exactly)
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-page {
+  font-size: 13px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px; flex: 1;
+}
+.topbar-page i { color: var(--accent); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans); font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.coins-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700; color: var(--warning);
+}
+.coins-badge i { animation: spin 3s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  padding: 7px 13px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans);
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+.nav-link.active { color: var(--accent); background: var(--violet-glow); }
+
+.hamburger {
+  display: none; background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-p); width: 36px; height: 36px; border-radius: var(--radius-sm);
+  align-items: center; justify-content: center; cursor: pointer; font-size: 16px;
+}
+
+/* ── Mobile dropdown menu ── */
+.mobile-menu {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  z-index: 599; padding: 12px; flex-direction: column; gap: 4px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu .nav-link { font-size: 14px; }
+
+/* ═══ PAGE CONTENT ══════════════════════════════════════════════════════ */
+.page-wrap { padding-top: var(--topbar-h); }
+
+/* ── Hero ── */
+.hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #080b14 0%, #0d1120 50%, #080b14 100%);
+  padding: 70px 32px 60px; text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 20% 50%, rgba(139,92,246,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 30%, rgba(251,191,36,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 60% 80%, rgba(56,189,248,.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+[data-theme="light"] .hero {
+  background: linear-gradient(135deg, #f0f2ff 0%, #e8f0fe 50%, #f0f2ff 100%);
+}
+[data-theme="light"] .hero::before {
+  background:
+    radial-gradient(ellipse 60% 80% at 20% 50%, rgba(139,92,246,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 30%, rgba(251,191,36,.05) 0%, transparent 60%);
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 14px; border-radius: 99px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  font-size: 11px; font-weight: 700; color: var(--violet-400);
+  letter-spacing: .6px; text-transform: uppercase; margin-bottom: 16px;
+  position: relative;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 56px); font-weight: 800;
+  color: var(--text-h); letter-spacing: -1px; line-height: 1.1;
+  margin-bottom: 16px; position: relative;
+}
+.hero h1 .gradient-word {
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 17px; color: var(--text-muted); max-width: 560px;
+  margin: 0 auto 28px; line-height: 1.65; position: relative;
+}
+
+/* Stats row */
+.hero-stats {
+  display: flex; justify-content: center; gap: 32px; margin-top: 32px;
+  flex-wrap: wrap; position: relative;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num {
+  font-family: var(--font-display); font-size: 28px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: .6px; }
+
+/* ── Search ── */
+.search-section {
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  padding: 18px 32px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.search-wrap {
+  display: flex; align-items: center; flex: 1; min-width: 260px;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+  transition: var(--trans);
+}
+.search-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.search-wrap i { padding: 0 14px; color: var(--text-muted); font-size: 14px; }
+.search-wrap input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--text-h); font-size: 14px; font-family: inherit; padding: 11px 0;
+}
+.search-wrap input::placeholder { color: var(--text-muted); }
+.search-btn {
+  padding: 11px 22px; background: var(--accent); color: #fff;
+  border: none; font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: var(--trans); white-space: nowrap;
+}
+.search-btn:hover { background: var(--accent-d); }
+
+/* Filter chips */
+.filter-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-chip {
+  padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); color: var(--text-muted);
+  background: var(--bg-card); cursor: pointer; transition: var(--trans);
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.filter-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+.filter-chip.active { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+/* ── Messages ── */
+.flash-messages { padding: 12px 32px 0; display: flex; flex-direction: column; gap: 8px; }
+.flash-msg {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: var(--radius-md); font-size: 13px;
+}
+.flash-msg.success { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+.flash-msg.error   { background: rgba(251,113,133,.08); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+.flash-msg.info    { background: rgba(139,92,246,.08);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.2); }
+.flash-msg.warning { background: rgba(251,191,36,.08);  color: var(--warning); border: 1px solid rgba(251,191,36,.2); }
+
+/* ── Courses Grid ── */
+.courses-section { padding: 32px; }
+.courses-section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; gap: 12px;
+}
+.courses-section-title {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 800; color: var(--text-h);
+  display: flex; align-items: center; gap: 10px;
+}
+.courses-count {
+  display: inline-flex; align-items: center;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 2px 10px;
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* ── Course Card ── */
+.course-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: var(--trans);
+  animation: cardReveal .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.course-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.3), var(--glow);
+}
+
+/* Stagger animation */
+.course-card:nth-child(1)  { animation-delay: .04s; }
+.course-card:nth-child(2)  { animation-delay: .08s; }
+.course-card:nth-child(3)  { animation-delay: .12s; }
+.course-card:nth-child(4)  { animation-delay: .16s; }
+.course-card:nth-child(5)  { animation-delay: .20s; }
+.course-card:nth-child(6)  { animation-delay: .24s; }
+
+.card-img-wrap {
+  position: relative; overflow: hidden;
+  aspect-ratio: 16/9;
+}
+.card-img-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .4s ease;
+}
+.course-card:hover .card-img-wrap img { transform: scale(1.05); }
+
+.card-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,11,20,.7) 0%, transparent 50%);
+}
+.card-img-badge {
+  position: absolute; top: 10px; left: 10px;
+  padding: 4px 10px; border-radius: 99px;
+  font-size: 10px; font-weight: 800; letter-spacing: .4px;
+  backdrop-filter: blur(8px);
+}
+[lang="ar"] .card-img-badge { left: auto; right: 10px; }
+.badge-enrolled { background: rgba(52,211,153,.8); color: #fff; }
+.badge-new      { background: rgba(139,92,246,.8); color: #fff; }
+
+.card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+.card-category {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--accent);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--text-h);
+  line-height: 1.3; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.card-desc {
+  font-size: 13px; color: var(--text-muted); line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  flex: 1;
+}
+
+.card-meta {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 11px; color: var(--text-muted); flex-wrap: wrap;
+}
+.card-meta span { display: flex; align-items: center; gap: 4px; }
+.card-meta .star { color: var(--gold-400); }
+
+.card-divider { height: 1px; background: var(--border); }
+
+.card-footer { padding: 0 18px 18px; }
+.card-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 11px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; text-decoration: none; border: none;
+  cursor: pointer; font-family: inherit; transition: var(--trans);
+}
+.card-btn-view {
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  color: #fff; box-shadow: 0 4px 16px rgba(52,211,153,.25);
+}
+.card-btn-view:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(52,211,153,.35); }
+.card-btn-buy {
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; box-shadow: 0 4px 16px rgba(139,92,246,.25);
+}
+.card-btn-buy:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139,92,246,.35); }
+.card-btn-login {
+  background: var(--bg-card-2); color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.card-btn-login:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+/* ── Empty state ── */
+.empty-courses {
+  grid-column: 1/-1; text-align: center; padding: 64px 40px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.empty-courses-icon {
+  width: 80px; height: 80px; border-radius: var(--radius-xl);
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; color: var(--text-muted); opacity: .4;
+}
+.empty-courses h3 {
+  font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-h);
+}
+.empty-courses p { font-size: 14px; color: var(--text-muted); }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 24px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo {
+  font-family: var(--font-display); font-size: 18px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-links { display: flex; gap: 16px; }
+.footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer-links a:hover { color: var(--accent); }
+
+/* ── Toast ── */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ MOBILE ════════════════════════════════════════════════════════════ */
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+}
+@media (max-width: 640px) {
+  .topbar { padding: 0 14px; gap: 10px; }
+  .hero { padding: 48px 20px 40px; }
+  .hero-stats { gap: 20px; }
+  .search-section { padding: 12px 16px; }
+  .courses-section { padding: 20px 16px; }
+  .site-footer { padding: 16px; flex-direction: column; text-align: center; }
+}
     </style>
 </head>
 <body>
-    <form style="display: none;">{% csrf_token %}</form>
+<form style="display:none;">{% csrf_token %}</form>
 
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">Menu</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">{% trans "Home" %}</a>
-            <a href="/courses/" data-translate="nav-courses">{% trans "Courses" %}</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">{% trans "Chatbot" %}</a>
-            <a href="/competitions/" data-translate="nav-competitions">{% trans "Competitions" %}</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">{% trans "Performance" %}</a>
-            <a href="/about/" data-translate="nav-about">{% trans "About Us" %}</a>
-            <a href="/contact_us/" data-translate="nav-contact">{% trans "Contact Us" %}</a>
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+    <div class="topbar-page">
+        <i class="fas fa-book-open"></i>
+        <span>{% trans "Courses" %}</span>
+    </div>
 
-            {% if user.is_authenticated %}
-                <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">{% trans "Dashboard" %}</a>
-                <a href="/accounts/profile/" data-translate="nav-profile">{% trans "Profile" %}</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">{% trans "Logout" %}</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">{% trans "Coins:" %}</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">{% trans "Login" %}</a>
+    <!-- Nav links (desktop) -->
+    <nav class="nav-links">
+        <a href="/" class="nav-link"><i class="fas fa-home"></i> {% trans "Home" %}</a>
+        <a href="/courses/" class="nav-link active"><i class="fas fa-book-open"></i> {% trans "Courses" %}</a>
+        <a href="/chatbot/" class="nav-link"><i class="fas fa-robot"></i> {% trans "Chatbot" %}</a>
+        <a href="/competitions/" class="nav-link"><i class="fas fa-trophy"></i> {% trans "Competitions" %}</a>
+        <a href="/performance/dashboard/" class="nav-link"><i class="fas fa-chart-line"></i> {% trans "Performance" %}</a>
+        <a href="/about/" class="nav-link"><i class="fas fa-info-circle"></i> {% trans "About" %}</a>
+        <a href="/contact_us/" class="nav-link"><i class="fas fa-envelope"></i> {% trans "Contact" %}</a>
+    </nav>
+
+    <div class="topbar-actions">
+        {% if user.is_authenticated %}
+            {% if user.courses_profile %}
+            <div class="coins-badge">
+                <i class="fas fa-coins"></i>
+                <span>{{ user.courses_profile.coins }}</span>
+            </div>
             {% endif %}
+            <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-ghost">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>{% trans "Dashboard" %}</span>
+            </a>
+            <a href="/accounts/profile/" class="ctrl-btn" title="Profile"><i class="fas fa-user-circle"></i></a>
+            <a href="/accounts/logout/" class="ctrl-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+        {% else %}
+            <a href="/accounts/register/" class="tb-btn tb-btn-accent">
+                <i class="fas fa-sign-in-alt"></i>
+                {% trans "Login" %}
+            </a>
+        {% endif %}
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+        <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</header>
 
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
+<!-- Mobile Menu -->
+<nav class="mobile-menu" id="mobile-menu">
+    <a href="/" class="nav-link"><i class="fas fa-home"></i> {% trans "Home" %}</a>
+    <a href="/courses/" class="nav-link active"><i class="fas fa-book-open"></i> {% trans "Courses" %}</a>
+    <a href="/chatbot/" class="nav-link"><i class="fas fa-robot"></i> {% trans "Chatbot" %}</a>
+    <a href="/competitions/" class="nav-link"><i class="fas fa-trophy"></i> {% trans "Competitions" %}</a>
+    <a href="/performance/dashboard/" class="nav-link"><i class="fas fa-chart-line"></i> {% trans "Performance" %}</a>
+    <a href="/about/" class="nav-link"><i class="fas fa-info-circle"></i> {% trans "About" %}</a>
+    <a href="/contact_us/" class="nav-link"><i class="fas fa-envelope"></i> {% trans "Contact" %}</a>
+</nav>
 
+<div class="page-wrap">
+
+    <!-- ── Flash Messages ───────────────────────────────────────────── -->
     {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <p class="{{ message.tags }}">{{ message }}</p>
-            {% endfor %}
+    <div class="flash-messages">
+        {% for message in messages %}
+        <div class="flash-msg {{ message.tags }}">
+            <i class="fas
+                {% if 'success' in message.tags %}fa-check-circle
+                {% elif 'error' in message.tags %}fa-exclamation-circle
+                {% elif 'warning' in message.tags %}fa-exclamation-triangle
+                {% else %}fa-info-circle{% endif %}"></i>
+            {{ message }}
         </div>
+        {% endfor %}
+    </div>
     {% endif %}
 
+    <!-- ── Hero ─────────────────────────────────────────────────────── -->
     <section class="hero">
-        <h1 data-translate="hero-title">{% trans "Discover Our Courses" %}</h1>
-        <p data-translate="hero-desc">{% trans "Explore a wide range of expert-led courses to enhance your skills and knowledge." %}</p>
+        <div class="hero-eyebrow">
+            <i class="fas fa-graduation-cap"></i>
+            {% trans "Learning Platform" %}
+        </div>
+        <h1>
+            {% trans "Discover Our" %}
+            <span class="gradient-word">{% trans "Courses" %}</span>
+        </h1>
+        <p>{% trans "Explore a wide range of expert-led courses to enhance your skills and knowledge." %}</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-num">{{ courses|length }}+</div>
+                <div class="hero-stat-lbl">{% trans "Courses" %}</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">∞</div>
+                <div class="hero-stat-lbl">{% trans "Learning Hours" %}</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">AI</div>
+                <div class="hero-stat-lbl">{% trans "Powered" %}</div>
+            </div>
+        </div>
     </section>
 
-    <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
-        <input type="text" name="q" placeholder="{% trans 'Search for a course...' %}" value="{{ query|default:'' }}">
-        <button type="submit" class="btn" data-translate="search-button">{% trans "Search" %}</button>
+    <!-- ── Search ────────────────────────────────────────────────────── -->
+    <form method="get" action="{% url 'courses:search_courses' %}" class="search-section">
+        <div class="search-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" name="q"
+                   placeholder="{% trans 'Search for a course...' %}"
+                   value="{{ query|default:'' }}">
+            <button type="submit" class="search-btn">{% trans "Search" %}</button>
+        </div>
+        <div class="filter-chips">
+            <div class="filter-chip active" onclick="filterCards('all', this)">
+                <i class="fas fa-th-large"></i> {% trans "All" %}
+            </div>
+            <div class="filter-chip" onclick="filterCards('enrolled', this)">
+                <i class="fas fa-check-circle"></i> {% trans "Enrolled" %}
+            </div>
+            <div class="filter-chip" onclick="filterCards('new', this)">
+                <i class="fas fa-star"></i> {% trans "New" %}
+            </div>
+        </div>
     </form>
 
-    <div class="cards-container">
-        {% if courses %}
-            {% for course in courses %}
-                <div class="course-card" id="course-{{ course.id }}">
-                    <img src="{{ course.image }}" alt="{{ course.title }}" onerror="this.src='{% static 'images/default_course.jpg' %}'">
-                    <h2>{{ course.title }}</h2>
-                    <p>{{ course.description|truncatewords:20 }}</p>
-                    <div class="course-actions">
+    <!-- ── Courses Grid ──────────────────────────────────────────────── -->
+    <section class="courses-section">
+        <div class="courses-section-head">
+            <div class="courses-section-title">
+                <i class="fas fa-layer-group" style="color:var(--accent);"></i>
+                {% trans "Available Courses" %}
+                <span class="courses-count">{{ courses|length }}</span>
+            </div>
+        </div>
+
+        <div class="courses-grid" id="courses-grid">
+            {% if courses %}
+                {% for course in courses %}
+                <div class="course-card"
+                     data-enrolled="{% if course.id in enrolled_course_ids %}true{% else %}false{% endif %}"
+                     id="course-{{ course.id }}">
+
+                    <!-- Image -->
+                    <div class="card-img-wrap">
+                        <img src="{{ course.image }}"
+                             alt="{{ course.title }}"
+                             onerror="this.src='{% static 'images/default_course.jpg' %}'">
+                        <div class="card-img-overlay"></div>
+                        {% if user.is_authenticated and course.id in enrolled_course_ids %}
+                        <span class="card-img-badge badge-enrolled">
+                            <i class="fas fa-check"></i> {% trans "Enrolled" %}
+                        </span>
+                        {% else %}
+                        <span class="card-img-badge badge-new">
+                            <i class="fas fa-bolt"></i> {% trans "New" %}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Body -->
+                    <div class="card-body">
+                        <div class="card-category">
+                            <i class="fas fa-tag"></i> Eduvia
+                        </div>
+                        <div class="card-title">{{ course.title }}</div>
+                        <div class="card-desc">{{ course.description|truncatewords:20 }}</div>
+
+                        {% if course.average_rating %}
+                        <div class="card-meta">
+                            <span><i class="fas fa-star star"></i> {{ course.average_rating|floatformat:1 }}</span>
+                            <span><i class="fas fa-users"></i> Students</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-divider"></div>
+
+                    <!-- Footer / CTA -->
+                    <div class="card-footer">
                         {% if user.is_authenticated %}
                             {% if course.id in enrolled_course_ids %}
-                                <!-- ✅ مشترك → عرض الكورس -->
-                                <a href="{% url 'courses:course_details' course.id course.slug %}" class="join-btn">
-                                    {% trans "View Course" %}
-                                </a>
+                            <a href="{% url 'courses:course_details' course.id course.slug %}"
+                               class="card-btn card-btn-view">
+                                <i class="fas fa-play-circle"></i>
+                                {% trans "View Course" %}
+                            </a>
                             {% else %}
-                                <!-- ✅ مش مشترك → زر الشراء مفتوح للكل بدون قيود -->
-                                <a href="/api/marketplace/checkout/?course_id={{ course.id }}" class="buy-btn">
-                                    {% trans "Buy Course" %}
-                                </a>
+                            <a href="/api/marketplace/checkout/?course_id={{ course.id }}"
+                               class="card-btn card-btn-buy">
+                                <i class="fas fa-shopping-cart"></i>
+                                {% trans "Buy Course" %}
+                            </a>
                             {% endif %}
                         {% else %}
-                            <a href="/accounts/register/?next={% url 'courses:courses' %}" class="join-btn">
-                                {% trans "Login to Access" %}
-                            </a>
+                        <a href="/accounts/register/?next={% url 'courses:courses' %}"
+                           class="card-btn card-btn-login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            {% trans "Login to Access" %}
+                        </a>
                         {% endif %}
                     </div>
                 </div>
-            {% empty %}
-                <p>{% trans "No courses available." %}</p>
-            {% endfor %}
-        {% else %}
-            <p>{% trans "No courses available." %}</p>
-        {% endif %}
-    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-courses">
+                    <div class="empty-courses-icon"><i class="fas fa-book-open"></i></div>
+                    <h3>{% trans "No courses available." %}</h3>
+                    <p>{% trans "Check back later for new content." %}</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 
-    <footer class="footer">
-        <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+    <!-- ── Footer ────────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+        <div>
+            <div class="footer-logo">Eduvia</div>
+            <div class="footer-copy" style="margin-top:4px;">© 2025 Eduvia &amp; creativitycode. All rights reserved.</div>
+        </div>
+        <div class="footer-links">
+            <a href="/about/">{% trans "About" %}</a>
+            <a href="/contact_us/">{% trans "Contact" %}</a>
+            <a href="/chatbot/">{% trans "Chatbot" %}</a>
+            <a href="/competitions/">{% trans "Competitions" %}</a>
+        </div>
     </footer>
 
-    <script>
-        function toggleMenu() {
-            document.querySelector('.menu').classList.toggle('active');
-        }
-        function toggleDarkMode() {
-            const body = document.body;
-            const toggleIcon = document.querySelector('.dark-mode-toggle i');
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                toggleIcon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                toggleIcon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
-        }
-        function toggleLanguage() {
-            const htmlRoot = document.getElementById('html-root');
-            const newLang = htmlRoot.getAttribute('lang') === 'en' ? 'ar' : 'en';
-            htmlRoot.setAttribute('lang', newLang);
-            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-            window.location.reload();
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.querySelector('.dark-mode-toggle i').classList.replace('fa-moon', 'fa-sun');
-            }
-        });
-    </script>
+</div><!-- /page-wrap -->
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── Theme ───────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Lang ────────────────────────────────────────────────────────────── */
+function toggleLang() {
+  const root = document.getElementById('html-root');
+  const newLang = root.getAttribute('lang') === 'en' ? 'ar' : 'en';
+  root.setAttribute('lang', newLang);
+  root.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+  localStorage.setItem('lang', newLang);
+  window.location.reload();
+}
+
+/* ── Mobile menu ─────────────────────────────────────────────────────── */
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger-btn');
+  if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+/* ── Filter chips ────────────────────────────────────────────────────── */
+function filterCards(type, chip) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  const cards = document.querySelectorAll('.course-card');
+  cards.forEach(card => {
+    if (type === 'all') { card.style.display = ''; return; }
+    if (type === 'enrolled') {
+      card.style.display = card.dataset.enrolled === 'true' ? '' : 'none';
+    } else if (type === 'new') {
+      card.style.display = card.dataset.enrolled === 'false' ? '' : 'none';
+    }
+  });
+}
+
+/* ── Toast ───────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  applyTheme(savedTheme);
+  const savedLang = localStorage.getItem('lang');
+  if (savedLang && savedLang !== document.documentElement.getAttribute('lang')) {
+    document.getElementById('html-root').setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+    document.getElementById('html-root').setAttribute('lang', savedLang);
+  }
+});
+</script>
 </body>
 </html>

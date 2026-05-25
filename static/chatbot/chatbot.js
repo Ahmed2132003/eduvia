@@ -1,18 +1,22 @@
+/* ═══════════════════════════════════════════════
+   EDUVIA Chatbot JS — Premium Edition
+   ═══════════════════════════════════════════════ */
+
 const translations = {
     en: {
         "chatbot-title": "Chatbot - Eduvia",
         "chatbot-meta-desc": "Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!",
         "chatbot-meta-keywords": "Eduvia, chatbot, online learning, programming, mathematics, English",
         "chatbot-og-title": "Chatbot - Eduvia",
-        "chatbot-og-desc": "Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!",
+        "chatbot-og-desc": "Interact with Eduvia's chatbot.",
         "chatbot-twitter-title": "Chatbot - Eduvia",
-        "chatbot-twitter-desc": "Interact with Eduvia's chatbot. Ask questions about programming, mathematics, English, or our platform!",
+        "chatbot-twitter-desc": "Interact with Eduvia's chatbot.",
         "chatbot-hero-title": "Welcome to Eduvia's Chatbot",
         "chatbot-hero-desc": "Eduvia's Chatbot is here to help you with programming, mathematics, and English. Feel free to ask any questions related to these topics or our platform!",
         "chatbot-hero-btn": "Start Chatting",
         "chatbot-input-placeholder": "Type your message here...",
         "chatbot-send": "Send",
-        "chatbot-loading": "Loading...",
+        "chatbot-loading": "Thinking",
         "chatbot-chats-title": "Your Chats",
         "chatbot-new-chat": "New Chat",
         "chatbot-no-chats": "No chats yet.",
@@ -43,15 +47,15 @@ const translations = {
         "chatbot-meta-desc": "تفاعل مع روبوت الدردشة الخاص بـ إدوفيا. اطرح أسئلتك حول البرمجة، الرياضيات، الإنجليزية، أو منصتنا!",
         "chatbot-meta-keywords": "إدوفيا، روبوت الدردشة، التعلم عبر الإنترنت، البرمجة، الرياضيات، الإنجليزية",
         "chatbot-og-title": "روبوت الدردشة - إدوفيا",
-        "chatbot-og-desc": "تفاعل مع روبوت الدردشة الخاص بـ إدوفيا. اطرح أسئلتك حول البرمجة، الرياضيات، الإنجليزية، أو منصتنا!",
+        "chatbot-og-desc": "تفاعل مع روبوت الدردشة الخاص بـ إدوفيا.",
         "chatbot-twitter-title": "روبوت الدردشة - إدوفيا",
-        "chatbot-twitter-desc": "تفاعل مع روبوت الدردشة الخاص بـ إدوفيا. اطرح أسئلتك حول البرمجة، الرياضيات، الإنجليزية، أو منصتنا!",
+        "chatbot-twitter-desc": "تفاعل مع روبوت الدردشة الخاص بـ إدوفيا.",
         "chatbot-hero-title": "مرحبًا بك في روبوت الدردشة الخاص بإدوفيا",
         "chatbot-hero-desc": "روبوت الدردشة الخاص بإدوفيا هنا لمساعدتك في البرمجة، الرياضيات، والإنجليزية. لا تتردد في طرح أي أسئلة تتعلق بهذه المواضيع أو منصتنا!",
         "chatbot-hero-btn": "ابدأ الدردشة",
         "chatbot-input-placeholder": "اكتب رسالتك هنا...",
         "chatbot-send": "إرسال",
-        "chatbot-loading": "جارٍ التحميل...",
+        "chatbot-loading": "جارٍ التفكير",
         "chatbot-chats-title": "محادثاتك",
         "chatbot-new-chat": "محادثة جديدة",
         "chatbot-no-chats": "لا توجد محادثات بعد.",
@@ -74,45 +78,90 @@ const translations = {
         "nav-coins": "النقاط:",
         "nav-login": "تسجيل الدخول",
         "search-placeholder": "ابحث عن دورة...",
-        "search-btn": "ابحث",
-        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
+        "search-btn": "بحث",
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود. جميع الحقوق محفوظة."
     }
 };
+
+/* ─── Helpers ─── */
+function getLang() {
+    return document.getElementById('html-root').getAttribute('lang') || 'en';
+}
 
 function getCSRFToken() {
     const cookies = document.cookie.split(';');
     for (let cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
-        if (name === 'csrftoken') {
-            return value;
-        }
+        if (name === 'csrftoken') return value;
     }
     return null;
 }
 
+function applyTranslations(lang) {
+    const t = translations[lang];
+    if (!t) return;
+
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        const text = t[key];
+        if (!text) return;
+
+        const tag = el.tagName.toLowerCase();
+        if (tag === 'meta') {
+            if (el.getAttribute('name') === 'description' ||
+                el.getAttribute('name') === 'keywords' ||
+                el.getAttribute('property')?.startsWith('og:') ||
+                el.getAttribute('name')?.startsWith('twitter:')) {
+                el.setAttribute('content', text);
+            }
+        } else if (tag === 'input' && el.getAttribute('type') === 'text') {
+            el.setAttribute('placeholder', text);
+        } else {
+            // Preserve child icons — only update text nodes
+            const iconEl = el.querySelector('i');
+            if (iconEl) {
+                // Set text after the icon
+                const textNode = [...el.childNodes].find(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
+                if (textNode) textNode.textContent = ' ' + text;
+                else el.appendChild(document.createTextNode(' ' + text));
+            } else {
+                el.textContent = text;
+            }
+        }
+    });
+
+    document.title = t["chatbot-title"] || document.title;
+}
+
+/* ─── Send Message ─── */
 async function sendMessage() {
-    const inputField = document.getElementById("user-input");
-    const sendButton = document.getElementById("send-button");
+    const inputField  = document.getElementById("user-input");
+    const sendButton  = document.getElementById("send-button");
     const messagesDiv = document.getElementById("chat-messages");
-    const loadingDiv = document.getElementById("loading");
-    const errorDiv = document.getElementById("error-message");
+    const loadingDiv  = document.getElementById("loading");
+    const errorDiv    = document.getElementById("error-message");
+    const lang        = getLang();
     const userMessage = inputField.value.trim();
 
     if (!userMessage) {
-        errorDiv.textContent = translations[document.getElementById('html-root').getAttribute('lang')]["chatbot-error"] + "Message cannot be empty";
+        errorDiv.textContent = (translations[lang]["chatbot-error"] || "Error: ") + "Message cannot be empty";
+        errorDiv.style.display = "block";
         return;
     }
 
-    // Show user message
-    const userMessageDiv = document.createElement("div");
-    userMessageDiv.className = "message user-message";
-    userMessageDiv.textContent = userMessage;
-    messagesDiv.appendChild(userMessageDiv);
+    errorDiv.style.display = "none";
 
-    // Disable button and show loading
+    // Append user message bubble
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user-message";
+    userDiv.textContent = userMessage;
+    messagesDiv.appendChild(userDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    // Disable UI
     sendButton.disabled = true;
     loadingDiv.style.display = "block";
-    errorDiv.textContent = "";
+    inputField.value = "";
 
     try {
         const response = await fetch(window.location.href, {
@@ -132,128 +181,96 @@ async function sendMessage() {
         }
 
         if (data.error) {
-            errorDiv.textContent = translations[document.getElementById('html-root').getAttribute('lang')]["chatbot-error"] + data.error;
+            errorDiv.textContent = (translations[lang]["chatbot-error"] || "Error: ") + data.error;
+            errorDiv.style.display = "block";
         } else {
-            const botMessageDiv = document.createElement("div");
-            botMessageDiv.className = "message bot-message";
-            botMessageDiv.textContent = data.response;
-            messagesDiv.appendChild(botMessageDiv);
+            const botDiv = document.createElement("div");
+            botDiv.className = "message bot-message";
+            botDiv.textContent = data.response;
+            messagesDiv.appendChild(botDiv);
 
-            // Update chat list if new chat was created
+            // Update sidebar if new chat created
             if (data.chat_id && !document.querySelector(`.sidebar ul li a[href="/chatbot/${data.chat_id}/"]`)) {
                 const chatList = document.querySelector('.sidebar ul');
-                const newChatItem = document.createElement('li');
-                newChatItem.innerHTML = `<a href="/chatbot/${data.chat_id}/" class="active">${data.chat_title} (${new Date().toLocaleString()})</a>`;
-                chatList.insertBefore(newChatItem, chatList.firstChild);
-                document.querySelectorAll('.sidebar ul li a').forEach(link => {
-                    if (link.getAttribute('href') !== `/chatbot/${data.chat_id}/`) {
-                        link.classList.remove('active');
-                    }
+                const newItem  = document.createElement('li');
+                newItem.innerHTML = `<a href="/chatbot/${data.chat_id}/" class="active">
+                    <i class="fas fa-comment-dots" style="font-size:11px;opacity:.5;margin-inline-end:6px;"></i>
+                    ${data.chat_title} · ${new Date().toLocaleDateString()}</a>`;
+                chatList.insertBefore(newItem, chatList.firstChild);
+                chatList.querySelectorAll('a').forEach(a => {
+                    if (a.getAttribute('href') !== `/chatbot/${data.chat_id}/`) a.classList.remove('active');
                 });
             }
 
-            inputField.value = "";
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
-    } catch (error) {
-        errorDiv.textContent = translations[document.getElementById('html-root').getAttribute('lang')]["chatbot-error"] + error.message;
-        console.error('There was a problem with the fetch operation:', error);
+    } catch (err) {
+        errorDiv.textContent = (translations[lang]["chatbot-error"] || "Error: ") + err.message;
+        errorDiv.style.display = "block";
+        console.error('Fetch error:', err);
     } finally {
         sendButton.disabled = false;
         loadingDiv.style.display = "none";
     }
 }
 
+/* ─── Toggle Menu ─── */
 function toggleMenu() {
-    const menu = document.querySelector('.menu');
-    menu.classList.toggle('active');
+    document.querySelector('.menu').classList.toggle('active');
 }
 
+/* ─── Toggle Dark Mode ─── */
 function toggleDarkMode() {
-    const body = document.body;
-    const toggleIcon = document.querySelector('.dark-mode-toggle i');
-    body.classList.toggle('dark-mode');
-
-    if (body.classList.contains('dark-mode')) {
-        toggleIcon.classList.remove('fa-moon');
-        toggleIcon.classList.add('fa-sun');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        toggleIcon.classList.remove('fa-sun');
-        toggleIcon.classList.add('fa-moon');
-        localStorage.setItem('theme', 'light');
-    }
+    document.body.classList.toggle('dark-mode');
+    const icon = document.getElementById('theme-icon');
+    const isDark = document.body.classList.contains('dark-mode');
+    // Only swap moon ↔ sun; globe icon is separate and never touched
+    if (icon) icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
+/* ─── Toggle Language ─── */
 function toggleLanguage() {
-    const htmlRoot = document.getElementById('html-root');
-    const currentLang = htmlRoot.getAttribute('lang');
-    const newLang = currentLang === 'en' ? 'ar' : 'en';
-
-    htmlRoot.setAttribute('lang', newLang);
-    htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-
-    document.querySelectorAll('[data-translate]').forEach(element => {
-        const key = element.getAttribute('data-translate');
-        const text = translations[newLang][key];
-        if (element.tagName.toLowerCase() === 'meta') {
-            if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                element.setAttribute('content', text);
-            } else if (element.getAttribute('property')?.startsWith('og:') || element.getAttribute('name')?.startsWith('twitter:')) {
-                element.setAttribute('content', text);
-            }
-        } else if (element.tagName.toLowerCase() === 'input' && element.getAttribute('type') === 'text') {
-            element.setAttribute('placeholder', text);
-        } else {
-            element.textContent = text;
-        }
-    });
-
-    document.title = translations[newLang]["chatbot-title"];
+    const html    = document.getElementById('html-root');
+    const newLang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
+    html.setAttribute('lang', newLang);
+    html.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
     localStorage.setItem('language', newLang);
+    applyTranslations(newLang);
+    // Globe icon stays — do NOT reassign language-toggle icon
 }
 
+/* ─── DOMContentLoaded ─── */
 document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    const toggleIcon = document.querySelector('.dark-mode-toggle i');
-    if (savedTheme === 'dark') {
+    // Restore theme
+    if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-mode');
-        toggleIcon.classList.remove('fa-moon');
-        toggleIcon.classList.add('fa-sun');
+        const icon = document.getElementById('theme-icon');
+        if (icon) icon.className = 'fas fa-sun';
     }
 
+    // Restore language
     const savedLang = localStorage.getItem('language') || 'en';
-    const htmlRoot = document.getElementById('html-root');
-    htmlRoot.setAttribute('lang', savedLang);
-    htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+    const html = document.getElementById('html-root');
+    html.setAttribute('lang', savedLang);
+    html.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+    applyTranslations(savedLang);
 
-    document.querySelectorAll('[data-translate]').forEach(element => {
-        const key = element.getAttribute('data-translate');
-        const text = translations[savedLang][key];
-        if (element.tagName.toLowerCase() === 'meta') {
-            if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                element.setAttribute('content', text);
-            } else if (element.getAttribute('property')?.startsWith('og:') || element.getAttribute('name')?.startsWith('twitter:')) {
-                element.setAttribute('content', text);
-            }
-        } else if (element.tagName.toLowerCase() === 'input' && element.getAttribute('type') === 'text') {
-            element.setAttribute('placeholder', text);
-        } else {
-            element.textContent = text;
-        }
-    });
+    // Enter key to send
+    const input = document.getElementById("user-input");
+    if (input) {
+        input.addEventListener("keypress", e => {
+            if (e.key === "Enter") { e.preventDefault(); sendMessage(); }
+        });
+    }
 
-    document.title = translations[savedLang]["chatbot-title"];
+    // New chat cleanup
+    const newChatBtn = document.querySelector('.new-chat-btn');
+    if (newChatBtn) {
+        newChatBtn.addEventListener('click', () => localStorage.removeItem('currentChatId'));
+    }
 
-    document.getElementById("user-input").addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-
-    // Clear current chat ID on New Chat click
-    document.querySelector('.new-chat-btn').addEventListener('click', () => {
-        localStorage.removeItem('currentChatId');
-    });
+    // Scroll chat to bottom on load
+    const messagesDiv = document.getElementById("chat-messages");
+    if (messagesDiv) messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });

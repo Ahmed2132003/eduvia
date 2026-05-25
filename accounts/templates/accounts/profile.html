@@ -1,235 +1,870 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="title">User Profile - Eduvia</title>
-    <meta name="description" content="View and edit your personal profile on Eduvia.">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ request.build_absolute_uri }}">
-    <meta property="og:title" content="User Profile - Eduvia">
-    <meta property="og:image" content="https://i.postimg.cc/sxgZmKDY/profile.jpg">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:type" content="website">
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'accounts/profile.css' %}">
-    <style>
-        :root { --hero-bg-image: url("https://i.postimg.cc/sxgZmKDY/profile.jpg"); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-translate="title">User Profile — Eduvia</title>
+<meta name="description" content="View and edit your personal profile on Eduvia.">
+<meta name="author" content="Eduvia">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:title" content="User Profile - Eduvia">
+<meta property="og:image" content="https://i.postimg.cc/sxgZmKDY/profile.jpg">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (Profile Page)
+   Matching lesson_view.html exactly
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-page-label {
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* coins badge */
+.coins-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 600; color: var(--gold-400);
+}
+
+/* ═══ NAVBAR (secondary) ═══════════════════════════════════════════════ */
+.nav-secondary {
+  position: fixed; top: var(--topbar-h); left: 0; right: 0; z-index: 500;
+  background: rgba(8,11,20,.75);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 2px;
+  padding: 0 24px; height: 44px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.nav-secondary::-webkit-scrollbar { display: none; }
+[data-theme="light"] .nav-secondary { background: rgba(255,255,255,.75); }
+
+.nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+  text-decoration: none; white-space: nowrap; transition: var(--trans);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.nav-link:hover { color: var(--text-p); background: var(--bg-card); }
+.nav-link.active { color: var(--accent); border-bottom-color: var(--accent); }
+[lang="ar"] .nav-link { font-family: var(--font-arabic); }
+
+/* ═══ LAYOUT ═══════════════════════════════════════════════════════════ */
+.page-layout {
+  padding-top: calc(var(--topbar-h) + 44px);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+.page-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  width: 100%;
+  flex: 1;
+}
+
+/* ═══ MESSAGES ═══════════════════════════════════════════════════════════ */
+.alert {
+  padding: 12px 16px; border-radius: var(--radius-md);
+  font-size: 13px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+  animation: cardReveal .4s ease both;
+}
+.alert-success { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25); color: var(--success); }
+.alert-error   { background: rgba(251,113,133,.08); border: 1px solid rgba(251,113,133,.22); color: var(--danger); }
+
+/* ═══ PROFILE HERO CARD ══════════════════════════════════════════════════ */
+.profile-hero {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Banner */
+.profile-banner {
+  height: 130px;
+  background: linear-gradient(135deg, #1a0f40 0%, #0d1120 40%, #0a1830 70%, #0f0a25 100%);
+  position: relative; overflow: hidden;
+}
+.profile-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 60%, rgba(139,92,246,.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(251,191,36,.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 100%, rgba(56,189,248,.1) 0%, transparent 50%);
+}
+.profile-banner-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(139,92,246,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Avatar */
+.profile-avatar-section {
+  padding: 0 32px; display: flex; align-items: flex-end;
+  gap: 20px; margin-top: -48px; position: relative; z-index: 2;
+}
+.profile-avatar-ring {
+  width: 96px; height: 96px; border-radius: 50%;
+  border: 3px solid var(--bg-card);
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+  box-shadow: 0 0 0 3px var(--violet-500), 0 8px 32px rgba(139,92,246,.4);
+  position: relative;
+}
+.profile-avatar-ring img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.avatar-placeholder-large {
+  font-size: 36px; color: rgba(255,255,255,.7);
+}
+.avatar-verified-dot {
+  position: absolute; bottom: 4px; right: 4px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--success); border: 2px solid var(--bg-card);
+  display: flex; align-items: center; justify-content: center;
+}
+.avatar-verified-dot i { font-size: 9px; color: #fff; }
+
+.profile-name-area {
+  padding-bottom: 12px; flex: 1;
+}
+.profile-display-name {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  color: var(--text-h); letter-spacing: -.3px;
+}
+.profile-username-line {
+  font-size: 13px; color: var(--text-muted); margin-top: 2px;
+}
+
+/* Role badge */
+.role-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; letter-spacing: .4px;
+  background: var(--violet-glow); color: var(--violet-400);
+  border: 1px solid var(--border-glow); margin-top: 6px;
+}
+
+/* Actions row */
+.profile-actions-row {
+  padding: 16px 32px 24px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+
+/* ═══ INFO GRID CARD ═════════════════════════════════════════════════════ */
+.section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  margin-bottom: 20px;
+  overflow: hidden;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+  animation-delay: .08s;
+}
+.section-card-header {
+  padding: 18px 24px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.section-header-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  color: var(--violet-400); font-size: 15px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.section-header-title {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
+}
+.section-card-body { padding: 20px 24px; }
+
+/* Info grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.info-item {
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  transition: var(--trans);
+}
+.info-item:hover { border-color: var(--border-glow); background: var(--violet-glow); }
+.info-item-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--accent); font-size: 14px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.info-item-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--text-muted); margin-bottom: 3px;
+}
+.info-item-value {
+  font-size: 14px; font-weight: 600; color: var(--text-h);
+}
+
+/* ═══ MESSAGE FORM ════════════════════════════════════════════════════════ */
+.message-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  margin-bottom: 20px;
+  overflow: hidden;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+  animation-delay: .14s;
+}
+.message-section-body { padding: 20px 24px; }
+.msg-textarea {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 14px 16px; font-size: 14px; font-family: inherit;
+  line-height: 1.65; resize: vertical; min-height: 110px;
+  transition: var(--trans);
+}
+.msg-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.msg-textarea::placeholder { color: var(--text-muted); }
+.file-attach-row {
+  margin-top: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.file-attach-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  background: var(--bg-card-2); color: var(--text-muted);
+  border: 1px solid var(--border); transition: var(--trans);
+}
+.file-attach-label:hover { border-color: var(--accent); color: var(--accent); }
+.file-attach-label input { display: none; }
+.msg-submit-btn {
+  margin-top: 14px; padding: 12px 28px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.msg-submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.msg-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+/* ═══ QUICK ACCESS ══════════════════════════════════════════════════════ */
+.qa-section {
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+  animation-delay: .2s;
+}
+.qa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 0;
+}
+.qa-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  text-decoration: none;
+  transition: var(--trans);
+  display: flex; flex-direction: column; gap: 8px;
+  position: relative; overflow: hidden;
+}
+.qa-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--violet-500), var(--gold-400));
+  opacity: 0; transition: var(--trans);
+}
+.qa-card:hover { border-color: var(--border-glow); background: var(--bg-card-2); transform: translateY(-2px); box-shadow: var(--glow); }
+.qa-card:hover::before { opacity: 1; }
+.qa-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-sm);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  color: var(--violet-400); font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+.qa-title {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 700; color: var(--text-h);
+}
+.qa-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.qa-cta {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 700; color: var(--accent);
+  margin-top: 4px; text-transform: uppercase; letter-spacing: .4px;
+}
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.page-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.page-footer a { color: var(--accent); text-decoration: none; }
+.page-footer a:hover { text-decoration: underline; }
+
+/* ═══ SPINNER ═══════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ TOAST ═══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ MOBILE ════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .page-inner { padding: 20px 14px 60px; }
+  .profile-avatar-section { padding: 0 18px; gap: 14px; margin-top: -40px; }
+  .profile-avatar-ring { width: 76px; height: 76px; }
+  .profile-display-name { font-size: 18px; }
+  .profile-actions-row { padding: 12px 18px 18px; }
+  .section-card-body, .message-section-body { padding: 16px; }
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-page-label { display: none; }
+  .nav-secondary { padding: 0 14px; }
+  .info-grid { grid-template-columns: 1fr; }
+  .qa-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 420px) {
+  .qa-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-<!-- ============ HEADER ============ -->
-<header class="header">
-    <div class="logo" data-translate="logo">Eduvia</div>
-    <button class="hamburger" onclick="toggleMenu()">☰</button>
-    <nav class="menu">
-        <a href="/" data-translate="nav-home">Home</a>
-        <a href="/courses/" data-translate="nav-courses">Courses</a>
-        <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-        <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-        <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-        <a href="/about/" data-translate="nav-about">About Us</a>
-        <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-        {% if user.is_authenticated %}
-            {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-            {% endif %}
-            <a href="{% url 'accounts:profile' %}" data-translate="nav-profile">Profile</a>
-            <a href="{% url 'accounts:user_messages' %}" data-translate="nav-messages">Messages</a>
-            <a href="{% url 'accounts:logout' %}" data-translate="nav-logout">Logout</a>
-            {% if user.courses_profile %}
-                <span class="coins-display">
-                    <i class="fas fa-coins coins-icon"></i>
-                    <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                </span>
-            {% endif %}
-        {% else %}
-            <a href="{% url 'accounts:login' %}" data-translate="nav-login">Login</a>
-        {% endif %}
-        <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
-        <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
-    </nav>
+<!-- ═══ TOPBAR ════════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-page-label" data-i18n="page-label">User Profile</span>
+
+  <div class="topbar-actions">
+    <!-- Coins -->
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-pill">
+      <i class="fas fa-coins"></i>
+      <span>{{ user.courses_profile.coins }}</span>
+    </div>
+    {% endif %}
+
+    <!-- Theme toggle -->
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <!-- Language toggle -->
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+
+    <!-- Back to courses -->
+    <a href="/courses/" class="tb-btn tb-btn-ghost">
+      <i class="fas fa-graduation-cap"></i>
+      <span data-i18n="nav-courses">Courses</span>
+    </a>
+
+    <!-- Edit / Logout -->
+    {% if user.is_authenticated %}
+      {% if is_own_profile %}
+      <a href="{% url 'accounts:edit_profile' %}" class="tb-btn tb-btn-accent">
+        <i class="fas fa-pen-to-square"></i>
+        <span data-i18n="btn-edit">Edit Profile</span>
+      </a>
+      {% endif %}
+    {% endif %}
+  </div>
 </header>
 
-<!-- ============ HERO ============ -->
-<section class="hero">
-    <h1 data-translate="hero-title">Your Profile</h1>
-    <p data-translate="hero-subtitle">View and manage your personal details on Eduvia.</p>
-</section>
-
-<!-- ============ PROFILE CONTENT ============ -->
-{% block content %}
-<div class="profile-container">
-
-    <h1 data-translate="profile-title">User Profile</h1>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert{% endif %}">
-                {{ message }}
-            </div>
-        {% endfor %}
+<!-- ═══ SECONDARY NAVBAR ══════════════════════════════════════════════════ -->
+<nav class="nav-secondary">
+  <a href="/" class="nav-link" data-i18n="nav-home"><i class="fas fa-house"></i> Home</a>
+  <a href="/courses/" class="nav-link" data-i18n="nav-courses"><i class="fas fa-graduation-cap"></i> Courses</a>
+  <a href="/chatbot/" class="nav-link" data-i18n="nav-chatbot"><i class="fas fa-robot"></i> Chatbot</a>
+  <a href="/competitions/" class="nav-link" data-i18n="nav-competitions"><i class="fas fa-trophy"></i> Competitions</a>
+  <a href="/performance/dashboard/" class="nav-link" data-i18n="nav-performance"><i class="fas fa-chart-line"></i> Performance</a>
+  <a href="/about/" class="nav-link" data-i18n="nav-about"><i class="fas fa-info-circle"></i> About Us</a>
+  <a href="/contact_us/" class="nav-link" data-i18n="nav-contact"><i class="fas fa-envelope"></i> Contact</a>
+  {% if user.is_authenticated %}
+    {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link" data-i18n="nav-dashboard"><i class="fas fa-th-large"></i> Dashboard</a>
     {% endif %}
+    <a href="{% url 'accounts:profile' %}" class="nav-link active" data-i18n="nav-profile"><i class="fas fa-user"></i> Profile</a>
+    <a href="{% url 'accounts:user_messages' %}" class="nav-link" data-i18n="nav-messages"><i class="fas fa-comments"></i> Messages</a>
+    <a href="{% url 'accounts:logout' %}" class="nav-link" data-i18n="nav-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  {% else %}
+    <a href="{% url 'accounts:login' %}" class="nav-link" data-i18n="nav-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+  {% endif %}
+</nav>
 
-    <!-- Glass Profile Card -->
-    <div class="profile-card">
+<!-- ═══ PAGE ══════════════════════════════════════════════════════════════ -->
+<div class="page-layout">
+<div class="page-inner">
 
-        <!-- Card Header: Avatar + Name -->
-        <div class="profile-card-header">
-            <div class="profile-avatar-wrap">
-                <div class="profile-avatar-ring">
-                    {% if profile.profile_picture %}
-                        <img src="{{ profile.profile_picture }}"
-                             alt="Profile Picture"
-                             onerror="this.src='{% static 'images/default_profile.jpg' %}'">
-                    {% else %}
-                        <div class="avatar-placeholder">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="avatar-badge"><i class="fas fa-check"></i></div>
-            </div>
+  <!-- Django messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
 
-            <div class="profile-header-info">
-                <div class="username">{{ profile.user.username }}</div>
-                <div class="profile-role-badge">
-                    <i class="fas fa-shield-halved"></i>
-                    {{ profile.user.get_role_display }}
-                </div>
-            </div>
+  <!-- ═══ PROFILE HERO ══════════════════════════════════════════════════ -->
+  <div class="profile-hero">
+
+    <!-- Banner -->
+    <div class="profile-banner">
+      <div class="profile-banner-grid"></div>
+    </div>
+
+    <!-- Avatar + name -->
+    <div class="profile-avatar-section">
+      <div class="profile-avatar-ring">
+        {% if profile.profile_picture %}
+          <img src="{{ profile.profile_picture }}"
+               alt="Profile Picture"
+               onerror="this.src='{% static 'images/default_profile.jpg' %}'">
+        {% else %}
+          <div class="avatar-placeholder-large">
+            <i class="fas fa-user"></i>
+          </div>
+        {% endif %}
+        <div class="avatar-verified-dot"><i class="fas fa-check"></i></div>
+      </div>
+
+      <div class="profile-name-area">
+        <div class="profile-display-name">
+          {{ profile.full_name|default:profile.user.username }}
+        </div>
+        <div class="profile-username-line">@{{ profile.user.username }}</div>
+        <div class="role-badge">
+          <i class="fas fa-shield-halved"></i>
+          {{ profile.user.get_role_display }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="profile-actions-row">
+      {% if not is_own_profile %}
+        <a href="{% url 'accounts:start_chat' user_id=viewed_user.id %}" class="tb-btn tb-btn-accent" data-i18n="btn-chat">
+          <i class="fas fa-comment-dots"></i> Chat
+        </a>
+      {% endif %}
+      {% if is_own_profile %}
+        <a href="{% url 'accounts:edit_profile' %}" class="tb-btn tb-btn-accent" data-i18n="btn-edit">
+          <i class="fas fa-pen-to-square"></i> Edit Profile
+        </a>
+      {% endif %}
+      <a href="{% url 'home' %}" class="tb-btn tb-btn-ghost" data-i18n="btn-home">
+        <i class="fas fa-house"></i> Back to Home
+      </a>
+    </div>
+
+  </div><!-- /profile-hero -->
+
+  <!-- ═══ INFO GRID ═════════════════════════════════════════════════════ -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-header-icon"><i class="fas fa-id-card"></i></div>
+      <div class="section-header-title" data-i18n="section-info">Personal Information</div>
+    </div>
+    <div class="section-card-body">
+      <div class="info-grid">
+
+        <div class="info-item">
+          <div class="info-item-icon"><i class="fas fa-at"></i></div>
+          <div>
+            <div class="info-item-label" data-i18n="label-username">Username</div>
+            <div class="info-item-value">{{ profile.user.username }}</div>
+          </div>
         </div>
 
-        <!-- Card Body: Info Grid + Actions -->
-        <div class="profile-card-body">
+        <div class="info-item">
+          <div class="info-item-icon"><i class="fas fa-signature"></i></div>
+          <div>
+            <div class="info-item-label" data-i18n="label-fullname">Full Name</div>
+            <div class="info-item-value">{{ profile.full_name|default:"—" }}</div>
+          </div>
+        </div>
 
-            <div class="info-grid">
-                <!-- Username -->
-                <div class="info-item">
-                    <div class="info-item-icon"><i class="fas fa-at"></i></div>
-                    <div class="info-item-content">
-                        <div class="info-item-label" data-translate="label-username">Username</div>
-                        <div class="info-item-value">{{ profile.user.username }}</div>
-                    </div>
-                </div>
+        <div class="info-item">
+          <div class="info-item-icon"><i class="fas fa-user-tag"></i></div>
+          <div>
+            <div class="info-item-label" data-i18n="label-role">Role</div>
+            <div class="info-item-value">{{ profile.user.get_role_display }}</div>
+          </div>
+        </div>
 
-                <!-- Full Name -->
-                <div class="info-item">
-                    <div class="info-item-icon"><i class="fas fa-id-card"></i></div>
-                    <div class="info-item-content">
-                        <div class="info-item-label" data-translate="label-fullname">Full Name</div>
-                        <div class="info-item-value">{{ profile.full_name|default:"—" }}</div>
-                    </div>
-                </div>
+        <div class="info-item">
+          <div class="info-item-icon"><i class="fas fa-cake-candles"></i></div>
+          <div>
+            <div class="info-item-label" data-i18n="label-dob">Date of Birth</div>
+            <div class="info-item-value">{{ profile.date_of_birth|default:"—" }}</div>
+          </div>
+        </div>
 
-                <!-- Role -->
-                <div class="info-item">
-                    <div class="info-item-icon"><i class="fas fa-user-tag"></i></div>
-                    <div class="info-item-content">
-                        <div class="info-item-label" data-translate="label-role">Role</div>
-                        <div class="info-item-value">{{ profile.user.get_role_display }}</div>
-                    </div>
-                </div>
-
-                <!-- Date of Birth -->
-                <div class="info-item">
-                    <div class="info-item-icon"><i class="fas fa-cake-candles"></i></div>
-                    <div class="info-item-content">
-                        <div class="info-item-label" data-translate="label-dob">Date of Birth</div>
-                        <div class="info-item-value">{{ profile.date_of_birth|default:"—" }}</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="profile-actions">
-                {% if not is_own_profile %}
-                    <a href="{% url 'accounts:start_chat' user_id=viewed_user.id %}" class="btn btn-primary" data-translate="btn-chat">
-                        <i class="fas fa-comment-dots"></i> Chat
-                    </a>
-                {% endif %}
-                {% if is_own_profile %}
-                    <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary" data-translate="btn-edit">
-                        <i class="fas fa-pen-to-square"></i> Edit Profile
-                    </a>
-                {% endif %}
-                <a href="{% url 'home' %}" class="btn btn-outline" data-translate="btn-home">
-                    <i class="fas fa-house"></i> Back to Home
-                </a>
-            </div>
-
-        </div><!-- /.profile-card-body -->
-    </div><!-- /.profile-card -->
-
-    <!-- Message Form (other user's profile) -->
-    {% if not is_own_profile %}
-    <div class="message-form">
-        <h3 data-translate="message-form-title">Send a Message to {{ viewed_user.username }}</h3>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-container">
-                {{ form.content }}
-                <div>
-                    <label for="{{ form.file.id_for_label }}" data-translate="label-file">
-                        <i class="fas fa-paperclip"></i> Choose File
-                    </label>
-                    {{ form.file }}
-                </div>
-                <button type="submit" data-translate="btn-send">
-                    <i class="fas fa-paper-plane"></i> Send Message
-                </button>
-            </div>
-        </form>
+      </div>
     </div>
-    {% endif %}
+  </div>
 
-</div><!-- /.profile-container -->
-{% endblock %}
-
-<!-- ============ QUICK ACCESS ============ -->
-<section class="quick-access-section">
-    <div class="quick-access-title">
-        <i class="fas fa-th-large"></i>
-        <span data-translate="quick-access-title">Quick Access</span>
+  <!-- ═══ MESSAGE FORM (other user's profile) ══════════════════════════ -->
+  {% if not is_own_profile %}
+  <div class="message-section">
+    <div class="section-card-header">
+      <div class="section-header-icon"><i class="fas fa-paper-plane"></i></div>
+      <div class="section-header-title">
+        <span data-i18n="msg-title">Send a Message to</span> {{ viewed_user.username }}
+      </div>
     </div>
-    <div class="quick-access-grid">
-        <a href="/marketplace/my-courses/" class="qa-card">
-            <div class="qa-icon"><i class="fas fa-graduation-cap"></i></div>
-            <h3 data-translate="qa-mycourses-title">My Courses</h3>
-            <p data-translate="qa-mycourses-desc">View and continue your enrolled courses.</p>
-            <span class="qa-btn" data-translate="qa-btn-open">Open</span>
-        </a>
-        <a href="/api/marketplace/checkout/" class="qa-card">
-            <div class="qa-icon"><i class="fas fa-shopping-cart"></i></div>
-            <h3 data-translate="qa-checkout-title">Checkout</h3>
-            <p data-translate="qa-checkout-desc">Enroll in new courses and manage payments.</p>
-            <span class="qa-btn" data-translate="qa-btn-shop">Shop</span>
-        </a>
-        <a href="/marketplace/wallet/" class="qa-card">
-            <div class="qa-icon"><i class="fas fa-wallet"></i></div>
-            <h3 data-translate="qa-wallet-title">Instructor Wallet</h3>
-            <p data-translate="qa-wallet-desc">Track your earnings and transaction history.</p>
-            <span class="qa-btn" data-translate="qa-btn-view">View</span>
-        </a>
-        <a href="/marketplace/access-restricted/" class="qa-card">
-            <div class="qa-icon"><i class="fas fa-lock"></i></div>
-            <h3 data-translate="qa-access-title">Access Info</h3>
-            <p data-translate="qa-access-desc">Learn about content access and enrollment requirements.</p>
-            <span class="qa-btn" data-translate="qa-btn-learn">Learn</span>
-        </a>
+    <div class="message-section-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.content }}
+        <div class="file-attach-row">
+          <label class="file-attach-label">
+            <i class="fas fa-paperclip"></i>
+            <span data-i18n="label-file">Choose File</span>
+            {{ form.file }}
+          </label>
+        </div>
+        <button type="submit" class="msg-submit-btn">
+          <i class="fas fa-paper-plane"></i>
+          <span data-i18n="btn-send">Send Message</span>
+        </button>
+      </form>
     </div>
-</section>
+  </div>
+  {% endif %}
 
-<!-- ============ FOOTER ============ -->
-<footer class="footer">
-    <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+  <!-- ═══ QUICK ACCESS ══════════════════════════════════════════════════ -->
+  <div class="qa-section">
+    <div class="section-card-header" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg) var(--radius-lg) 0 0;border-bottom:none;padding:18px 24px 14px;">
+      <div class="section-header-icon"><i class="fas fa-th-large"></i></div>
+      <div class="section-header-title" data-i18n="quick-access-title">Quick Access</div>
+    </div>
+    <div class="qa-grid" style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius-lg) var(--radius-lg);padding:16px;background:var(--bg-card);">
+
+      <a href="/marketplace/my-courses/" class="qa-card">
+        <div class="qa-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="qa-title" data-i18n="qa-mycourses-title">My Courses</div>
+        <div class="qa-desc" data-i18n="qa-mycourses-desc">View and continue your enrolled courses.</div>
+        <div class="qa-cta" data-i18n="qa-btn-open">Open <i class="fas fa-arrow-right" style="font-size:9px;"></i></div>
+      </a>
+
+      <a href="/api/marketplace/checkout/" class="qa-card">
+        <div class="qa-icon" style="background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.2);color:var(--gold-400);"><i class="fas fa-shopping-cart"></i></div>
+        <div class="qa-title" data-i18n="qa-checkout-title">Checkout</div>
+        <div class="qa-desc" data-i18n="qa-checkout-desc">Enroll in new courses and manage payments.</div>
+        <div class="qa-cta" data-i18n="qa-btn-shop">Shop <i class="fas fa-arrow-right" style="font-size:9px;"></i></div>
+      </a>
+
+      <a href="/marketplace/wallet/" class="qa-card">
+        <div class="qa-icon" style="background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.2);color:var(--emerald-400);"><i class="fas fa-wallet"></i></div>
+        <div class="qa-title" data-i18n="qa-wallet-title">Instructor Wallet</div>
+        <div class="qa-desc" data-i18n="qa-wallet-desc">Track your earnings and transaction history.</div>
+        <div class="qa-cta" data-i18n="qa-btn-view">View <i class="fas fa-arrow-right" style="font-size:9px;"></i></div>
+      </a>
+
+      <a href="/marketplace/access-restricted/" class="qa-card">
+        <div class="qa-icon" style="background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.2);color:var(--sky-400);"><i class="fas fa-lock"></i></div>
+        <div class="qa-title" data-i18n="qa-access-title">Access Info</div>
+        <div class="qa-desc" data-i18n="qa-access-desc">Learn about content access and enrollment requirements.</div>
+        <div class="qa-cta" data-i18n="qa-btn-learn">Learn <i class="fas fa-arrow-right" style="font-size:9px;"></i></div>
+      </a>
+
+    </div>
+  </div>
+
+</div><!-- /page-inner -->
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════════════ -->
+<footer class="page-footer">
+  <p>
+    <span data-i18n="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</span>
+    &nbsp;·&nbsp;
+    <a href="/about/" data-i18n="footer-about">About</a>
+    &nbsp;·&nbsp;
+    <a href="/contact_us/" data-i18n="footer-contact">Contact</a>
+  </p>
 </footer>
 
-<script src="{% static 'accounts/profile.js' %}"></script>
+</div><!-- /page-layout -->
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    'page-label': 'User Profile',
+    'nav-home': 'Home', 'nav-courses': 'Courses', 'nav-chatbot': 'Chatbot',
+    'nav-competitions': 'Competitions', 'nav-performance': 'Performance',
+    'nav-about': 'About Us', 'nav-contact': 'Contact',
+    'nav-dashboard': 'Dashboard', 'nav-profile': 'Profile',
+    'nav-messages': 'Messages', 'nav-logout': 'Logout', 'nav-login': 'Login',
+    'btn-edit': 'Edit Profile', 'btn-chat': 'Chat', 'btn-home': 'Back to Home',
+    'btn-send': 'Send Message', 'label-file': 'Choose File',
+    'section-info': 'Personal Information',
+    'label-username': 'Username', 'label-fullname': 'Full Name',
+    'label-role': 'Role', 'label-dob': 'Date of Birth',
+    'msg-title': 'Send a Message to',
+    'quick-access-title': 'Quick Access',
+    'qa-mycourses-title': 'My Courses', 'qa-mycourses-desc': 'View and continue your enrolled courses.', 'qa-btn-open': 'Open',
+    'qa-checkout-title': 'Checkout', 'qa-checkout-desc': 'Enroll in new courses and manage payments.', 'qa-btn-shop': 'Shop',
+    'qa-wallet-title': 'Instructor Wallet', 'qa-wallet-desc': 'Track your earnings and transaction history.', 'qa-btn-view': 'View',
+    'qa-access-title': 'Access Info', 'qa-access-desc': 'Learn about content access and enrollment requirements.', 'qa-btn-learn': 'Learn',
+    'footer-text': '© 2025 Eduvia and creativitycode. All rights reserved.',
+    'footer-about': 'About', 'footer-contact': 'Contact',
+  },
+  ar: {
+    'page-label': 'الملف الشخصي',
+    'nav-home': 'الرئيسية', 'nav-courses': 'الكورسات', 'nav-chatbot': 'المساعد الذكي',
+    'nav-competitions': 'المسابقات', 'nav-performance': 'الأداء',
+    'nav-about': 'عن Eduvia', 'nav-contact': 'تواصل معنا',
+    'nav-dashboard': 'لوحة التحكم', 'nav-profile': 'الملف الشخصي',
+    'nav-messages': 'الرسائل', 'nav-logout': 'تسجيل خروج', 'nav-login': 'تسجيل دخول',
+    'btn-edit': 'تعديل الملف', 'btn-chat': 'محادثة', 'btn-home': 'العودة للرئيسية',
+    'btn-send': 'إرسال رسالة', 'label-file': 'اختر ملفاً',
+    'section-info': 'البيانات الشخصية',
+    'label-username': 'اسم المستخدم', 'label-fullname': 'الاسم الكامل',
+    'label-role': 'الدور', 'label-dob': 'تاريخ الميلاد',
+    'msg-title': 'أرسل رسالة إلى',
+    'quick-access-title': 'وصول سريع',
+    'qa-mycourses-title': 'كورساتي', 'qa-mycourses-desc': 'عرض الكورسات المسجلة ومتابعتها.', 'qa-btn-open': 'فتح',
+    'qa-checkout-title': 'الدفع', 'qa-checkout-desc': 'الاشتراك في كورسات جديدة وإدارة المدفوعات.', 'qa-btn-shop': 'تسوق',
+    'qa-wallet-title': 'محفظة المحاضر', 'qa-wallet-desc': 'تتبع أرباحك وسجل المعاملات.', 'qa-btn-view': 'عرض',
+    'qa-access-title': 'معلومات الوصول', 'qa-access-desc': 'تعرف على شروط الوصول والتسجيل.', 'qa-btn-learn': 'تعلم',
+    'footer-text': '© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+    'footer-about': 'عن Eduvia', 'footer-contact': 'تواصل معنا',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Highlight active nav link ──────────────────────────────────────────── */
+function setActiveNav() {
+  const path = window.location.pathname;
+  document.querySelectorAll('.nav-link').forEach(a => {
+    a.classList.remove('active');
+    const href = a.getAttribute('href');
+    if (href && path.startsWith(href) && href !== '/') a.classList.add('active');
+    if (href === '/' && path === '/') a.classList.add('active');
+  });
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  setActiveNav();
+});
+</script>
 </body>
 </html>
