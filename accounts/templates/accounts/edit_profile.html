@@ -5,48 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
+    <!-- SEO -->
     <title data-translate="title">Edit Profile - Eduvia</title>
-    <meta name="description" content="Edit your Eduvia profile to update your full name, profile picture, and date of birth. Personalize your learning experience on our platform.">
+    <meta name="description" content="Edit your Eduvia profile to update your full name, profile picture, and date of birth.">
     <meta name="keywords" content="Eduvia, edit profile, user profile, online learning, education platform, profile settings">
-    <!-- SEO Meta Tags (Arabic) -->
-    <meta name="description" content="تعديل ملفك الشخصي على Eduvia لتحديث اسمك الكامل، صورة الملف الشخصي، وتاريخ الميلاد. تخصيص تجربتك التعليمية على منصتنا.">
-    <meta name="keywords" content="Eduvia، تعديل الملف الشخصي، الملف الشخصي، التعليم عبر الإنترنت، منصة تعليمية، إعدادات الملف الشخصي">
     <meta name="author" content="Eduvia">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <!-- 🌍 Open Graph -->
+    <!-- Open Graph -->
     <meta property="og:title" content="Edit Profile - Eduvia">
     <meta property="og:description" content="Update your Eduvia profile details, including full name, profile picture, and date of birth.">
     <meta property="og:image" content="https://i.postimg.cc/jS5Z2QHJ/edit-profile.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Edit Profile - Eduvia">
-    <meta name="twitter:description" content="Update your Eduvia profile details, including full name, profile picture, and date of birth.">
+    <meta name="twitter:description" content="Update your Eduvia profile details.">
     <meta name="twitter:image" content="https://i.postimg.cc/jS5Z2QHJ/edit-profile.jpg">
 
-    <!-- 🖼️ Favicon -->
+    <!-- Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-    <!-- 🌐 Fonts & Icons -->
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- 🎨 Styles -->
+    <!-- Styles -->
     <link rel="stylesheet" href="{% static 'accounts/edit_profile.css' %}">
 
-    <!-- 🖼️ Hero Background -->
+    <!-- Hero Background Variable -->
     <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/jS5Z2QHJ/edit-profile.jpg");
-        }
+        :root { --hero-bg-image: url("https://i.postimg.cc/jS5Z2QHJ/edit-profile.jpg"); }
     </style>
 
-    <!-- 📊 Structured Data -->
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -56,15 +51,7 @@
                 "@id": "https://eduvia-ai.fly.dev/#organization",
                 "name": "Eduvia",
                 "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
+                "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" }
             },
             {
                 "@type": "WebPage",
@@ -72,113 +59,141 @@
                 "url": "https://eduvia-ai.fly.dev/accounts/edit_profile/",
                 "name": "Edit Profile - Eduvia",
                 "description": "Edit your Eduvia profile to update your full name, profile picture, and date of birth.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/accounts/edit_profile/#breadcrumb"
-                },
                 "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/accounts/edit_profile/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Edit Profile",
-                        "item": "https://eduvia-ai.fly.dev/accounts/edit_profile/"
-                    }
-                ]
             }
         ]
     }
     </script>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo" data-translate="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/recommendation/" data-translate="nav-recommendations">Recommendations</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'accounts:profile' %}" data-translate="nav-profile">Profile</a>
-                <a href="{% url 'accounts:user_messages' %}" data-translate="nav-messages">Messages</a>
-                <a href="{% url 'accounts:logout' %}" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
+
+<!-- ============ HEADER ============ -->
+<header class="header">
+    <div class="logo" data-translate="logo">Eduvia</div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <nav class="menu">
+        <a href="/" data-translate="nav-home">Home</a>
+        <a href="/courses/" data-translate="nav-courses">Courses</a>
+        <a href="/recommendation/" data-translate="nav-recommendations">Recommendations</a>
+        <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+        <a href="/about/" data-translate="nav-about">About Us</a>
+        <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'accounts:profile' %}" data-translate="nav-profile">Profile</a>
+            <a href="{% url 'accounts:user_messages' %}" data-translate="nav-messages">Messages</a>
+            <a href="{% url 'accounts:logout' %}" data-translate="nav-logout">Logout</a>
+            {% if user.courses_profile %}
+                <span class="coins-display">
+                    <i class="fas fa-coins coins-icon"></i>
+                    <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                </span>
             {% else %}
-                <a href="{% url 'accounts:login' %}" data-translate="nav-login">Login</a>
+                <span class="coins-display">
+                    <i class="fas fa-coins coins-icon"></i>
+                    <span data-translate="nav-coins">Coins:</span> 0
+                </span>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Edit Your Profile</h1>
-        <p data-translate="hero-subtitle">Update your personal details to customize your Eduvia experience.</p>
-    </section>
-
-    <!-- Edit Profile Content -->
-    {% block content %}
-    <div class="edit-profile-container">
-        <h1 data-translate="edit-profile-title">Edit Profile</h1>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert{% endif %}">{{ message }}</div>
-            {% endfor %}
+        {% else %}
+            <a href="{% url 'accounts:login' %}" data-translate="nav-login">Login</a>
         {% endif %}
-        <form method="post">
-            {% csrf_token %}
-            <p>
-                <label for="{{ form.full_name.id_for_label }}" data-translate="label-fullname">Full Name:</label>
-                {{ form.full_name }}
-            </p>
-            <p>
-                <label for="{{ form.date_of_birth.id_for_label }}" data-translate="label-dob">Date of Birth:</label>
-                {{ form.date_of_birth }}
-            </p>
-            <p>
-                <label for="{{ form.profile_picture.id_for_label }}" data-translate="label-profile-picture">Profile Picture URL:</label>
-                {{ form.profile_picture }}
-                <small data-translate="image-upload-instruction">Upload your image to <a href="https://postimg.cc/" target="_blank">PostImage</a> and paste the direct link here.</small>
-            </p>
-            <button type="submit" class="btn" data-translate="btn-save">Save Changes</button>
-            <a href="{% url 'accounts:profile' %}" class="btn" data-translate="btn-cancel">Cancel</a>
-        </form>
-    </div>
-    {% endblock %}
+        <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+        <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
+    </nav>
+</header>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
-    </footer>
+<!-- ============ HERO ============ -->
+<section class="hero">
+    <h1 data-translate="hero-title">Edit Your Profile</h1>
+    <p data-translate="hero-subtitle">Update your personal details to customize your Eduvia experience.</p>
+</section>
 
-    <script src="{% static 'accounts/edit_profile.js' %}"></script>
+<!-- ============ EDIT PROFILE CONTENT ============ -->
+{% block content %}
+<div class="edit-profile-container">
+
+    <h1 data-translate="edit-profile-title">Edit Profile</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Glass Form Card -->
+    <div class="form-card">
+
+        <!-- Card Header -->
+        <div class="form-card-header">
+            <div class="form-card-icon">
+                <i class="fas fa-pen-to-square"></i>
+            </div>
+            <div>
+                <div class="form-card-title" data-translate="edit-profile-title">Edit Profile</div>
+                <div class="form-card-subtitle" data-translate="form-card-subtitle">Update your personal information</div>
+            </div>
+        </div>
+
+        <!-- Card Body: Form -->
+        <div class="form-card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Full Name -->
+                <div class="field-group">
+                    <label class="field-label" for="{{ form.full_name.id_for_label }}" data-translate="label-fullname">
+                        <i class="fas fa-id-card"></i> Full Name
+                    </label>
+                    {{ form.full_name }}
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="field-group">
+                    <label class="field-label" for="{{ form.date_of_birth.id_for_label }}" data-translate="label-dob">
+                        <i class="fas fa-cake-candles"></i> Date of Birth
+                    </label>
+                    {{ form.date_of_birth }}
+                </div>
+
+                <!-- Profile Picture URL -->
+                <div class="field-group">
+                    <label class="field-label" for="{{ form.profile_picture.id_for_label }}" data-translate="label-profile-picture">
+                        <i class="fas fa-image"></i> Profile Picture URL
+                    </label>
+                    {{ form.profile_picture }}
+                    <div class="field-help">
+                        <i class="fas fa-circle-info"></i>
+                        <span data-translate="image-upload-instruction">Upload your image to</span>
+                        <a href="https://postimg.cc/" target="_blank" rel="noopener">PostImage</a>
+                        <span data-translate="image-upload-instruction-2">and paste the direct link here.</span>
+                    </div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-save" data-translate="btn-save">
+                        <i class="fas fa-floppy-disk"></i> Save Changes
+                    </button>
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-cancel" data-translate="btn-cancel">
+                        <i class="fas fa-xmark"></i> Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div><!-- /.form-card-body -->
+    </div><!-- /.form-card -->
+
+</div><!-- /.edit-profile-container -->
+{% endblock %}
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+    <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+</footer>
+
+<script src="{% static 'accounts/edit_profile.js' %}"></script>
 </body>
 </html>

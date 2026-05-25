@@ -1,193 +1,293 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
     <title data-translate="messages-title">My Messages - Eduvia</title>
-    <meta name="description" content="View and manage your direct and service chats on Eduvia. Stay connected with other users and service providers.">
+    <meta name="description" content="View and manage your direct and service chats on Eduvia.">
     <meta name="keywords" content="Eduvia, messages, chats, direct chats, service chats, education platform">
     <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <!-- 🌍 Open Graph -->
     <meta property="og:title" content="My Messages - Eduvia">
-    <meta property="og:description" content="View and manage your direct and service chats on Eduvia. Stay connected with other users and service providers.">
+    <meta property="og:description" content="View and manage your direct and service chats on Eduvia.">
     <meta property="og:image" content="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="My Messages - Eduvia">
-    <meta name="twitter:description" content="View and manage your direct and service chats on Eduvia. Stay connected with other users and service providers.">
     <meta name="twitter:image" content="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
 
-    <!-- 🖼️ Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'accounts/user_messages.css' %}">
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/accounts/user_messages/#webpage",
-                "url": "https://eduvia-ai.fly.dev/accounts/user_messages/",
-                "name": "My Messages - Eduvia",
-                "description": "View and manage your direct and service chats on Eduvia. Stay connected with other users and service providers.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/accounts/user_messages/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/accounts/user_messages/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "My Messages",
-                        "item": "https://eduvia-ai.fly.dev/accounts/user_messages/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+
+<!-- Header -->
+<header class="header">
+    <div class="logo">Eduvia</div>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <nav class="menu" id="main-menu">
+        <a href="/" data-translate="nav-home">Home</a>
+        <a href="/courses/" data-translate="nav-courses">Courses</a>
+        <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+        <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+        <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+        <a href="/about/" data-translate="nav-about">About Us</a>
+        <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+        {% if user.is_authenticated %}
+            {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
+            <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+            <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+            {% if user.courses_profile %}
+                <span class="coins-display">
+                    <i class="fas fa-coins coins-icon"></i>
+                    <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                </span>
+            {% else %}
+                <span class="coins-display">
+                    <i class="fas fa-coins coins-icon"></i>
+                    <span data-translate="nav-coins">Coins:</span> 0
+                </span>
+            {% endif %}
+        {% else %}
+            <a href="/accounts/register/" data-translate="nav-login">Login</a>
+        {% endif %}
+        <div class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle theme">
+            <i class="fas fa-moon"></i>
+        </div>
+        <div class="language-toggle" onclick="toggleLanguage()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </div>
+    </nav>
+</header>
 
-    <!-- Messages Section -->
-    <div class="messages-container">
-        <h2 data-translate="messages-title">My Messages</h2>
+<!-- Messages Page -->
+<main class="messages-page">
 
-        <!-- المحادثات العادية بين المستخدمين -->
-        <h3 data-translate="messages-direct">Direct Chats</h3>
+    <!-- Page Title -->
+    <div class="page-title-block">
+        <h1 class="page-title" data-translate="messages-title">My Messages</h1>
+        <p class="page-subtitle" data-translate="messages-subtitle">All your conversations in one place.</p>
+    </div>
+
+    <!-- Direct Chats Section -->
+    <div class="section-block">
+        <div class="section-label">
+            <div class="section-label-icon violet">
+                <i class="fas fa-comments"></i>
+            </div>
+            <span class="section-title-text" data-translate="messages-direct">Direct Chats</span>
+            <span class="section-count">{{ chat_data|length|default:"0" }}</span>
+        </div>
+
         {% if chat_data %}
             {% for item in chat_data %}
-                <div class="chat-item">
-                    <a href="{% url 'accounts:user_chat' chat_id=item.chat.id %}" data-translate="messages-chat-with">
-                        Chat with {{ item.other_user }}
+                <div class="chat-card">
+                    <a href="{% url 'accounts:user_chat' chat_id=item.chat.id %}" class="chat-card-inner">
+                        <div class="chat-card-avatar">
+                            {{ item.other_user|slice:":1"|upper }}
+                        </div>
+                        <div class="chat-card-info">
+                            <div class="chat-card-name">{{ item.other_user }}</div>
+                            <div class="chat-card-meta">
+                                <i class="fas fa-clock"></i>
+                                {{ item.chat.created_at|date:"F d, Y H:i" }}
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right chat-card-arrow"></i>
                     </a>
-                    <p>Started At: {{ item.chat.created_at|date:"F d, Y H:i" }}</p>
                 </div>
             {% endfor %}
         {% else %}
-            <p data-translate="messages-no-direct">No direct chats yet.</p>
-        {% endif %}
-
-        <!-- محادثات الخدمات (إذا كنت مقدم خدمة أو مشتري) -->
-        <h3 data-translate="messages-service">Service Chats</h3>
-        {% if service_orders_as_buyer or service_orders_as_provider %}
-            <!-- كمشتري -->
-            {% if service_orders_as_buyer %}
-                {% for order in service_orders_as_buyer %}
-                    <div class="service-chat-item">
-                        <a href="{% url 'skills_market:track_service' order_id=order.id %}">
-                            Chat with {{ order.service.provider.username }} (Service: {{ order.service.title }})
-                        </a>
-                        <p>Status: {{ order.get_status_display }}</p>
-                        <p>Created At: {{ order.created_at|date:"F d, Y H:i" }}</p>
-                    </div>
-                {% endfor %}
-            {% endif %}
-
-            <!-- كمقدم خدمة -->
-            {% if service_orders_as_provider %}
-                {% for order in service_orders_as_provider %}
-                    <div class="service-chat-item">
-                        <a href="{% url 'skills_market:provider_chat' order_id=order.id %}">
-                            Chat with {{ order.buyer.username }} (Service: {{ order.service.title }})
-                        </a>
-                        <p>Status: {{ order.get_status_display }}</p>
-                        <p>Created At: {{ order.created_at|date:"F d, Y H:i" }}</p>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% else %}
-            <p data-translate="messages-no-service">No service chats yet.</p>
+            <div class="empty-state-box">
+                <i class="fas fa-comment-slash"></i>
+                <p data-translate="messages-no-direct">No direct chats yet.</p>
+            </div>
         {% endif %}
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
-    </footer>
+    <!-- Service Chats Section -->
+    <div class="section-block">
+        <div class="section-label">
+            <div class="section-label-icon sky">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <span class="section-title-text" data-translate="messages-service">Service Chats</span>
+            <span class="section-count">
+                {% with total=service_orders_as_buyer|length|add:service_orders_as_provider|length %}
+                    {{ total|default:"0" }}
+                {% endwith %}
+            </span>
+        </div>
 
-    <script src="{% static 'accounts/user_messages.js' %}"></script>
+        {% if service_orders_as_buyer or service_orders_as_provider %}
+
+            {% if service_orders_as_buyer %}
+                {% for order in service_orders_as_buyer %}
+                    <div class="service-card">
+                        <a href="{% url 'skills_market:track_service' order_id=order.id %}" class="service-card-link">
+                            <div class="service-card-icon">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <div class="service-card-info">
+                                <div class="service-card-title">
+                                    {{ order.service.provider.username }} — {{ order.service.title }}
+                                </div>
+                                <div class="service-card-meta">
+                                    <span class="service-badge badge-default">
+                                        <i class="fas fa-user"></i>
+                                        <span data-translate="messages-as-buyer">As Buyer</span>
+                                    </span>
+                                    <span class="service-badge {% if order.status == 'completed' %}badge-complete{% elif order.status == 'in_progress' %}badge-active{% else %}badge-pending{% endif %}">
+                                        {{ order.get_status_display }}
+                                    </span>
+                                    <span class="service-card-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ order.created_at|date:"M d, Y" }}
+                                    </span>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right service-card-arrow"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if service_orders_as_provider %}
+                {% for order in service_orders_as_provider %}
+                    <div class="service-card">
+                        <a href="{% url 'skills_market:provider_chat' order_id=order.id %}" class="service-card-link">
+                            <div class="service-card-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <div class="service-card-info">
+                                <div class="service-card-title">
+                                    {{ order.buyer.username }} — {{ order.service.title }}
+                                </div>
+                                <div class="service-card-meta">
+                                    <span class="service-badge badge-default">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        <span data-translate="messages-as-provider">As Provider</span>
+                                    </span>
+                                    <span class="service-badge {% if order.status == 'completed' %}badge-complete{% elif order.status == 'in_progress' %}badge-active{% else %}badge-pending{% endif %}">
+                                        {{ order.get_status_display }}
+                                    </span>
+                                    <span class="service-card-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ order.created_at|date:"M d, Y" }}
+                                    </span>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right service-card-arrow"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+        {% else %}
+            <div class="empty-state-box">
+                <i class="fas fa-folder-open"></i>
+                <p data-translate="messages-no-service">No service chats yet.</p>
+            </div>
+        {% endif %}
+    </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+</footer>
+
+<script>
+const translations = {
+    en: {
+        "messages-title":    "My Messages",
+        "messages-subtitle": "All your conversations in one place.",
+        "messages-direct":   "Direct Chats",
+        "messages-service":  "Service Chats",
+        "messages-no-direct":  "No direct chats yet.",
+        "messages-no-service": "No service chats yet.",
+        "messages-as-buyer":    "As Buyer",
+        "messages-as-provider": "As Provider",
+        "nav-home": "Home", "nav-courses": "Courses", "nav-chatbot": "Chatbot",
+        "nav-competitions": "Competitions", "nav-performance": "Performance",
+        "nav-about": "About Us", "nav-contact": "Contact Us",
+        "nav-dashboard": "Dashboard", "nav-profile": "Profile",
+        "nav-logout": "Logout", "nav-coins": "Coins:", "nav-login": "Login",
+        "footer-text": "© 2025 Eduvia. All rights reserved."
+    },
+    ar: {
+        "messages-title":    "رسائلي",
+        "messages-subtitle": "كل محادثاتك في مكان واحد.",
+        "messages-direct":   "محادثات مباشرة",
+        "messages-service":  "محادثات الخدمات",
+        "messages-no-direct":  "لا توجد محادثات مباشرة بعد.",
+        "messages-no-service": "لا توجد محادثات خدمات بعد.",
+        "messages-as-buyer":    "كمشتري",
+        "messages-as-provider": "كمقدم خدمة",
+        "nav-home": "الرئيسية", "nav-courses": "الدورات", "nav-chatbot": "الدردشة الآلية",
+        "nav-competitions": "المسابقات", "nav-performance": "الأداء",
+        "nav-about": "معلومات عنا", "nav-contact": "تواصل معنا",
+        "nav-dashboard": "لوحة التحكم", "nav-profile": "الملف الشخصي",
+        "nav-logout": "تسجيل الخروج", "nav-coins": "النقاط:", "nav-login": "تسجيل الدخول",
+        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+    }
+};
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.querySelector('.dark-mode-toggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleDarkMode() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+function applyLang(lang) {
+    const root = document.getElementById('html-root');
+    root.setAttribute('lang', lang);
+    root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
+    });
+    document.title = translations[lang]["messages-title"] + ' - Eduvia';
+    localStorage.setItem('language', lang);
+}
+function toggleLanguage() {
+    const current = document.getElementById('html-root').getAttribute('lang');
+    applyLang(current === 'en' ? 'ar' : 'en');
+}
+
+function toggleMenu() {
+    document.getElementById('main-menu').classList.toggle('active');
+}
+document.addEventListener('click', e => {
+    const menu = document.getElementById('main-menu');
+    const hamburger = document.querySelector('.hamburger');
+    if (menu && hamburger && !menu.contains(e.target) && !hamburger.contains(e.target)) {
+        menu.classList.remove('active');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    applyLang(localStorage.getItem('language') || 'en');
+});
+</script>
 </body>
 </html>

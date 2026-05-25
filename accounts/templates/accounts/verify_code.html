@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
     <title data-translate="title">Verify Your Account - Eduvia</title>
     <meta name="description" content="Verify your Eduvia account to complete registration.">
     <meta name="keywords" content="Eduvia, verify, online courses, education platform">
@@ -13,112 +12,175 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <!-- 🌍 Open Graph -->
     <meta property="og:title" content="Verify Your Account - Eduvia">
     <meta property="og:description" content="Verify your Eduvia account to complete registration.">
-    <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/logo-eduvia1.jpg">
+    <meta property="og:image" content="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Verify Your Account - Eduvia">
-    <meta name="twitter:description" content="Verify your Eduvia account to complete registration.">
-    <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/logo-eduvia1.jpg">
+    <meta name="twitter:image" content="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
 
-    <!-- 🖼️ Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'accounts/verify_code.css' %}">
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/accounts/verify_code/#webpage",
-                "url": "https://eduvia-ai.fly.dev/accounts/verify_code/",
-                "name": "Verify Your Account - Eduvia",
-                "description": "Verify your Eduvia account to complete registration.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/accounts/verify_code/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/accounts/verify_code/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Verify Account",
-                        "item": "https://eduvia-ai.fly.dev/accounts/verify_code/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
 </head>
 <body>
+
+<!-- Toggle Controls -->
 <div class="toggle-container">
-    <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle theme">
         <i class="fas fa-moon"></i>
     </div>
-    <div class="language-toggle" onclick="toggleLanguage()">
+    <div class="language-toggle" onclick="toggleLanguage()" title="Toggle language">
         <i class="fas fa-globe"></i>
     </div>
 </div>
 
-<div class="container">
-    <img src="{% static 'images/logo_eduvia1.jpg' %}" alt="Eduvia Logo" class="logo">
-    <h2 data-translate="heading">Verify Your Account</h2>
-    <p data-translate="subheading">Enter the verification code sent to your email.</p>
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-    <form method="post" action="{% url 'accounts:verify_code' %}">
-        {% csrf_token %}
-        <label for="verification_code" data-translate="label-verification_code">Enter Verification Code:</label>
-        <input type="text" id="verification_code" name="verification_code" required>
-        <button type="submit" data-translate="button-verify">Verify Code</button>
-    </form>
-    <div class="footer">
-        <p data-translate="footer-text">Didn't receive a code? <a href="{% url 'accounts:register' %}" data-translate="footer-link">Try again</a></p>
-    </div>
-</div>
+<!-- Verify Page -->
+<main class="verify-page">
+    <div class="verify-container">
 
-<script src="{% static 'accounts/verify_code.js' %}"></script>
+        <!-- Logo / Icon -->
+        <img src="{% static 'images/logo_eduvia1.jpg' %}"
+             alt="Eduvia Logo" class="verify-logo"
+             onerror="this.style.display='none'; document.getElementById('verify-icon-fallback').style.display='flex';">
+        <div class="verify-icon-wrap" id="verify-icon-fallback" style="display:none;">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+
+        <!-- Headings -->
+        <h2 class="verify-heading" data-translate="heading">Verify Your Account</h2>
+        <p class="verify-subheading" data-translate="subheading">
+            Enter the verification code sent to your email.
+        </p>
+
+        <!-- Security Note -->
+        <div class="security-note">
+            <i class="fas fa-lock"></i>
+            <span data-translate="security-note">Your code is valid for 10 minutes. Do not share it with anyone.</span>
+        </div>
+
+        <!-- Django Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas {% if 'error' in message.tags or 'danger' in message.tags %}fa-exclamation-circle{% elif 'success' in message.tags %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Verify Form -->
+        <form method="post" action="{% url 'accounts:verify_code' %}" class="verify-form" id="verify-form">
+            {% csrf_token %}
+
+            <label for="verification_code" class="form-label" data-translate="label-verification_code">
+                Enter Verification Code
+            </label>
+            <div class="code-input-wrap">
+                <input type="text" id="verification_code" name="verification_code"
+                       class="code-input" required
+                       maxlength="10" autocomplete="one-time-code" inputmode="numeric"
+                       placeholder="· · · · · ·"
+                       autofocus>
+                <i class="fas fa-key code-input-icon"></i>
+            </div>
+
+            <button type="submit" class="verify-btn" id="verify-btn">
+                <i class="fas fa-check-circle"></i>
+                <span data-translate="button-verify">Verify Code</span>
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="verify-footer">
+            <p>
+                <span data-translate="footer-text">Didn't receive a code?</span>
+                <a href="{% url 'accounts:register' %}" data-translate="footer-link">Try again</a>
+            </p>
+        </div>
+
+    </div>
+</main>
+
+<footer class="page-footer">
+    <p data-translate="footer-copyright">© 2025 Eduvia. All rights reserved.</p>
+</footer>
+
+<script>
+const translations = {
+    en: {
+        "title":                  "Verify Your Account - Eduvia",
+        "heading":                "Verify Your Account",
+        "subheading":             "Enter the verification code sent to your email.",
+        "button-verify":          "Verify Code",
+        "footer-text":            "Didn't receive a code?",
+        "footer-link":            "Try again",
+        "label-verification_code":"Enter Verification Code",
+        "security-note":          "Your code is valid for 10 minutes. Do not share it with anyone.",
+        "footer-copyright":       "© 2025 Eduvia. All rights reserved."
+    },
+    ar: {
+        "title":                  "تحقق من حسابك - إدوفيا",
+        "heading":                "تحقق من حسابك",
+        "subheading":             "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني.",
+        "button-verify":          "تحقق من الرمز",
+        "footer-text":            "لم تتلق رمزًا؟",
+        "footer-link":            "حاول مرة أخرى",
+        "label-verification_code":"أدخل رمز التحقق",
+        "security-note":          "رمزك صالح لمدة 10 دقائق. لا تشاركه مع أحد.",
+        "footer-copyright":       "© 2025 إدوفيا. جميع الحقوق محفوظة."
+    }
+};
+
+/* ── Theme ───────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.querySelector('.dark-mode-toggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleDarkMode() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Language ────────────────────────────────────────────────────────── */
+function applyLang(lang) {
+    const root = document.getElementById('html-root');
+    root.setAttribute('lang', lang);
+    root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
+    });
+    document.title = translations[lang]["title"];
+    localStorage.setItem('language', lang);
+}
+function toggleLanguage() {
+    const current = document.getElementById('html-root').getAttribute('lang');
+    applyLang(current === 'en' ? 'ar' : 'en');
+}
+
+/* ── Submit button loading state ─────────────────────────────────────── */
+document.getElementById('verify-form').addEventListener('submit', function() {
+    const btn = document.getElementById('verify-btn');
+    btn.innerHTML = '<span style="width:16px;height:16px;border:2px solid transparent;border-top-color:#fff;border-radius:50%;animation:btnSpin .7s linear infinite;display:inline-block;"></span>';
+    btn.disabled = true;
+});
+
+/* ── Init ────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    applyLang(localStorage.getItem('language') || 'en');
+});
+</script>
+
+<style>
+@keyframes btnSpin { to { transform: rotate(360deg); } }
+</style>
 </body>
 </html>

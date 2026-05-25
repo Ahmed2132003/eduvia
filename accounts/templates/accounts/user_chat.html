@@ -1,170 +1,279 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
     <title data-translate="chat-title">Chat with {{ other_user.username }} - Eduvia</title>
-    <meta name="description" content="Chat with {{ other_user.username }} on Eduvia. Send and receive messages to collaborate and enhance your learning experience.">
+    <meta name="description" content="Chat with {{ other_user.username }} on Eduvia.">
     <meta name="keywords" content="Eduvia, chat, messaging, online learning, education platform">
     <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <!-- 🌍 Open Graph -->
     <meta property="og:title" content="Chat with {{ other_user.username }} - Eduvia">
-    <meta property="og:description" content="Chat with {{ other_user.username }} on Eduvia. Send and receive messages to collaborate and enhance your learning experience.">
+    <meta property="og:description" content="Chat with {{ other_user.username }} on Eduvia.">
     <meta property="og:image" content="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Chat with {{ other_user.username }} - Eduvia">
-    <meta name="twitter:description" content="Chat with {{ other_user.username }} on Eduvia. Send and receive messages to collaborate and enhance your learning experience.">
     <meta name="twitter:image" content="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
 
-    <!-- 🖼️ Favicon -->
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'accounts/user_chat.css' %}">
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/accounts/chat/#webpage",
-                "url": "https://eduvia-ai.fly.dev/accounts/chat/",
-                "name": "Chat with {{ other_user.username }} - Eduvia",
-                "description": "Chat with {{ other_user.username }} on Eduvia. Send and receive messages to collaborate and enhance your learning experience.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/accounts/chat/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/accounts/chat/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Chat",
-                        "item": "https://eduvia-ai.fly.dev/accounts/chat/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+
+<!-- Header -->
+<header class="header">
+    <div class="logo">Eduvia</div>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <nav class="menu" id="main-menu">
+        <a href="/" data-translate="nav-home">Home</a>
+        <a href="/courses/" data-translate="nav-courses">Courses</a>
+        <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+        <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+        <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+        <a href="/about/" data-translate="nav-about">About Us</a>
+        <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+        {% if user.is_authenticated %}
+            {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
+            <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
+            <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
+            {% if user.courses_profile %}
+                <span class="coins-display">
+                    <i class="fas fa-coins coins-icon"></i>
+                    <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                </span>
+            {% else %}
+                <span class="coins-display">
+                    <i class="fas fa-coins coins-icon"></i>
+                    <span data-translate="nav-coins">Coins:</span> 0
+                </span>
+            {% endif %}
+        {% else %}
+            <a href="/accounts/register/" data-translate="nav-login">Login</a>
+        {% endif %}
+        <div class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle theme">
+            <i class="fas fa-moon"></i>
+        </div>
+        <div class="language-toggle" onclick="toggleLanguage()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </div>
+    </nav>
+</header>
 
-    <!-- Chat Section -->
+<!-- Chat Page -->
+<main class="chat-page">
     <div class="chat-container">
-        <h2 data-translate="chat-title">Chat with {{ other_user.username }}</h2>
 
-        <div class="message-list">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="chat-avatar" id="chat-avatar">
+                {{ other_user.username|slice:":1"|upper }}
+            </div>
+            <div class="chat-header-info">
+                <div class="chat-header-name">{{ other_user.username }}</div>
+                <div class="chat-header-status">
+                    <span class="status-dot"></span>
+                    <span data-translate="chat-status">Online</span>
+                </div>
+            </div>
+            <div class="chat-header-badge">
+                <i class="fas fa-graduation-cap"></i>
+                <span data-translate="chat-badge">Eduvia</span>
+            </div>
+        </div>
+
+        <!-- Message List -->
+        <div class="message-list" id="message-list">
             {% for message in messages %}
+                {% if forloop.first %}
+                    <div class="msg-date-divider">
+                        <span>{{ message.sent_at|date:"F d, Y" }}</span>
+                    </div>
+                {% endif %}
                 <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}">
-                    <p>{{ message.content }}</p>
-                    {% if message.file %}
-                        <p class="file"><a href="{{ message.file.url }}" target="_blank">Download File</a></p>
-                    {% endif %}
-                    <small>{{ message.sent_at|date:"F d, Y H:i" }}</small>
+                    <div class="message-bubble">
+                        {{ message.content }}
+                        {% if message.file %}
+                            <div class="message-file">
+                                <a href="{{ message.file.url }}" target="_blank" rel="noopener">
+                                    <i class="fas fa-paperclip"></i>
+                                    <span data-translate="chat-download">Download File</span>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="message-time">{{ message.sent_at|date:"H:i" }}</div>
                 </div>
             {% empty %}
-                <p data-translate="chat-empty">No messages yet.</p>
+                <div class="message-empty">
+                    <i class="fas fa-comments"></i>
+                    <p data-translate="chat-empty">No messages yet. Start the conversation!</p>
+                </div>
             {% endfor %}
         </div>
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-container">
-                {{ form.content }}
-                {{ form.file.label_tag }}
-                {{ form.file }}
-                <button type="submit" data-translate="chat-send">Send</button>
-            </div>
-        </form>
+        <!-- Input Area -->
+        <div class="chat-input-area">
+            <form method="post" enctype="multipart/form-data" class="chat-form" id="chat-form">
+                {% csrf_token %}
+                <label class="chat-file-label" for="chat-file-input" title="Attach file">
+                    <i class="fas fa-paperclip"></i>
+                </label>
+                <input type="file" id="chat-file-input" name="file" class="chat-file-input"
+                       onchange="showFilePreview(this)">
+                <div class="chat-textarea-wrap">
+                    {{ form.content }}
+                    <div class="chat-file-preview" id="file-preview" style="display:none;">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="file-name-display"></span>
+                    </div>
+                </div>
+                <button type="submit" class="chat-send-btn" data-translate="chat-send" title="Send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+
     </div>
+</main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
-    </footer>
+<!-- Footer -->
+<footer class="footer">
+    <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
+</footer>
 
-    <script src="{% static 'accounts/user_chat.js' %}"></script>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── Translations ─────────────────────────────────────────────────── */
+const translations = {
+    en: {
+        "chat-title":    "Chat with {{ other_user.username }} - Eduvia",
+        "chat-empty":    "No messages yet. Start the conversation!",
+        "chat-send":     "Send",
+        "chat-status":   "Online",
+        "chat-badge":    "Eduvia",
+        "chat-download": "Download File",
+        "nav-home": "Home", "nav-courses": "Courses", "nav-chatbot": "Chatbot",
+        "nav-competitions": "Competitions", "nav-performance": "Performance",
+        "nav-about": "About Us", "nav-contact": "Contact Us",
+        "nav-dashboard": "Dashboard", "nav-profile": "Profile",
+        "nav-logout": "Logout", "nav-coins": "Coins:", "nav-login": "Login",
+        "footer-text": "© 2025 Eduvia. All rights reserved."
+    },
+    ar: {
+        "chat-title":    "الدردشة مع {{ other_user.username }} - إدوفيا",
+        "chat-empty":    "لا توجد رسائل بعد. ابدأ المحادثة!",
+        "chat-send":     "إرسال",
+        "chat-status":   "متصل",
+        "chat-badge":    "إدوفيا",
+        "chat-download": "تحميل الملف",
+        "nav-home": "الرئيسية", "nav-courses": "الدورات", "nav-chatbot": "الدردشة الآلية",
+        "nav-competitions": "المسابقات", "nav-performance": "الأداء",
+        "nav-about": "معلومات عنا", "nav-contact": "تواصل معنا",
+        "nav-dashboard": "لوحة التحكم", "nav-profile": "الملف الشخصي",
+        "nav-logout": "تسجيل الخروج", "nav-coins": "النقاط:", "nav-login": "تسجيل الدخول",
+        "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
+    }
+};
+
+/* ── Theme ───────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.querySelector('.dark-mode-toggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleDarkMode() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Language ────────────────────────────────────────────────────── */
+function applyLang(lang) {
+    const root = document.getElementById('html-root');
+    root.setAttribute('lang', lang);
+    root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
+    });
+    const username = "{{ other_user.username }}";
+    if (translations[lang]["chat-title"])
+        document.title = translations[lang]["chat-title"].replace("{{ other_user.username }}", username);
+    localStorage.setItem('language', lang);
+}
+function toggleLanguage() {
+    const current = document.getElementById('html-root').getAttribute('lang');
+    applyLang(current === 'en' ? 'ar' : 'en');
+}
+
+/* ── Menu ────────────────────────────────────────────────────────── */
+function toggleMenu() {
+    document.getElementById('main-menu').classList.toggle('active');
+}
+document.addEventListener('click', e => {
+    const menu = document.getElementById('main-menu');
+    const hamburger = document.querySelector('.hamburger');
+    if (menu && hamburger && !menu.contains(e.target) && !hamburger.contains(e.target)) {
+        menu.classList.remove('active');
+    }
+});
+
+/* ── File Preview ────────────────────────────────────────────────── */
+function showFilePreview(input) {
+    const preview = document.getElementById('file-preview');
+    const display = document.getElementById('file-name-display');
+    if (input.files && input.files[0]) {
+        display.textContent = input.files[0].name;
+        preview.style.display = 'flex';
+    }
+}
+
+/* ── Auto-scroll to bottom ───────────────────────────────────────── */
+function scrollToBottom() {
+    const list = document.getElementById('message-list');
+    if (list) list.scrollTop = list.scrollHeight;
+}
+
+/* ── Textarea auto-resize ────────────────────────────────────────── */
+function initTextareaResize() {
+    const textarea = document.querySelector('.chat-textarea, #id_content, textarea[name="content"]');
+    if (!textarea) return;
+    textarea.classList.add('chat-textarea');
+    textarea.setAttribute('placeholder', document.getElementById('html-root').getAttribute('lang') === 'ar'
+        ? 'اكتب رسالتك...' : 'Type a message...');
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 140) + 'px';
+    });
+    textarea.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            document.getElementById('chat-form').submit();
+        }
+    });
+}
+
+/* ── Init ────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    applyLang(localStorage.getItem('language') || 'en');
+    scrollToBottom();
+    initTextareaResize();
+});
+</script>
 </body>
 </html>

@@ -9,26 +9,39 @@ const translations = {
         "nav-performance": "Performance",
         "nav-about": "About Us",
         "nav-contact": "Contact Us",
+        "nav-dashboard": "Dashboard",
         "nav-profile": "Profile",
         "nav-messages": "Messages",
         "nav-logout": "Logout",
         "nav-coins": "Coins:",
         "nav-login": "Login",
-        "btn-subscribe": "Subscribe",
         "hero-title": "Your Profile",
         "hero-subtitle": "View and manage your personal details on Eduvia.",
         "profile-title": "User Profile",
         "no-picture": "No profile picture uploaded.",
-        "label-username": "Username:",
-        "label-fullname": "Full Name:",
-        "label-role": "Role:",
-        "label-dob": "Date of Birth:",
+        "label-username": "Username",
+        "label-fullname": "Full Name",
+        "label-role": "Role",
+        "label-dob": "Date of Birth",
         "label-file": "Choose File",
         "btn-chat": "Chat",
         "btn-edit": "Edit Profile",
         "btn-home": "Back to Home",
         "btn-send": "Send Message",
         "message-form-title": "Send a Message to ",
+        "quick-access-title": "Quick Access",
+        "qa-mycourses-title": "My Courses",
+        "qa-mycourses-desc": "View and continue your enrolled courses.",
+        "qa-checkout-title": "Checkout",
+        "qa-checkout-desc": "Enroll in new courses and manage payments.",
+        "qa-wallet-title": "Instructor Wallet",
+        "qa-wallet-desc": "Track your earnings and transaction history.",
+        "qa-access-title": "Access Info",
+        "qa-access-desc": "Learn about content access and enrollment requirements.",
+        "qa-btn-open": "Open",
+        "qa-btn-shop": "Shop",
+        "qa-btn-view": "View",
+        "qa-btn-learn": "Learn",
         "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
     },
     ar: {
@@ -41,113 +54,105 @@ const translations = {
         "nav-performance": "الأداء",
         "nav-about": "معلومات عنا",
         "nav-contact": "تواصل معنا",
+        "nav-dashboard": "لوحة التحكم",
         "nav-profile": "الملف الشخصي",
         "nav-messages": "الرسائل",
         "nav-logout": "تسجيل الخروج",
         "nav-coins": "النقاط:",
         "nav-login": "تسجيل الدخول",
-        "btn-subscribe": "الاشتراك", 
         "hero-title": "ملفك الشخصي",
         "hero-subtitle": "عرض وإدارة تفاصيلك الشخصية على إدوفيا.",
         "profile-title": "الملف الشخصي",
         "no-picture": "لم يتم رفع صورة شخصية.",
-        "label-username": "اسم المستخدم:",
-        "label-fullname": "الاسم الكامل:",
-        "label-role": "الدور:",
-        "label-dob": "تاريخ الميلاد:",
+        "label-username": "اسم المستخدم",
+        "label-fullname": "الاسم الكامل",
+        "label-role": "الدور",
+        "label-dob": "تاريخ الميلاد",
         "label-file": "اختر ملف",
         "btn-chat": "دردشة",
         "btn-edit": "تعديل الملف الشخصي",
         "btn-home": "العودة إلى الرئيسية",
         "btn-send": "إرسال الرسالة",
         "message-form-title": "إرسال رسالة إلى ",
-        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
+        "quick-access-title": "الوصول السريع",
+        "qa-mycourses-title": "دوراتي",
+        "qa-mycourses-desc": "عرض ومتابعة الدورات المسجّل بها.",
+        "qa-checkout-title": "الدفع",
+        "qa-checkout-desc": "التسجيل في دورات جديدة وإدارة المدفوعات.",
+        "qa-wallet-title": "محفظة المدرب",
+        "qa-wallet-desc": "تتبع أرباحك وسجل المعاملات.",
+        "qa-access-title": "معلومات الوصول",
+        "qa-access-desc": "تعرّف على شروط الوصول للمحتوى والتسجيل.",
+        "qa-btn-open": "فتح",
+        "qa-btn-shop": "تسوّق",
+        "qa-btn-view": "عرض",
+        "qa-btn-learn": "تعلّم",
+        "footer-text": "© 2025 إدوفيا و كريتيفيتي كود. جميع الحقوق محفوظة."
     }
 };
 
-function toggleMenu() {
-    const menu = document.querySelector('.menu');
-    menu.classList.toggle('active');
+/* ---- Utility ---- */
+function applyTranslations(lang) {
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        const val = translations[lang][key];
+        if (val !== undefined) el.textContent = val;
+    });
+    document.title = translations[lang]["title"] || document.title;
 }
 
+/* ---- Menu ---- */
+function toggleMenu() {
+    document.querySelector('.menu').classList.toggle('active');
+}
+
+/* ---- Dark Mode ---- */
 function toggleDarkMode() {
     const body = document.body;
-    const toggleIcon = document.querySelector('.dark-mode-toggle i');
+    const icon = document.querySelector('.dark-mode-toggle i');
     body.classList.toggle('dark-mode');
-    
-    if (body.classList.contains('dark-mode')) {
-        toggleIcon.classList.remove('fa-moon');
-        toggleIcon.classList.add('fa-sun');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        toggleIcon.classList.remove('fa-sun');
-        toggleIcon.classList.add('fa-moon');
-        localStorage.setItem('theme', 'light');
-    }
+    const isDark = body.classList.contains('dark-mode');
+    icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
+/* ---- Language ---- */
 function toggleLanguage() {
-    const htmlRoot = document.getElementById('html-root');
-    const currentLang = htmlRoot.getAttribute('lang');
-    const newLang = currentLang === 'en' ? 'ar' : 'en';
-    
-    console.log(`Switching language to: ${newLang}`);
-    
-    htmlRoot.setAttribute('lang', newLang);
-    htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-    
-    document.querySelectorAll('[data-translate]').forEach(element => {
-        const key = element.getAttribute('data-translate');
-        if (element.tagName.toLowerCase() === 'label') {
-            const forAttr = element.getAttribute('for');
-            if (forAttr && translations[newLang][key]) {
-                element.textContent = translations[newLang][key];
-            }
-        } else if (translations[newLang][key]) {
-            element.textContent = translations[newLang][key];
-        } else {
-            console.warn(`Translation missing for key: ${key} in language: ${newLang}`);
-        }
-    });
-    document.querySelectorAll('[data-translate="btn-subscribe"]').forEach(element => {
-        element.textContent = translations[newLang]["btn-subscribe"] || "Subscribe"; 
-    });
-
-    document.title = translations[newLang]["title"];
-    
-    localStorage.setItem('language', newLang);
+    const root = document.getElementById('html-root');
+    const current = root.getAttribute('lang');
+    const next = current === 'en' ? 'ar' : 'en';
+    root.setAttribute('lang', next);
+    root.setAttribute('dir', next === 'ar' ? 'rtl' : 'ltr');
+    applyTranslations(next);
+    localStorage.setItem('language', next);
 }
 
+/* ---- Init ---- */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing translations and theme');
-    
+    // Theme
     const savedTheme = localStorage.getItem('theme');
-    const toggleIcon = document.querySelector('.dark-mode-toggle i');
+    const themeIcon = document.querySelector('.dark-mode-toggle i');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
-        toggleIcon.classList.remove('fa-moon');
-        toggleIcon.classList.add('fa-sun');
+        if (themeIcon) themeIcon.className = 'fas fa-sun';
     }
 
+    // Language
     const savedLang = localStorage.getItem('language') || 'en';
-    const htmlRoot = document.getElementById('html-root');
-    htmlRoot.setAttribute('lang', savedLang);
-    htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+    const root = document.getElementById('html-root');
+    root.setAttribute('lang', savedLang);
+    root.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+    applyTranslations(savedLang);
 
-    document.querySelectorAll('[data-translate]').forEach(element => {
-        const key = element.getAttribute('data-translate');
-        if (element.tagName.toLowerCase() === 'label') {
-            const forAttr = element.getAttribute('for');
-            if (forAttr && translations[savedLang][key]) {
-                element.textContent = translations[savedLang][key];
-            }
-        } else if (translations[savedLang][key]) {
-            element.textContent = translations[savedLang][key];
-        } else {
-            console.warn(`Translation missing for key: ${key} in language: ${savedLang}`);
-        }
+    // Smooth entrance animation for info items
+    const items = document.querySelectorAll('.info-item, .qa-card');
+    items.forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(16px)';
+        el.style.transition = `opacity 0.5s ease ${i * 0.07}s, transform 0.5s ease ${i * 0.07}s`;
+        requestAnimationFrame(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        });
     });
-
-    document.title = translations[savedLang]["title"];
-    console.log(`Applied language: ${savedLang}`);
 });

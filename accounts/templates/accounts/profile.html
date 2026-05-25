@@ -15,277 +15,221 @@
     <meta property="og:type" content="website">
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'accounts/profile.css' %}">
     <style>
         :root { --hero-bg-image: url("https://i.postimg.cc/sxgZmKDY/profile.jpg"); }
-
-        /* ---- Quick Access Cards — match home.css design ---- */
-        .quick-access-section {
-            max-width: 1100px;
-            margin: 0 auto 48px;
-            padding: 0 24px;
-        }
-
-        .quick-access-title {
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--card-text, #00a8cc);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .quick-access-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 20px;
-        }
-
-        .qa-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 28px 20px;
-            background: var(--card-bg, linear-gradient(145deg, #fdfcfe, #d8f4ff));
-            color: var(--card-text, #00a8cc);
-            text-align: center;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .qa-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: var(--btn-bg, linear-gradient(90deg, #00c9a7, #12d3cf));
-        }
-
-        .qa-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .qa-card .qa-icon {
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, rgba(0,201,167,0.15), rgba(0,168,204,0.15));
-            border-radius: 18px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 26px;
-            margin-bottom: 14px;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(0,201,167,0.2);
-        }
-
-        .qa-card:hover .qa-icon {
-            transform: scale(1.12) rotate(-4deg);
-        }
-
-        .qa-card .qa-icon i {
-            background: var(--btn-bg, linear-gradient(90deg, #00c9a7, #12d3cf));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .qa-card h3 {
-            font-size: 18px; font-weight: 700;
-            color: var(--card-text, #00a8cc);
-            margin-bottom: 8px;
-        }
-
-        .qa-card p {
-            font-size: 14px;
-            color: var(--card-secondary-text, #444);
-            line-height: 1.5;
-            margin-bottom: 16px;
-            flex-grow: 1;
-        }
-
-        .qa-card .qa-btn {
-            background: var(--btn-bg, linear-gradient(90deg, #00c9a7, #12d3cf));
-            color: white;
-            padding: 8px 22px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            display: inline-block;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0,201,167,0.4);
-            transition: all 0.3s ease;
-        }
-
-        .qa-card:hover .qa-btn {
-            transform: scale(1.05);
-            box-shadow: 0 6px 18px rgba(0,201,167,0.6);
-        }
-
-        /* Dark mode overrides (inherited from profile.css via body.dark-mode) */
-        body.dark-mode .qa-card {
-            background: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-        }
-        body.dark-mode .qa-card h3 { color: #3498db; }
-        body.dark-mode .qa-card p  { color: #b0b0b0; }
-        body.dark-mode .qa-card .qa-btn { background: linear-gradient(90deg, #3498db, #2980b9); }
-        body.dark-mode .qa-card .qa-icon { background: rgba(52,152,219,0.15); border-color: rgba(52,152,219,0.2); }
-        body.dark-mode .qa-card .qa-icon i { background: linear-gradient(90deg, #3498db, #2980b9); -webkit-background-clip: text; background-clip: text; }
-
-        @media (max-width: 600px) {
-            .quick-access-grid { grid-template-columns: 1fr 1fr; }
-            .qa-card { padding: 20px 14px; }
-        }
-
-        @media (max-width: 380px) {
-            .quick-access-grid { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo" data-translate="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="{% url 'accounts:profile' %}" data-translate="nav-profile">Profile</a>
-                <a href="{% url 'accounts:user_messages' %}" data-translate="nav-messages">Messages</a>
-                <a href="{% url 'accounts:logout' %}" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="{% url 'accounts:login' %}" data-translate="nav-login">Login</a>
+
+<!-- ============ HEADER ============ -->
+<header class="header">
+    <div class="logo" data-translate="logo">Eduvia</div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <nav class="menu">
+        <a href="/" data-translate="nav-home">Home</a>
+        <a href="/courses/" data-translate="nav-courses">Courses</a>
+        <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
+        <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
+        <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
+        <a href="/about/" data-translate="nav-about">About Us</a>
+        <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
+        {% if user.is_authenticated %}
+            {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
-            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
-        </nav>
-    </header>
-
-    <section class="hero">
-        <h1 data-translate="hero-title">Your Profile</h1>
-        <p data-translate="hero-subtitle">View and manage your personal details on Eduvia.</p>
-    </section>
-
-    {% block content %}
-    <div class="profile-container">
-        <h1 data-translate="profile-title">User Profile</h1>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert{% endif %}">{{ message }}</div>
-            {% endfor %}
+            <a href="{% url 'accounts:profile' %}" data-translate="nav-profile">Profile</a>
+            <a href="{% url 'accounts:user_messages' %}" data-translate="nav-messages">Messages</a>
+            <a href="{% url 'accounts:logout' %}" data-translate="nav-logout">Logout</a>
+            {% if user.courses_profile %}
+                <span class="coins-display">
+                    <i class="fas fa-coins coins-icon"></i>
+                    <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
+                </span>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'accounts:login' %}" data-translate="nav-login">Login</a>
         {% endif %}
+        <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
+        <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
+    </nav>
+</header>
 
-        <div class="profile-picture">
-            {% if profile.profile_picture %}
-                <img src="{{ profile.profile_picture }}" alt="Profile Picture"
-                     onerror="this.src='{% static 'images/default_profile.jpg' %}'">
-            {% else %}
-                <p data-translate="no-picture">No profile picture uploaded.</p>
-            {% endif %}
-        </div>
+<!-- ============ HERO ============ -->
+<section class="hero">
+    <h1 data-translate="hero-title">Your Profile</h1>
+    <p data-translate="hero-subtitle">View and manage your personal details on Eduvia.</p>
+</section>
 
-        <div class="profile-details">
-            <p><strong data-translate="label-username">Username:</strong> {{ profile.user.username }}</p>
-            <p><strong data-translate="label-fullname">Full Name:</strong> {{ profile.full_name|default:"Not provided" }}</p>
-            <p><strong data-translate="label-role">Role:</strong> {{ profile.user.get_role_display }}</p>
-            <p><strong data-translate="label-dob">Date of Birth:</strong> {{ profile.date_of_birth|default:"Not provided" }}</p>
-        </div>
+<!-- ============ PROFILE CONTENT ============ -->
+{% block content %}
+<div class="profile-container">
 
-        {% if not is_own_profile %}
-            <a href="{% url 'accounts:start_chat' user_id=viewed_user.id %}" class="btn" data-translate="btn-chat">Chat</a>
-            <div class="message-form">
-                <h3 data-translate="message-form-title">Send a Message to {{ viewed_user.username }}</h3>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-container">
-                        {{ form.content }}
-                        <div>
-                            <label for="{{ form.file.id_for_label }}" data-translate="label-file">Choose File</label>
-                            {{ form.file }}
-                        </div>
-                        <button type="submit" data-translate="btn-send">Send Message</button>
-                    </div>
-                </form>
+    <h1 data-translate="profile-title">User Profile</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert{% endif %}">
+                {{ message }}
             </div>
-        {% endif %}
+        {% endfor %}
+    {% endif %}
 
-        {% if is_own_profile %}
-            <a href="{% url 'accounts:edit_profile' %}" class="btn" data-translate="btn-edit">Edit Profile</a>
-        {% endif %}
-        <a href="{% url 'home' %}" class="btn" data-translate="btn-home">Back to Home</a>
+    <!-- Glass Profile Card -->
+    <div class="profile-card">
+
+        <!-- Card Header: Avatar + Name -->
+        <div class="profile-card-header">
+            <div class="profile-avatar-wrap">
+                <div class="profile-avatar-ring">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture }}"
+                             alt="Profile Picture"
+                             onerror="this.src='{% static 'images/default_profile.jpg' %}'">
+                    {% else %}
+                        <div class="avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="avatar-badge"><i class="fas fa-check"></i></div>
+            </div>
+
+            <div class="profile-header-info">
+                <div class="username">{{ profile.user.username }}</div>
+                <div class="profile-role-badge">
+                    <i class="fas fa-shield-halved"></i>
+                    {{ profile.user.get_role_display }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Body: Info Grid + Actions -->
+        <div class="profile-card-body">
+
+            <div class="info-grid">
+                <!-- Username -->
+                <div class="info-item">
+                    <div class="info-item-icon"><i class="fas fa-at"></i></div>
+                    <div class="info-item-content">
+                        <div class="info-item-label" data-translate="label-username">Username</div>
+                        <div class="info-item-value">{{ profile.user.username }}</div>
+                    </div>
+                </div>
+
+                <!-- Full Name -->
+                <div class="info-item">
+                    <div class="info-item-icon"><i class="fas fa-id-card"></i></div>
+                    <div class="info-item-content">
+                        <div class="info-item-label" data-translate="label-fullname">Full Name</div>
+                        <div class="info-item-value">{{ profile.full_name|default:"—" }}</div>
+                    </div>
+                </div>
+
+                <!-- Role -->
+                <div class="info-item">
+                    <div class="info-item-icon"><i class="fas fa-user-tag"></i></div>
+                    <div class="info-item-content">
+                        <div class="info-item-label" data-translate="label-role">Role</div>
+                        <div class="info-item-value">{{ profile.user.get_role_display }}</div>
+                    </div>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="info-item">
+                    <div class="info-item-icon"><i class="fas fa-cake-candles"></i></div>
+                    <div class="info-item-content">
+                        <div class="info-item-label" data-translate="label-dob">Date of Birth</div>
+                        <div class="info-item-value">{{ profile.date_of_birth|default:"—" }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="profile-actions">
+                {% if not is_own_profile %}
+                    <a href="{% url 'accounts:start_chat' user_id=viewed_user.id %}" class="btn btn-primary" data-translate="btn-chat">
+                        <i class="fas fa-comment-dots"></i> Chat
+                    </a>
+                {% endif %}
+                {% if is_own_profile %}
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary" data-translate="btn-edit">
+                        <i class="fas fa-pen-to-square"></i> Edit Profile
+                    </a>
+                {% endif %}
+                <a href="{% url 'home' %}" class="btn btn-outline" data-translate="btn-home">
+                    <i class="fas fa-house"></i> Back to Home
+                </a>
+            </div>
+
+        </div><!-- /.profile-card-body -->
+    </div><!-- /.profile-card -->
+
+    <!-- Message Form (other user's profile) -->
+    {% if not is_own_profile %}
+    <div class="message-form">
+        <h3 data-translate="message-form-title">Send a Message to {{ viewed_user.username }}</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-container">
+                {{ form.content }}
+                <div>
+                    <label for="{{ form.file.id_for_label }}" data-translate="label-file">
+                        <i class="fas fa-paperclip"></i> Choose File
+                    </label>
+                    {{ form.file }}
+                </div>
+                <button type="submit" data-translate="btn-send">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </div>
+        </form>
     </div>
-    {% endblock %}
+    {% endif %}
 
-    <!-- =====================================================
-         QUICK ACCESS — Marketplace & Platform Navigation
-         Matches home.css hero-card design exactly
-         ===================================================== -->
-    <section class="quick-access-section">
-        <div class="quick-access-title">
-            <i class="fas fa-th-large"></i>
-            Quick Access
-        </div>
+</div><!-- /.profile-container -->
+{% endblock %}
 
-        <div class="quick-access-grid">
-            <!-- My Courses -->
-            <a href="/marketplace/my-courses/" class="qa-card">
-                <div class="qa-icon"><i class="fas fa-graduation-cap"></i></div>
-                <h3>My Courses</h3>
-                <p>View and continue your enrolled courses.</p>
-                <span class="qa-btn">Open</span>
-            </a>
+<!-- ============ QUICK ACCESS ============ -->
+<section class="quick-access-section">
+    <div class="quick-access-title">
+        <i class="fas fa-th-large"></i>
+        <span data-translate="quick-access-title">Quick Access</span>
+    </div>
+    <div class="quick-access-grid">
+        <a href="/marketplace/my-courses/" class="qa-card">
+            <div class="qa-icon"><i class="fas fa-graduation-cap"></i></div>
+            <h3 data-translate="qa-mycourses-title">My Courses</h3>
+            <p data-translate="qa-mycourses-desc">View and continue your enrolled courses.</p>
+            <span class="qa-btn" data-translate="qa-btn-open">Open</span>
+        </a>
+        <a href="/api/marketplace/checkout/" class="qa-card">
+            <div class="qa-icon"><i class="fas fa-shopping-cart"></i></div>
+            <h3 data-translate="qa-checkout-title">Checkout</h3>
+            <p data-translate="qa-checkout-desc">Enroll in new courses and manage payments.</p>
+            <span class="qa-btn" data-translate="qa-btn-shop">Shop</span>
+        </a>
+        <a href="/marketplace/wallet/" class="qa-card">
+            <div class="qa-icon"><i class="fas fa-wallet"></i></div>
+            <h3 data-translate="qa-wallet-title">Instructor Wallet</h3>
+            <p data-translate="qa-wallet-desc">Track your earnings and transaction history.</p>
+            <span class="qa-btn" data-translate="qa-btn-view">View</span>
+        </a>
+        <a href="/marketplace/access-restricted/" class="qa-card">
+            <div class="qa-icon"><i class="fas fa-lock"></i></div>
+            <h3 data-translate="qa-access-title">Access Info</h3>
+            <p data-translate="qa-access-desc">Learn about content access and enrollment requirements.</p>
+            <span class="qa-btn" data-translate="qa-btn-learn">Learn</span>
+        </a>
+    </div>
+</section>
 
-            <!-- Checkout -->
-            <a href="/api/marketplace/checkout/" class="qa-card">
-                <div class="qa-icon"><i class="fas fa-shopping-cart"></i></div>
-                <h3>Checkout</h3>
-                <p>Enroll in new courses and manage payments.</p>
-                <span class="qa-btn">Shop</span>
-            </a>
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+    <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
 
-            <!-- Instructor Wallet -->
-            <a href="/marketplace/wallet/" class="qa-card">
-                <div class="qa-icon"><i class="fas fa-wallet"></i></div>
-                <h3>Instructor Wallet</h3>
-                <p>Track your earnings and transaction history.</p>
-                <span class="qa-btn">View</span>
-            </a>
-
-            <!-- Access Restricted (info) -->
-            <a href="/marketplace/access-restricted/" class="qa-card">
-                <div class="qa-icon"><i class="fas fa-lock"></i></div>
-                <h3>Access Info</h3>
-                <p>Learn about content access and enrollment requirements.</p>
-                <span class="qa-btn">Learn</span>
-            </a>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
-
-    <script src="{% static 'accounts/profile.js' %}"></script>
+<script src="{% static 'accounts/profile.js' %}"></script>
 </body>
 </html>
