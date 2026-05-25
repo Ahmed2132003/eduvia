@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── Reset & Base ──────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --primary:   #00a8cc;
@@ -17,6 +16,7 @@
   --accent:    #00c9a7;
   --danger:    #e74c3c;
   --warning:   #f39c12;
+  --violet:    #8b5cf6;
   --bg:        #f0f4f8;
   --card:      #ffffff;
   --border:    #d1dde8;
@@ -28,7 +28,6 @@
 }
 body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-/* ── Top Bar ───────────────────────────────────────────────────────────── */
 .topbar {
   background: linear-gradient(90deg,#00a8cc,#00c9a7);
   color:#fff; padding:0 24px; height:58px;
@@ -37,7 +36,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   box-shadow:0 2px 8px rgba(0,0,0,.15);
 }
 .topbar-left { display:flex; align-items:center; gap:16px; }
-.topbar .logo { font-size:22px; font-weight:700; letter-spacing:.5px; }
+.topbar .logo { font-size:22px; font-weight:700; }
 .topbar .breadcrumb { font-size:13px; opacity:.85; }
 .topbar .breadcrumb a { color:#fff; text-decoration:none; }
 .topbar .breadcrumb span { margin:0 6px; }
@@ -47,27 +46,27 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   display:inline-flex; align-items:center; gap:6px;
   padding:8px 18px; border-radius:6px; font-size:14px; font-weight:600;
   cursor:pointer; border:none; transition:all .2s; text-decoration:none;
+  font-family:'Cairo',sans-serif;
 }
 .btn-primary { background:var(--primary); color:#fff; }
 .btn-primary:hover { background:var(--primary-d); }
 .btn-accent  { background:var(--accent); color:#fff; }
-.btn-accent:hover { filter:brightness(.92); }
 .btn-white   { background:#fff; color:var(--primary); }
 .btn-white:hover { background:#e8f6fb; }
 .btn-danger  { background:var(--danger); color:#fff; }
 .btn-danger:hover { filter:brightness(.9); }
 .btn-ghost   { background:transparent; color:var(--primary); border:1.5px solid var(--primary); }
 .btn-ghost:hover { background:var(--primary); color:#fff; }
+.btn-violet  { background:var(--violet); color:#fff; }
+.btn-violet:hover { filter:brightness(.9); }
 .btn-sm { padding:5px 12px; font-size:12px; }
 .btn-icon { padding:6px 10px; }
 
-/* ── Layout ────────────────────────────────────────────────────────────── */
 .page-wrap { max-width:900px; margin:32px auto; padding:0 16px 60px; }
 .page-header { margin-bottom:28px; }
 .page-header h1 { font-size:24px; font-weight:700; color:var(--text); }
 .page-header p { color:var(--muted); font-size:14px; margin-top:4px; }
 
-/* ── Section Card ──────────────────────────────────────────────────────── */
 .section-card {
   background:var(--card); border:1.5px solid var(--border);
   border-radius:var(--radius); margin-bottom:16px;
@@ -89,7 +88,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .section-meta { font-size:12px; color:var(--muted); white-space:nowrap; }
 .section-actions { display:flex; gap:6px; }
 
-/* ── Inline Edit ───────────────────────────────────────────────────────── */
 .inline-edit-form {
   display:none; padding:12px 18px; background:#f7fafb;
   border-bottom:1px solid var(--border); gap:8px; align-items:center;
@@ -102,7 +100,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 }
 .inline-edit-form input:focus { border-color:var(--primary); }
 
-/* ── Lesson List ───────────────────────────────────────────────────────── */
 .lesson-list { padding:0; list-style:none; }
 .lesson-list:empty::after {
   content:'No lessons yet. Add your first lesson below.';
@@ -120,23 +117,23 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .lesson-type-icon.video   { color:var(--primary); }
 .lesson-type-icon.text    { color:#8e44ad; }
 .lesson-type-icon.article { color:#e67e22; }
-.lesson-title { flex:1; font-size:14px; font-weight:500; }
+.lesson-title-text { flex:1; font-size:14px; font-weight:500; }
 .lesson-meta  { font-size:12px; color:var(--muted); display:flex; gap:8px; align-items:center; }
 .badge {
   font-size:11px; padding:2px 7px; border-radius:20px; font-weight:600;
   background:#e8f6fb; color:var(--primary);
 }
 .badge.preview { background:#e8faf4; color:#00a86b; }
+.badge.task-badge { background:rgba(139,92,246,.12); color:var(--violet); }
 .lesson-actions { display:flex; gap:4px; }
 
-/* ── Add Lesson Bar ────────────────────────────────────────────────────── */
 .add-lesson-bar {
   display:flex; flex-wrap:wrap; gap:8px; align-items:center;
   padding:12px 18px; background:#f9fbfc; border-top:1px dashed var(--border);
 }
 .add-lesson-bar span { font-size:13px; color:var(--muted); font-weight:600; margin-right:4px; }
 
-/* ── Modal ─────────────────────────────────────────────────────────────── */
+/* ── Modal ── */
 .modal-overlay {
   display:none; position:fixed; inset:0;
   background:rgba(0,0,0,.45); z-index:500;
@@ -149,6 +146,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   animation:modalIn .22s ease;
   max-height:90vh; overflow-y:auto;
 }
+.modal-box.wide { max-width:680px; }
 @keyframes modalIn { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
 .modal-header {
   display:flex; align-items:center; justify-content:space-between;
@@ -164,7 +162,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   position:sticky; bottom:0; background:#fff;
 }
 
-/* ── Form ──────────────────────────────────────────────────────────────── */
+/* ── Form ── */
 .form-group { margin-bottom:16px; }
 .form-group label { display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:#4a5568; }
 .form-control {
@@ -187,40 +185,44 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .type-tab:hover:not(.active) { border-color:var(--primary); }
 .type-tab i { display:block; font-size:18px; margin-bottom:3px; }
 
+/* Task type tabs */
+.task-type-tab {
+  flex:1; padding:9px; border:1.5px solid var(--border);
+  border-radius:6px; text-align:center; cursor:pointer;
+  font-size:12px; font-weight:600; transition:all .2s; background:#f9fbfc;
+}
+.task-type-tab.active { border-color:var(--violet); background:rgba(139,92,246,.08); color:var(--violet); }
+.task-type-tab:hover:not(.active) { border-color:var(--violet); }
+.task-type-tab i { display:block; font-size:16px; margin-bottom:3px; }
+.task-field-group { display:none; }
+
 .field-group { display:none; }
 .field-group.active { display:block; }
 
 .check-label { display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer; }
 .check-label input[type=checkbox] { width:16px; height:16px; cursor:pointer; }
 
-/* ── Existing Video Picker ─────────────────────────────────────────────── */
 .video-picker-section {
   background:#f0f9fb; border:1.5px solid #b2e4f0;
   border-radius:8px; padding:14px; margin-bottom:16px;
 }
-.video-picker-section h4 {
-  font-size:13px; font-weight:700; color:var(--primary); margin-bottom:10px;
-}
+.video-picker-section h4 { font-size:13px; font-weight:700; color:var(--primary); margin-bottom:10px; }
 .video-picker-section select {
   width:100%; padding:8px 12px;
   border:1.5px solid var(--border); border-radius:6px;
   font-size:13px; font-family:'Cairo',sans-serif; outline:none;
   background:#fff; cursor:pointer;
 }
-.video-picker-section select:focus { border-color:var(--primary); }
 .video-picker-hint { font-size:11px; color:var(--muted); margin-top:6px; }
 .divider-or {
   text-align:center; font-size:12px; color:var(--muted);
   margin:12px 0; position:relative;
 }
 .divider-or::before, .divider-or::after {
-  content:''; position:absolute; top:50%; width:44%; height:1px;
-  background:var(--border);
+  content:''; position:absolute; top:50%; width:44%; height:1px; background:var(--border);
 }
-.divider-or::before { left:0; }
-.divider-or::after  { right:0; }
+.divider-or::before { left:0; } .divider-or::after { right:0; }
 
-/* ── Add Section Bar ───────────────────────────────────────────────────── */
 .add-section-bar {
   border:2px dashed var(--border); border-radius:var(--radius);
   padding:18px; text-align:center; cursor:pointer;
@@ -229,7 +231,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 }
 .add-section-bar:hover { border-color:var(--primary); background:#e8f6fb; }
 
-/* ── Spinner inside button ─────────────────────────────────────────────── */
 .btn-loading { opacity:.7; pointer-events:none; }
 .btn-loading::after {
   content:''; display:inline-block; width:12px; height:12px;
@@ -238,7 +239,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* ── Toast ─────────────────────────────────────────────────────────────── */
 .toast-container {
   position:fixed; bottom:24px; right:24px; z-index:900;
   display:flex; flex-direction:column; gap:8px;
@@ -253,7 +253,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .toast.warning { background:var(--warning); }
 @keyframes toastIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
 
-/* ── Rich Text Editor ──────────────────────────────────────────────────── */
 .rich-editor-wrap { border:1.5px solid var(--border); border-radius:6px; overflow:hidden; }
 .rich-editor-toolbar {
   display:flex; flex-wrap:wrap; gap:2px; padding:6px;
@@ -272,7 +271,13 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   content: attr(data-placeholder); color:#a0aec0; pointer-events:none;
 }
 
-/* Sortable ghost */
+/* MCQ Builder */
+.mcq-builder-wrap {
+  max-height:320px; overflow-y:auto;
+  border:1.5px solid var(--border); border-radius:8px; padding:12px;
+  background:#f9fbfc; margin-bottom:10px;
+}
+
 .sortable-ghost { opacity:.4; background:#e8f6fb; }
 
 @media(max-width:600px){
@@ -283,7 +288,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 </head>
 <body>
 
-<!-- Top Bar -->
 <div class="topbar">
   <div class="topbar-left">
     <span class="logo">Eduvia</span>
@@ -309,15 +313,13 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 <div class="page-wrap">
   <div class="page-header">
     <h1><i class="fas fa-list-ul" style="color:var(--primary)"></i> Course Curriculum</h1>
-    <p>Build your course sections and lessons. Drag to reorder.</p>
+    <p>Build your course sections and lessons. Add tasks to each lesson. Drag to reorder.</p>
   </div>
 
-  <!-- Sections Container -->
   <div id="sections-container">
     {% for section in sections %}
     <div class="section-card" data-section-id="{{ section.id }}">
 
-      <!-- Section Header -->
       <div class="section-header" onclick="toggleSection(this)">
         <i class="fas fa-grip-vertical section-drag-handle" onclick="event.stopPropagation()"></i>
         <i class="fas fa-chevron-down section-toggle-icon"></i>
@@ -337,7 +339,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
         </div>
       </div>
 
-      <!-- Inline Edit Form -->
       <div class="inline-edit-form" id="edit-section-{{ section.id }}">
         <input type="text" id="edit-section-input-{{ section.id }}"
                placeholder="Section title…" value="{{ section.title|escapejs }}">
@@ -345,7 +346,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
         <button class="btn btn-ghost btn-sm" onclick="cancelEditSection({{ section.id }})">Cancel</button>
       </div>
 
-      <!-- Lesson List -->
       <ul class="lesson-list" id="lessons-{{ section.id }}" data-section-id="{{ section.id }}">
         {% for lesson in section.lessons.all %}
         <li class="lesson-item" data-lesson-id="{{ lesson.id }}">
@@ -353,16 +353,20 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
           <div class="lesson-type-icon {{ lesson.lesson_type }}">
             <i class="{{ lesson.get_icon }}"></i>
           </div>
-          <div class="lesson-title">{{ lesson.title }}</div>
+          <div class="lesson-title-text">{{ lesson.title }}</div>
           <div class="lesson-meta">
             <span class="badge">{{ lesson.get_type_label }}</span>
             {% if lesson.is_preview %}<span class="badge preview">Preview</span>{% endif %}
             {% if lesson.lesson_type == 'video' and lesson.video_duration %}
               <span>{{ lesson.get_duration_display }}</span>
             {% endif %}
+            {% comment %} Task badge if task exists {% endcomment %}
+            {% if lesson.task %}
+              <span class="badge task-badge"><i class="fas fa-tasks"></i> Task</span>
+            {% endif %}
           </div>
           <div class="lesson-actions">
-            <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
+            <button class="btn btn-ghost btn-sm btn-icon" title="Edit Lesson"
               onclick="openEditLesson(
                 {{ section.id }}, {{ lesson.id }},
                 '{{ lesson.title|escapejs }}',
@@ -374,7 +378,22 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
                 `{{ lesson.content|escapejs }}`)">
               <i class="fas fa-pen"></i>
             </button>
-            <button class="btn btn-danger btn-sm btn-icon" title="Delete"
+            {% if lesson.task %}
+            <button class="btn btn-violet btn-sm btn-icon" title="Edit Task"
+              onclick="openTaskModal({{ section.id }}, {{ lesson.id }}, 'edit')">
+              <i class="fas fa-tasks"></i>
+            </button>
+            <button class="btn btn-sm" style="background:#f39c12;color:#fff;" title="Delete Task"
+              onclick="deleteTask({{ section.id }}, {{ lesson.id }})">
+              <i class="fas fa-times"></i>
+            </button>
+            {% else %}
+            <button class="btn btn-violet btn-sm" title="Add Task"
+              onclick="openTaskModal({{ section.id }}, {{ lesson.id }}, 'create')">
+              <i class="fas fa-plus"></i> Task
+            </button>
+            {% endif %}
+            <button class="btn btn-danger btn-sm btn-icon" title="Delete Lesson"
               onclick="deleteLesson({{ section.id }}, {{ lesson.id }})">
               <i class="fas fa-trash"></i>
             </button>
@@ -383,7 +402,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
         {% endfor %}
       </ul>
 
-      <!-- Add Lesson Bar -->
       <div class="add-lesson-bar">
         <span>Add:</span>
         <button class="btn btn-primary btn-sm" onclick="openAddLesson({{ section.id }}, 'video')">
@@ -402,16 +420,14 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
     {% endfor %}
   </div>
 
-  <!-- Add Section Bar -->
   <div class="add-section-bar" id="add-section-bar" onclick="openAddSection()">
     <i class="fas fa-plus-circle"></i> Add New Section
   </div>
 </div>
 
-<!-- Toast Container -->
 <div class="toast-container" id="toast-container"></div>
 
-<!-- ═══════ MODAL: Add / Edit Section ════════════════════════════════════ -->
+<!-- MODAL: Section -->
 <div class="modal-overlay" id="section-modal">
   <div class="modal-box">
     <div class="modal-header">
@@ -420,7 +436,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label for="section-title-input">Section Title *</label>
+        <label>Section Title *</label>
         <input type="text" id="section-title-input" class="form-control"
                placeholder="e.g. Introduction to the Course"
                onkeydown="if(event.key==='Enter') document.getElementById('section-modal-save').click()">
@@ -435,7 +451,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   </div>
 </div>
 
-<!-- ═══════ MODAL: Add / Edit Lesson ═════════════════════════════════════ -->
+<!-- MODAL: Lesson -->
 <div class="modal-overlay" id="lesson-modal">
   <div class="modal-box" style="max-width:600px;">
     <div class="modal-header">
@@ -443,8 +459,6 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
       <button class="modal-close" onclick="closeModal('lesson-modal')">×</button>
     </div>
     <div class="modal-body">
-
-      <!-- Type Tabs -->
       <div class="form-group">
         <label>Lesson Type</label>
         <div class="type-tabs">
@@ -461,55 +475,47 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
         <input type="hidden" id="lesson-type-hidden" value="video">
       </div>
 
-      <!-- ── Existing Video Picker (shows only for type=video in add mode) ── -->
       <div id="existing-video-picker" class="video-picker-section" style="display:none;">
         <h4><i class="fas fa-film"></i> Use an existing course video</h4>
         <select id="existing-video-select" onchange="onExistingVideoSelected()">
           <option value="">— Select a video —</option>
         </select>
-        <p class="video-picker-hint">
-          Selecting a video will auto-fill title, URL and duration below.
-        </p>
+        <p class="video-picker-hint">Selecting a video will auto-fill title, URL and duration.</p>
         <div class="divider-or">OR</div>
       </div>
 
       <div class="form-group">
-        <label for="lesson-title-input">Lesson Title *</label>
-        <input type="text" id="lesson-title-input" class="form-control"
-               placeholder="e.g. Introduction to Variables">
+        <label>Lesson Title *</label>
+        <input type="text" id="lesson-title-input" class="form-control" placeholder="e.g. Introduction to Variables">
       </div>
 
-      <!-- Video Fields -->
       <div class="field-group active" id="field-video">
         <div class="form-group">
-          <label for="lesson-video-url">Video URL *</label>
-          <input type="url" id="lesson-video-url" class="form-control"
-                 placeholder="https://...">
+          <label>Video URL *</label>
+          <input type="url" id="lesson-video-url" class="form-control" placeholder="https://...">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label for="lesson-duration">Duration (minutes)</label>
-            <input type="number" id="lesson-duration" class="form-control"
-                   placeholder="e.g. 10.5" step="0.1" min="0">
+            <label>Duration (minutes)</label>
+            <input type="number" id="lesson-duration" class="form-control" placeholder="e.g. 10.5" step="0.1" min="0">
           </div>
           <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px;">
             <label class="check-label">
               <input type="checkbox" id="lesson-is-preview">
-              Free Preview (visible before purchase)
+              Free Preview
             </label>
           </div>
         </div>
       </div>
 
-      <!-- Text / Article Fields -->
       <div class="field-group" id="field-text">
         <div class="form-group">
           <label>Content *</label>
           <div class="rich-editor-wrap">
             <div class="rich-editor-toolbar">
-              <button type="button" onclick="execCmd('bold')" title="Bold"><b>B</b></button>
-              <button type="button" onclick="execCmd('italic')" title="Italic"><i>I</i></button>
-              <button type="button" onclick="execCmd('underline')" title="Underline"><u>U</u></button>
+              <button type="button" onclick="execCmd('bold')"><b>B</b></button>
+              <button type="button" onclick="execCmd('italic')"><i>I</i></button>
+              <button type="button" onclick="execCmd('underline')"><u>U</u></button>
               <button type="button" onclick="execCmd('insertOrderedList')"><i class="fas fa-list-ol"></i></button>
               <button type="button" onclick="execCmd('insertUnorderedList')"><i class="fas fa-list-ul"></i></button>
               <button type="button" onclick="insertHeading()"><i class="fas fa-heading"></i></button>
@@ -523,14 +529,10 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
       </div>
 
       <div class="form-group">
-        <label for="lesson-description">
-          Description <span style="color:var(--muted);font-weight:400">(optional)</span>
-        </label>
+        <label>Description <span style="color:var(--muted);font-weight:400">(optional)</span></label>
         <textarea id="lesson-description" class="form-control textarea" rows="2"
-          placeholder="Brief description of this lesson…"></textarea>
+          placeholder="Brief description…"></textarea>
       </div>
-
-      <!-- Hidden: tracks which existing video was chosen -->
       <input type="hidden" id="existing-video-id" value="">
     </div>
     <div class="modal-footer">
@@ -542,856 +544,636 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   </div>
 </div>
 
-<!-- ═══════ Sortable.js ═══════════════════════════════════════════════════ -->
+<!-- MODAL: Task -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal-box wide">
+    <div class="modal-header">
+      <h2 id="task-modal-title">Add Task</h2>
+      <button class="modal-close" onclick="closeModal('task-modal')">×</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Task Type Tabs -->
+      <div class="form-group">
+        <label>Task Type</label>
+        <div class="type-tabs">
+          <div class="task-type-tab active" data-type="mcq" onclick="switchTaskType('mcq')">
+            <i class="fas fa-list-ul"></i> MCQ
+          </div>
+          <div class="task-type-tab" data-type="essay" onclick="switchTaskType('essay')">
+            <i class="fas fa-pen-nib"></i> Essay
+          </div>
+          <div class="task-type-tab" data-type="file_upload" onclick="switchTaskType('file_upload')">
+            <i class="fas fa-file-upload"></i> File Upload
+          </div>
+          <div class="task-type-tab" data-type="external_link" onclick="switchTaskType('external_link')">
+            <i class="fas fa-external-link-alt"></i> External Link
+          </div>
+        </div>
+        <input type="hidden" id="task-type-hidden" value="mcq">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Task Title *</label>
+          <input type="text" id="task-title-input" class="form-control" placeholder="e.g. Chapter Quiz">
+        </div>
+        <div class="form-group">
+          <label>Passing Score % <span style="color:var(--muted);font-weight:400">(0–100)</span></label>
+          <input type="number" id="task-passing-input" class="form-control" value="70" min="0" max="100">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <input type="text" id="task-desc-input" class="form-control" placeholder="Brief task description…">
+      </div>
+
+      <!-- MCQ Fields -->
+      <div class="task-field-group" id="task-field-mcq" style="display:block;">
+        <div class="form-group">
+          <label>Questions</label>
+          <div class="mcq-builder-wrap" id="mcq-questions-container">
+            <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">
+              <i class="fas fa-plus-circle" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4;"></i>
+              No questions yet. Click "Add Question" to start.
+            </div>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="addMCQQuestion()" style="margin-top:8px;">
+            <i class="fas fa-plus"></i> Add Question
+          </button>
+        </div>
+      </div>
+
+      <!-- Essay Fields -->
+      <div class="task-field-group" id="task-field-essay">
+        <div class="form-group">
+          <label>Essay Questions <span style="color:var(--muted);font-weight:400">(one per line)</span></label>
+          <textarea id="task-essay-q-input" class="form-control textarea" rows="5"
+            placeholder="e.g.&#10;Explain the concept of OOP.&#10;What are the 4 pillars of OOP?"></textarea>
+        </div>
+      </div>
+
+      <!-- File Upload Fields -->
+      <div class="task-field-group" id="task-field-file_upload">
+        <div style="background:#f0f9fb;border:1.5px solid #b2e4f0;border-radius:8px;padding:16px;">
+          <p style="font-size:14px;color:#4a5568;line-height:1.6;">
+            <i class="fas fa-info-circle" style="color:var(--primary);margin-right:6px;"></i>
+            Students will upload a file (PDF, DOCX, ZIP, or image) as their task submission.
+            The task is auto-passed upon file upload.
+          </p>
+        </div>
+      </div>
+
+      <!-- External Link Fields -->
+      <div class="task-field-group" id="task-field-external_link">
+        <div class="form-group">
+          <label>External URL *</label>
+          <input type="url" id="task-ext-url-input" class="form-control"
+                 placeholder="https://forms.google.com/… or any external resource">
+          <p style="font-size:12px;color:var(--muted);margin-top:6px;">
+            Students must visit this link and confirm completion to pass the task.
+          </p>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('task-modal')">Cancel</button>
+      <button class="btn btn-violet" id="task-modal-save" onclick="saveTask()">
+        <i class="fas fa-plus"></i> Add Task
+      </button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 <script>
-/* ════════════════════════════════════════════════════════════════════════
-   STATE
-   ════════════════════════════════════════════════════════════════════════ */
 const COURSE_ID = {{ course.id }};
 const CSRF      = '{{ csrf_token }}';
 
-let lessonModalMode = 'add';   // 'add' | 'edit'
+let lessonModalMode = 'add';
 let lessonSectionId = null;
 let lessonEditId    = null;
+let legacyVideos    = [];
 
-// Cache of legacy videos fetched from server
-let legacyVideos = [];
+// Task state
+let taskModalMode   = 'create';
+let taskSectionId   = null;
+let taskLessonId    = null;
+let currentTaskType = 'mcq';
+let mcqQuestions    = [];
 
-/* ════════════════════════════════════════════════════════════════════════
-   AJAX HELPER  — fixed: correct error handling + returns parsed JSON
-   ════════════════════════════════════════════════════════════════════════ */
+/* ── API ── */
 async function api(url, body = null, method = 'POST') {
   try {
     const opts = {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': CSRF,
-      },
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
     };
     if (body !== null) opts.body = JSON.stringify(body);
-
     const response = await fetch(url, opts);
-
-    // Parse JSON regardless of status
     let data;
-    try {
-      data = await response.json();
-    } catch {
-      throw new Error(`Server returned non-JSON response (status ${response.status})`);
-    }
-
-    if (!response.ok) {
-      // Server returned 4xx/5xx
-      throw new Error(data.error || `HTTP ${response.status}`);
-    }
-
-    return data;   // { ok: true, ... }
-
+    try { data = await response.json(); } catch { throw new Error(`Non-JSON (${response.status})`); }
+    if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+    return data;
   } catch (err) {
-    // Network error or thrown above
-    console.error('[api] error:', err);
+    console.error('[api]', err);
     return { ok: false, error: err.message || 'Network error' };
   }
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   TOAST
-   ════════════════════════════════════════════════════════════════════════ */
+/* ── Toast ── */
 function toast(msg, type = 'success') {
-  const container = document.getElementById('toast-container');
   const el = document.createElement('div');
   el.className = `toast ${type}`;
   el.textContent = msg;
-  container.appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 400); }, 3500);
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; setTimeout(()=>el.remove(),400); }, 3500);
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   MODAL HELPERS
-   ════════════════════════════════════════════════════════════════════════ */
+/* ── Modal ── */
 function openModal(id)  { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-// Close on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('active');
-  });
-});
-
-// Close on Escape
+document.querySelectorAll('.modal-overlay').forEach(o =>
+  o.addEventListener('click', e => { if(e.target===o) o.classList.remove('active'); })
+);
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
-  }
+  if(e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m=>m.classList.remove('active'));
 });
 
-/* ════════════════════════════════════════════════════════════════════════
-   BUTTON LOADING STATE
-   ════════════════════════════════════════════════════════════════════════ */
-function setLoading(btn, loading) {
-  if (loading) {
-    btn.classList.add('btn-loading');
-    btn._origText = btn.innerHTML;
-    btn.innerHTML = 'Saving…';
-  } else {
-    btn.classList.remove('btn-loading');
-    if (btn._origText) btn.innerHTML = btn._origText;
-  }
+/* ── Button loading ── */
+function setLoading(btn, on) {
+  if(on) { btn.classList.add('btn-loading'); btn._orig=btn.innerHTML; btn.innerHTML='Saving…'; }
+  else   { btn.classList.remove('btn-loading'); if(btn._orig) btn.innerHTML=btn._orig; }
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   SECTION TOGGLE
-   ════════════════════════════════════════════════════════════════════════ */
+/* ── Section toggle ── */
 function toggleSection(header) {
-  const card   = header.closest('.section-card');
-  const list   = card.querySelector('.lesson-list');
-  const addBar = card.querySelector('.add-lesson-bar');
-  const icon   = header.querySelector('.section-toggle-icon');
-
-  const isHidden = list.style.display === 'none';
-  list.style.display    = isHidden ? '' : 'none';
-  addBar.style.display  = isHidden ? '' : 'none';
-  icon.classList.toggle('collapsed', !isHidden);
+  const card=header.closest('.section-card');
+  const list=card.querySelector('.lesson-list');
+  const bar=card.querySelector('.add-lesson-bar');
+  const icon=header.querySelector('.section-toggle-icon');
+  const hidden=list.style.display==='none';
+  list.style.display=hidden?'':'none';
+  bar.style.display=hidden?'':'none';
+  icon.classList.toggle('collapsed',!hidden);
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   SECTION CRUD
-   ════════════════════════════════════════════════════════════════════════ */
+/* ── Section CRUD ── */
 function openAddSection() {
-  document.getElementById('section-modal-title').textContent = 'Add New Section';
-  document.getElementById('section-title-input').value = '';
-  const btn = document.getElementById('section-modal-save');
-  btn.innerHTML = '<i class="fas fa-plus"></i> Add Section';
-  btn.onclick = saveNewSection;
+  document.getElementById('section-modal-title').textContent='Add New Section';
+  document.getElementById('section-title-input').value='';
+  const btn=document.getElementById('section-modal-save');
+  btn.innerHTML='<i class="fas fa-plus"></i> Add Section';
+  btn.onclick=saveNewSection;
   openModal('section-modal');
-  setTimeout(() => document.getElementById('section-title-input').focus(), 80);
+  setTimeout(()=>document.getElementById('section-title-input').focus(),80);
 }
-
 async function saveNewSection() {
-  const title = document.getElementById('section-title-input').value.trim();
-  if (!title) {
-    toast('Please enter a section title.', 'error');
-    document.getElementById('section-title-input').focus();
-    return;
-  }
-
-  const btn = document.getElementById('section-modal-save');
-  setLoading(btn, true);
-
-  const res = await api(
-    `/courses/instructor/curriculum/${COURSE_ID}/section/create/`,
-    { title }
-  );
-
-  setLoading(btn, false);
-
-  if (!res.ok) {
-    toast(res.error || 'Failed to create section.', 'error');
-    return;
-  }
-
+  const title=document.getElementById('section-title-input').value.trim();
+  if(!title){toast('Section title required.','error');return;}
+  const btn=document.getElementById('section-modal-save');
+  setLoading(btn,true);
+  const res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/create/`,{title});
+  setLoading(btn,false);
+  if(!res.ok){toast(res.error||'Failed.','error');return;}
   closeModal('section-modal');
   renderNewSection(res.section);
-  toast('Section added successfully!');
+  toast('Section added!');
 }
-
-function openEditSection(id, currentTitle) {
-  const form  = document.getElementById(`edit-section-${id}`);
-  const input = document.getElementById(`edit-section-input-${id}`);
-  if (!form || !input) return;
-  input.value = currentTitle;
-  form.classList.add('active');
-  input.focus();
+function openEditSection(id,title) {
+  const form=document.getElementById(`edit-section-${id}`);
+  const inp=document.getElementById(`edit-section-input-${id}`);
+  if(!form||!inp)return;
+  inp.value=title; form.classList.add('active'); inp.focus();
 }
-
-function cancelEditSection(id) {
-  const form = document.getElementById(`edit-section-${id}`);
-  if (form) form.classList.remove('active');
-}
-
+function cancelEditSection(id){document.getElementById(`edit-section-${id}`)?.classList.remove('active');}
 async function saveSection(id) {
-  const input = document.getElementById(`edit-section-input-${id}`);
-  const title = input ? input.value.trim() : '';
-  if (!title) { toast('Title is required.', 'error'); return; }
-
-  const res = await api(
-    `/courses/instructor/curriculum/${COURSE_ID}/section/${id}/update/`,
-    { title }
-  );
-
-  if (!res.ok) { toast(res.error || 'Update failed.', 'error'); return; }
-
-  // Update UI in-place
-  const card = document.querySelector(`[data-section-id="${id}"]`);
-  if (card) card.querySelector('.section-title-text').textContent = title;
+  const inp=document.getElementById(`edit-section-input-${id}`);
+  const title=inp?inp.value.trim():'';
+  if(!title){toast('Title required.','error');return;}
+  const res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${id}/update/`,{title});
+  if(!res.ok){toast(res.error||'Failed.','error');return;}
+  document.querySelector(`[data-section-id="${id}"] .section-title-text`).textContent=title;
   cancelEditSection(id);
   toast('Section updated!');
 }
-
 async function deleteSection(id) {
-  if (!confirm('Delete this section and ALL its lessons? This cannot be undone.')) return;
-
-  const res = await api(
-    `/courses/instructor/curriculum/${COURSE_ID}/section/${id}/delete/`
-  );
-
-  if (!res.ok) { toast(res.error || 'Delete failed.', 'error'); return; }
-
-  const card = document.querySelector(`[data-section-id="${id}"]`);
-  if (card) {
-    card.style.opacity = '0';
-    card.style.transition = 'opacity .3s';
-    setTimeout(() => card.remove(), 300);
-  }
+  if(!confirm('Delete this section and ALL its lessons?'))return;
+  const res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${id}/delete/`);
+  if(!res.ok){toast(res.error||'Failed.','error');return;}
+  const card=document.querySelector(`[data-section-id="${id}"]`);
+  if(card){card.style.opacity='0';card.style.transition='opacity .3s';setTimeout(()=>card.remove(),300);}
   toast('Section deleted.');
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   LEGACY VIDEOS  — fetch once and cache
-   ════════════════════════════════════════════════════════════════════════ */
+/* ── Legacy videos ── */
 async function fetchLegacyVideos() {
-  if (legacyVideos.length > 0) return legacyVideos; // cached
-
+  if(legacyVideos.length>0)return legacyVideos;
   try {
-    const r = await fetch(
-      `/courses/instructor/curriculum/${COURSE_ID}/videos/json/`,
-      { headers: { 'X-CSRFToken': CSRF } }
-    );
-    const data = await r.json();
-    legacyVideos = data.videos || [];
-  } catch {
-    legacyVideos = [];
-  }
+    const r=await fetch(`/courses/instructor/curriculum/${COURSE_ID}/videos/json/`,{headers:{'X-CSRFToken':CSRF}});
+    const d=await r.json();
+    legacyVideos=d.videos||[];
+  } catch{legacyVideos=[];}
   return legacyVideos;
 }
-
 function populateVideoDropdown(videos) {
-  const sel = document.getElementById('existing-video-select');
-  // Clear old options except first placeholder
-  while (sel.options.length > 1) sel.remove(1);
-
-  videos.forEach(v => {
-    const opt = document.createElement('option');
-    opt.value = v.id;
-    opt.textContent = `${v.title}${v.duration ? ' (' + v.duration + ' min)' : ''}`;
-    opt.dataset.url      = v.video_url || '';
-    opt.dataset.title    = v.title;
-    opt.dataset.duration = v.duration || 0;
+  const sel=document.getElementById('existing-video-select');
+  while(sel.options.length>1)sel.remove(1);
+  videos.forEach(v=>{
+    const opt=document.createElement('option');
+    opt.value=v.id; opt.textContent=`${v.title}${v.duration?' ('+v.duration+' min)':''}`;
+    opt.dataset.url=v.video_url||''; opt.dataset.title=v.title; opt.dataset.duration=v.duration||0;
     sel.appendChild(opt);
   });
 }
-
 function onExistingVideoSelected() {
-  const sel = document.getElementById('existing-video-select');
-  const selectedOpt = sel.options[sel.selectedIndex];
-
-  if (!selectedOpt || !selectedOpt.value) {
-    // Clear pre-fill
-    document.getElementById('existing-video-id').value = '';
-    document.getElementById('lesson-title-input').value = '';
-    document.getElementById('lesson-video-url').value   = '';
-    document.getElementById('lesson-duration').value    = '';
+  const sel=document.getElementById('existing-video-select');
+  const opt=sel.options[sel.selectedIndex];
+  if(!opt||!opt.value){
+    ['existing-video-id','lesson-title-input','lesson-video-url','lesson-duration'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
     return;
   }
-
-  // Pre-fill fields from selected video's data attributes
-  document.getElementById('existing-video-id').value  = selectedOpt.value;
-  document.getElementById('lesson-title-input').value = selectedOpt.dataset.title;
-  document.getElementById('lesson-video-url').value   = selectedOpt.dataset.url;
-  document.getElementById('lesson-duration').value    = selectedOpt.dataset.duration || '';
+  document.getElementById('existing-video-id').value=opt.value;
+  document.getElementById('lesson-title-input').value=opt.dataset.title;
+  document.getElementById('lesson-video-url').value=opt.dataset.url;
+  document.getElementById('lesson-duration').value=opt.dataset.duration||'';
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   LESSON CRUD
-   ════════════════════════════════════════════════════════════════════════ */
-async function openAddLesson(sectionId, type = 'video') {
-  lessonModalMode = 'add';
-  lessonSectionId = sectionId;
-  lessonEditId    = null;
-
-  document.getElementById('lesson-modal-title').textContent = 'Add Lesson';
-  const saveBtn = document.getElementById('lesson-modal-save');
-  saveBtn.innerHTML = '<i class="fas fa-plus"></i> Add Lesson';
-  saveBtn.onclick = saveLesson;
-
-  clearLessonForm();
-  switchType(type);
-
-  // Show video picker only in add mode for video type
-  const picker = document.getElementById('existing-video-picker');
-  if (type === 'video') {
-    picker.style.display = '';
-    const videos = await fetchLegacyVideos();
-    populateVideoDropdown(videos);
-  } else {
-    picker.style.display = 'none';
-  }
-
+/* ── Lesson CRUD ── */
+async function openAddLesson(sectionId,type='video') {
+  lessonModalMode='add'; lessonSectionId=sectionId; lessonEditId=null;
+  document.getElementById('lesson-modal-title').textContent='Add Lesson';
+  const btn=document.getElementById('lesson-modal-save');
+  btn.innerHTML='<i class="fas fa-plus"></i> Add Lesson'; btn.onclick=saveLesson;
+  clearLessonForm(); switchType(type);
+  const picker=document.getElementById('existing-video-picker');
+  if(type==='video'){picker.style.display='';const vids=await fetchLegacyVideos();populateVideoDropdown(vids);}
+  else picker.style.display='none';
   openModal('lesson-modal');
-  setTimeout(() => document.getElementById('lesson-title-input').focus(), 80);
+  setTimeout(()=>document.getElementById('lesson-title-input').focus(),80);
 }
-
-function openEditLesson(sectionId, lessonId, title, type, videoUrl, duration, isPreview, desc, content) {
-  lessonModalMode = 'edit';
-  lessonSectionId = sectionId;
-  lessonEditId    = lessonId;
-
-  document.getElementById('lesson-modal-title').textContent = 'Edit Lesson';
-  const saveBtn = document.getElementById('lesson-modal-save');
-  saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
-  saveBtn.onclick = saveLesson;
-
-  // Fill form
-  document.getElementById('lesson-title-input').value    = title;
-  document.getElementById('lesson-video-url').value      = videoUrl;
-  document.getElementById('lesson-duration').value       = duration || '';
-  document.getElementById('lesson-is-preview').checked   = isPreview;
-  document.getElementById('lesson-description').value    = desc;
-  document.getElementById('lesson-content-editor').innerHTML = content;
-  document.getElementById('existing-video-id').value     = '';
-
-  // Hide video picker in edit mode
-  document.getElementById('existing-video-picker').style.display = 'none';
-
-  switchType(type);
-  openModal('lesson-modal');
+function openEditLesson(sId,lId,title,type,videoUrl,duration,isPreview,desc,content) {
+  lessonModalMode='edit'; lessonSectionId=sId; lessonEditId=lId;
+  document.getElementById('lesson-modal-title').textContent='Edit Lesson';
+  const btn=document.getElementById('lesson-modal-save');
+  btn.innerHTML='<i class="fas fa-save"></i> Save Changes'; btn.onclick=saveLesson;
+  document.getElementById('lesson-title-input').value=title;
+  document.getElementById('lesson-video-url').value=videoUrl;
+  document.getElementById('lesson-duration').value=duration||'';
+  document.getElementById('lesson-is-preview').checked=isPreview;
+  document.getElementById('lesson-description').value=desc;
+  document.getElementById('lesson-content-editor').innerHTML=content;
+  document.getElementById('existing-video-id').value='';
+  document.getElementById('existing-video-picker').style.display='none';
+  switchType(type); openModal('lesson-modal');
 }
-
 function clearLessonForm() {
-  ['lesson-title-input', 'lesson-video-url', 'lesson-duration', 'lesson-description']
-    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  document.getElementById('lesson-is-preview').checked = false;
-  document.getElementById('lesson-content-editor').innerHTML = '';
-  document.getElementById('existing-video-id').value = '';
-  // Reset video picker
-  const sel = document.getElementById('existing-video-select');
-  if (sel) sel.selectedIndex = 0;
+  ['lesson-title-input','lesson-video-url','lesson-duration','lesson-description']
+    .forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('lesson-is-preview').checked=false;
+  document.getElementById('lesson-content-editor').innerHTML='';
+  document.getElementById('existing-video-id').value='';
+  const sel=document.getElementById('existing-video-select');
+  if(sel)sel.selectedIndex=0;
 }
-
 function switchType(type) {
-  document.getElementById('lesson-type-hidden').value = type;
-
-  document.querySelectorAll('.type-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.type === type);
-  });
-  document.querySelectorAll('.field-group').forEach(g => g.classList.remove('active'));
-
-  if (type === 'video') {
+  document.getElementById('lesson-type-hidden').value=type;
+  document.querySelectorAll('.type-tab').forEach(t=>t.classList.toggle('active',t.dataset.type===type));
+  document.querySelectorAll('.field-group').forEach(g=>g.classList.remove('active'));
+  if(type==='video'){
     document.getElementById('field-video').classList.add('active');
-    // Show picker only in add mode
-    if (lessonModalMode === 'add') {
-      document.getElementById('existing-video-picker').style.display = '';
-    }
+    if(lessonModalMode==='add')document.getElementById('existing-video-picker').style.display='';
   } else {
     document.getElementById('field-text').classList.add('active');
-    document.getElementById('existing-video-picker').style.display = 'none';
+    document.getElementById('existing-video-picker').style.display='none';
   }
 }
-
 async function saveLesson() {
-  const type           = document.getElementById('lesson-type-hidden').value;
-  const title          = document.getElementById('lesson-title-input').value.trim();
-  const video_url      = document.getElementById('lesson-video-url').value.trim();
-  const duration       = parseFloat(document.getElementById('lesson-duration').value) || 0;
-  const is_preview     = document.getElementById('lesson-is-preview').checked;
-  const description    = document.getElementById('lesson-description').value.trim();
-  const content        = document.getElementById('lesson-content-editor').innerHTML.trim();
-  const existing_video = document.getElementById('existing-video-id').value;
-
-  // Client-side validation
-  if (!title) { toast('Lesson title is required.', 'error'); return; }
-  if (type === 'video' && !video_url && !existing_video) {
-    toast('Please enter a video URL or select an existing video.', 'error');
-    return;
-  }
-  if (type !== 'video' && !content) {
-    toast('Content is required for text/article lessons.', 'error');
-    return;
-  }
-
-  const saveBtn = document.getElementById('lesson-modal-save');
-  setLoading(saveBtn, true);
-
-  const body = {
-    title,
-    lesson_type: type,
-    video_url,
-    video_duration: duration,
-    is_preview,
-    description,
-    content,
-  };
-
-  // Include existing video id if user picked one (add mode only)
-  if (lessonModalMode === 'add' && existing_video) {
-    body.existing_video_id = parseInt(existing_video);
-  }
-
+  const type=document.getElementById('lesson-type-hidden').value;
+  const title=document.getElementById('lesson-title-input').value.trim();
+  const video_url=document.getElementById('lesson-video-url').value.trim();
+  const duration=parseFloat(document.getElementById('lesson-duration').value)||0;
+  const is_preview=document.getElementById('lesson-is-preview').checked;
+  const description=document.getElementById('lesson-description').value.trim();
+  const content=document.getElementById('lesson-content-editor').innerHTML.trim();
+  const existing_video=document.getElementById('existing-video-id').value;
+  if(!title){toast('Lesson title required.','error');return;}
+  if(type==='video'&&!video_url&&!existing_video){toast('Video URL required.','error');return;}
+  if(type!=='video'&&!content){toast('Content required.','error');return;}
+  const btn=document.getElementById('lesson-modal-save');
+  setLoading(btn,true);
+  const body={title,lesson_type:type,video_url,video_duration:duration,is_preview,description,content};
+  if(lessonModalMode==='add'&&existing_video)body.existing_video_id=parseInt(existing_video);
   let res;
-  if (lessonModalMode === 'add') {
-    res = await api(
-      `/courses/instructor/curriculum/${COURSE_ID}/section/${lessonSectionId}/lesson/create/`,
-      body
-    );
-    if (res.ok) {
-      appendLessonItem(lessonSectionId, res.lesson);
-      updateSectionMeta(lessonSectionId);
-      toast('Lesson added!');
-    }
+  if(lessonModalMode==='add'){
+    res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${lessonSectionId}/lesson/create/`,body);
+    if(res.ok){appendLessonItem(lessonSectionId,res.lesson);updateSectionMeta(lessonSectionId);toast('Lesson added!');}
   } else {
-    res = await api(
-      `/courses/instructor/curriculum/${COURSE_ID}/section/${lessonSectionId}/lesson/${lessonEditId}/update/`,
-      body
-    );
-    if (res.ok) {
-      updateLessonItem(lessonEditId, res.lesson);
-      toast('Lesson updated!');
-    }
+    res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${lessonSectionId}/lesson/${lessonEditId}/update/`,body);
+    if(res.ok){updateLessonItem(lessonEditId,res.lesson);toast('Lesson updated!');}
   }
-
-  setLoading(saveBtn, false);
-
-  if (!res.ok) {
-    toast(res.error || 'Failed to save lesson.', 'error');
-    return;
-  }
-
+  setLoading(btn,false);
+  if(!res.ok){toast(res.error||'Failed.','error');return;}
   closeModal('lesson-modal');
 }
-
-async function deleteLesson(sectionId, lessonId) {
-  if (!confirm('Delete this lesson?')) return;
-
-  const res = await api(
-    `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/${lessonId}/delete/`
-  );
-
-  if (!res.ok) { toast(res.error || 'Delete failed.', 'error'); return; }
-
-  const li = document.querySelector(`[data-lesson-id="${lessonId}"]`);
-  if (li) {
-    li.style.opacity = '0'; li.style.transition = 'opacity .3s';
-    setTimeout(() => { li.remove(); updateSectionMeta(sectionId); }, 300);
-  }
+async function deleteLesson(sId,lId) {
+  if(!confirm('Delete this lesson?'))return;
+  const res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${sId}/lesson/${lId}/delete/`);
+  if(!res.ok){toast(res.error||'Failed.','error');return;}
+  const li=document.querySelector(`[data-lesson-id="${lId}"]`);
+  if(li){li.style.opacity='0';li.style.transition='opacity .3s';setTimeout(()=>{li.remove();updateSectionMeta(sId);},300);}
   toast('Lesson deleted.');
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   RENDER HELPERS
-   ════════════════════════════════════════════════════════════════════════ */
-const TYPE_ICONS  = { video:'fas fa-play-circle', text:'fas fa-file-alt', article:'fas fa-newspaper' };
-const TYPE_LABELS = { video:'Video', text:'Text', article:'Article' };
-const TYPE_COLORS = { video:'var(--primary)', text:'#8e44ad', article:'#e67e22' };
+/* ── Render helpers ── */
+const TYPE_ICONS={video:'fas fa-play-circle',text:'fas fa-file-alt',article:'fas fa-newspaper'};
+const TYPE_LABELS={video:'Video',text:'Text',article:'Article'};
+function esc(s){return(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+function escBt(s){return(s||'').replace(/`/g,'\\`').replace(/\\/g,'\\\\')}
 
-function escapeSingleQuotes(str) {
-  return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-}
-function escapeBackticks(str) {
-  return (str || '').replace(/`/g, '\\`').replace(/\\/g, '\\\\');
-}
-
-function lessonItemHTML(l, sId) {
-  const dur  = (l.lesson_type === 'video' && l.video_duration)
-    ? `<span>${l.duration_display || l.video_duration + 'm'}</span>` : '';
-  const prev = l.is_preview
-    ? `<span class="badge preview">Preview</span>` : '';
-
+function lessonItemHTML(l,sId) {
+  const dur=(l.lesson_type==='video'&&l.video_duration)?`<span>${l.duration_display||l.video_duration+'m'}</span>`:'';
+  const prev=l.is_preview?`<span class="badge preview">Preview</span>`:'';
   return `
 <li class="lesson-item" data-lesson-id="${l.id}">
   <i class="fas fa-grip-vertical lesson-drag-handle"></i>
-  <div class="lesson-type-icon ${l.lesson_type}">
-    <i class="${TYPE_ICONS[l.lesson_type] || 'fas fa-file'}"></i>
-  </div>
-  <div class="lesson-title">${l.title}</div>
+  <div class="lesson-type-icon ${l.lesson_type}"><i class="${TYPE_ICONS[l.lesson_type]||'fas fa-file'}"></i></div>
+  <div class="lesson-title-text">${l.title}</div>
   <div class="lesson-meta">
-    <span class="badge">${TYPE_LABELS[l.lesson_type] || l.lesson_type}</span>
+    <span class="badge">${TYPE_LABELS[l.lesson_type]||l.lesson_type}</span>
     ${prev}${dur}
   </div>
   <div class="lesson-actions">
-    <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
-      onclick="openEditLesson(
-        ${sId}, ${l.id},
-        '${escapeSingleQuotes(l.title)}',
-        '${l.lesson_type}',
-        '${escapeSingleQuotes(l.video_url || '')}',
-        ${l.video_duration || 0},
-        ${l.is_preview ? 'true' : 'false'},
-        '${escapeSingleQuotes(l.description || '')}',
-        \`${escapeBackticks(l.content || '')}\`)">
+    <button class="btn btn-ghost btn-sm btn-icon" title="Edit Lesson"
+      onclick="openEditLesson(${sId},${l.id},'${esc(l.title)}','${l.lesson_type}','${esc(l.video_url||'')}',${l.video_duration||0},${l.is_preview?'true':'false'},'${esc(l.description||'')}',\`${escBt(l.content||'')}\`)">
       <i class="fas fa-pen"></i>
     </button>
-    <button class="btn btn-danger btn-sm btn-icon" title="Delete"
-      onclick="deleteLesson(${sId}, ${l.id})">
+    <button class="btn btn-violet btn-sm" title="Add Task" onclick="openTaskModal(${sId},${l.id},'create')">
+      <i class="fas fa-plus"></i> Task
+    </button>
+    <button class="btn btn-danger btn-sm btn-icon" title="Delete" onclick="deleteLesson(${sId},${l.id})">
       <i class="fas fa-trash"></i>
     </button>
   </div>
 </li>`;
 }
 
-function appendLessonItem(sectionId, lesson) {
-  const ul = document.getElementById(`lessons-${sectionId}`);
-  if (!ul) return;
-  ul.insertAdjacentHTML('beforeend', lessonItemHTML(lesson, sectionId));
-  initLessonSortable(sectionId);
+function appendLessonItem(sId,lesson) {
+  const ul=document.getElementById(`lessons-${sId}`);
+  if(!ul)return;
+  ul.insertAdjacentHTML('beforeend',lessonItemHTML(lesson,sId));
+  initLessonSortable(sId);
 }
-
-function updateLessonItem(lessonId, lesson) {
-  const li = document.querySelector(`[data-lesson-id="${lessonId}"]`);
-  if (!li) return;
-  li.outerHTML = lessonItemHTML(lesson, lessonSectionId);
+function updateLessonItem(lId,lesson) {
+  const li=document.querySelector(`[data-lesson-id="${lId}"]`);
+  if(!li)return;
+  li.outerHTML=lessonItemHTML(lesson,lessonSectionId);
 }
-
-function updateSectionMeta(sectionId) {
-  const ul    = document.getElementById(`lessons-${sectionId}`);
-  const count = ul ? ul.querySelectorAll('.lesson-item').length : 0;
-  const card  = document.querySelector(`[data-section-id="${sectionId}"]`);
-  if (card) {
-    card.querySelector('.section-meta').textContent =
-      `${count} lesson${count !== 1 ? 's' : ''}`;
-  }
+function updateSectionMeta(sId) {
+  const ul=document.getElementById(`lessons-${sId}`);
+  const count=ul?ul.querySelectorAll('.lesson-item').length:0;
+  const card=document.querySelector(`[data-section-id="${sId}"]`);
+  if(card)card.querySelector('.section-meta').textContent=`${count} lesson${count!==1?'s':''}`;
 }
-
 function renderNewSection(section) {
-  const container = document.getElementById('sections-container');
-  const html = `
+  const container=document.getElementById('sections-container');
+  const html=`
 <div class="section-card" data-section-id="${section.id}" style="opacity:0;transition:opacity .3s;">
   <div class="section-header" onclick="toggleSection(this)">
     <i class="fas fa-grip-vertical section-drag-handle" onclick="event.stopPropagation()"></i>
     <i class="fas fa-chevron-down section-toggle-icon"></i>
-    <div class="section-header-title">
-      <span class="section-title-text">${section.title}</span>
-    </div>
+    <div class="section-header-title"><span class="section-title-text">${section.title}</span></div>
     <span class="section-meta">0 lessons</span>
     <div class="section-actions" onclick="event.stopPropagation()">
-      <button class="btn btn-ghost btn-sm btn-icon"
-        onclick="openEditSection(${section.id}, '${escapeSingleQuotes(section.title)}')">
-        <i class="fas fa-pen"></i>
-      </button>
-      <button class="btn btn-danger btn-sm btn-icon"
-        onclick="deleteSection(${section.id})">
-        <i class="fas fa-trash"></i>
-      </button>
+      <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditSection(${section.id},'${esc(section.title)}')"><i class="fas fa-pen"></i></button>
+      <button class="btn btn-danger btn-sm btn-icon" onclick="deleteSection(${section.id})"><i class="fas fa-trash"></i></button>
     </div>
   </div>
   <div class="inline-edit-form" id="edit-section-${section.id}">
-    <input type="text" id="edit-section-input-${section.id}"
-           value="${escapeSingleQuotes(section.title)}" placeholder="Section title…">
+    <input type="text" id="edit-section-input-${section.id}" value="${esc(section.title)}" placeholder="Section title…">
     <button class="btn btn-primary btn-sm" onclick="saveSection(${section.id})">Save</button>
     <button class="btn btn-ghost btn-sm" onclick="cancelEditSection(${section.id})">Cancel</button>
   </div>
   <ul class="lesson-list" id="lessons-${section.id}" data-section-id="${section.id}"></ul>
   <div class="add-lesson-bar">
     <span>Add:</span>
-    <button class="btn btn-primary btn-sm" onclick="openAddLesson(${section.id},'video')">
-      <i class="fas fa-play-circle"></i> Video
-    </button>
-    <button class="btn btn-sm" style="background:#8e44ad;color:#fff;"
-            onclick="openAddLesson(${section.id},'text')">
-      <i class="fas fa-file-alt"></i> Text
-    </button>
-    <button class="btn btn-sm" style="background:#e67e22;color:#fff;"
-            onclick="openAddLesson(${section.id},'article')">
-      <i class="fas fa-newspaper"></i> Article
-    </button>
+    <button class="btn btn-primary btn-sm" onclick="openAddLesson(${section.id},'video')"><i class="fas fa-play-circle"></i> Video</button>
+    <button class="btn btn-sm" style="background:#8e44ad;color:#fff;" onclick="openAddLesson(${section.id},'text')"><i class="fas fa-file-alt"></i> Text</button>
+    <button class="btn btn-sm" style="background:#e67e22;color:#fff;" onclick="openAddLesson(${section.id},'article')"><i class="fas fa-newspaper"></i> Article</button>
   </div>
 </div>`;
-
-  container.insertAdjacentHTML('beforeend', html);
-  // Fade in
-  const card = container.lastElementChild;
-  requestAnimationFrame(() => { card.style.opacity = '1'; });
-
+  container.insertAdjacentHTML('beforeend',html);
+  requestAnimationFrame(()=>{container.lastElementChild.style.opacity='1';});
   initLessonSortable(section.id);
   initSectionSortable();
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   RICH TEXT EDITOR HELPERS
-   ════════════════════════════════════════════════════════════════════════ */
-function execCmd(cmd, val = null) {
-  document.getElementById('lesson-content-editor').focus();
-  document.execCommand(cmd, false, val);
-}
-function insertHeading() { execCmd('formatBlock', 'h3'); }
-function insertCode() {
-  const sel = window.getSelection();
-  const txt = sel && sel.toString() ? sel.toString() : 'code here';
-  document.execCommand('insertHTML', false, `<code>${txt}</code>`);
-}
-function insertLink() {
-  const url = prompt('Enter URL:');
-  if (url) execCmd('createLink', url);
-}
+/* ── Rich text ── */
+function execCmd(cmd,val=null){document.getElementById('lesson-content-editor').focus();document.execCommand(cmd,false,val);}
+function insertHeading(){execCmd('formatBlock','h3');}
+function insertCode(){const sel=window.getSelection();const txt=sel&&sel.toString()?sel.toString():'code here';document.execCommand('insertHTML',false,`<code>${txt}</code>`);}
+function insertLink(){const url=prompt('Enter URL:');if(url)execCmd('createLink',url);}
 
-/* ════════════════════════════════════════════════════════════════════════
-   DRAG-DROP  (Sortable.js)
-   ════════════════════════════════════════════════════════════════════════ */
-function initSectionSortable() {
-  const container = document.getElementById('sections-container');
-  if (!container || container._sortable) return;
-  container._sortable = Sortable.create(container, {
-    animation: 150,
-    handle: '.section-drag-handle',
-    ghostClass: 'sortable-ghost',
-    onEnd: async () => {
-      const ids = [...document.querySelectorAll('[data-section-id]')]
-        .map(el => parseInt(el.dataset.sectionId));
-      const res = await api(
-        `/courses/instructor/curriculum/${COURSE_ID}/section/reorder/`,
-        { order: ids }
-      );
-      if (!res.ok) toast('Reorder save failed.', 'warning');
-    },
-  });
-}
-
-function initLessonSortable(sectionId) {
-  const el = document.getElementById(`lessons-${sectionId}`);
-  if (!el || el._sortable) return;
-  el._sortable = Sortable.create(el, {
-    animation: 150,
-    handle: '.lesson-drag-handle',
-    ghostClass: 'sortable-ghost',
-    onEnd: async () => {
-      const ids = [...el.querySelectorAll('[data-lesson-id]')]
-        .map(li => parseInt(li.dataset.lessonId));
-      const res = await api(
-        `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/reorder/`,
-        { order: ids }
-      );
-      if (!res.ok) toast('Reorder save failed.', 'warning');
-    },
-  });
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   INIT
-   ════════════════════════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', () => {
-  initSectionSortable();
-  document.querySelectorAll('[id^="lessons-"]').forEach(ul => {
-    initLessonSortable(ul.dataset.sectionId);
-  });
-
-  // Pre-fetch videos in background so dropdown is instant when opened
-  fetchLegacyVideos();
-});ز
-let taskModalMode    = 'create';  // 'create' | 'edit'
-let taskSectionId    = null;
-let taskLessonId     = null;
-let currentTaskType  = 'mcq';
-let mcqQuestions     = [];   // [{question, options:[], correct_answer}]
- 
-/* ── Open task modal ── */
-async function openTaskModal(sectionId, lessonId, mode = 'create') {
-  taskModalMode = mode;
-  taskSectionId = sectionId;
-  taskLessonId  = lessonId;
-  mcqQuestions  = [];
- 
-  document.getElementById('task-modal-title').textContent =
-    mode === 'create' ? 'Add Task' : 'Edit Task';
-  document.getElementById('task-modal-save').innerHTML =
-    mode === 'create'
-      ? '<i class="fas fa-plus"></i> Add Task'
-      : '<i class="fas fa-save"></i> Save Changes';
- 
+/* ══════════════════════════════════════════════════════
+   TASK SYSTEM
+   ══════════════════════════════════════════════════════ */
+async function openTaskModal(sId, lId, mode='create') {
+  taskModalMode=mode; taskSectionId=sId; taskLessonId=lId; mcqQuestions=[];
+  document.getElementById('task-modal-title').textContent=mode==='create'?'Add Task':'Edit Task';
+  const btn=document.getElementById('task-modal-save');
+  btn.innerHTML=mode==='create'?'<i class="fas fa-plus"></i> Add Task':'<i class="fas fa-save"></i> Save Changes';
   clearTaskForm();
- 
-  if (mode === 'edit') {
-    // fetch existing task data
+  if(mode==='edit') {
     try {
-      const res = await fetch(
-        `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/${lessonId}/task/get/`,
-        { headers: { 'X-CSRFToken': CSRF } }
+      const res=await api(
+        `/courses/instructor/curriculum/${COURSE_ID}/section/${sId}/lesson/${lId}/task/get/`,
+        null,'GET'
       );
-      const data = await res.json();
-      if (data.ok && data.task) prefillTaskForm(data.task);
-    } catch(e) { toast('Could not load task data.', 'error'); return; }
+      if(res.ok&&res.task) prefillTaskForm(res.task);
+    } catch(e){toast('Could not load task.','error');return;}
   }
+  switchTaskType(currentTaskType);
   openModal('task-modal');
-  switchTaskType(currentTaskType);
 }
- 
+
 function clearTaskForm() {
-  document.getElementById('task-title-input').value       = '';
-  document.getElementById('task-desc-input').value        = '';
-  document.getElementById('task-passing-input').value     = '70';
-  document.getElementById('task-ext-url-input').value     = '';
-  document.getElementById('task-essay-q-input').value     = '';
-  document.getElementById('task-type-hidden').value       = 'mcq';
-  currentTaskType = 'mcq';
-  mcqQuestions    = [];
+  document.getElementById('task-title-input').value='';
+  document.getElementById('task-desc-input').value='';
+  document.getElementById('task-passing-input').value='70';
+  document.getElementById('task-ext-url-input').value='';
+  document.getElementById('task-essay-q-input').value='';
+  document.getElementById('task-type-hidden').value='mcq';
+  currentTaskType='mcq'; mcqQuestions=[];
   renderMCQBuilder();
 }
- 
+
 function prefillTaskForm(task) {
-  document.getElementById('task-title-input').value       = task.title || '';
-  document.getElementById('task-desc-input').value        = task.description || '';
-  document.getElementById('task-passing-input').value     = task.passing_score || 70;
-  document.getElementById('task-ext-url-input').value     = task.external_url || '';
-  currentTaskType = task.task_type || 'mcq';
-  document.getElementById('task-type-hidden').value       = currentTaskType;
-  if (currentTaskType === 'mcq') {
-    mcqQuestions = task.questions || [];
-    renderMCQBuilder();
-  } else if (currentTaskType === 'essay') {
-    const qs = (task.questions || []).map(q => q.question || '').join('\n');
-    document.getElementById('task-essay-q-input').value = qs;
+  document.getElementById('task-title-input').value=task.title||'';
+  document.getElementById('task-desc-input').value=task.description||'';
+  document.getElementById('task-passing-input').value=task.passing_score||70;
+  document.getElementById('task-ext-url-input').value=task.external_url||'';
+  currentTaskType=task.task_type||'mcq';
+  document.getElementById('task-type-hidden').value=currentTaskType;
+  if(currentTaskType==='mcq'){mcqQuestions=task.questions||[];renderMCQBuilder();}
+  else if(currentTaskType==='essay'){
+    document.getElementById('task-essay-q-input').value=(task.questions||[]).map(q=>q.question||'').join('\n');
   }
-  switchTaskType(currentTaskType);
-  // Update type tabs
-  document.querySelectorAll('.task-type-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.type === currentTaskType);
-  });
 }
- 
+
 function switchTaskType(type) {
-  currentTaskType = type;
-  document.getElementById('task-type-hidden').value = type;
-  document.querySelectorAll('.task-type-tab').forEach(t =>
-    t.classList.toggle('active', t.dataset.type === type)
-  );
-  document.querySelectorAll('.task-field-group').forEach(g => g.style.display = 'none');
-  const el = document.getElementById(`task-field-${type}`);
-  if (el) el.style.display = 'block';
+  currentTaskType=type;
+  document.getElementById('task-type-hidden').value=type;
+  document.querySelectorAll('.task-type-tab').forEach(t=>t.classList.toggle('active',t.dataset.type===type));
+  document.querySelectorAll('.task-field-group').forEach(g=>g.style.display='none');
+  const el=document.getElementById(`task-field-${type}`);
+  if(el)el.style.display='block';
 }
- 
-/* ── MCQ Builder ── */
+
 function addMCQQuestion() {
-  mcqQuestions.push({ question: '', options: ['', '', '', ''], correct_answer: '' });
+  mcqQuestions.push({question:'',options:['','','',''],correct_answer:''});
   renderMCQBuilder();
 }
- 
-function removeMCQQuestion(idx) {
-  mcqQuestions.splice(idx, 1);
-  renderMCQBuilder();
-}
- 
+function removeMCQQuestion(idx) {mcqQuestions.splice(idx,1);renderMCQBuilder();}
+
 function renderMCQBuilder() {
-  const container = document.getElementById('mcq-questions-container');
-  if (!container) return;
-  if (mcqQuestions.length === 0) {
-    container.innerHTML = `
-      <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">
-        <i class="fas fa-plus-circle" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4;"></i>
-        No questions yet. Click "Add Question" to start.
-      </div>`;
+  const c=document.getElementById('mcq-questions-container');
+  if(!c)return;
+  if(mcqQuestions.length===0){
+    c.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">
+      <i class="fas fa-plus-circle" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4;"></i>
+      No questions yet. Click "Add Question" to start.</div>`;
     return;
   }
-  container.innerHTML = mcqQuestions.map((q, qi) => `
-    <div style="background:var(--bg,#f0f4f8);border:1.5px solid var(--border,#d1dde8);border-radius:8px;padding:14px;margin-bottom:12px;">
+  function escV(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+  c.innerHTML=mcqQuestions.map((q,qi)=>`
+    <div style="background:#f8fafc;border:1.5px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:12px;font-weight:700;color:var(--primary,#00a8cc);">Question ${qi + 1}</span>
+        <span style="font-size:12px;font-weight:700;color:var(--violet);">Question ${qi+1}</span>
         <button onclick="removeMCQQuestion(${qi})" class="btn btn-danger btn-sm btn-icon"><i class="fas fa-trash"></i></button>
       </div>
       <div class="form-group" style="margin-bottom:10px;">
         <label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block;">Question text *</label>
         <input type="text" class="form-control" placeholder="Enter question…"
-          value="${escVal(q.question)}"
-          onchange="mcqQuestions[${qi}].question = this.value">
+          value="${escV(q.question)}" onchange="mcqQuestions[${qi}].question=this.value">
       </div>
-      <div style="margin-bottom:8px;">
-        <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">Options (mark correct one)</label>
-        ${q.options.map((opt, oi) => `
-          <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-            <input type="radio" name="correct_${qi}" value="${oi}"
-              ${q.correct_answer === opt && opt ? 'checked' : ''}
-              onchange="mcqQuestions[${qi}].correct_answer = mcqQuestions[${qi}].options[${oi}]"
-              title="Mark as correct">
-            <input type="text" class="form-control" style="flex:1;" placeholder="Option ${oi + 1}"
-              value="${escVal(opt)}"
-              oninput="mcqQuestions[${qi}].options[${oi}] = this.value">
-          </div>`).join('')}
-      </div>
+      <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">Options (select correct answer)</label>
+      ${q.options.map((opt,oi)=>`
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+          <input type="radio" name="correct_${qi}" ${q.correct_answer===opt&&opt?'checked':''}
+            onchange="mcqQuestions[${qi}].correct_answer=mcqQuestions[${qi}].options[${oi}]" title="Mark correct">
+          <input type="text" class="form-control" style="flex:1;" placeholder="Option ${oi+1}"
+            value="${escV(opt)}" oninput="mcqQuestions[${qi}].options[${oi}]=this.value">
+        </div>`).join('')}
     </div>`).join('');
 }
- 
-function escVal(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
- 
-/* ── Save task ── */
+
 async function saveTask() {
-  const type         = document.getElementById('task-type-hidden').value;
-  const title        = document.getElementById('task-title-input').value.trim();
-  const description  = document.getElementById('task-desc-input').value.trim();
-  const passingScore = parseInt(document.getElementById('task-passing-input').value) || 70;
-  const externalUrl  = document.getElementById('task-ext-url-input').value.trim();
- 
-  if (!title) { toast('Task title is required.', 'error'); return; }
- 
-  let questions = [];
-  if (type === 'mcq') {
-    if (mcqQuestions.length === 0) { toast('Add at least one MCQ question.', 'error'); return; }
-    for (let i = 0; i < mcqQuestions.length; i++) {
-      const q = mcqQuestions[i];
-      if (!q.question.trim())     { toast(`Question ${i+1}: text is required.`, 'error'); return; }
-      if (!q.correct_answer)      { toast(`Question ${i+1}: mark the correct answer.`, 'error'); return; }
-      const filled = q.options.filter(o => o.trim());
-      if (filled.length < 2)      { toast(`Question ${i+1}: need at least 2 options.`, 'error'); return; }
+  const type=document.getElementById('task-type-hidden').value;
+  const title=document.getElementById('task-title-input').value.trim();
+  const description=document.getElementById('task-desc-input').value.trim();
+  const passingScore=parseInt(document.getElementById('task-passing-input').value)||70;
+  const externalUrl=document.getElementById('task-ext-url-input').value.trim();
+  if(!title){toast('Task title required.','error');return;}
+  let questions=[];
+  if(type==='mcq'){
+    if(mcqQuestions.length===0){toast('Add at least one question.','error');return;}
+    for(let i=0;i<mcqQuestions.length;i++){
+      const q=mcqQuestions[i];
+      if(!q.question.trim()){toast(`Q${i+1}: text required.`,'error');return;}
+      if(!q.correct_answer){toast(`Q${i+1}: mark correct answer.`,'error');return;}
+      if(q.options.filter(o=>o.trim()).length<2){toast(`Q${i+1}: need ≥2 options.`,'error');return;}
     }
-    questions = mcqQuestions.map(q => ({
-      question: q.question,
-      options:  q.options.filter(o => o.trim()),
-      correct_answer: q.correct_answer,
-    }));
-  } else if (type === 'essay') {
-    const raw = document.getElementById('task-essay-q-input').value.trim();
-    if (!raw) { toast('Add at least one essay question.', 'error'); return; }
-    questions = raw.split('\n').filter(l => l.trim()).map(l => ({ question: l.trim() }));
-  } else if (type === 'external_link' && !externalUrl) {
-    toast('External URL is required.', 'error'); return;
+    questions=mcqQuestions.map(q=>({question:q.question,options:q.options.filter(o=>o.trim()),correct_answer:q.correct_answer}));
+  } else if(type==='essay'){
+    const raw=document.getElementById('task-essay-q-input').value.trim();
+    if(!raw){toast('Add at least one question.','error');return;}
+    questions=raw.split('\n').filter(l=>l.trim()).map(l=>({question:l.trim()}));
+  } else if(type==='external_link'&&!externalUrl){
+    toast('External URL required.','error');return;
   }
- 
-  const body = {
-    task_type: type, title, description, questions,
-    passing_score: passingScore, external_url: externalUrl,
-  };
- 
-  const saveBtn = document.getElementById('task-modal-save');
-  setLoading(saveBtn, true);
- 
-  const url = taskModalMode === 'create'
-    ? `/courses/instructor/curriculum/${COURSE_ID}/section/${taskSectionId}/lesson/${taskLessonId}/task/create/`
-    : `/courses/instructor/curriculum/${COURSE_ID}/section/${taskSectionId}/lesson/${taskLessonId}/task/update/`;
- 
-  const res = await api(url, body);
-  setLoading(saveBtn, false);
- 
-  if (!res.ok) { toast(res.error || 'Failed to save task.', 'error'); return; }
- 
+  const body={task_type:type,title,description,questions,passing_score:passingScore,external_url:externalUrl};
+  const btn=document.getElementById('task-modal-save');
+  setLoading(btn,true);
+  const url=taskModalMode==='create'
+    ?`/courses/instructor/curriculum/${COURSE_ID}/section/${taskSectionId}/lesson/${taskLessonId}/task/create/`
+    :`/courses/instructor/curriculum/${COURSE_ID}/section/${taskSectionId}/lesson/${taskLessonId}/task/update/`;
+  const res=await api(url,body);
+  setLoading(btn,false);
+  if(!res.ok){toast(res.error||'Failed.','error');return;}
   closeModal('task-modal');
-  updateLessonTaskBadge(taskLessonId, true);
-  toast(taskModalMode === 'create' ? 'Task added!' : 'Task updated!');
+  updateLessonTaskBadge(taskLessonId,true,taskSectionId);
+  toast(taskModalMode==='create'?'Task added!':'Task updated!');
 }
- 
-async function deleteTask(sectionId, lessonId) {
-  if (!confirm('Delete this task? Students will lose their submissions.')) return;
-  const res = await api(
-    `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/${lessonId}/task/delete/`
-  );
-  if (!res.ok) { toast(res.error || 'Failed.', 'error'); return; }
-  updateLessonTaskBadge(lessonId, false);
+
+async function deleteTask(sId,lId) {
+  if(!confirm('Delete this task?'))return;
+  const res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${sId}/lesson/${lId}/task/delete/`);
+  if(!res.ok){toast(res.error||'Failed.','error');return;}
+  updateLessonTaskBadge(lId,false,sId);
   toast('Task deleted.');
 }
- 
-function updateLessonTaskBadge(lessonId, hasTask) {
-  const li = document.querySelector(`[data-lesson-id="${lessonId}"]`);
-  if (!li) return;
-  let badge = li.querySelector('.task-badge');
-  if (hasTask && !badge) {
-    badge = document.createElement('span');
-    badge.className = 'badge task-badge';
-    badge.style.cssText = 'background:rgba(139,92,246,.12);color:#8b5cf6;';
-    badge.innerHTML = '<i class="fas fa-tasks"></i> Task';
-    li.querySelector('.lesson-meta')?.appendChild(badge);
-  } else if (!hasTask && badge) {
+
+function updateLessonTaskBadge(lId,hasTask,sId) {
+  const li=document.querySelector(`[data-lesson-id="${lId}"]`);
+  if(!li)return;
+  const meta=li.querySelector('.lesson-meta');
+  const badge=li.querySelector('.task-badge');
+  const actions=li.querySelector('.lesson-actions');
+  if(hasTask&&!badge){
+    const b=document.createElement('span');
+    b.className='badge task-badge';
+    b.innerHTML='<i class="fas fa-tasks"></i> Task';
+    meta?.appendChild(b);
+    // Replace "Add Task" btn with edit+delete
+    const addBtn=actions?.querySelector('.btn-violet');
+    if(addBtn){
+      addBtn.outerHTML=`
+        <button class="btn btn-violet btn-sm btn-icon" title="Edit Task" onclick="openTaskModal(${sId},${lId},'edit')"><i class="fas fa-tasks"></i></button>
+        <button class="btn btn-sm" style="background:#f39c12;color:#fff;" title="Delete Task" onclick="deleteTask(${sId},${lId})"><i class="fas fa-times"></i></button>`;
+    }
+  } else if(!hasTask&&badge){
     badge.remove();
+    // Replace edit+delete with "Add Task"
+    const editBtn=actions?.querySelector('.btn-violet');
+    const delTaskBtn=editBtn?.nextElementSibling;
+    if(editBtn&&delTaskBtn&&!editBtn.querySelector('i.fa-pen')){
+      delTaskBtn.remove();
+      editBtn.outerHTML=`<button class="btn btn-violet btn-sm" title="Add Task" onclick="openTaskModal(${sId},${lId},'create')"><i class="fas fa-plus"></i> Task</button>`;
+    }
   }
 }
 
+/* ── Sortable ── */
+function initSectionSortable() {
+  const c=document.getElementById('sections-container');
+  if(!c||c._sortable)return;
+  c._sortable=Sortable.create(c,{animation:150,handle:'.section-drag-handle',ghostClass:'sortable-ghost',
+    onEnd:async()=>{
+      const ids=[...document.querySelectorAll('[data-section-id]')].map(e=>parseInt(e.dataset.sectionId));
+      const res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/reorder/`,{order:ids});
+      if(!res.ok)toast('Reorder failed.','warning');
+    }
+  });
+}
+function initLessonSortable(sId) {
+  const el=document.getElementById(`lessons-${sId}`);
+  if(!el||el._sortable)return;
+  el._sortable=Sortable.create(el,{animation:150,handle:'.lesson-drag-handle',ghostClass:'sortable-ghost',
+    onEnd:async()=>{
+      const ids=[...el.querySelectorAll('[data-lesson-id]')].map(li=>parseInt(li.dataset.lessonId));
+      const res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${sId}/lesson/reorder/`,{order:ids});
+      if(!res.ok)toast('Reorder failed.','warning');
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  initSectionSortable();
+  document.querySelectorAll('[id^="lessons-"]').forEach(ul=>initLessonSortable(ul.dataset.sectionId));
+  fetchLegacyVideos();
+});
 </script>
 </body>
 </html>
