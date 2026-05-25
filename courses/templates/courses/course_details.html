@@ -665,7 +665,7 @@ body {
                 </div>
             </div>
 
-            {% if completed_lessons_count == total_lessons_count and total_lessons_count > 0 %}
+            {% if can_download_certificate %}            
             <div class="actions-row">
                 <a href="{% url 'courses:download_certificate' course.id slugified_course_title %}" class="certificate-btn">␊
                     <i class="fas fa-certificate"></i> Download Certificate                    

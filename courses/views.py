@@ -126,8 +126,12 @@ def download_certificate(request, course_id, course_slug):
         }))
 
     enrollment = get_object_or_404(CourseEnrollment, user=request.user, course=course)
+    if not course.is_finished:
+        messages.error(request, 'Certificate is not available yet because the instructor has not marked this course as finished.')
+        return redirect('courses:course_details', course_id=course.id, course_slug=slugified_title)
+
     if not enrollment.is_course_completed():
-        messages.error(request, 'You must complete all course lessons to download the certificate.')        
+        messages.error(request, 'You must complete all course lessons to download the certificate.')
         return redirect('courses:course_details', course_id=course.id, course_slug=slugified_title)
 
     certificate, created = Certificate.objects.get_or_create(
@@ -661,6 +665,12 @@ def course_details_view(request, course_id, course_slug):
         completed=True,
     ).count()
 
+    can_download_certificate = (
+        course.is_finished
+        and total_lessons_count > 0
+        and completed_lessons_count == total_lessons_count
+    )
+
     context = {
         "course": course,
         "videos": videos,
@@ -668,7 +678,7 @@ def course_details_view(request, course_id, course_slug):
         "is_owner": owner,                  # ← available in template
         "completed_lessons_count": completed_lessons_count,
         "total_lessons_count": total_lessons_count,
-        "can_download_certificate": True,
+        "can_download_certificate": can_download_certificate,
         "slugified_course_title": slugified_title,
     }    
     return render(request, 'courses/course_details.html', context)
@@ -1259,7 +1269,6 @@ def add_video(request, course_id, course_slug):
         'sections': sections,          # ← جديد
     })
  
-
 
 
 
