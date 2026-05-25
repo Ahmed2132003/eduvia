@@ -11,7 +11,7 @@ from django.core.exceptions import PermissionDenied
 from .models import (
     Course, Video, UserProfile, CourseEnrollment, VideoFile, Comment,
     VideoRating, Certificate, VideoProgress, UserTaskSubmission,
-    AlternativeQuiz, Task,
+    AlternativeQuiz, Task, Lesson, LessonProgress,    
 )
 from .forms import AlternativeQuizForm, TaskForm
 from .decorators import instructor_required
@@ -127,7 +127,7 @@ def download_certificate(request, course_id, course_slug):
 
     enrollment = get_object_or_404(CourseEnrollment, user=request.user, course=course)
     if not enrollment.is_course_completed():
-        messages.error(request, 'You must complete all videos to download the certificate.')
+        messages.error(request, 'You must complete all course lessons to download the certificate.')        
         return redirect('courses:course_details', course_id=course.id, course_slug=slugified_title)
 
     certificate, created = Certificate.objects.get_or_create(
@@ -654,21 +654,23 @@ def course_details_view(request, course_id, course_slug):
     for video in videos:
         video.slugified_title = slugify(clean_text(video.title), allow_unicode=True) or 'default-title'
 
-    completed_videos_count = VideoProgress.objects.filter(
-        user=request.user, video__course=course, completed=True
+    total_lessons_count = Lesson.objects.filter(section__course=course).count()
+    completed_lessons_count = LessonProgress.objects.filter(
+        user=request.user,
+        lesson__section__course=course,
+        completed=True,
     ).count()
-    total_videos_count = videos.count()
 
     context = {
         "course": course,
         "videos": videos,
         "is_enrolled": enrolled,
         "is_owner": owner,                  # ← available in template
-        "completed_videos_count": completed_videos_count,
-        "total_videos_count": total_videos_count,
+        "completed_lessons_count": completed_lessons_count,
+        "total_lessons_count": total_lessons_count,
         "can_download_certificate": True,
         "slugified_course_title": slugified_title,
-    }
+    }    
     return render(request, 'courses/course_details.html', context)
 
 

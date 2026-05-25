@@ -152,14 +152,17 @@ class CourseEnrollment(models.Model):
         return f"{self.user.username} enrolled in {self.course.title}"
 
     def is_course_completed(self):
-        progress = VideoProgress.objects.filter(user=self.user, video__course=self.course)
-        videos = self.course.videos.all()
-        return (
-            videos.exists()
-            and progress.count() == videos.count()
-            and all(p.completed for p in progress)
-        )
+        lesson_ids = Lesson.objects.filter(section__course=self.course).values_list('id', flat=True)
+        total_lessons = lesson_ids.count()
+        if total_lessons == 0:
+            return False
 
+        completed_lessons = LessonProgress.objects.filter(
+            user=self.user,
+            lesson_id__in=lesson_ids,
+            completed=True,
+        ).count()
+        return completed_lessons == total_lessons
 
 class Certificate(models.Model):
     user = models.ForeignKey(

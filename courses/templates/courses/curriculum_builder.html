@@ -1,318 +1,569 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Course Curriculum — {{ course.title }} | Eduvia</title>
 <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
+/* ═══════════════════════════════════════════════════════════════════
+   OBSIDIAN ACADEMY — Curriculum Builder
+   Matches lesson_view.html design system exactly
+   ═══════════════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --primary:   #00a8cc;
-  --primary-d: #0087a3;
-  --accent:    #00c9a7;
-  --danger:    #e74c3c;
-  --warning:   #f39c12;
-  --violet:    #8b5cf6;
-  --bg:        #f0f4f8;
-  --card:      #ffffff;
-  --border:    #d1dde8;
-  --text:      #2d3748;
-  --muted:     #718096;
-  --radius:    10px;
-  --shadow:    0 2px 12px rgba(0,0,0,.08);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
-}
-body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ═══════════════════════════════════════════════════════ */
 .topbar {
-  background: linear-gradient(90deg,#00a8cc,#00c9a7);
-  color:#fff; padding:0 24px; height:58px;
-  display:flex; align-items:center; justify-content:space-between;
-  position:sticky; top:0; z-index:200;
-  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  position: sticky; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
 }
-.topbar-left { display:flex; align-items:center; gap:16px; }
-.topbar .logo { font-size:22px; font-weight:700; }
-.topbar .breadcrumb { font-size:13px; opacity:.85; }
-.topbar .breadcrumb a { color:#fff; text-decoration:none; }
-.topbar .breadcrumb span { margin:0 6px; }
-.topbar-right { display:flex; gap:10px; }
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
 
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0;
+  text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-breadcrumb {
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .sep { opacity: .4; }
+.topbar-breadcrumb .current { color: var(--text-p); font-weight: 600; }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost  { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover  { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ═══ BUTTONS ═══════════════════════════════════════════════════════ */
 .btn {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:8px 18px; border-radius:6px; font-size:14px; font-weight:600;
-  cursor:pointer; border:none; transition:all .2s; text-decoration:none;
-  font-family:'Cairo',sans-serif;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; transition: var(--trans); text-decoration: none;
+  font-family: var(--font-body);
 }
-.btn-primary { background:var(--primary); color:#fff; }
-.btn-primary:hover { background:var(--primary-d); }
-.btn-accent  { background:var(--accent); color:#fff; }
-.btn-white   { background:#fff; color:var(--primary); }
-.btn-white:hover { background:#e8f6fb; }
-.btn-danger  { background:var(--danger); color:#fff; }
-.btn-danger:hover { filter:brightness(.9); }
-.btn-ghost   { background:transparent; color:var(--primary); border:1.5px solid var(--primary); }
-.btn-ghost:hover { background:var(--primary); color:#fff; }
-.btn-violet  { background:var(--violet); color:#fff; }
-.btn-violet:hover { filter:brightness(.9); }
-.btn-sm { padding:5px 12px; font-size:12px; }
-.btn-icon { padding:6px 10px; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-d); }
+.btn-danger  { background: rgba(251,113,133,.12); color: var(--rose-400); border: 1px solid rgba(251,113,133,.2); }
+.btn-danger:hover { background: rgba(251,113,133,.22); }
+.btn-ghost   { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-violet  { background: var(--violet-glow); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.btn-violet:hover { background: rgba(139,92,246,.28); }
+.btn-gold    { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+.btn-gold:hover { background: rgba(251,191,36,.2); }
+.btn-sky     { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2); }
+.btn-sky:hover { background: rgba(56,189,248,.2); }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-icon { padding: 6px 10px; }
 
-.page-wrap { max-width:900px; margin:32px auto; padding:0 16px 60px; }
-.page-header { margin-bottom:28px; }
-.page-header h1 { font-size:24px; font-weight:700; color:var(--text); }
-.page-header p { color:var(--muted); font-size:14px; margin-top:4px; }
+.btn-loading { opacity: .7; pointer-events: none; }
+.btn-loading::after {
+  content: ''; display: inline-block; width: 12px; height: 12px;
+  border: 2px solid rgba(255,255,255,.4); border-top-color: currentColor;
+  border-radius: 50%; animation: spin .7s linear infinite; margin-left: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
+/* ═══ PAGE WRAP ═════════════════════════════════════════════════════ */
+.page-wrap { max-width: 900px; margin: 32px auto; padding: 0 16px 120px; }
+
+.page-header { margin-bottom: 28px; }
+.page-header h1 {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 800; color: var(--text-h);
+  display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+}
+.page-header h1 i { color: var(--accent); font-size: 22px; }
+.page-header p { color: var(--text-muted); font-size: 14px; }
+
+/* ═══ SECTION CARD ══════════════════════════════════════════════════ */
 .section-card {
-  background:var(--card); border:1.5px solid var(--border);
-  border-radius:var(--radius); margin-bottom:16px;
-  box-shadow:var(--shadow); overflow:hidden; transition:box-shadow .2s;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: var(--trans);
+  animation: cardReveal .4s cubic-bezier(.34,1.56,.64,1) both;
 }
-.section-card:hover { box-shadow:var(--shadow-lg); }
+.section-card:hover { border-color: rgba(139,92,246,.2); box-shadow: var(--glow); }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 .section-header {
-  display:flex; align-items:center; gap:10px;
-  padding:14px 18px;
-  background:linear-gradient(90deg,#f0f9fb,#e8f8f5);
-  border-bottom:1.5px solid var(--border);
-  cursor:pointer; user-select:none;
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px;
+  background: var(--bg-card-2);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; user-select: none;
+  transition: var(--trans);
 }
-.section-drag-handle { color:var(--muted); cursor:grab; font-size:16px; }
-.section-toggle-icon { color:var(--primary); font-size:14px; transition:transform .25s; }
-.section-toggle-icon.collapsed { transform:rotate(-90deg); }
-.section-header-title { flex:1; font-size:15px; font-weight:700; color:var(--text); }
-.section-meta { font-size:12px; color:var(--muted); white-space:nowrap; }
-.section-actions { display:flex; gap:6px; }
+.section-header:hover { background: var(--bg-hover); }
 
+.section-drag-handle { color: var(--text-muted); cursor: grab; font-size: 15px; }
+.section-drag-handle:hover { color: var(--accent); }
+
+.section-toggle-icon {
+  color: var(--text-muted); font-size: 13px; transition: transform .25s;
+}
+.section-toggle-icon.collapsed { transform: rotate(-90deg); }
+
+.section-header-title { flex: 1; font-size: 14px; font-weight: 700; color: var(--text-h); }
+.section-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+.section-actions { display: flex; gap: 5px; }
+
+/* Inline edit form */
 .inline-edit-form {
-  display:none; padding:12px 18px; background:#f7fafb;
-  border-bottom:1px solid var(--border); gap:8px; align-items:center;
+  display: none; padding: 12px 18px;
+  background: var(--bg-base); border-bottom: 1px solid var(--border);
+  gap: 8px; align-items: center;
 }
-.inline-edit-form.active { display:flex; }
+.inline-edit-form.active { display: flex; }
 .inline-edit-form input {
-  flex:1; padding:8px 12px; border:1.5px solid var(--border);
-  border-radius:6px; font-size:14px; font-family:'Cairo',sans-serif;
-  outline:none; transition:border-color .2s;
+  flex: 1; padding: 8px 12px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 14px; font-family: var(--font-body);
+  outline: none; transition: var(--trans);
+  background: var(--bg-card); color: var(--text-h);
 }
-.inline-edit-form input:focus { border-color:var(--primary); }
+.inline-edit-form input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
 
-.lesson-list { padding:0; list-style:none; }
+/* ═══ LESSON LIST ═══════════════════════════════════════════════════ */
+.lesson-list { padding: 0; list-style: none; }
 .lesson-list:empty::after {
-  content:'No lessons yet. Add your first lesson below.';
-  display:block; padding:16px 20px; color:var(--muted);
-  font-size:13px; font-style:italic;
+  content: 'No lessons yet. Add your first lesson below.';
+  display: block; padding: 18px 20px; color: var(--text-muted);
+  font-size: 13px; font-style: italic;
 }
+
 .lesson-item {
-  display:flex; align-items:center; gap:10px;
-  padding:11px 18px; border-bottom:1px solid #eef2f5; transition:background .15s;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,.03);
+  transition: var(--trans);
 }
-.lesson-item:last-child { border-bottom:none; }
-.lesson-item:hover { background:#f7fbfd; }
-.lesson-drag-handle { color:#b0bec5; cursor:grab; font-size:14px; }
-.lesson-type-icon { width:28px; text-align:center; }
-.lesson-type-icon.video   { color:var(--primary); }
-.lesson-type-icon.text    { color:#8e44ad; }
-.lesson-type-icon.article { color:#e67e22; }
-.lesson-title-text { flex:1; font-size:14px; font-weight:500; }
-.lesson-meta  { font-size:12px; color:var(--muted); display:flex; gap:8px; align-items:center; }
+.lesson-item:last-child { border-bottom: none; }
+.lesson-item:hover { background: var(--bg-hover); }
+
+.lesson-drag-handle { color: var(--text-muted); cursor: grab; font-size: 14px; }
+.lesson-drag-handle:hover { color: var(--accent); }
+
+.lesson-type-icon { width: 28px; text-align: center; font-size: 14px; }
+.lesson-type-icon.video   { color: var(--sky-400); }
+.lesson-type-icon.text    { color: var(--violet-400); }
+.lesson-type-icon.article { color: var(--gold-400); }
+
+.lesson-title-text { flex: 1; font-size: 14px; font-weight: 500; color: var(--text-p); }
+.lesson-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 7px; align-items: center; }
+
 .badge {
-  font-size:11px; padding:2px 7px; border-radius:20px; font-weight:600;
-  background:#e8f6fb; color:var(--primary);
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px;
 }
-.badge.preview { background:#e8faf4; color:#00a86b; }
-.badge.task-badge { background:rgba(139,92,246,.12); color:var(--violet); }
-.lesson-actions { display:flex; gap:4px; }
+.badge-type    { background: var(--bg-base); color: var(--text-muted); border: 1px solid var(--border); }
+.badge-preview { background: rgba(52,211,153,.1); color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+.badge-task    { background: var(--violet-glow); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.badge-dur     { color: var(--text-muted); }
 
+.lesson-actions { display: flex; gap: 4px; }
+
+/* ═══ ADD LESSON BAR ════════════════════════════════════════════════ */
 .add-lesson-bar {
-  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-  padding:12px 18px; background:#f9fbfc; border-top:1px dashed var(--border);
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  padding: 12px 18px;
+  background: var(--bg-base); border-top: 1px dashed rgba(139,92,246,.2);
 }
-.add-lesson-bar span { font-size:13px; color:var(--muted); font-weight:600; margin-right:4px; }
+.add-lesson-bar-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--text-muted); margin-right: 4px;
+}
 
-/* ── Modal ── */
+/* ═══ ADD SECTION BAR ═══════════════════════════════════════════════ */
+.add-section-bar {
+  border: 2px dashed rgba(139,92,246,.25); border-radius: var(--radius-lg);
+  padding: 20px; text-align: center; cursor: pointer;
+  color: var(--accent); font-size: 14px; font-weight: 600;
+  transition: var(--trans); background: var(--bg-card); margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.add-section-bar:hover { border-color: var(--accent); background: var(--violet-glow); }
+
+/* ═══ MODAL ═════════════════════════════════════════════════════════ */
 .modal-overlay {
-  display:none; position:fixed; inset:0;
-  background:rgba(0,0,0,.45); z-index:500;
-  justify-content:center; align-items:center; padding:16px;
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.6); z-index: 700;
+  justify-content: center; align-items: center; padding: 16px;
+  backdrop-filter: blur(6px);
 }
-.modal-overlay.active { display:flex; }
+.modal-overlay.active { display: flex; }
 .modal-box {
-  background:#fff; border-radius:12px; width:100%; max-width:540px;
-  box-shadow:0 20px 60px rgba(0,0,0,.2);
-  animation:modalIn .22s ease;
-  max-height:90vh; overflow-y:auto;
+  background: var(--bg-panel); border-radius: var(--radius-xl);
+  width: 100%; max-width: 560px;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  animation: modalIn .25s cubic-bezier(.34,1.56,.64,1);
+  max-height: 90vh; overflow-y: auto;
 }
-.modal-box.wide { max-width:680px; }
-@keyframes modalIn { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal-box.wide { max-width: 700px; }
+@keyframes modalIn { from { transform: translateY(30px) scale(.96); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
 .modal-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:18px 22px; border-bottom:1px solid var(--border);
-  position:sticky; top:0; background:#fff; z-index:1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--bg-panel); z-index: 1;
 }
-.modal-header h2 { font-size:17px; font-weight:700; }
-.modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--muted); }
-.modal-body { padding:22px; }
+.modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 17px; font-weight: 700; color: var(--text-h);
+  display: flex; align-items: center; gap: 8px;
+}
+.modal-header h2 i { color: var(--accent); }
+.modal-close {
+  background: var(--bg-card); border: 1px solid var(--border);
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 16px; cursor: pointer; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--trans);
+}
+.modal-close:hover { border-color: var(--danger); color: var(--danger); }
+.modal-body { padding: 22px; }
 .modal-footer {
-  padding:16px 22px; border-top:1px solid var(--border);
-  display:flex; gap:8px; justify-content:flex-end;
-  position:sticky; bottom:0; background:#fff;
+  padding: 16px 22px; border-top: 1px solid var(--border);
+  display: flex; gap: 8px; justify-content: flex-end;
+  position: sticky; bottom: 0; background: var(--bg-panel);
 }
 
-/* ── Form ── */
-.form-group { margin-bottom:16px; }
-.form-group label { display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:#4a5568; }
+/* ═══ FORM ELEMENTS ═════════════════════════════════════════════════ */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block; font-size: 12px; font-weight: 700;
+  margin-bottom: 6px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .4px;
+}
 .form-control {
-  width:100%; padding:9px 13px;
-  border:1.5px solid var(--border); border-radius:6px;
-  font-size:14px; font-family:'Cairo',sans-serif;
-  outline:none; transition:border-color .2s; background:#fff;
+  width: 100%; padding: 10px 13px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; font-family: var(--font-body);
+  outline: none; transition: var(--trans);
+  background: var(--bg-base); color: var(--text-h);
 }
-.form-control:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,168,204,.1); }
-.form-control.textarea { min-height:100px; resize:vertical; }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
+.form-control::placeholder { color: var(--text-muted); }
+.form-control.textarea { min-height: 100px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-.type-tabs { display:flex; gap:8px; margin-bottom:4px; }
-.type-tab {
-  flex:1; padding:9px; border:1.5px solid var(--border);
-  border-radius:6px; text-align:center; cursor:pointer;
-  font-size:13px; font-weight:600; transition:all .2s; background:#f9fbfc;
+select.form-control {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a6585' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 32px; appearance: none;
 }
-.type-tab.active { border-color:var(--primary); background:#e8f6fb; color:var(--primary); }
-.type-tab:hover:not(.active) { border-color:var(--primary); }
-.type-tab i { display:block; font-size:18px; margin-bottom:3px; }
+
+/* ── Type Tabs ── */
+.type-tabs { display: flex; gap: 8px; margin-bottom: 4px; }
+.type-tab {
+  flex: 1; padding: 10px 8px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); text-align: center; cursor: pointer;
+  font-size: 12px; font-weight: 700; transition: var(--trans);
+  background: var(--bg-card); color: var(--text-muted);
+}
+.type-tab:hover { border-color: var(--accent); color: var(--accent); }
+.type-tab.active { border-color: var(--accent); background: var(--violet-glow); color: var(--accent); }
+.type-tab i { display: block; font-size: 18px; margin-bottom: 4px; }
 
 /* Task type tabs */
 .task-type-tab {
-  flex:1; padding:9px; border:1.5px solid var(--border);
-  border-radius:6px; text-align:center; cursor:pointer;
-  font-size:12px; font-weight:600; transition:all .2s; background:#f9fbfc;
+  flex: 1; padding: 9px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); text-align: center; cursor: pointer;
+  font-size: 11px; font-weight: 700; transition: var(--trans);
+  background: var(--bg-card); color: var(--text-muted);
 }
-.task-type-tab.active { border-color:var(--violet); background:rgba(139,92,246,.08); color:var(--violet); }
-.task-type-tab:hover:not(.active) { border-color:var(--violet); }
-.task-type-tab i { display:block; font-size:16px; margin-bottom:3px; }
-.task-field-group { display:none; }
+.task-type-tab:hover { border-color: var(--violet-400); color: var(--violet-400); }
+.task-type-tab.active { border-color: var(--violet-400); background: var(--violet-glow); color: var(--violet-400); }
+.task-type-tab i { display: block; font-size: 16px; margin-bottom: 3px; }
 
-.field-group { display:none; }
-.field-group.active { display:block; }
+.field-group { display: none; }
+.field-group.active { display: block; }
+.task-field-group { display: none; }
 
-.check-label { display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer; }
-.check-label input[type=checkbox] { width:16px; height:16px; cursor:pointer; }
+/* ── Checkbox ── */
+.check-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; cursor: pointer; color: var(--text-p);
+}
+.check-label input[type=checkbox] {
+  width: 16px; height: 16px; cursor: pointer;
+  accent-color: var(--accent);
+}
 
+/* ── Video picker ── */
 .video-picker-section {
-  background:#f0f9fb; border:1.5px solid #b2e4f0;
-  border-radius:8px; padding:14px; margin-bottom:16px;
+  background: var(--bg-base); border: 1.5px solid var(--border-glow);
+  border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;
 }
-.video-picker-section h4 { font-size:13px; font-weight:700; color:var(--primary); margin-bottom:10px; }
-.video-picker-section select {
-  width:100%; padding:8px 12px;
-  border:1.5px solid var(--border); border-radius:6px;
-  font-size:13px; font-family:'Cairo',sans-serif; outline:none;
-  background:#fff; cursor:pointer;
+.video-picker-section h4 {
+  font-size: 12px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
 }
-.video-picker-hint { font-size:11px; color:var(--muted); margin-top:6px; }
 .divider-or {
-  text-align:center; font-size:12px; color:var(--muted);
-  margin:12px 0; position:relative;
+  text-align: center; font-size: 11px; color: var(--text-muted);
+  margin: 10px 0; position: relative;
 }
 .divider-or::before, .divider-or::after {
-  content:''; position:absolute; top:50%; width:44%; height:1px; background:var(--border);
+  content: ''; position: absolute; top: 50%; width: 44%; height: 1px; background: var(--border);
 }
-.divider-or::before { left:0; } .divider-or::after { right:0; }
+.divider-or::before { left: 0; } .divider-or::after { right: 0; }
 
-.add-section-bar {
-  border:2px dashed var(--border); border-radius:var(--radius);
-  padding:18px; text-align:center; cursor:pointer;
-  color:var(--primary); font-size:15px; font-weight:600;
-  transition:all .2s; background:#fff; margin-bottom:24px;
-}
-.add-section-bar:hover { border-color:var(--primary); background:#e8f6fb; }
-
-.btn-loading { opacity:.7; pointer-events:none; }
-.btn-loading::after {
-  content:''; display:inline-block; width:12px; height:12px;
-  border:2px solid rgba(255,255,255,.5); border-top-color:#fff;
-  border-radius:50%; animation:spin .7s linear infinite; margin-left:6px;
-}
-@keyframes spin { to { transform:rotate(360deg); } }
-
-.toast-container {
-  position:fixed; bottom:24px; right:24px; z-index:900;
-  display:flex; flex-direction:column; gap:8px;
-}
-.toast {
-  padding:12px 18px; border-radius:8px; font-size:14px; font-weight:600;
-  color:#fff; box-shadow:0 4px 16px rgba(0,0,0,.15);
-  animation:toastIn .3s ease; max-width:320px;
-}
-.toast.success { background:#27ae60; }
-.toast.error   { background:var(--danger); }
-.toast.warning { background:var(--warning); }
-@keyframes toastIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
-
-.rich-editor-wrap { border:1.5px solid var(--border); border-radius:6px; overflow:hidden; }
+/* ── Rich Editor ── */
+.rich-editor-wrap { border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
 .rich-editor-toolbar {
-  display:flex; flex-wrap:wrap; gap:2px; padding:6px;
-  background:#f7fafc; border-bottom:1px solid var(--border);
+  display: flex; flex-wrap: wrap; gap: 2px; padding: 6px;
+  background: var(--bg-base); border-bottom: 1px solid var(--border);
 }
 .rich-editor-toolbar button {
-  padding:4px 8px; border:none; background:none; cursor:pointer;
-  border-radius:4px; color:var(--text); font-size:13px;
+  padding: 4px 8px; border: none; background: none; cursor: pointer;
+  border-radius: 4px; color: var(--text-p); font-size: 13px; transition: var(--trans);
 }
-.rich-editor-toolbar button:hover { background:#e2e8f0; }
+.rich-editor-toolbar button:hover { background: var(--bg-card-2); color: var(--accent); }
 #lesson-content-editor {
-  min-height:160px; padding:12px; outline:none;
-  font-size:14px; font-family:'Cairo',sans-serif; line-height:1.7;
+  min-height: 160px; padding: 14px; outline: none;
+  font-size: 14px; font-family: var(--font-body); line-height: 1.7;
+  background: var(--bg-card); color: var(--text-p);
 }
 #lesson-content-editor:empty::before {
-  content: attr(data-placeholder); color:#a0aec0; pointer-events:none;
+  content: attr(data-placeholder); color: var(--text-muted); pointer-events: none;
 }
 
-/* MCQ Builder */
+/* ── MCQ Builder ── */
 .mcq-builder-wrap {
-  max-height:320px; overflow-y:auto;
-  border:1.5px solid var(--border); border-radius:8px; padding:12px;
-  background:#f9fbfc; margin-bottom:10px;
+  max-height: 340px; overflow-y: auto;
+  border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  padding: 12px; background: var(--bg-base); margin-bottom: 10px;
+}
+.mcq-question-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 14px; margin-bottom: 10px;
+}
+.mcq-question-card:last-child { margin-bottom: 0; }
+.mcq-q-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.mcq-q-label { font-size: 11px; font-weight: 700; color: var(--violet-400); text-transform: uppercase; letter-spacing: .4px; }
+.mcq-option-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+.mcq-option-row input[type=radio] { accent-color: var(--accent); flex-shrink: 0; }
+
+/* ── External link info ── */
+.info-panel {
+  background: var(--bg-base); border: 1px solid var(--border-glow);
+  border-radius: var(--radius-md); padding: 16px;
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 13px; color: var(--text-p); line-height: 1.65;
+}
+.info-panel i { color: var(--sky-400); margin-top: 2px; flex-shrink: 0; }
+
+/* ═══ GHOST (DRAG) ══════════════════════════════════════════════════ */
+.sortable-ghost { opacity: .35; background: var(--violet-glow) !important; border-color: var(--border-glow) !important; }
+
+/* ═══ TOAST ═════════════════════════════════════════════════════════ */
+.toast-container {
+  position: fixed; bottom: 90px; right: 24px; z-index: 900;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  padding: 12px 18px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease;
+  display: flex; align-items: center; gap: 8px; min-width: 240px; max-width: 340px;
+}
+@keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.toast.success { background: rgba(52,211,153,.12); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.toast.error   { background: rgba(251,113,133,.12); color: var(--danger); border: 1px solid rgba(251,113,133,.25); }
+.toast.warning { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+
+/* ═══ NAV BAR ═══════════════════════════════════════════════════════ */
+.lesson-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 24px;
+  background: rgba(8,11,20,.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid var(--border);
+}
+[data-theme="light"] .lesson-nav { background: rgba(255,255,255,.92); }
+
+.nav-btn {
+  padding: 10px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; border: 1px solid var(--border);
+  color: var(--text-muted); background: var(--bg-card);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  transition: var(--trans); cursor: pointer; font-family: inherit;
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-btn.primary:hover { background: var(--accent-d); }
+.nav-btn.gold    { background: rgba(251,191,36,.12); color: var(--gold-400); border-color: rgba(251,191,36,.25); }
+.nav-btn.gold:hover { background: rgba(251,191,36,.22); }
+
+.nav-center {
+  display: flex; align-items: center;
+  font-size: 13px; color: var(--text-muted); gap: 6px;
+}
+.nav-center .course-name {
+  font-family: var(--font-display); font-weight: 700; color: var(--text-p);
+  max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-.sortable-ghost { opacity:.4; background:#e8f6fb; }
-
-@media(max-width:600px){
-  .form-row { grid-template-columns:1fr; }
-  .section-actions .btn span { display:none; }
+/* ═══ RESPONSIVE ════════════════════════════════════════════════════ */
+@media(max-width:640px){
+  .form-row { grid-template-columns: 1fr; }
+  .section-actions .btn span { display: none; }
+  .lesson-nav { padding: 10px 14px; }
+  .nav-center { display: none; }
+  .topbar { padding: 0 14px; }
 }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-left">
-    <span class="logo">Eduvia</span>
-    <div class="breadcrumb">
-      <a href="{% url 'courses:instructor_dashboard' %}">Dashboard</a>
-      <span>›</span>
-      <span>{{ course.title|truncatechars:40 }}</span>
-      <span>›</span>
-      <span>Curriculum</span>
-    </div>
+<!-- Topbar -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-breadcrumb">
+    <a href="{% url 'courses:instructor_dashboard' %}">Dashboard</a>
+    <span class="sep">›</span>
+    <span>{{ course.title|truncatechars:40 }}</span>
+    <span class="sep">›</span>
+    <span class="current">Curriculum</span>
   </div>
-  <div class="topbar-right">
+  <div class="topbar-actions">
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
     <a href="{% url 'courses:course_curriculum' course_id=course.id course_slug=course_slug %}"
-       class="btn btn-white" target="_blank">
+       class="tb-btn tb-btn-ghost" target="_blank">
       <i class="fas fa-eye"></i> Preview
     </a>
-    <a href="{% url 'courses:instructor_dashboard' %}" class="btn btn-white">
+    <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-ghost">
       <i class="fas fa-arrow-left"></i> Back
     </a>
   </div>
-</div>
+</header>
 
 <div class="page-wrap">
   <div class="page-header">
-    <h1><i class="fas fa-list-ul" style="color:var(--primary)"></i> Course Curriculum</h1>
+    <h1><i class="fas fa-list-ul"></i> Course Curriculum</h1>
     <p>Build your course sections and lessons. Add tasks to each lesson. Drag to reorder.</p>
   </div>
 
@@ -328,11 +579,11 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
         </div>
         <span class="section-meta">{{ section.lessons.count }} lesson{{ section.lessons.count|pluralize }}</span>
         <div class="section-actions" onclick="event.stopPropagation()">
-          <button class="btn btn-ghost btn-sm btn-icon" title="Edit"
+          <button class="btn btn-ghost btn-sm btn-icon" title="Edit Section"
             onclick="openEditSection({{ section.id }}, '{{ section.title|escapejs }}')">
             <i class="fas fa-pen"></i>
           </button>
-          <button class="btn btn-danger btn-sm btn-icon" title="Delete"
+          <button class="btn btn-danger btn-sm btn-icon" title="Delete Section"
             onclick="deleteSection({{ section.id }})">
             <i class="fas fa-trash"></i>
           </button>
@@ -355,14 +606,13 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
           </div>
           <div class="lesson-title-text">{{ lesson.title }}</div>
           <div class="lesson-meta">
-            <span class="badge">{{ lesson.get_type_label }}</span>
-            {% if lesson.is_preview %}<span class="badge preview">Preview</span>{% endif %}
+            <span class="badge badge-type">{{ lesson.get_type_label }}</span>
+            {% if lesson.is_preview %}<span class="badge badge-preview">Preview</span>{% endif %}
             {% if lesson.lesson_type == 'video' and lesson.video_duration %}
-              <span>{{ lesson.get_duration_display }}</span>
+              <span class="badge-dur">{{ lesson.get_duration_display }}</span>
             {% endif %}
-            {% comment %} Task badge if task exists {% endcomment %}
             {% if lesson.task %}
-              <span class="badge task-badge"><i class="fas fa-tasks"></i> Task</span>
+              <span class="badge badge-task"><i class="fas fa-tasks"></i> Task</span>
             {% endif %}
           </div>
           <div class="lesson-actions">
@@ -383,7 +633,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
               onclick="openTaskModal({{ section.id }}, {{ lesson.id }}, 'edit')">
               <i class="fas fa-tasks"></i>
             </button>
-            <button class="btn btn-sm" style="background:#f39c12;color:#fff;" title="Delete Task"
+            <button class="btn btn-gold btn-sm btn-icon" title="Delete Task"
               onclick="deleteTask({{ section.id }}, {{ lesson.id }})">
               <i class="fas fa-times"></i>
             </button>
@@ -403,16 +653,14 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
       </ul>
 
       <div class="add-lesson-bar">
-        <span>Add:</span>
-        <button class="btn btn-primary btn-sm" onclick="openAddLesson({{ section.id }}, 'video')">
+        <span class="add-lesson-bar-label">Add:</span>
+        <button class="btn btn-sky btn-sm" onclick="openAddLesson({{ section.id }}, 'video')">
           <i class="fas fa-play-circle"></i> Video
         </button>
-        <button class="btn btn-sm" style="background:#8e44ad;color:#fff;"
-                onclick="openAddLesson({{ section.id }}, 'text')">
+        <button class="btn btn-violet btn-sm" onclick="openAddLesson({{ section.id }}, 'text')">
           <i class="fas fa-file-alt"></i> Text
         </button>
-        <button class="btn btn-sm" style="background:#e67e22;color:#fff;"
-                onclick="openAddLesson({{ section.id }}, 'article')">
+        <button class="btn btn-gold btn-sm" onclick="openAddLesson({{ section.id }}, 'article')">
           <i class="fas fa-newspaper"></i> Article
         </button>
       </div>
@@ -425,13 +673,14 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   </div>
 </div>
 
+<!-- Toast Container -->
 <div class="toast-container" id="toast-container"></div>
 
-<!-- MODAL: Section -->
+<!-- ═══ MODAL: Section ═══════════════════════════════════════════════ -->
 <div class="modal-overlay" id="section-modal">
   <div class="modal-box">
     <div class="modal-header">
-      <h2 id="section-modal-title">Add Section</h2>
+      <h2><i class="fas fa-folder-plus"></i> <span id="section-modal-title">Add Section</span></h2>
       <button class="modal-close" onclick="closeModal('section-modal')">×</button>
     </div>
     <div class="modal-body">
@@ -451,25 +700,26 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   </div>
 </div>
 
-<!-- MODAL: Lesson -->
+<!-- ═══ MODAL: Lesson ════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="lesson-modal">
-  <div class="modal-box" style="max-width:600px;">
+  <div class="modal-box" style="max-width:620px;">
     <div class="modal-header">
-      <h2 id="lesson-modal-title">Add Lesson</h2>
+      <h2><i class="fas fa-book-open"></i> <span id="lesson-modal-title">Add Lesson</span></h2>
       <button class="modal-close" onclick="closeModal('lesson-modal')">×</button>
     </div>
     <div class="modal-body">
+
       <div class="form-group">
         <label>Lesson Type</label>
         <div class="type-tabs">
           <div class="type-tab active" data-type="video" onclick="switchType('video')">
-            <i class="fas fa-play-circle"></i> Video
+            <i class="fas fa-play-circle" style="color:var(--sky-400)"></i> Video
           </div>
           <div class="type-tab" data-type="text" onclick="switchType('text')">
-            <i class="fas fa-file-alt"></i> Text
+            <i class="fas fa-file-alt" style="color:var(--violet-400)"></i> Text
           </div>
           <div class="type-tab" data-type="article" onclick="switchType('article')">
-            <i class="fas fa-newspaper"></i> Article
+            <i class="fas fa-newspaper" style="color:var(--gold-400)"></i> Article
           </div>
         </div>
         <input type="hidden" id="lesson-type-hidden" value="video">
@@ -477,10 +727,10 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 
       <div id="existing-video-picker" class="video-picker-section" style="display:none;">
         <h4><i class="fas fa-film"></i> Use an existing course video</h4>
-        <select id="existing-video-select" onchange="onExistingVideoSelected()">
+        <select class="form-control" id="existing-video-select" onchange="onExistingVideoSelected()">
           <option value="">— Select a video —</option>
         </select>
-        <p class="video-picker-hint">Selecting a video will auto-fill title, URL and duration.</p>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Selecting a video will auto-fill title, URL and duration.</p>
         <div class="divider-or">OR</div>
       </div>
 
@@ -492,7 +742,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
       <div class="field-group active" id="field-video">
         <div class="form-group">
           <label>Video URL *</label>
-          <input type="url" id="lesson-video-url" class="form-control" placeholder="https://...">
+          <input type="url" id="lesson-video-url" class="form-control" placeholder="https://…">
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -529,7 +779,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
       </div>
 
       <div class="form-group">
-        <label>Description <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <label>Description <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
         <textarea id="lesson-description" class="form-control textarea" rows="2"
           placeholder="Brief description…"></textarea>
       </div>
@@ -544,16 +794,15 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   </div>
 </div>
 
-<!-- MODAL: Task -->
+<!-- ═══ MODAL: Task ══════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="task-modal">
   <div class="modal-box wide">
     <div class="modal-header">
-      <h2 id="task-modal-title">Add Task</h2>
+      <h2><i class="fas fa-tasks"></i> <span id="task-modal-title">Add Task</span></h2>
       <button class="modal-close" onclick="closeModal('task-modal')">×</button>
     </div>
     <div class="modal-body">
 
-      <!-- Task Type Tabs -->
       <div class="form-group">
         <label>Task Type</label>
         <div class="type-tabs">
@@ -579,23 +828,23 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
           <input type="text" id="task-title-input" class="form-control" placeholder="e.g. Chapter Quiz">
         </div>
         <div class="form-group">
-          <label>Passing Score % <span style="color:var(--muted);font-weight:400">(0–100)</span></label>
+          <label>Passing Score % (0–100)</label>
           <input type="number" id="task-passing-input" class="form-control" value="70" min="0" max="100">
         </div>
       </div>
 
       <div class="form-group">
-        <label>Description <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <label>Description <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
         <input type="text" id="task-desc-input" class="form-control" placeholder="Brief task description…">
       </div>
 
-      <!-- MCQ Fields -->
+      <!-- MCQ -->
       <div class="task-field-group" id="task-field-mcq" style="display:block;">
         <div class="form-group">
           <label>Questions</label>
           <div class="mcq-builder-wrap" id="mcq-questions-container">
-            <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">
-              <i class="fas fa-plus-circle" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4;"></i>
+            <div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">
+              <i class="fas fa-plus-circle" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3;color:var(--accent);"></i>
               No questions yet. Click "Add Question" to start.
             </div>
           </div>
@@ -605,33 +854,30 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
         </div>
       </div>
 
-      <!-- Essay Fields -->
+      <!-- Essay -->
       <div class="task-field-group" id="task-field-essay">
         <div class="form-group">
-          <label>Essay Questions <span style="color:var(--muted);font-weight:400">(one per line)</span></label>
+          <label>Essay Questions (one per line)</label>
           <textarea id="task-essay-q-input" class="form-control textarea" rows="5"
             placeholder="e.g.&#10;Explain the concept of OOP.&#10;What are the 4 pillars of OOP?"></textarea>
         </div>
       </div>
 
-      <!-- File Upload Fields -->
+      <!-- File Upload -->
       <div class="task-field-group" id="task-field-file_upload">
-        <div style="background:#f0f9fb;border:1.5px solid #b2e4f0;border-radius:8px;padding:16px;">
-          <p style="font-size:14px;color:#4a5568;line-height:1.6;">
-            <i class="fas fa-info-circle" style="color:var(--primary);margin-right:6px;"></i>
-            Students will upload a file (PDF, DOCX, ZIP, or image) as their task submission.
-            The task is auto-passed upon file upload.
-          </p>
+        <div class="info-panel">
+          <i class="fas fa-info-circle"></i>
+          <span>Students will upload a file (PDF, DOCX, ZIP, or image) as their task submission. The task is auto-passed upon file upload.</span>
         </div>
       </div>
 
-      <!-- External Link Fields -->
+      <!-- External Link -->
       <div class="task-field-group" id="task-field-external_link">
         <div class="form-group">
           <label>External URL *</label>
           <input type="url" id="task-ext-url-input" class="form-control"
                  placeholder="https://forms.google.com/… or any external resource">
-          <p style="font-size:12px;color:var(--muted);margin-top:6px;">
+          <p style="font-size:12px;color:var(--text-muted);margin-top:6px;">
             Students must visit this link and confirm completion to pass the task.
           </p>
         </div>
@@ -640,12 +886,27 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('task-modal')">Cancel</button>
-      <button class="btn btn-violet" id="task-modal-save" onclick="saveTask()">
+      <button class="btn btn-violet" id="task-modal-save" onclick="saveTask()" style="background:var(--accent);color:#fff;border:none;">
         <i class="fas fa-plus"></i> Add Task
       </button>
     </div>
   </div>
 </div>
+
+<!-- Bottom Nav Bar -->
+<nav class="lesson-nav">
+  <a href="{% url 'courses:instructor_dashboard' %}" class="nav-btn">
+    <i class="fas fa-arrow-left"></i> Dashboard
+  </a>
+  <div class="nav-center">
+    <i class="fas fa-book" style="color:var(--accent);font-size:13px;"></i>
+    <span class="course-name">{{ course.title }}</span>
+  </div>
+  <a href="{% url 'courses:course_curriculum' course_id=course.id course_slug=course_slug %}"
+     class="nav-btn primary" target="_blank">
+    <i class="fas fa-eye"></i> Preview
+  </a>
+</nav>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 <script>
@@ -657,12 +918,22 @@ let lessonSectionId = null;
 let lessonEditId    = null;
 let legacyVideos    = [];
 
-// Task state
 let taskModalMode   = 'create';
 let taskSectionId   = null;
 let taskLessonId    = null;
 let currentTaskType = 'mcq';
 let mcqQuestions    = [];
+
+/* ── Theme ── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
 
 /* ── API ── */
 async function api(url, body = null, method = 'POST') {
@@ -687,9 +958,10 @@ async function api(url, body = null, method = 'POST') {
 function toast(msg, type = 'success') {
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  el.textContent = msg;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', warning:'fa-exclamation-triangle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
   document.getElementById('toast-container').appendChild(el);
-  setTimeout(() => { el.style.opacity='0'; setTimeout(()=>el.remove(),400); }, 3500);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),400); }, 3500);
 }
 
 /* ── Modal ── */
@@ -765,7 +1037,7 @@ async function deleteSection(id) {
   if(!res.ok){toast(res.error||'Failed.','error');return;}
   const card=document.querySelector(`[data-section-id="${id}"]`);
   if(card){card.style.opacity='0';card.style.transition='opacity .3s';setTimeout(()=>card.remove(),300);}
-  toast('Section deleted.');
+  toast('Section deleted.','warning');
 }
 
 /* ── Legacy videos ── */
@@ -884,25 +1156,26 @@ async function deleteLesson(sId,lId) {
   if(!res.ok){toast(res.error||'Failed.','error');return;}
   const li=document.querySelector(`[data-lesson-id="${lId}"]`);
   if(li){li.style.opacity='0';li.style.transition='opacity .3s';setTimeout(()=>{li.remove();updateSectionMeta(sId);},300);}
-  toast('Lesson deleted.');
+  toast('Lesson deleted.','warning');
 }
 
 /* ── Render helpers ── */
 const TYPE_ICONS={video:'fas fa-play-circle',text:'fas fa-file-alt',article:'fas fa-newspaper'};
 const TYPE_LABELS={video:'Video',text:'Text',article:'Article'};
+const TYPE_COLORS={video:'var(--sky-400)',text:'var(--violet-400)',article:'var(--gold-400)'};
 function esc(s){return(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 function escBt(s){return(s||'').replace(/`/g,'\\`').replace(/\\/g,'\\\\')}
 
 function lessonItemHTML(l,sId) {
-  const dur=(l.lesson_type==='video'&&l.video_duration)?`<span>${l.duration_display||l.video_duration+'m'}</span>`:'';
-  const prev=l.is_preview?`<span class="badge preview">Preview</span>`:'';
+  const dur=(l.lesson_type==='video'&&l.video_duration)?`<span class="badge-dur">${l.duration_display||l.video_duration+'m'}</span>`:'';
+  const prev=l.is_preview?`<span class="badge badge-preview">Preview</span>`:'';
   return `
 <li class="lesson-item" data-lesson-id="${l.id}">
   <i class="fas fa-grip-vertical lesson-drag-handle"></i>
   <div class="lesson-type-icon ${l.lesson_type}"><i class="${TYPE_ICONS[l.lesson_type]||'fas fa-file'}"></i></div>
   <div class="lesson-title-text">${l.title}</div>
   <div class="lesson-meta">
-    <span class="badge">${TYPE_LABELS[l.lesson_type]||l.lesson_type}</span>
+    <span class="badge badge-type">${TYPE_LABELS[l.lesson_type]||l.lesson_type}</span>
     ${prev}${dur}
   </div>
   <div class="lesson-actions">
@@ -958,10 +1231,10 @@ function renderNewSection(section) {
   </div>
   <ul class="lesson-list" id="lessons-${section.id}" data-section-id="${section.id}"></ul>
   <div class="add-lesson-bar">
-    <span>Add:</span>
-    <button class="btn btn-primary btn-sm" onclick="openAddLesson(${section.id},'video')"><i class="fas fa-play-circle"></i> Video</button>
-    <button class="btn btn-sm" style="background:#8e44ad;color:#fff;" onclick="openAddLesson(${section.id},'text')"><i class="fas fa-file-alt"></i> Text</button>
-    <button class="btn btn-sm" style="background:#e67e22;color:#fff;" onclick="openAddLesson(${section.id},'article')"><i class="fas fa-newspaper"></i> Article</button>
+    <span class="add-lesson-bar-label">Add:</span>
+    <button class="btn btn-sky btn-sm" onclick="openAddLesson(${section.id},'video')"><i class="fas fa-play-circle"></i> Video</button>
+    <button class="btn btn-violet btn-sm" onclick="openAddLesson(${section.id},'text')"><i class="fas fa-file-alt"></i> Text</button>
+    <button class="btn btn-gold btn-sm" onclick="openAddLesson(${section.id},'article')"><i class="fas fa-newspaper"></i> Article</button>
   </div>
 </div>`;
   container.insertAdjacentHTML('beforeend',html);
@@ -976,9 +1249,9 @@ function insertHeading(){execCmd('formatBlock','h3');}
 function insertCode(){const sel=window.getSelection();const txt=sel&&sel.toString()?sel.toString():'code here';document.execCommand('insertHTML',false,`<code>${txt}</code>`);}
 function insertLink(){const url=prompt('Enter URL:');if(url)execCmd('createLink',url);}
 
-/* ══════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    TASK SYSTEM
-   ══════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════ */
 async function openTaskModal(sId, lId, mode='create') {
   taskModalMode=mode; taskSectionId=sId; taskLessonId=lId; mcqQuestions=[];
   document.getElementById('task-modal-title').textContent=mode==='create'?'Add Task':'Edit Task';
@@ -1041,26 +1314,26 @@ function renderMCQBuilder() {
   const c=document.getElementById('mcq-questions-container');
   if(!c)return;
   if(mcqQuestions.length===0){
-    c.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">
-      <i class="fas fa-plus-circle" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4;"></i>
+    c.innerHTML=`<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">
+      <i class="fas fa-plus-circle" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3;color:var(--accent);"></i>
       No questions yet. Click "Add Question" to start.</div>`;
     return;
   }
   function escV(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
   c.innerHTML=mcqQuestions.map((q,qi)=>`
-    <div style="background:#f8fafc;border:1.5px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:12px;font-weight:700;color:var(--violet);">Question ${qi+1}</span>
+    <div class="mcq-question-card">
+      <div class="mcq-q-header">
+        <span class="mcq-q-label">Question ${qi+1}</span>
         <button onclick="removeMCQQuestion(${qi})" class="btn btn-danger btn-sm btn-icon"><i class="fas fa-trash"></i></button>
       </div>
       <div class="form-group" style="margin-bottom:10px;">
-        <label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block;">Question text *</label>
+        <label style="font-size:11px;">Question text *</label>
         <input type="text" class="form-control" placeholder="Enter question…"
           value="${escV(q.question)}" onchange="mcqQuestions[${qi}].question=this.value">
       </div>
-      <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">Options (select correct answer)</label>
+      <label style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:8px;">Options (select correct answer)</label>
       ${q.options.map((opt,oi)=>`
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+        <div class="mcq-option-row">
           <input type="radio" name="correct_${qi}" ${q.correct_answer===opt&&opt?'checked':''}
             onchange="mcqQuestions[${qi}].correct_answer=mcqQuestions[${qi}].options[${oi}]" title="Mark correct">
           <input type="text" class="form-control" style="flex:1;" placeholder="Option ${oi+1}"
@@ -1112,30 +1385,28 @@ async function deleteTask(sId,lId) {
   const res=await api(`/courses/instructor/curriculum/${COURSE_ID}/section/${sId}/lesson/${lId}/task/delete/`);
   if(!res.ok){toast(res.error||'Failed.','error');return;}
   updateLessonTaskBadge(lId,false,sId);
-  toast('Task deleted.');
+  toast('Task deleted.','warning');
 }
 
 function updateLessonTaskBadge(lId,hasTask,sId) {
   const li=document.querySelector(`[data-lesson-id="${lId}"]`);
   if(!li)return;
   const meta=li.querySelector('.lesson-meta');
-  const badge=li.querySelector('.task-badge');
+  const badge=li.querySelector('.badge-task');
   const actions=li.querySelector('.lesson-actions');
   if(hasTask&&!badge){
     const b=document.createElement('span');
-    b.className='badge task-badge';
+    b.className='badge badge-task';
     b.innerHTML='<i class="fas fa-tasks"></i> Task';
     meta?.appendChild(b);
-    // Replace "Add Task" btn with edit+delete
     const addBtn=actions?.querySelector('.btn-violet');
     if(addBtn){
       addBtn.outerHTML=`
         <button class="btn btn-violet btn-sm btn-icon" title="Edit Task" onclick="openTaskModal(${sId},${lId},'edit')"><i class="fas fa-tasks"></i></button>
-        <button class="btn btn-sm" style="background:#f39c12;color:#fff;" title="Delete Task" onclick="deleteTask(${sId},${lId})"><i class="fas fa-times"></i></button>`;
+        <button class="btn btn-gold btn-sm btn-icon" title="Delete Task" onclick="deleteTask(${sId},${lId})"><i class="fas fa-times"></i></button>`;
     }
   } else if(!hasTask&&badge){
     badge.remove();
-    // Replace edit+delete with "Add Task"
     const editBtn=actions?.querySelector('.btn-violet');
     const delTaskBtn=editBtn?.nextElementSibling;
     if(editBtn&&delTaskBtn&&!editBtn.querySelector('i.fa-pen')){
@@ -1170,6 +1441,7 @@ function initLessonSortable(sId) {
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
+  applyTheme(localStorage.getItem('theme') || 'dark');
   initSectionSortable();
   document.querySelectorAll('[id^="lessons-"]').forEach(ul=>initLessonSortable(ul.dataset.sectionId));
   fetchLegacyVideos();
