@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auth Pages Preview — Eduvia Obsidian Academy</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --emerald-400: #34d399;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --danger:      var(--rose-400);
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+/* ── Preview chrome ───────────────────────────────── */
+.preview-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  height: 52px;
+  background: rgba(8,11,20,.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 12px;
+}
+[data-theme="light"] .preview-bar { background: rgba(255,255,255,.92); }
+
+.preview-bar-title {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 700;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  flex: 1;
+}
+
+.tab-pills { display: flex; gap: 4px; }
+.tab-pill {
+  padding: 6px 16px; border-radius: 99px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-muted);
+  transition: var(--trans); font-family: inherit;
+}
+.tab-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.ctrl-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+/* ── Page wrapper ─────────────────────────────────── */
+.page-view {
+  display: none;
+  padding-top: 52px;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.page-view.active { display: flex; }
+
+/* ── Auth background ──────────────────────────────── */
+.auth-bg {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+}
+.auth-bg-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); animation: orbFloat 8s ease-in-out infinite;
+}
+.auth-bg-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(139,92,246,.18), transparent 70%);
+  top: -100px; left: -80px; animation-delay: 0s;
+}
+.auth-bg-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(251,191,36,.1), transparent 70%);
+  bottom: -80px; right: -60px; animation-delay: -3s;
+}
+.auth-bg-orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(56,189,248,.08), transparent 70%);
+  top: 40%; left: 55%; animation-delay: -5s;
+}
+@keyframes orbFloat {
+  0%,100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
+.auth-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(139,92,246,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+[data-theme="light"] .auth-bg::before {
+  background-image:
+    linear-gradient(rgba(139,92,246,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,.07) 1px, transparent 1px);
+}
+
+/* ── Auth wrapper & card ──────────────────────────── */
+.auth-wrapper {
+  position: relative; z-index: 10;
+  width: 100%; max-width: 460px;
+  padding: 20px 16px;
+  animation: cardReveal .55s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(32px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.auth-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 40px 36px;
+  box-shadow: var(--glow), 0 24px 64px rgba(0,0,0,.35);
+  position: relative; overflow: hidden;
+}
+.auth-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--violet-500), var(--gold-400), transparent);
+  opacity: .6;
+}
+.auth-card::after {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.08), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Logo ─────────────────────────────────────────── */
+.auth-logo-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: 24px;
+}
+.auth-logo-icon {
+  width: 68px; height: 68px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--violet-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; color: #fff;
+  border: 2px solid var(--border-glow);
+  box-shadow: 0 0 24px rgba(139,92,246,.3);
+  margin-bottom: 12px;
+  transition: var(--trans);
+}
+.auth-logo-icon:hover { transform: scale(1.06); box-shadow: 0 0 40px rgba(139,92,246,.5); }
+
+.auth-brand {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800; letter-spacing: -.5px;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-heading {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700;
+  color: var(--text-h); text-align: center;
+  margin-bottom: 6px; letter-spacing: -.4px;
+}
+.auth-subheading {
+  font-size: 13px; color: var(--text-muted);
+  text-align: center; margin-bottom: 28px;
+}
+
+/* ── Alerts ───────────────────────────────────────── */
+.alert {
+  padding: 11px 14px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 500; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.alert-error  { background: rgba(251,113,133,.08); border: 1px solid rgba(251,113,133,.25); color: var(--rose-400); }
+.alert-success{ background: rgba(52,211,153,.08);  border: 1px solid rgba(52,211,153,.25);  color: var(--emerald-400); }
+
+/* ── Form ─────────────────────────────────────────── */
+.auth-form { display: flex; flex-direction: column; }
+
+.field-group { display: flex; flex-direction: column; margin-bottom: 16px; }
+
+.field-label {
+  font-size: 11px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: .6px; margin-bottom: 7px;
+  transition: color .2s;
+}
+.field-group:focus-within .field-label { color: var(--violet-400); }
+
+.input-wrap { position: relative; display: flex; align-items: center; }
+
+.input-icon {
+  position: absolute; left: 14px;
+  color: var(--text-muted); font-size: 14px;
+  pointer-events: none; transition: color .2s; z-index: 1;
+}
+[dir="rtl"] .input-icon { left: auto; right: 14px; }
+.field-group:focus-within .input-icon { color: var(--violet-400); }
+
+.auth-input {
+  width: 100%;
+  background: var(--bg-base);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-h);
+  padding: 12px 14px 12px 42px;
+  font-size: 14px; font-family: inherit;
+  transition: var(--trans); outline: none;
+}
+[dir="rtl"] .auth-input { padding: 12px 42px 12px 14px; }
+.auth-input::placeholder { color: var(--text-muted); }
+.auth-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+  background: var(--bg-panel);
+}
+
+.pw-toggle {
+  position: absolute; right: 12px;
+  background: none; border: none; color: var(--text-muted);
+  cursor: pointer; font-size: 14px; padding: 4px;
+  display: flex; align-items: center; transition: color .2s; z-index: 2;
+}
+[dir="rtl"] .pw-toggle { right: auto; left: 12px; }
+.pw-toggle:hover { color: var(--accent); }
+
+/* Password strength */
+.pw-strength-wrap {
+  margin-top: 6px; display: flex; align-items: center; gap: 10px;
+}
+.pw-strength-track {
+  flex: 1; height: 3px; background: var(--bg-card-2); border-radius: 99px; overflow: hidden;
+}
+.pw-strength-fill {
+  height: 100%; width: 0%; border-radius: 99px;
+  transition: width .35s ease, background .35s ease;
+}
+.pw-strength-lbl { font-size: 11px; font-weight: 700; min-width: 40px; text-align: right; }
+[dir="rtl"] .pw-strength-lbl { text-align: left; }
+
+/* Submit */
+.auth-btn {
+  width: 100%; padding: 13px;
+  border-radius: var(--radius-md);
+  font-size: 15px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35); margin-top: 8px;
+}
+.auth-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.12), transparent);
+}
+.auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.5); }
+.auth-btn:active { transform: translateY(0); }
+
+/* Footer */
+.auth-footer {
+  text-align: center; margin-top: 22px;
+  font-size: 13px; color: var(--text-muted);
+}
+.auth-link {
+  color: var(--violet-400); text-decoration: none;
+  font-weight: 600; transition: color .2s; margin-left: 4px;
+}
+[dir="rtl"] .auth-link { margin-left: 0; margin-right: 4px; }
+.auth-link:hover { color: var(--violet-500); text-decoration: underline; }
+
+/* Spinner */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid transparent; border-top-color: currentColor;
+  border-radius: 50%; animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 480px) {
+  .auth-card { padding: 28px 18px; }
+  .auth-heading { font-size: 19px; }
+  .preview-bar-title { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Preview Bar ──────────────────────────────────────── -->
+<div class="preview-bar">
+  <span class="preview-bar-title">Eduvia Auth — Obsidian Academy</span>
+  <div class="tab-pills">
+    <button class="tab-pill active" onclick="showPage('login', this)">Login</button>
+    <button class="tab-pill" onclick="showPage('register', this)">Register</button>
+  </div>
+  <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme"><i class="fas fa-moon" id="theme-icon"></i></button>
+  <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language"><i class="fas fa-globe"></i></button>
+</div>
+
+<!-- Shared animated bg -->
+<div class="auth-bg">
+  <div class="auth-bg-orb auth-bg-orb-1"></div>
+  <div class="auth-bg-orb auth-bg-orb-2"></div>
+  <div class="auth-bg-orb auth-bg-orb-3"></div>
+</div>
+
+<!-- ══════════════════ LOGIN PAGE ═══════════════════ -->
+<div class="page-view active" id="page-login">
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo-wrap">
+        <div class="auth-logo-icon"><i class="fas fa-graduation-cap"></i></div>
+        <span class="auth-brand">Eduvia</span>
+      </div>
+
+      <h1 class="auth-heading" data-i18n="login-heading">Welcome back</h1>
+      <p class="auth-subheading" data-i18n="login-sub">Sign in to continue your learning journey</p>
+
+      <!-- Demo alert -->
+      <div class="alert alert-error" id="demo-alert" style="display:none;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span data-i18n="error-invalid">Invalid username or password.</span>
+      </div>
+
+      <div class="auth-form">
+        <!-- Username -->
+        <div class="field-group">
+          <label class="field-label" data-i18n="label-username">Username</label>
+          <div class="input-wrap">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" class="auth-input" id="demo-username" data-i18n-ph="ph-username" placeholder="Enter your username" autocomplete="username">
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label" data-i18n="label-password">Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" class="auth-input" id="demo-password" data-i18n-ph="ph-password" placeholder="Enter your password" autocomplete="current-password">
+            <button type="button" class="pw-toggle" onclick="togglePw('demo-password','pw-eye')" aria-label="Toggle password">
+              <i class="fas fa-eye" id="pw-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="auth-btn" onclick="demoLogin()" id="login-btn">
+          <i class="fas fa-sign-in-alt"></i>
+          <span data-i18n="btn-login">Sign In</span>
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        <span data-i18n="login-footer">Don't have an account?</span>
+        <a href="#" class="auth-link" onclick="showPage('register', document.querySelectorAll('.tab-pill')[1]); return false;" data-i18n="login-footer-link">Create one</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ REGISTER PAGE ════════════════ -->
+<div class="page-view" id="page-register">
+  <div class="auth-wrapper" style="max-width:480px;">
+    <div class="auth-card">
+      <div class="auth-logo-wrap">
+        <div class="auth-logo-icon"><i class="fas fa-graduation-cap"></i></div>
+        <span class="auth-brand">Eduvia</span>
+      </div>
+
+      <h1 class="auth-heading" data-i18n="reg-heading">Create your account</h1>
+      <p class="auth-subheading" data-i18n="reg-sub">Join Eduvia and start your learning journey today</p>
+
+      <div class="auth-form">
+        <!-- Username -->
+        <div class="field-group">
+          <label class="field-label" data-i18n="label-username">Username</label>
+          <div class="input-wrap">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" class="auth-input" data-i18n-ph="ph-username" placeholder="Enter your username" autocomplete="username">
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label" data-i18n="label-email">Email address</label>
+          <div class="input-wrap">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" class="auth-input" data-i18n-ph="ph-email" placeholder="your@email.com" autocomplete="email">
+          </div>
+        </div>
+
+        <!-- Role -->
+        <div class="field-group">
+          <label class="field-label" data-i18n="label-role">Role</label>
+          <div class="input-wrap">
+            <i class="fas fa-id-badge input-icon"></i>
+            <select class="auth-input" style="appearance:none; cursor:pointer;">
+              <option value="" disabled selected data-i18n="ph-role">Select your role</option>
+              <option data-i18n="role-student">Student</option>
+              <option data-i18n="role-instructor">Instructor</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label" data-i18n="label-password1">Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" class="auth-input" id="reg-pw1" data-i18n-ph="ph-password" placeholder="Create a password" oninput="checkStrength(this.value)">
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-pw1','pw-eye-r1')">
+              <i class="fas fa-eye" id="pw-eye-r1"></i>
+            </button>
+          </div>
+          <div class="pw-strength-wrap">
+            <div class="pw-strength-track">
+              <div class="pw-strength-fill" id="pw-strength-bar"></div>
+            </div>
+            <span class="pw-strength-lbl" id="pw-strength-lbl"></span>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="field-group">
+          <label class="field-label" data-i18n="label-password2">Confirm password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" class="auth-input" id="reg-pw2" data-i18n-ph="ph-confirm" placeholder="Repeat your password">
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-pw2','pw-eye-r2')">
+              <i class="fas fa-eye" id="pw-eye-r2"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="auth-btn">
+          <i class="fas fa-user-plus"></i>
+          <span data-i18n="btn-register">Create Account</span>
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        <span data-i18n="reg-footer">Already have an account?</span>
+        <a href="#" class="auth-link" onclick="showPage('login', document.querySelectorAll('.tab-pill')[0]); return false;" data-i18n="reg-footer-link">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── i18n ──────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    'login-heading':'Welcome back',
+    'login-sub':'Sign in to continue your learning journey',
+    'label-username':'Username', 'label-password':'Password',
+    'label-email':'Email address', 'label-role':'Role',
+    'label-password1':'Password', 'label-password2':'Confirm password',
+    'btn-login':'Sign In', 'btn-register':'Create Account',
+    'login-footer':"Don't have an account?", 'login-footer-link':'Create one',
+    'reg-heading':'Create your account',
+    'reg-sub':'Join Eduvia and start your learning journey today',
+    'reg-footer':'Already have an account?', 'reg-footer-link':'Sign in',
+    'error-invalid':'Invalid username or password.',
+    'ph-username':'Enter your username',
+    'ph-password':'Enter your password',
+    'ph-email':'your@email.com',
+    'ph-role':'Select your role',
+    'ph-confirm':'Repeat your password',
+    'role-student':'Student',
+    'role-instructor':'Instructor',
+    'weak':'Weak','fair':'Fair','good':'Good','strong':'Strong',
+  },
+  ar: {
+    'login-heading':'مرحباً بعودتك',
+    'login-sub':'سجّل دخولك لمواصلة رحلتك التعليمية',
+    'label-username':'اسم المستخدم', 'label-password':'كلمة المرور',
+    'label-email':'البريد الإلكتروني', 'label-role':'الدور',
+    'label-password1':'كلمة المرور', 'label-password2':'تأكيد كلمة المرور',
+    'btn-login':'تسجيل الدخول', 'btn-register':'إنشاء حساب',
+    'login-footer':'ليس لديك حساب؟', 'login-footer-link':'أنشئ حساباً',
+    'reg-heading':'أنشئ حسابك',
+    'reg-sub':'انضم إلى إدوفيا وابدأ رحلتك التعليمية اليوم',
+    'reg-footer':'لديك حساب بالفعل؟', 'reg-footer-link':'تسجيل الدخول',
+    'error-invalid':'اسم المستخدم أو كلمة المرور غير صحيحة.',
+    'ph-username':'أدخل اسم المستخدم',
+    'ph-password':'أدخل كلمة المرور',
+    'ph-email':'بريدك@الإلكتروني.com',
+    'ph-role':'اختر دورك',
+    'ph-confirm':'أعد كتابة كلمة المرور',
+    'role-student':'طالب',
+    'role-instructor':'مدرّس',
+    'weak':'ضعيف','fair':'مقبول','good':'جيد','strong':'قوي',
+  }
+};
+
+let lang = localStorage.getItem('language') || 'en';
+let theme = localStorage.getItem('theme') || 'dark';
+
+function applyTheme(t) {
+  theme = t;
+  document.documentElement.setAttribute('data-theme', t);
+  const icon = document.getElementById('theme-icon');
+  if (icon) icon.className = t === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', t);
+}
+function toggleTheme() { applyTheme(theme === 'dark' ? 'light' : 'dark'); }
+
+function applyLang(l) {
+  lang = l;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', l);
+  root.setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (I18N[l][k]) el.textContent = I18N[l][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const k = el.getAttribute('data-i18n-ph');
+    if (I18N[l][k]) el.placeholder = I18N[l][k];
+  });
+  localStorage.setItem('language', l);
+}
+function toggleLang() { applyLang(lang === 'en' ? 'ar' : 'en'); }
+
+function showPage(name, btn) {
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function togglePw(inputId, iconId) {
+  const inp = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (!inp || !icon) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  icon.className = inp.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+}
+
+function checkStrength(pw) {
+  const bar = document.getElementById('pw-strength-bar');
+  const lbl = document.getElementById('pw-strength-lbl');
+  if (!bar || !lbl) return;
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const levels = [
+    { lbl:'',       color:'transparent', w:'0%' },
+    { lbl:'weak',   color:'#fb7185',     w:'25%' },
+    { lbl:'fair',   color:'#fbbf24',     w:'50%' },
+    { lbl:'good',   color:'#38bdf8',     w:'75%' },
+    { lbl:'strong', color:'#34d399',     w:'100%' }
+  ];
+  const lvl = levels[score] || levels[0];
+  bar.style.width = lvl.w;
+  bar.style.background = lvl.color;
+  lbl.textContent = I18N[lang][lvl.lbl] || '';
+  lbl.style.color = lvl.color;
+}
+
+function demoLogin() {
+  const btn = document.getElementById('login-btn');
+  const alert = document.getElementById('demo-alert');
+  const u = document.getElementById('demo-username').value;
+  const p = document.getElementById('demo-password').value;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fas fa-sign-in-alt"></i><span data-i18n="btn-login">${I18N[lang]['btn-login']}</span>`;
+    if (!u || !p) {
+      alert.style.display = 'flex';
+      setTimeout(() => alert.style.display = 'none', 3000);
+    }
+  }, 1200);
+}
+
+// Init
+applyTheme(theme);
+applyLang(lang);
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,7 @@
 
     <!-- 🌍 Open Graph -->
     <meta property="og:title" content="Register - Eduvia">
-    <meta property="og:description" content="Register for Eduvia to start your learning journey with interactive AI-integrated courses in programming, mathematics, and English.">
+    <meta property="og:description" content="Register for Eduvia to start your learning journey.">
     <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/logo-eduvia1.jpg">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:type" content="website">
@@ -23,7 +23,7 @@
     <!-- 🐦 Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Register - Eduvia">
-    <meta name="twitter:description" content="Register for Eduvia to start your learning journey with interactive AI-integrated courses in programming, mathematics, and English.">
+    <meta name="twitter:description" content="Register for Eduvia to start your learning journey.">
     <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/logo-eduvia1.jpg">
 
     <!-- 🖼️ Favicon -->
@@ -31,16 +31,98 @@
 
     <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- 🎨 Styles -->
     <link rel="stylesheet" href="{% static 'accounts/register.css' %}">
 
-    <!-- 🖼️ Hero Background -->
+    <!-- Extra register-specific tweaks -->
     <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/3JrZfCbb/logo-eduvia1.jpg");
-        }
+      /* Password strength bar */
+      .pw-strength-wrap {
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .pw-strength-track {
+        flex: 1;
+        height: 3px;
+        background: var(--bg-card-2, #1a2236);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .pw-strength-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 99px;
+        transition: width .35s ease, background .35s ease;
+      }
+      .pw-strength-lbl {
+        font-size: 11px;
+        font-weight: 700;
+        min-width: 40px;
+        text-align: right;
+      }
+      [dir="rtl"] .pw-strength-lbl { text-align: left; }
+
+      /* Scrollable card on small screens */
+      @media (max-height: 700px) {
+        .auth-wrapper { align-items: flex-start; padding-top: 60px; padding-bottom: 24px; }
+        body { align-items: flex-start; }
+      }
+
+      /* Django form paragraphs */
+      form p {
+        margin: 0;
+        display: contents;
+      }
+      form p label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted, #5a6585);
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 7px;
+        transition: color .2s;
+      }
+      form p input,
+      form p select {
+        width: 100%;
+        background: var(--bg-base, #080b14);
+        border: 1.5px solid var(--border, rgba(120,130,180,.12));
+        border-radius: var(--radius-md, 12px);
+        color: var(--text-h, #f1f5ff);
+        padding: 12px 14px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: all .22s cubic-bezier(.4,0,.2,1);
+        outline: none;
+        margin-bottom: 4px;
+        box-sizing: border-box;
+      }
+      form p input:focus,
+      form p select:focus {
+        border-color: var(--accent, #8b5cf6);
+        box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+        background: var(--bg-panel, #0d1120);
+      }
+      form p input::placeholder { color: var(--text-muted, #5a6585); }
+
+      /* Wrap each Django form p in a field-group visually */
+      .django-form-field {
+        margin-bottom: 16px;
+      }
+      .django-form-field label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 7px;
+      }
     </style>
 
     <!-- 📊 Structured Data -->
@@ -56,92 +138,194 @@
                 "logo": {
                     "@type": "ImageObject",
                     "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
+                }
             },
             {
                 "@type": "WebPage",
                 "@id": "https://eduvia-ai.fly.dev/accounts/register/#webpage",
                 "url": "https://eduvia-ai.fly.dev/accounts/register/",
                 "name": "Register - Eduvia",
-                "description": "Register for Eduvia to start your learning journey with interactive AI-integrated courses in programming, mathematics, and English.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/accounts/register/#breadcrumb"
-                },
+                "description": "Register for Eduvia to start your learning journey.",
                 "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/accounts/register/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Register",
-                        "item": "https://eduvia-ai.fly.dev/accounts/register/"
-                    }
-                ]
             }
         ]
     }
     </script>
 </head>
 <body>
-<div class="toggle-container">
-    <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-        <i class="fas fa-moon"></i>
-    </div>
-    <div class="language-toggle" onclick="toggleLanguage()">
-        <i class="fas fa-globe"></i>
-    </div>
+
+<!-- Animated background -->
+<div class="auth-bg" aria-hidden="true">
+    <div class="auth-bg-orb auth-bg-orb-1"></div>
+    <div class="auth-bg-orb auth-bg-orb-2"></div>
+    <div class="auth-bg-orb auth-bg-orb-3"></div>
 </div>
 
-<div class="container">
-    <img src="{% static 'images/logo_eduvia1.jpg' %}" alt="Eduvia Logo" class="logo">
-    <h2 data-translate="heading">Create Your Eduvia Account</h2>
-    <p data-translate="subheading">Join us and start your learning journey today!</p>
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-    <form method="post" action="{% url 'accounts:register' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {% if form.errors %}
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <div class="errorlist">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-                <div class="errorlist">
-                    {{ error }}
-                </div>
+<!-- Theme / Language toggles -->
+<div class="toggle-container" role="toolbar" aria-label="Settings">
+    <button class="ctrl-btn" onclick="toggleDarkMode()" title="Toggle theme" aria-label="Toggle theme">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLanguage()" title="Toggle language" aria-label="Toggle language">
+        <i class="fas fa-globe"></i>
+    </button>
+</div>
+
+<main class="auth-wrapper" role="main">
+    <div class="auth-card">
+
+        <!-- Logo -->
+        <div class="auth-logo-wrap">
+            <img src="{% static 'images/logo_eduvia1.jpg' %}" alt="Eduvia Logo" class="auth-logo">
+            <span class="auth-brand">Eduvia</span>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="auth-heading" data-translate="heading">Create your account</h1>
+        <p class="auth-subheading" data-translate="subheading">Join Eduvia and start your learning journey today</p>
+
+        <!-- Server messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
             {% endfor %}
         {% endif %}
-        <button type="submit" data-translate="button-register">Register</button>
-    </form>
-    <div class="footer">
-        <p>
+
+        <!-- Non-field errors -->
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-error" role="alert">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Register form -->
+        <form method="post" action="{% url 'accounts:register' %}" class="auth-form" onsubmit="return handleSubmit(this)" novalidate>
+            {% csrf_token %}
+
+            {# ── Render each field manually for full styling control ── #}
+
+            <!-- Username -->
+            <div class="field-group">
+                <label class="field-label" for="id_username" data-translate="label-username">Username</label>
+                <div class="input-wrap">
+                    <i class="fas fa-user input-icon" aria-hidden="true"></i>
+                    {{ form.username }}
+                </div>
+                {% for error in form.username.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Email -->
+            {% if form.email %}
+            <div class="field-group">
+                <label class="field-label" for="id_email" data-translate="label-email">Email address</label>
+                <div class="input-wrap">
+                    <i class="fas fa-envelope input-icon" aria-hidden="true"></i>
+                    {{ form.email }}
+                </div>
+                {% for error in form.email.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Role -->
+            {% if form.role %}
+            <div class="field-group">
+                <label class="field-label" for="id_role" data-translate="label-role">Role</label>
+                <div class="input-wrap">
+                    <i class="fas fa-id-badge input-icon" aria-hidden="true"></i>
+                    {{ form.role }}
+                </div>
+                {% for error in form.role.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Password 1 -->
+            <div class="field-group">
+                <label class="field-label" for="id_password1" data-translate="label-password1">Password</label>
+                <div class="input-wrap">
+                    <i class="fas fa-lock input-icon" aria-hidden="true"></i>
+                    {{ form.password1 }}
+                    <button type="button" class="pw-toggle" onclick="togglePassword('id_password1','pw-eye-1')" aria-label="Toggle password visibility">
+                        <i class="fas fa-eye" id="pw-eye-1"></i>
+                    </button>
+                </div>
+                <!-- Password strength bar -->
+                <div class="pw-strength-wrap">
+                    <div class="pw-strength-track">
+                        <div class="pw-strength-fill" id="pw-strength-bar"></div>
+                    </div>
+                    <span class="pw-strength-lbl" id="pw-strength-lbl"></span>
+                </div>
+                {% for error in form.password1.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Password 2 -->
+            <div class="field-group">
+                <label class="field-label" for="id_password2" data-translate="label-password2">Confirm password</label>
+                <div class="input-wrap">
+                    <i class="fas fa-lock input-icon" aria-hidden="true"></i>
+                    {{ form.password2 }}
+                    <button type="button" class="pw-toggle" onclick="togglePassword('id_password2','pw-eye-2')" aria-label="Toggle confirm password visibility">
+                        <i class="fas fa-eye" id="pw-eye-2"></i>
+                    </button>
+                </div>
+                {% for error in form.password2.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            {# Any remaining fields Django might add #}
+            {% for field in form %}
+                {% if field.name not in "username,email,password1,password2,role" %}
+                <div class="field-group">
+                    <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="input-wrap">
+                        {{ field }}
+                    </div>
+                    {% for error in field.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Submit -->
+            <button type="submit" class="auth-btn" data-translate="button-register">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="auth-footer">
             <span data-translate="footer-text">Already have an account?</span>
-            <button class="login-btn" onclick="window.location.href='{% url 'accounts:login' %}'" data-translate="footer-link">Login here</button>
-        </p>
+            <a href="{% url 'accounts:login' %}" class="auth-link" data-translate="footer-link">Sign in</a>
+        </div>
+
     </div>
-</div>
+</main>
 
 <script src="{% static 'accounts/register.js' %}"></script>
+
+<!-- Style Django-rendered inputs after load -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Apply auth-input class to all Django-rendered inputs/selects
+  document.querySelectorAll('.input-wrap input, .input-wrap select').forEach(el => {
+    el.classList.add('auth-input');
+    // Add padding for icon
+    if (el.tagName === 'SELECT') {
+      el.style.paddingLeft = el.closest('[dir="rtl"]') ? '14px' : '42px';
+    }
+  });
+});
+</script>
 </body>
 </html>
