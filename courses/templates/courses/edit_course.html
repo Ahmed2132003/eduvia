@@ -107,75 +107,68 @@
     }
     </script>
 </head>
+
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo" data-translate="title">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">Menu</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
+
+<!-- Header -->
+<header class="header">
+    <div class="logo" data-translate="title">Eduvia</div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <h1 data-translate="hero-title">Edit Course</h1>
+</section>
+
+<!-- Content -->
+<div class="content">
+    <div class="overview-card">
+        <h2 data-translate="edit-course-title">Edit Course</h2>
+
+        <form method="post" action="{% url 'courses:edit_course' course_id=course.id course_slug=slugified_course_title|arabic_slug:course.id %}">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="form-group" style="
+              margin-top: 20px;
+              background: linear-gradient(135deg,#fef9f0,#fff8e1);
+              border: 1.5px solid #f59e0b;
+              border-radius: 10px;
+              padding: 18px 20px;
+            ">
+              <label style="
+                display: flex; align-items: flex-start; gap: 14px;
+                cursor: pointer; user-select: none;
+              ">
+                <input type="checkbox" name="is_finished" id="id_is_finished"
+                  {% if form.instance.is_finished %}checked{% endif %}
+                  style="width:20px;height:20px;margin-top:2px;accent-color:#f59e0b;flex-shrink:0;cursor:pointer;">
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:#92400e;margin-bottom:4px;">
+                    <i class="fas fa-flag-checkered"></i>
+                    Mark Course as Finished / Completed
+                  </div>
+                  <div style="font-size:13px;color:#a16207;line-height:1.6;">
+                    When checked, students who have completed all lessons will be able
+                    to download their <strong>Certificate of Completion</strong>.
+                    Only mark this when the course content is fully published.
+                  </div>
+                </div>
+              </label>
             </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Edit Course</h1>
-        <p data-translate="hero-desc">Update your course details and manage your educational content with ease.</p>
-    </section>
-
-    <!-- Content Section -->
-    <div class="content">
-        <!-- Course Edit Form -->
-        <div class="overview-card">
-            <h2 data-translate="edit-course-title">Edit Course</h2>
-            <p data-translate="edit-course-desc">Modify the course title, description, or category below.</p>
-
-            <!-- الحل هنا: استخدم arabic_slug بدل slugify -->
-            <form method="post" action="{% url 'courses:edit_course' course_id=course.id course_slug=slugified_course_title|arabic_slug:course.id %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn" data-translate="save-changes">Save Changes</button>
-            </form>
-        </div>
+            <button type="submit" class="btn" data-translate="save-changes">Save Changes</button>
+        </form>
     </div>
+</div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+<!-- Footer -->
+<footer class="footer">
+    <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
 
-    <script src="{% static 'courses/edit_course.js' %}"></script>
+<script src="{% static 'courses/edit_course.js' %}"></script>
+
 </body>
 </html>

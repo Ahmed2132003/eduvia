@@ -7,17 +7,12 @@ app_name = 'courses'
 urlpatterns = [
     path('', views.courses_view, name='courses'),
     path('search/', views.search_courses, name='search_courses'),
-
-    # ─── Access Denied (403) ────────────────────────────────────────────────
     path('access-denied/', views.access_denied, name='access_denied'),
-
     path('enroll/<int:course_id>/<path:course_slug>/', views.enroll_course, name='enroll_course'),
-
-    # Course details
     path('details/<int:course_id>/<path:course_slug>/', views.course_details_view, name='course_details'),
     path('details/<int:course_id>/', views.redirect_old_course_url, name='redirect_old_course_url'),
 
-    # ── Legacy video paths (kept intact) ────────────────────────────────────
+    # ── Legacy video paths ───────────────────────────────────────────────────
     path('instructor/dashboard/', views.instructor_dashboard, name='instructor_dashboard'),
     path('instructor/add_course/', views.add_course, name='add_course'),
     path('instructor/edit_course/<int:course_id>/<path:course_slug>/', views.edit_course, name='edit_course'),
@@ -38,102 +33,77 @@ urlpatterns = [
     path('instructor/add_alternative_quiz/<int:course_id>/<path:course_slug>/<int:video_id>/<path:video_slug>/', views.add_alternative_quiz, name='add_alternative_quiz'),
 
     # ════════════════════════════════════════════════════════════════════════
-    # ── NEW CURRICULUM SYSTEM
+    # NEW CURRICULUM SYSTEM
+    # NOTE: All fixed-segment AJAX URLs MUST come BEFORE greedy <path:course_slug>
     # ════════════════════════════════════════════════════════════════════════
-    #
-    # IMPORTANT: All fixed-segment AJAX URLs MUST come BEFORE the greedy
-    # <path:course_slug> builder URL, otherwise Django's <path:> converter
-    # will swallow "/section/create/", "/videos/json/", etc.
-    # ────────────────────────────────────────────────────────────────────────
 
-    # ── Videos JSON (AJAX) — no course_slug, fixed path ────────────────────
-    path(
-        'instructor/curriculum/<int:course_id>/videos/json/',
-        views.videos_json,
-        name='videos_json',
-    ),
+    # ── Videos JSON (AJAX) ──────────────────────────────────────────────────
+    path('instructor/curriculum/<int:course_id>/videos/json/',
+         views.videos_json, name='videos_json'),
 
-    # ── Section AJAX — all fixed paths, no course_slug ──────────────────────
+    # ── Section AJAX ────────────────────────────────────────────────────────
     path('instructor/curriculum/<int:course_id>/section/create/',
-         views_curriculum.section_create,  name='section_create'),
+         views_curriculum.section_create, name='section_create'),
     path('instructor/curriculum/<int:course_id>/section/reorder/',
          views_curriculum.section_reorder, name='section_reorder'),
     path('instructor/curriculum/<int:course_id>/section/<int:section_id>/update/',
-         views_curriculum.section_update,  name='section_update'),
+         views_curriculum.section_update, name='section_update'),
     path('instructor/curriculum/<int:course_id>/section/<int:section_id>/delete/',
-         views_curriculum.section_delete,  name='section_delete'),
+         views_curriculum.section_delete, name='section_delete'),
 
-    # ── Lesson AJAX — all fixed paths, no course_slug ───────────────────────
+    # ── Lesson AJAX ─────────────────────────────────────────────────────────
     path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/create/',
-         views_curriculum.lesson_create,   name='lesson_create'),
+         views_curriculum.lesson_create, name='lesson_create'),
     path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/reorder/',
-         views_curriculum.lesson_reorder,  name='lesson_reorder'),
+         views_curriculum.lesson_reorder, name='lesson_reorder'),
     path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/<int:lesson_id>/update/',
-         views_curriculum.lesson_update,   name='lesson_update'),
+         views_curriculum.lesson_update, name='lesson_update'),
     path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/<int:lesson_id>/delete/',
-         views_curriculum.lesson_delete,   name='lesson_delete'),
+         views_curriculum.lesson_delete, name='lesson_delete'),
 
-    # ── Curriculum builder page — MUST be last among /curriculum/ URLs ──────
-    # <path:course_slug> is greedy and would match everything above if placed first.
-    path(
-        'instructor/curriculum/<int:course_id>/<path:course_slug>/',
-        views_curriculum.curriculum_builder,
-        name='curriculum_builder',
-    ),
+    # ── Lesson Task AJAX (Instructor) ────────────────────────────────────────
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/<int:lesson_id>/task/create/',
+         views_curriculum.lesson_task_create, name='lesson_task_create'),
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/<int:lesson_id>/task/update/',
+         views_curriculum.lesson_task_update, name='lesson_task_update'),
+    path('instructor/curriculum/<int:course_id>/section/<int:section_id>/lesson/<int:lesson_id>/task/delete/',
+         views_curriculum.lesson_task_delete, name='lesson_task_delete'),
+
+    # ── Curriculum builder page (MUST be last among /curriculum/ URLs) ───────
+    path('instructor/curriculum/<int:course_id>/<path:course_slug>/',
+         views_curriculum.curriculum_builder, name='curriculum_builder'),
 
     # ── Student — Curriculum overview ────────────────────────────────────────
-    path(
-        'curriculum/<int:course_id>/<path:course_slug>/',
-        views_curriculum.course_curriculum_view,
-        name='course_curriculum',
-    ),
+    path('curriculum/<int:course_id>/<path:course_slug>/',
+         views_curriculum.course_curriculum_view, name='course_curriculum'),
 
     # ── Student — Lesson view ────────────────────────────────────────────────
-    path(
-        'lesson/<int:course_id>/<path:course_slug>/<int:lesson_id>/',
-        views_curriculum.lesson_view,
-        name='lesson_view',
-    ),
+    path('lesson/<int:course_id>/<path:course_slug>/<int:lesson_id>/',
+         views_curriculum.lesson_view, name='lesson_view'),
 
     # ── Student — Lesson progress AJAX ───────────────────────────────────────
-    path(
-        'lesson/progress/<int:lesson_id>/',
-        views_curriculum.lesson_progress_update,
-        name='lesson_progress_update',
-    ),
-    path(
-        'lesson/<int:lesson_id>/comment/',
-        views_curriculum.lesson_comment_add,
-        name='lesson_comment_add',
-    ),
-    path(
-        'lesson/<int:lesson_id>/comment/<int:comment_id>/delete/',
-        views_curriculum.lesson_comment_delete,
-        name='lesson_comment_delete',
-    ),
- 
-    # ── Lesson Ratings ────────────────────────────────────────────────────────
-    path(
-        'lesson/<int:lesson_id>/rate/',
-        views_curriculum.lesson_rate,
-        name='lesson_rate',
-    ),
-    path(
-        'lesson/<int:lesson_id>/rating-status/',
-        views_curriculum.lesson_rating_status,
-        name='lesson_rating_status',
-    ),
- 
-    # ── Lesson Attachments ────────────────────────────────────────────────────
-    path(
-        'lesson/<int:lesson_id>/attachment/upload/',
-        views_curriculum.lesson_attachment_upload,
-        name='lesson_attachment_upload',
-    ),
-    path(
-        'lesson/<int:lesson_id>/attachment/<int:attachment_id>/delete/',
-        views_curriculum.lesson_attachment_delete,
-        name='lesson_attachment_delete',
-    ),
+    path('lesson/progress/<int:lesson_id>/',
+         views_curriculum.lesson_progress_update, name='lesson_progress_update'),
 
+    # ── Student — Task Submit ────────────────────────────────────────────────
+    path('lesson/<int:lesson_id>/task/submit/',
+         views_curriculum.lesson_task_submit, name='lesson_task_submit'),
+
+    # ── Comments ─────────────────────────────────────────────────────────────
+    path('lesson/<int:lesson_id>/comment/',
+         views_curriculum.lesson_comment_add, name='lesson_comment_add'),
+    path('lesson/<int:lesson_id>/comment/<int:comment_id>/delete/',
+         views_curriculum.lesson_comment_delete, name='lesson_comment_delete'),
+
+    # ── Ratings ──────────────────────────────────────────────────────────────
+    path('lesson/<int:lesson_id>/rate/',
+         views_curriculum.lesson_rate, name='lesson_rate'),
+    path('lesson/<int:lesson_id>/rating-status/',
+         views_curriculum.lesson_rating_status, name='lesson_rating_status'),
+
+    # ── Attachments ──────────────────────────────────────────────────────────
+    path('lesson/<int:lesson_id>/attachment/upload/',
+         views_curriculum.lesson_attachment_upload, name='lesson_attachment_upload'),
+    path('lesson/<int:lesson_id>/attachment/<int:attachment_id>/delete/',
+         views_curriculum.lesson_attachment_delete, name='lesson_attachment_delete'),
 ]

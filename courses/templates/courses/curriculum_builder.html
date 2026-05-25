@@ -1178,7 +1178,220 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Pre-fetch videos in background so dropdown is instant when opened
   fetchLegacyVideos();
-});
+});ز
+let taskModalMode    = 'create';  // 'create' | 'edit'
+let taskSectionId    = null;
+let taskLessonId     = null;
+let currentTaskType  = 'mcq';
+let mcqQuestions     = [];   // [{question, options:[], correct_answer}]
+ 
+/* ── Open task modal ── */
+async function openTaskModal(sectionId, lessonId, mode = 'create') {
+  taskModalMode = mode;
+  taskSectionId = sectionId;
+  taskLessonId  = lessonId;
+  mcqQuestions  = [];
+ 
+  document.getElementById('task-modal-title').textContent =
+    mode === 'create' ? 'Add Task' : 'Edit Task';
+  document.getElementById('task-modal-save').innerHTML =
+    mode === 'create'
+      ? '<i class="fas fa-plus"></i> Add Task'
+      : '<i class="fas fa-save"></i> Save Changes';
+ 
+  clearTaskForm();
+ 
+  if (mode === 'edit') {
+    // fetch existing task data
+    try {
+      const res = await fetch(
+        `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/${lessonId}/task/get/`,
+        { headers: { 'X-CSRFToken': CSRF } }
+      );
+      const data = await res.json();
+      if (data.ok && data.task) prefillTaskForm(data.task);
+    } catch(e) { toast('Could not load task data.', 'error'); return; }
+  }
+  openModal('task-modal');
+  switchTaskType(currentTaskType);
+}
+ 
+function clearTaskForm() {
+  document.getElementById('task-title-input').value       = '';
+  document.getElementById('task-desc-input').value        = '';
+  document.getElementById('task-passing-input').value     = '70';
+  document.getElementById('task-ext-url-input').value     = '';
+  document.getElementById('task-essay-q-input').value     = '';
+  document.getElementById('task-type-hidden').value       = 'mcq';
+  currentTaskType = 'mcq';
+  mcqQuestions    = [];
+  renderMCQBuilder();
+}
+ 
+function prefillTaskForm(task) {
+  document.getElementById('task-title-input').value       = task.title || '';
+  document.getElementById('task-desc-input').value        = task.description || '';
+  document.getElementById('task-passing-input').value     = task.passing_score || 70;
+  document.getElementById('task-ext-url-input').value     = task.external_url || '';
+  currentTaskType = task.task_type || 'mcq';
+  document.getElementById('task-type-hidden').value       = currentTaskType;
+  if (currentTaskType === 'mcq') {
+    mcqQuestions = task.questions || [];
+    renderMCQBuilder();
+  } else if (currentTaskType === 'essay') {
+    const qs = (task.questions || []).map(q => q.question || '').join('\n');
+    document.getElementById('task-essay-q-input').value = qs;
+  }
+  switchTaskType(currentTaskType);
+  // Update type tabs
+  document.querySelectorAll('.task-type-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.type === currentTaskType);
+  });
+}
+ 
+function switchTaskType(type) {
+  currentTaskType = type;
+  document.getElementById('task-type-hidden').value = type;
+  document.querySelectorAll('.task-type-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.type === type)
+  );
+  document.querySelectorAll('.task-field-group').forEach(g => g.style.display = 'none');
+  const el = document.getElementById(`task-field-${type}`);
+  if (el) el.style.display = 'block';
+}
+ 
+/* ── MCQ Builder ── */
+function addMCQQuestion() {
+  mcqQuestions.push({ question: '', options: ['', '', '', ''], correct_answer: '' });
+  renderMCQBuilder();
+}
+ 
+function removeMCQQuestion(idx) {
+  mcqQuestions.splice(idx, 1);
+  renderMCQBuilder();
+}
+ 
+function renderMCQBuilder() {
+  const container = document.getElementById('mcq-questions-container');
+  if (!container) return;
+  if (mcqQuestions.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">
+        <i class="fas fa-plus-circle" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4;"></i>
+        No questions yet. Click "Add Question" to start.
+      </div>`;
+    return;
+  }
+  container.innerHTML = mcqQuestions.map((q, qi) => `
+    <div style="background:var(--bg,#f0f4f8);border:1.5px solid var(--border,#d1dde8);border-radius:8px;padding:14px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:12px;font-weight:700;color:var(--primary,#00a8cc);">Question ${qi + 1}</span>
+        <button onclick="removeMCQQuestion(${qi})" class="btn btn-danger btn-sm btn-icon"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block;">Question text *</label>
+        <input type="text" class="form-control" placeholder="Enter question…"
+          value="${escVal(q.question)}"
+          onchange="mcqQuestions[${qi}].question = this.value">
+      </div>
+      <div style="margin-bottom:8px;">
+        <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">Options (mark correct one)</label>
+        ${q.options.map((opt, oi) => `
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+            <input type="radio" name="correct_${qi}" value="${oi}"
+              ${q.correct_answer === opt && opt ? 'checked' : ''}
+              onchange="mcqQuestions[${qi}].correct_answer = mcqQuestions[${qi}].options[${oi}]"
+              title="Mark as correct">
+            <input type="text" class="form-control" style="flex:1;" placeholder="Option ${oi + 1}"
+              value="${escVal(opt)}"
+              oninput="mcqQuestions[${qi}].options[${oi}] = this.value">
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+ 
+function escVal(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+ 
+/* ── Save task ── */
+async function saveTask() {
+  const type         = document.getElementById('task-type-hidden').value;
+  const title        = document.getElementById('task-title-input').value.trim();
+  const description  = document.getElementById('task-desc-input').value.trim();
+  const passingScore = parseInt(document.getElementById('task-passing-input').value) || 70;
+  const externalUrl  = document.getElementById('task-ext-url-input').value.trim();
+ 
+  if (!title) { toast('Task title is required.', 'error'); return; }
+ 
+  let questions = [];
+  if (type === 'mcq') {
+    if (mcqQuestions.length === 0) { toast('Add at least one MCQ question.', 'error'); return; }
+    for (let i = 0; i < mcqQuestions.length; i++) {
+      const q = mcqQuestions[i];
+      if (!q.question.trim())     { toast(`Question ${i+1}: text is required.`, 'error'); return; }
+      if (!q.correct_answer)      { toast(`Question ${i+1}: mark the correct answer.`, 'error'); return; }
+      const filled = q.options.filter(o => o.trim());
+      if (filled.length < 2)      { toast(`Question ${i+1}: need at least 2 options.`, 'error'); return; }
+    }
+    questions = mcqQuestions.map(q => ({
+      question: q.question,
+      options:  q.options.filter(o => o.trim()),
+      correct_answer: q.correct_answer,
+    }));
+  } else if (type === 'essay') {
+    const raw = document.getElementById('task-essay-q-input').value.trim();
+    if (!raw) { toast('Add at least one essay question.', 'error'); return; }
+    questions = raw.split('\n').filter(l => l.trim()).map(l => ({ question: l.trim() }));
+  } else if (type === 'external_link' && !externalUrl) {
+    toast('External URL is required.', 'error'); return;
+  }
+ 
+  const body = {
+    task_type: type, title, description, questions,
+    passing_score: passingScore, external_url: externalUrl,
+  };
+ 
+  const saveBtn = document.getElementById('task-modal-save');
+  setLoading(saveBtn, true);
+ 
+  const url = taskModalMode === 'create'
+    ? `/courses/instructor/curriculum/${COURSE_ID}/section/${taskSectionId}/lesson/${taskLessonId}/task/create/`
+    : `/courses/instructor/curriculum/${COURSE_ID}/section/${taskSectionId}/lesson/${taskLessonId}/task/update/`;
+ 
+  const res = await api(url, body);
+  setLoading(saveBtn, false);
+ 
+  if (!res.ok) { toast(res.error || 'Failed to save task.', 'error'); return; }
+ 
+  closeModal('task-modal');
+  updateLessonTaskBadge(taskLessonId, true);
+  toast(taskModalMode === 'create' ? 'Task added!' : 'Task updated!');
+}
+ 
+async function deleteTask(sectionId, lessonId) {
+  if (!confirm('Delete this task? Students will lose their submissions.')) return;
+  const res = await api(
+    `/courses/instructor/curriculum/${COURSE_ID}/section/${sectionId}/lesson/${lessonId}/task/delete/`
+  );
+  if (!res.ok) { toast(res.error || 'Failed.', 'error'); return; }
+  updateLessonTaskBadge(lessonId, false);
+  toast('Task deleted.');
+}
+ 
+function updateLessonTaskBadge(lessonId, hasTask) {
+  const li = document.querySelector(`[data-lesson-id="${lessonId}"]`);
+  if (!li) return;
+  let badge = li.querySelector('.task-badge');
+  if (hasTask && !badge) {
+    badge = document.createElement('span');
+    badge.className = 'badge task-badge';
+    badge.style.cssText = 'background:rgba(139,92,246,.12);color:#8b5cf6;';
+    badge.innerHTML = '<i class="fas fa-tasks"></i> Task';
+    li.querySelector('.lesson-meta')?.appendChild(badge);
+  } else if (!hasTask && badge) {
+    badge.remove();
+  }
+}
+
 </script>
 </body>
 </html>

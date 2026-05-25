@@ -270,17 +270,19 @@ def download_certificate(request, course_id, course_slug):
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['title', 'description', 'category', 'image']
+        fields = ['title', 'description', 'category', 'image', 'is_finished']        
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'category': forms.Select(choices=Course.CATEGORY_CHOICES),
             'image': forms.URLInput(attrs={'placeholder': 'Enter image URL (e.g., Google Drive link)'}),
+            'is_finished': forms.CheckboxInput(),
         }
         labels = {
             'title': 'Course Title',
             'description': 'Description',
             'category': 'Category',
             'image': 'Image URL',
+            'is_finished': 'Mark Course as Finished (enables certificates)',
         }
 
     def clean_image(self):

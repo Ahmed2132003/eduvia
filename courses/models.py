@@ -81,7 +81,8 @@ class Course(models.Model):
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default='beginner')
     total_lessons = models.PositiveIntegerField(default=0)
     slug = models.SlugField(max_length=500, unique=True, allow_unicode=True, blank=True)
-
+    is_finished = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.title
 
@@ -517,3 +518,97 @@ class LessonAttachment(models.Model):
             return self.file_url.split('/')[-1] or self.file_url
         return "Attachment"
  
+class LessonTask(models.Model):
+    """
+    A task attached to a single Lesson (OneToOne).
+    Supports: MCQ | Essay | File Upload | External Link
+    """
+    TASK_TYPE_CHOICES = [
+        ('mcq',           'Multiple Choice (MCQ)'),
+        ('essay',         'Essay / Open Answer'),
+        ('file_upload',   'File Upload'),
+        ('external_link', 'External Link'),
+    ]
+ 
+    lesson = models.OneToOneField(
+        'Lesson',
+        on_delete=models.CASCADE,
+        related_name='task',
+    )
+    task_type = models.CharField(
+        max_length=20,
+        choices=TASK_TYPE_CHOICES,
+        default='mcq',
+    )
+    title        = models.CharField(max_length=300)
+    description  = models.TextField(blank=True)
+    questions    = models.JSONField(
+        default=list,
+        help_text=(
+            'MCQ: [{"question":"...","options":[...],"correct_answer":"..."}]. '
+            'Essay: [{"question":"..."}]. '
+            'File/Link: leave [].'
+        ),
+    )
+    passing_score = models.PositiveSmallIntegerField(
+        default=70,
+        help_text='Minimum % (0–100) required to pass.',
+    )
+    external_url = models.URLField(
+        blank=True,
+        help_text='For external_link tasks — URL students must visit.',
+    )
+    order      = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+ 
+    class Meta:
+        ordering = ['order']
+ 
+    def __str__(self):
+        return f'[{self.get_task_type_display()}] {self.title}'
+ 
+    def get_icon(self):
+        return {
+            'mcq':           'fas fa-list-ul',
+            'essay':         'fas fa-pen-nib',
+            'file_upload':   'fas fa-file-upload',
+            'external_link': 'fas fa-external-link-alt',
+        }.get(self.task_type, 'fas fa-tasks')
+ 
+ 
+class LessonTaskSubmission(models.Model):
+    """Tracks every student attempt on a LessonTask."""
+    task = models.ForeignKey(
+        'LessonTask',
+        on_delete=models.CASCADE,
+        related_name='submissions',
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='lesson_task_submissions',
+    )
+    attempt_number       = models.PositiveSmallIntegerField(default=1)
+    submitted_answers    = models.JSONField(default=list)
+    essay_answer         = models.TextField(blank=True)
+    file_url             = models.URLField(blank=True)
+    external_url_visited = models.BooleanField(default=False)
+    score                = models.FloatField(default=0.0, help_text='Percentage 0–100')
+    passed               = models.BooleanField(default=False)
+    submitted_at         = models.DateTimeField(auto_now_add=True)
+ 
+    class Meta:
+        ordering = ['-submitted_at']
+ 
+    def __str__(self):
+        return (
+            f'{self.user.username} → {self.task.title} '
+            f'(attempt {self.attempt_number}, {self.score:.0f}%)'
+        )
+ 
+
+
+
+
+
+
