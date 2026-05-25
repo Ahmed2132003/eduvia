@@ -534,3 +534,16 @@ body {
   .toggle-container { top: 12px; right: 12px; }
   [dir="rtl"] .toggle-container { right: auto; left: 12px; }
 }
+
+/* Keep theme/language toggle icons visually stable between LTR/RTL */
+[dir="rtl"] .dark-mode-toggle,
+[dir="rtl"] .language-toggle,
+[dir="rtl"] .ctrl-btn {
+  transform: none !important;
+}
+[dir="rtl"] .dark-mode-toggle i,
+[dir="rtl"] .language-toggle i,
+[dir="rtl"] .ctrl-btn i {
+  transform: none !important;
+  scale: 1 !important;
+}

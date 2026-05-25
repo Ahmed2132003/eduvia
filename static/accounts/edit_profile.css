@@ -645,3 +645,16 @@ html[dir="rtl"] .form-actions { flex-direction: row-reverse; }
 @media (max-width: 400px) {
     .edit-profile-container { padding: 0 12px; }
 }
+
+/* Keep theme/language toggle icons visually stable between LTR/RTL */
+[dir="rtl"] .dark-mode-toggle,
+[dir="rtl"] .language-toggle,
+[dir="rtl"] .ctrl-btn {
+  transform: none !important;
+}
+[dir="rtl"] .dark-mode-toggle i,
+[dir="rtl"] .language-toggle i,
+[dir="rtl"] .ctrl-btn i {
+  transform: none !important;
+  scale: 1 !important;
+}

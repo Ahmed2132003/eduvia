@@ -291,3 +291,16 @@ body::before {
   .verify-heading { font-size: 20px; }
   .code-input { font-size: 18px; letter-spacing: 4px; }
 }
+
+/* Keep theme/language toggle icons visually stable between LTR/RTL */
+[dir="rtl"] .dark-mode-toggle,
+[dir="rtl"] .language-toggle,
+[dir="rtl"] .ctrl-btn {
+  transform: none !important;
+}
+[dir="rtl"] .dark-mode-toggle i,
+[dir="rtl"] .language-toggle i,
+[dir="rtl"] .ctrl-btn i {
+  transform: none !important;
+  scale: 1 !important;
+}

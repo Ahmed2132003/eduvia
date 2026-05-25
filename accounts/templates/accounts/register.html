@@ -233,10 +233,20 @@
             <!-- Role -->
             {% if form.role %}
             <div class="field-group">
-                <label class="field-label" for="id_role" data-translate="label-role">Role</label>
-                <div class="input-wrap">
-                    <i class="fas fa-id-badge input-icon" aria-hidden="true"></i>
-                    {{ form.role }}
+                <label id="id_role_label" class="field-label block" data-translate="label-role">Role</label>
+                <div class="mt-3 space-y-3" role="radiogroup" aria-labelledby="id_role_label">
+                    {% for value, text in form.role.field.choices %}
+                    <label class="flex items-center gap-3 leading-none">
+                        <input
+                            type="radio"
+                            name="{{ form.role.html_name }}"
+                            value="{{ value }}"
+                            class="h-4 w-4 shrink-0"
+                            {% if form.role.value == value %}checked{% endif %}
+                        >
+                        <span class="text-sm sm:text-base">{{ text }}</span>
+                    </label>
+                    {% endfor %}
                 </div>
                 {% for error in form.role.errors %}
                     <div class="field-error">{{ error }}</div>
