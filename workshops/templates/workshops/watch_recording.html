@@ -1,210 +1,1373 @@
 {% load static i18n %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Recording — {{ recording.live_session.title }} | Eduvia</title>
 
-  <!-- ✅ Title -->
-  <title>Watch Recording - {{ recording.live_session.title }} | Eduvia</title>
-
-  <!-- 🔍 SEO Meta -->
+  <!-- SEO Meta -->
   <meta name="description" content="Watch the recorded workshop '{{ recording.live_session.title }}' on Eduvia and learn on your schedule.">
   <meta name="keywords" content="Eduvia, recorded session, watch recording, coding session, AI workshops, online learning, instructor video, recorded course, learn programming">
   <meta name="author" content="Eduvia Team">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/workshops/watch-recording/{{ recording.id }}/{{ recording.live_session.title|slugify }}/">
 
-  <!-- 🔗 Open Graph Meta -->
+  <!-- Open Graph -->
   <meta property="og:title" content="Watch Recording - {{ recording.live_session.title }} | Eduvia">
   <meta property="og:description" content="Rewatch '{{ recording.live_session.title }}' on Eduvia, uploaded by expert instructors.">
   <meta property="og:type" content="video.other">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/workshops/watch-recording/{{ recording.id }}/{{ recording.live_session.title|slugify }}/">
   <meta property="og:image" content="https://i.postimg.cc/GtYxPYSQ/workshops3.jpg">
 
-  <!-- 🐦 Twitter Card -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Watch Recording - {{ recording.live_session.title }} | Eduvia">
   <meta name="twitter:description" content="Replay the workshop '{{ recording.live_session.title }}' at your own pace and learn from top instructors.">
   <meta name="twitter:image" content="https://i.postimg.cc/GtYxPYSQ/workshops3.jpg">
 
-  <!-- 🌐 Favicon -->
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
 
-  <!-- 🌐 Styles -->
+  <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'workshops/watch_recording.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🎨 Custom Style -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/GtYxPYSQ/workshops3.jpg");
-    }
-  </style>
-
-  <!-- 🧠 Structured Data (JSON-LD) -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
-    {
+  {
     "@context": "https://schema.org",
     "@graph": [
-        {
+      {
         "@type": "Organization",
         "@id": "https://eduvia-ai.fly.dev/#organization",
         "name": "Eduvia",
         "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-            "@type": "ImageObject",
-            "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg"
-        },
+        "logo": { "@type": "ImageObject", "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg" },
         "sameAs": [
-            "https://www.facebook.com/share/18iRSctdxN/",
-            "https://x.com/Eduvia7",
-            "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
+          "https://www.facebook.com/share/18iRSctdxN/",
+          "https://x.com/Eduvia7",
+          "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
         ]
-        },
-        {
-        "@type": "WebSite",
-        "@id": "https://eduvia-ai.fly.dev/#website",
-        "url": "https://eduvia-ai.fly.dev",
-        "name": "Eduvia AI Learning Platform",
-        "publisher": {
-            "@id": "https://eduvia-ai.fly.dev/#organization"
-        }
-        },
-        {
-        "@type": "Course",
-        "name": "{{ recording.live_session.title|escapejs }}",
-        "description": "Recorded workshop titled '{{ recording.live_session.title|escapejs }}' led by {{ recording.live_session.instructor.user.username }} on Eduvia.",
-        "provider": {
-            "@type": "Organization",
-            "name": "Eduvia",
-            "url": "https://eduvia-ai.fly.dev"
-        }
-        },
-        {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-            },
-            {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Workshops",
-            "item": "https://eduvia-ai.fly.dev/workshops/"
-            },
-            {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Recordings",
-            "item": "https://eduvia-ai.fly.dev/workshops/"
-            },
-            {
-            "@type": "ListItem",
-            "position": 4,
-            "name": "{{ recording.live_session.title|escapejs }}",
-            "item": "https://eduvia-ai.fly.dev/workshops/watch-recording/{{ recording.id }}/{{ recording.live_session.title|slugify }}/"
-            }
-        ]
-        },
-        {
+      },
+      {
         "@type": "VideoObject",
         "name": "{{ recording.live_session.title|escapejs }}",
         "description": "Replay of the session '{{ recording.live_session.title|escapejs }}' by {{ recording.live_session.instructor.user.username }} hosted on Eduvia.",
         "thumbnailUrl": "https://i.postimg.cc/GtYxPYSQ/workshops3.jpg",
         "uploadDate": "{{ recording.uploaded_at|date:'c' }}",
         "contentUrl": "{{ recording.video_file|default:'https://drive.google.com/' }}",
-        "embedUrl": "{{ recording.video_file|default:'https://drive.google.com/' }}",
-        "interactionStatistic": {
-            "@type": "InteractionCounter",
-            "interactionType": { "@type": "WatchAction" },
-            "userInteractionCount": 100  <!-- يمكنك ربطها لاحقًا بعدد المشاهدات -->
-        },
-        "publisher": {
-            "@type": "Organization",
-            "name": "Eduvia",
-            "logo": {
-            "@type": "ImageObject",
-            "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg"
-            }
-        }
-        }
+        "publisher": { "@type": "Organization", "name": "Eduvia" }
+      }
     ]
-    }
-    </script>
+  }
+  </script>
 
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   Identical token set to lesson_view.html
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --sidebar-w:  300px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ═══════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0;
+  text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; overflow: hidden;
+}
+.topbar-breadcrumb a {
+  color: var(--text-muted); text-decoration: none; transition: var(--trans);
+  white-space: nowrap;
+}
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .bc-sep { font-size: 11px; opacity: .4; flex-shrink: 0; }
+.topbar-breadcrumb .bc-current {
+  color: var(--text-p); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ═══ LAYOUT ════════════════════════════════════════════════════════════ */
+.page-layout {
+  display: flex;
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+}
+.main-area {
+  flex: 1; display: flex;
+  flex-direction: column; min-width: 0;
+}
+
+/* ═══ VIDEO SHELL ═══════════════════════════════════════════════════════ */
+.video-shell {
+  background: #000; position: relative;
+  width: 100%; aspect-ratio: 16/9; max-height: 62vh;
+  flex-shrink: 0;
+}
+.video-shell iframe {
+  width: 100%; height: 100%; border: none; display: block;
+}
+.video-error-state {
+  width: 100%; height: 100%; min-height: 280px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px;
+  background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+  color: var(--text-muted);
+}
+.video-error-state i { font-size: 52px; opacity: .25; }
+.video-error-state p { font-size: 14px; }
+
+/* Progress strip */
+.vid-strip { height: 3px; background: var(--bg-card-2); position: relative; }
+.vid-strip-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet-500), var(--gold-400));
+  width: 0%; transition: width .3s ease;
+}
+
+/* ═══ CONTENT BODY ══════════════════════════════════════════════════════ */
+.content-body { flex: 1; background: var(--bg-panel); }
+.content-inner { max-width: 900px; margin: 0 auto; padding: 32px 28px 80px; }
+
+/* ═══ TITLE BLOCK ═══════════════════════════════════════════════════════ */
+.title-block { margin-bottom: 28px; }
+.lesson-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; letter-spacing: .4px;
+}
+.badge-recording { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2); }
+.badge-workshop  { background: rgba(167,139,250,.1); color: var(--violet-400); border: 1px solid rgba(167,139,250,.2); }
+.badge-free      { background: rgba(52,211,153,.1); color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+
+.recording-h1 {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 800;
+  color: var(--text-h); line-height: 1.25; letter-spacing: -.5px;
+  margin-bottom: 14px;
+}
+
+/* ── Meta Row ── */
+.meta-row {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  font-size: 13px; color: var(--text-muted);
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.meta-row span { display: flex; align-items: center; gap: 6px; }
+.meta-row a { color: var(--accent); text-decoration: none; }
+.meta-row a:hover { text-decoration: underline; }
+
+/* ═══ INFO CARDS ROW ════════════════════════════════════════════════════ */
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin: 28px 0;
+}
+.info-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px 18px;
+  display: flex; align-items: center; gap: 12px;
+  animation: cardReveal .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+.info-card:nth-child(1) { animation-delay: .05s; }
+.info-card:nth-child(2) { animation-delay: .10s; }
+.info-card:nth-child(3) { animation-delay: .15s; }
+.info-card:nth-child(4) { animation-delay: .20s; }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.info-card-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.ico-violet { background: var(--violet-glow); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.ico-gold   { background: rgba(251,191,36,.08); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+.ico-sky    { background: rgba(56,189,248,.08); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2); }
+.ico-green  { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+
+.info-card-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.info-card-value { font-size: 14px; color: var(--text-h); font-weight: 600; margin-top: 2px; }
+
+/* ═══ DESCRIPTION CARD ══════════════════════════════════════════════════ */
+.desc-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md); padding: 16px 20px;
+  font-size: 14px; color: var(--text-p); line-height: 1.75;
+  margin-bottom: 28px;
+}
+
+/* ═══ TABS ══════════════════════════════════════════════════════════════ */
+.tabs-bar {
+  display: flex; gap: 0; border-bottom: 1px solid var(--border);
+  margin: 36px 0 24px;
+}
+.tab-btn {
+  padding: 12px 18px; font-size: 13px; font-weight: 600;
+  color: var(--text-muted); background: transparent; border: none;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: var(--trans);
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: inherit;
+}
+.tab-btn:hover { color: var(--text-p); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-count {
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 1px 7px; border-radius: 99px; font-size: 10px; color: var(--text-muted);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══ COMMENTS ═══════════════════════════════════════════════════════════ */
+.comment-compose {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px; margin-bottom: 20px;
+}
+.comment-compose textarea {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 13px 15px; font-size: 14px; font-family: inherit;
+  line-height: 1.6; resize: vertical; min-height: 80px;
+  transition: var(--trans);
+}
+.comment-compose textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.comment-compose textarea::placeholder { color: var(--text-muted); }
+.comment-compose-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.cchar { font-size: 11px; color: var(--text-muted); }
+
+.comments-list { display: flex; flex-direction: column; gap: 12px; }
+.comment-item {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px; animation: fadeIn .3s ease;
+}
+.comment-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.c-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.c-name  { font-size: 13px; font-weight: 600; color: var(--text-h); }
+.c-date  { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.c-text  { font-size: 14px; color: var(--text-p); line-height: 1.6; }
+.c-del {
+  margin-left: auto; background: none; border: none; color: var(--text-muted);
+  font-size: 12px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: var(--trans);
+}
+.c-del:hover { color: var(--danger); background: rgba(251,113,133,.1); }
+
+/* ═══ RATING ════════════════════════════════════════════════════════════ */
+.rating-panel {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 28px; text-align: center;
+}
+.rating-avg-big {
+  font-size: 56px; font-family: var(--font-display);
+  font-weight: 800; color: var(--gold-400); line-height: 1;
+}
+.rating-avg-total { font-size: 13px; color: var(--text-muted); margin: 6px 0 24px; }
+.star-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
+.star-btn {
+  font-size: 38px; background: none; border: none; cursor: pointer;
+  color: var(--bg-card-2); line-height: 1; transition: var(--trans);
+}
+.star-btn:hover,.star-btn.lit { color: var(--gold-400); transform: scale(1.2); text-shadow: 0 0 12px rgba(251,191,36,.5); }
+.rating-sel-lbl { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.rating-submit-btn {
+  padding: 11px 28px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--gold-400), #f59e0b);
+  color: #1a0f00; font-size: 14px; font-weight: 700; border: none;
+  cursor: pointer; font-family: inherit; transition: var(--trans);
+}
+.rating-submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(251,191,36,.3); }
+.rating-submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.rating-fb { margin-top: 14px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
+.rating-fb.ok  { display: block; background: rgba(52,211,153,.1); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.rating-fb.err { display: block; background: rgba(251,113,133,.1); color: var(--danger); border: 1px solid rgba(251,113,133,.2); }
+.star-disp { font-size: 18px; display: inline-flex; gap: 2px; }
+.sd-full  { color: var(--gold-400); }
+.sd-empty { color: var(--bg-card-2); }
+
+/* ═══ ABOUT TAB ══════════════════════════════════════════════════════════ */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
+
+.about-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 20px;
+}
+.about-card h4 {
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  color: var(--text-h); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.about-card h4 i { color: var(--accent); }
+.about-card p, .about-card li { font-size: 13px; color: var(--text-p); line-height: 1.7; }
+.about-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.about-card ul li { display: flex; align-items: center; gap: 8px; }
+.about-card ul li i { color: var(--success); font-size: 11px; flex-shrink: 0; }
+
+.instructor-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 20px;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 16px;
+}
+.instr-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.instr-name { font-size: 16px; font-weight: 700; color: var(--text-h); margin-bottom: 4px; font-family: var(--font-display); }
+.instr-role { font-size: 12px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+/* ═══ NAV BAR ════════════════════════════════════════════════════════════ */
+.lesson-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 28px; border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+}
+.nav-btn {
+  padding: 10px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; border: 1px solid var(--border);
+  color: var(--text-muted); background: var(--bg-card);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  transition: var(--trans); cursor: pointer; font-family: inherit;
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-btn.primary:hover { background: var(--accent-d); }
+.nav-btn.disabled { opacity: .35; cursor: not-allowed; pointer-events: none; }
+
+/* ═══ SIDEBAR ════════════════════════════════════════════════════════════ */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: var(--bg-panel); border-left: 1px solid var(--border);
+  overflow-y: auto; display: flex; flex-direction: column;
+  position: sticky; top: var(--topbar-h); height: calc(100vh - var(--topbar-h));
+}
+[lang="ar"] .sidebar { border-left: none; border-right: 1px solid var(--border); }
+
+.sidebar-head {
+  padding: 16px; position: sticky; top: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border); z-index: 5;
+}
+.sidebar-head h3 {
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 700; color: var(--text-h); margin-bottom: 4px;
+}
+.sidebar-head p { font-size: 12px; color: var(--text-muted); }
+
+.sb-section {
+  padding: 9px 16px 7px;
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); background: rgba(8,11,20,.6);
+  border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 5px;
+}
+[data-theme="light"] .sb-section { background: rgba(244,246,252,.8); }
+
+.sb-recording {
+  display: flex; align-items: center; gap: 9px;
+  padding: 12px 16px; text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.025);
+  color: var(--text-muted); transition: var(--trans); position: relative;
+}
+[data-theme="light"] .sb-recording { border-bottom-color: rgba(0,0,0,.04); }
+.sb-recording:hover { background: var(--bg-card); color: var(--text-p); }
+.sb-recording.active {
+  background: var(--violet-glow); color: var(--accent);
+  border-left: 3px solid var(--accent);
+}
+[lang="ar"] .sb-recording.active { border-left: none; border-right: 3px solid var(--accent); }
+
+.sb-rec-icon {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  background: rgba(56,189,248,.08); color: var(--sky-400);
+  border: 1px solid rgba(56,189,248,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+}
+.sb-recording.active .sb-rec-icon { background: var(--violet-glow); color: var(--accent); border-color: var(--border-glow); }
+
+.sb-info { flex: 1; min-width: 0; }
+.sb-nm { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-dur { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ FOOTER ═════════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  padding: 40px 24px 28px;
+}
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px;
+}
+@media (max-width: 800px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .footer-inner { grid-template-columns: 1fr; } }
+
+.footer-brand .footer-logo {
+  font-family: var(--font-display); font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 10px; display: inline-block;
+}
+.footer-brand p { font-size: 13px; color: var(--text-muted); line-height: 1.65; max-width: 260px; margin-bottom: 16px; }
+
+.footer-social { display: flex; gap: 8px; }
+.social-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-muted); font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; transition: var(--trans);
+}
+.social-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.footer-col h4 {
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  color: var(--text-h); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+.footer-col h4 i { color: var(--accent); font-size: 11px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-col ul li a {
+  font-size: 13px; color: var(--text-muted); text-decoration: none;
+  transition: var(--trans); display: flex; align-items: center; gap: 6px;
+}
+.footer-col ul li a:hover { color: var(--accent); padding-left: 4px; }
+[lang="ar"] .footer-col ul li a:hover { padding-left: 0; padding-right: 4px; }
+
+.footer-bottom {
+  max-width: 1200px; margin: 28px auto 0;
+  padding-top: 20px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-size: 12px; color: var(--text-muted);
+}
+.footer-bottom a { color: var(--text-muted); text-decoration: none; }
+.footer-bottom a:hover { color: var(--accent); }
+
+/* ═══ EMPTY STATE ════════════════════════════════════════════════════════ */
+.empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
+.empty-state i { font-size: 36px; display: block; margin-bottom: 10px; opacity: .25; }
+
+/* ═══ SPINNER ════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Submit Button ── */
+.submit-btn {
+  padding: 12px 28px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+.submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.submit-btn-sm { padding: 9px 20px; font-size: 13px; box-shadow: none; }
+
+/* ═══ MOBILE ═════════════════════════════════════════════════════════════ */
+.sb-fab {
+  display: none; position: fixed; bottom: 24px; right: 20px; z-index: 400;
+  width: 52px; height: 52px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--accent); color: #fff; font-size: 20px;
+  box-shadow: 0 4px 20px rgba(139,92,246,.4);
+  align-items: center; justify-content: center; transition: var(--trans);
+}
+.sb-fab:hover { transform: scale(1.08); }
+[lang="ar"] .sb-fab { right: auto; left: 20px; }
+
+@media (max-width: 960px) {
+  .sidebar {
+    position: fixed; right: -100%; top: var(--topbar-h);
+    height: calc(100vh - var(--topbar-h)); z-index: 400;
+    box-shadow: -10px 0 40px rgba(0,0,0,.5);
+    transition: right .3s cubic-bezier(.4,0,.2,1);
+  }
+  [lang="ar"] .sidebar { right: auto; left: -100%; }
+  .sidebar.open { right: 0; }
+  [lang="ar"] .sidebar.open { left: 0; right: auto; }
+  .sb-fab { display: flex; }
+}
+@media (max-width: 640px) {
+  .content-inner { padding: 18px 14px 60px; }
+  .recording-h1 { font-size: 20px; }
+  .lesson-nav { padding: 12px 14px; }
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-breadcrumb .bc-current { display: none; }
+  .info-cards { grid-template-columns: 1fr 1fr; }
+}
+</style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+
+{# ── JS Data Layer ───────────────────────────────────────────────────────── #}
+<script>
+const APP = {
+  recordingId: {{ recording.id }},
+  csrf: '{{ csrf_token }}',
+  urls: {
+    rate:       '/workshops/recording/{{ recording.id }}/rate/',
+    rateStatus: '/workshops/recording/{{ recording.id }}/rating-status/',
+    comment:    '/workshops/recording/{{ recording.id }}/comment/',
+  },
+};
+</script>
+
+{# ── TOPBAR ──────────────────────────────────────────────────────────────── #}
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+
+  {# Breadcrumb #}
+  <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+    <a href="/workshops/" data-i18n="workshops">Workshops</a>
+    <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
+    <a href="/workshops/" data-i18n="recordings">Recordings</a>
+    <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
+    <span class="bc-current">{{ recording.live_session.title }}</span>
+  </nav>
+
+  <div class="topbar-actions">
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" id="lang-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <a href="/workshops/" class="tb-btn tb-btn-ghost">
+      <i class="fas fa-list-ul"></i>
+      <span data-i18n="all_sessions">All Sessions</span>
+    </a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-accent">
+          <i class="fas fa-tachometer-alt"></i>
+          <span data-i18n="dashboard">Dashboard</span>
+        </a>
+      {% endif %}
+    {% endif %}
+  </div>
+</header>
+
+{# ── PAGE LAYOUT ─────────────────────────────────────────────────────────── #}
+<div class="page-layout">
+
+  {# ══ MAIN AREA ════════════════════════════════════════════════════════════ #}
+  <div class="main-area">
+
+    {# ── Video Player ─────────────────────────────────────────────────────── #}
+    <div class="video-shell" id="video-shell">
+      {% if recording.video_file %}
+        <iframe
+          id="recording-iframe"
+          src="{{ recording.video_file }}"
+          frameborder="0"
+          allowfullscreen
+          allow="autoplay; encrypted-media"
+          onerror="this.style.display='none'; document.getElementById('video-error').style.display='flex';">
+        </iframe>
+        <div class="video-error-state" id="video-error" style="display:none;">
+          <i class="fas fa-video-slash"></i>
+          <p data-i18n="video_error">Failed to load the video. Please try again later.</p>
+        </div>
+      {% else %}
+        <div class="video-error-state">
+          <i class="fas fa-video-slash"></i>
+          <p data-i18n="no_video">No video available for this recording.</p>
+        </div>
+      {% endif %}
+    </div>
+    <div class="vid-strip"><div class="vid-strip-fill"></div></div>
+
+    {# ── Content Body ─────────────────────────────────────────────────────── #}
+    <div class="content-body">
+      <div class="content-inner">
+
+        {# ── Title Block ── #}
+        <div class="title-block">
+          <div class="lesson-badges">
+            <span class="badge badge-recording">
+              <i class="fas fa-play-circle"></i>
+              <span data-i18n="recording">Recording</span>
+            </span>
+            <span class="badge badge-workshop">
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span data-i18n="workshop">Workshop</span>
+            </span>
+            {% if recording.live_session.is_free %}
+            <span class="badge badge-free">
+              <i class="fas fa-unlock"></i>
+              <span data-i18n="free">Free</span>
+            </span>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
+          </div>
+          <h1 class="recording-h1">{{ recording.live_session.title }}</h1>
+          <div class="meta-row">
+            <span>
+              <i class="fas fa-chalkboard-teacher"></i>
+              <a href="#">{{ recording.live_session.instructor.user.get_full_name|default:recording.live_session.instructor.user.username }}</a>
+            </span>
+            <span>
+              <i class="fas fa-calendar-alt"></i>
+              {{ recording.uploaded_at|date:"M d, Y" }}
+            </span>
+            <span>
+              <i class="fas fa-star" style="color:var(--gold-400)"></i>
+              <span id="meta-avg">—</span>
+              <span style="color:var(--text-muted)">(<span id="meta-total">—</span> <span data-i18n="ratings">ratings</span>)</span>
+            </span>
+            {% if recording.live_session.session_date %}
+            <span>
+              <i class="fas fa-broadcast-tower" style="color:var(--rose-400)"></i>
+              <span data-i18n="live_date">Live</span>: {{ recording.live_session.session_date|date:"M d, Y" }}
+            </span>
+            {% endif %}
+          </div>
+        </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Watch Recording: {{ recording.live_session.title }}</h1>
-        <p data-translate="hero-subtitle">Enjoy the recorded session '{{ recording.live_session.title }}' at your own pace.</p>
-        <a href="#recording-container" class="btn" data-translate="hero-btn">Watch Now</a>
-    </section>
+        {# ── Info Cards ── #}
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-card-icon ico-violet"><i class="fas fa-user-tie"></i></div>
+            <div>
+              <div class="info-card-label" data-i18n="instructor">Instructor</div>
+              <div class="info-card-value">{{ recording.live_session.instructor.user.get_full_name|default:recording.live_session.instructor.user.username }}</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-icon ico-sky"><i class="fas fa-upload"></i></div>
+            <div>
+              <div class="info-card-label" data-i18n="uploaded">Uploaded</div>
+              <div class="info-card-value">{{ recording.uploaded_at|date:"M d, Y" }}</div>
+            </div>
+          </div>
+          {% if recording.live_session.session_date %}
+          <div class="info-card">
+            <div class="info-card-icon ico-gold"><i class="fas fa-broadcast-tower"></i></div>
+            <div>
+              <div class="info-card-label" data-i18n="session_date">Session Date</div>
+              <div class="info-card-value">{{ recording.live_session.session_date|date:"M d, Y" }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if recording.live_session.category %}
+          <div class="info-card">
+            <div class="info-card-icon ico-green"><i class="fas fa-tag"></i></div>
+            <div>
+              <div class="info-card-label" data-i18n="category">Category</div>
+              <div class="info-card-value">{{ recording.live_session.category }}</div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
 
-    <!-- Recording Container -->
-    <div class="container" id="recording-container">
-        <h1 data-translate="container-title">Recording: {{ recording.live_session.title }}</h1>
-        <p><strong data-translate="uploaded-label">Uploaded:</strong> {{ recording.uploaded_at }}</p>
-        <p><strong data-translate="instructor-label">Instructor:</strong> {{ recording.live_session.instructor.user.username }}</p>
-        <iframe class="video-iframe" src="{{ recording.video_file }}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" onerror="this.style.display='none'; document.querySelector('#video-error').style.display='block';"></iframe>
-        <p id="video-error" style="color: red; display: none;" data-translate="video-error">Failed to load the video. Please check the URL or try again later.</p>
-        <a href="{% url 'workshops:live_session_list' %}" class="btn btn-secondary mt-3" data-translate="back-btn">Back to Sessions</a>
+        {# ── Description ── #}
+        {% if recording.live_session.description %}
+        <div class="desc-card">{{ recording.live_session.description }}</div>
+        {% endif %}
+
+        {# ═══ TABS ═════════════════════════════════════════════════════════ #}
+        <div class="tabs-bar">
+          <button class="tab-btn active" onclick="switchTab('comments', this)">
+            <i class="fas fa-comments"></i>
+            <span data-i18n="comments">Comments</span>
+            <span class="tab-count" id="comment-count">{{ comments.count|default:0 }}</span>
+          </button>
+          <button class="tab-btn" onclick="switchTab('about', this)">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="about">About</span>
+          </button>
+          <button class="tab-btn" onclick="switchTab('rating', this)">
+            <i class="fas fa-star"></i>
+            <span data-i18n="rate">Rate</span>
+          </button>
+        </div>
+
+        {# ── COMMENTS TAB ── #}
+        <div class="tab-panel active" id="tab-comments">
+          {% if user.is_authenticated %}
+          <div class="comment-compose">
+            <textarea id="comment-inp"
+              placeholder="Share your thoughts or ask a question…"
+              rows="3" maxlength="2000"
+              oninput="document.getElementById('cchar-count').textContent = this.value.length + ' / 2000'"></textarea>
+            <div class="comment-compose-footer">
+              <span class="cchar" id="cchar-count">0 / 2000</span>
+              <button class="submit-btn submit-btn-sm" onclick="submitComment()" id="comment-btn">
+                <i class="fas fa-paper-plane"></i>
+                <span data-i18n="post">Post</span>
+              </button>
+            </div>
+          </div>
+          {% else %}
+          <div style="padding:16px 18px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:20px; font-size:13px; color:var(--text-muted); text-align:center;">
+            <i class="fas fa-lock" style="margin-right:6px; color:var(--accent);"></i>
+            <a href="/accounts/login/" style="color:var(--accent);" data-i18n="login_to_comment">Login to leave a comment</a>
+          </div>
+          {% endif %}
+
+          <div class="comments-list" id="comments-list">
+            {% for comment in comments %}
+            <div class="comment-item" id="comment-{{ comment.id }}">
+              <div class="comment-head">
+                <div class="c-avatar">{{ comment.user.username|slice:":1"|upper }}</div>
+                <div>
+                  <div class="c-name">{{ comment.user.get_full_name|default:comment.user.username }}</div>
+                  <div class="c-date">{{ comment.created_at|date:"M d, Y" }}</div>
+                </div>
+                {% if comment.user == request.user or is_owner %}
+                <button class="c-del" onclick="deleteComment({{ comment.id }})"><i class="fas fa-trash-alt"></i></button>
+                {% endif %}
+              </div>
+              <div class="c-text">{{ comment.content }}</div>
+            </div>
+            {% empty %}
+            <div class="empty-state" id="no-comments">
+              <i class="fas fa-comment-slash"></i>
+              <span data-i18n="no_comments">No comments yet. Be the first!</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        {# ── ABOUT TAB ── #}
+        <div class="tab-panel" id="tab-about">
+          {# Instructor card #}
+          <div class="instructor-card">
+            <div class="instr-avatar">{{ recording.live_session.instructor.user.username|slice:":1"|upper }}</div>
+            <div>
+              <div class="instr-name">{{ recording.live_session.instructor.user.get_full_name|default:recording.live_session.instructor.user.username }}</div>
+              <div class="instr-role" data-i18n="instructor">Instructor</div>
+            </div>
+          </div>
+
+          <div class="about-grid">
+            <div class="about-card">
+              <h4><i class="fas fa-info-circle"></i> <span data-i18n="about_session">About This Session</span></h4>
+              <p>{{ recording.live_session.description|default:"No description provided." }}</p>
+            </div>
+            <div class="about-card">
+              <h4><i class="fas fa-check-circle"></i> <span data-i18n="what_youll_learn">What You'll Learn</span></h4>
+              <ul>
+                {% for point in recording.live_session.learning_points.all %}
+                <li><i class="fas fa-check"></i> {{ point }}</li>
+                {% empty %}
+                <li><i class="fas fa-check"></i> <span data-i18n="workshop_skills">Workshop skills and techniques</span></li>
+                <li><i class="fas fa-check"></i> <span data-i18n="practical_examples">Practical real-world examples</span></li>
+                <li><i class="fas fa-check"></i> <span data-i18n="expert_guidance">Expert guidance and insights</span></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {# ── RATING TAB ── #}
+        <div class="tab-panel" id="tab-rating">
+          <div class="rating-panel">
+            <div class="rating-avg-big" id="rat-avg-big">—</div>
+            <div style="margin:6px 0;">
+              <span class="star-disp" id="avg-stars">☆☆☆☆☆</span>
+            </div>
+            <div class="rating-avg-total" id="rat-total" data-i18n="loading">Loading…</div>
+            {% if user.is_authenticated %}
+            <div class="star-row" id="star-row">
+              {% for i in "54321" %}
+              <button class="star-btn" data-val="{{ i }}"
+                      onmouseenter="starHover({{ i }})" onmouseleave="starUnhover()"
+                      onclick="starClick({{ i }})">★</button>
+              {% endfor %}
+            </div>
+            <p class="rating-sel-lbl" id="rat-sel-lbl" data-i18n="select_rating">Select a rating</p>
+            <button class="rating-submit-btn" id="rat-submit-btn" onclick="submitRating()" disabled data-i18n="submit_rating">Submit Rating</button>
+            {% else %}
+            <div style="font-size:13px; color:var(--text-muted); margin-top:14px;">
+              <a href="/accounts/login/" style="color:var(--accent);" data-i18n="login_to_rate">Login to rate this recording</a>
+            </div>
+            {% endif %}
+            <div class="rating-fb" id="rat-fb"></div>
+          </div>
+        </div>
+
+      </div>{# /content-inner #}
+    </div>{# /content-body #}
+
+    {# ── Nav Bar ──────────────────────────────────────────────────────────── #}
+    <div class="lesson-nav">
+      {% if prev_recording %}
+        <a href="{% url 'workshops:watch_recording' prev_recording.id prev_recording.live_session.title|slugify %}"
+           class="nav-btn">
+          <i class="fas fa-arrow-left"></i>
+          <span data-i18n="prev_recording">Previous</span>
+        </a>
+      {% else %}
+        <span class="nav-btn disabled">
+          <i class="fas fa-arrow-left"></i>
+          <span data-i18n="prev_recording">Previous</span>
+        </span>
+      {% endif %}
+
+      <a href="{% url 'workshops:live_session_list' %}"
+         style="font-size:13px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:5px;">
+        <i class="fas fa-th-list"></i>
+        <span data-i18n="all_sessions">All Sessions</span>
+      </a>
+
+      {% if next_recording %}
+        <a href="{% url 'workshops:watch_recording' next_recording.id next_recording.live_session.title|slugify %}"
+           class="nav-btn primary">
+          <span data-i18n="next_recording">Next</span>
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      {% else %}
+        <a href="{% url 'workshops:live_session_list' %}" class="nav-btn primary">
+          <i class="fas fa-th-list"></i>
+          <span data-i18n="back_sessions">Back to Sessions</span>
+        </a>
+      {% endif %}
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
-    </footer>
+  </div>{# /main-area #}
 
-    <!-- JavaScript -->
-    <script src="{% static 'workshops/watch_recording.js' %}"></script>
+  {# ══ SIDEBAR ══════════════════════════════════════════════════════════════ #}
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <h3>
+        <i class="fas fa-film" style="color:var(--accent);margin-right:6px;"></i>
+        <span data-i18n="all_recordings">All Recordings</span>
+      </h3>
+      <p>{{ recording.live_session.title }}</p>
+    </div>
+
+    {% if other_recordings %}
+      <div class="sb-section">
+        <i class="fas fa-folder" style="font-size:9px;"></i>
+        <span data-i18n="related_sessions">Related Sessions</span>
+      </div>
+      {% for rec in other_recordings %}
+      <a href="{% url 'workshops:watch_recording' rec.id rec.live_session.title|slugify %}"
+         class="sb-recording {% if rec.id == recording.id %}active{% endif %}">
+        <div class="sb-rec-icon">
+          <i class="fas fa-play"></i>
+        </div>
+        <div class="sb-info">
+          <div class="sb-nm">{{ rec.live_session.title }}</div>
+          <div class="sb-dur">
+            <i class="fas fa-calendar-alt"></i>
+            {{ rec.uploaded_at|date:"M d, Y" }}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state" style="padding: 32px 16px;">
+        <i class="fas fa-film"></i>
+        <span data-i18n="no_other_recordings">No other recordings available.</span>
+      </div>
+    {% endif %}
+  </aside>
+
+</div>{# /page-layout #}
+
+<button class="sb-fab" id="sb-fab" onclick="toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</button>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+{# ── FOOTER ──────────────────────────────────────────────────────────────── #}
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">Eduvia</div>
+      <p data-i18n="footer_desc">Empowering learners with cutting-edge workshops, courses, and live sessions from expert instructors worldwide.</p>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://x.com/Eduvia7" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter">
+          <i class="fab fa-x-twitter"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4><i class="fas fa-compass"></i> <span data-i18n="footer_explore">Explore</span></h4>
+      <ul>
+        <li><a href="/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_home">Home</span></a></li>
+        <li><a href="/courses/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_courses">Courses</span></a></li>
+        <li><a href="/workshops/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_workshops">Workshops</span></a></li>
+        <li><a href="/competitions/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_competitions">Competitions</span></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4><i class="fas fa-tools"></i> <span data-i18n="footer_tools">Tools</span></h4>
+      <ul>
+        <li><a href="/chatbot/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_chatbot">Chatbot</span></a></li>
+        <li><a href="/performance/dashboard/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_performance">Performance</span></a></li>
+        {% if user.is_authenticated %}
+        <li><a href="/accounts/profile/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_profile">Profile</span></a></li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4><i class="fas fa-life-ring"></i> <span data-i18n="footer_support">Support</span></h4>
+      <ul>
+        <li><a href="/about/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_about">About Us</span></a></li>
+        <li><a href="/contact_us/"><i class="fas fa-chevron-right" style="font-size:9px;"></i> <span data-i18n="nav_contact">Contact Us</span></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 Eduvia. <span data-i18n="footer_rights">All rights reserved.</span></span>
+    <span>
+      <span data-i18n="made_with">Made with</span>
+      <i class="fas fa-heart" style="color:var(--rose-400); margin: 0 3px;"></i>
+      <span data-i18n="for_learners">for learners everywhere</span>
+    </span>
+  </div>
+</footer>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    workshops:'Workshops', recordings:'Recordings', all_sessions:'All Sessions',
+    dashboard:'Dashboard', all_recordings:'All Recordings',
+    related_sessions:'Related Sessions', no_other_recordings:'No other recordings.',
+    recording:'Recording', workshop:'Workshop', free:'Free',
+    instructor:'Instructor', uploaded:'Uploaded',
+    session_date:'Session Date', category:'Category',
+    comments:'Comments', about:'About', rate:'Rate',
+    post:'Post', login_to_comment:'Login to leave a comment',
+    no_comments:'No comments yet. Be the first!',
+    about_session:'About This Session', what_youll_learn:"What You'll Learn",
+    workshop_skills:'Workshop skills and techniques',
+    practical_examples:'Practical real-world examples',
+    expert_guidance:'Expert guidance and insights',
+    select_rating:'Select a rating', submit_rating:'Submit Rating',
+    login_to_rate:'Login to rate this recording',
+    loading:'Loading…', ratings:'ratings',
+    prev_recording:'Previous', next_recording:'Next',
+    back_sessions:'Back to Sessions',
+    video_error:'Failed to load the video. Please try again later.',
+    no_video:'No video available for this recording.',
+    footer_desc:'Empowering learners with cutting-edge workshops and live sessions.',
+    footer_explore:'Explore', footer_tools:'Tools', footer_support:'Support',
+    footer_rights:'All rights reserved.', made_with:'Made with', for_learners:'for learners everywhere',
+    nav_home:'Home', nav_courses:'Courses', nav_workshops:'Workshops',
+    nav_competitions:'Competitions', nav_chatbot:'Chatbot',
+    nav_performance:'Performance', nav_profile:'Profile',
+    nav_about:'About Us', nav_contact:'Contact Us',
+    live_date:'Live', rating_updated:'Updated', rating_submitted:'Submitted',
+  },
+  ar: {
+    workshops:'الورش', recordings:'التسجيلات', all_sessions:'كل الجلسات',
+    dashboard:'لوحة التحكم', all_recordings:'كل التسجيلات',
+    related_sessions:'جلسات ذات صلة', no_other_recordings:'لا توجد تسجيلات أخرى.',
+    recording:'تسجيل', workshop:'ورشة عمل', free:'مجاني',
+    instructor:'المحاضر', uploaded:'تاريخ الرفع',
+    session_date:'تاريخ الجلسة', category:'الفئة',
+    comments:'التعليقات', about:'حول', rate:'تقييم',
+    post:'نشر', login_to_comment:'سجّل دخولك للتعليق',
+    no_comments:'لا توجد تعليقات بعد. كن الأول!',
+    about_session:'حول هذه الجلسة', what_youll_learn:'ماذا ستتعلم',
+    workshop_skills:'مهارات الورشة والتقنيات',
+    practical_examples:'أمثلة عملية من الواقع',
+    expert_guidance:'توجيه الخبراء ورؤاهم',
+    select_rating:'اختر تقييمك', submit_rating:'إرسال التقييم',
+    login_to_rate:'سجّل دخولك لتقييم التسجيل',
+    loading:'جارٍ التحميل…', ratings:'تقييمات',
+    prev_recording:'السابق', next_recording:'التالي',
+    back_sessions:'العودة للجلسات',
+    video_error:'فشل تحميل الفيديو. يرجى المحاولة لاحقاً.',
+    no_video:'لا يوجد فيديو لهذا التسجيل.',
+    footer_desc:'تمكين المتعلمين بورش عمل وجلسات مباشرة من خبراء حول العالم.',
+    footer_explore:'استكشف', footer_tools:'الأدوات', footer_support:'الدعم',
+    footer_rights:'جميع الحقوق محفوظة.', made_with:'صُنع بـ', for_learners:'للمتعلمين في كل مكان',
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_workshops:'الورش',
+    nav_competitions:'المسابقات', nav_chatbot:'الشات بوت',
+    nav_performance:'الأداء', nav_profile:'الملف الشخصي',
+    nav_about:'من نحن', nav_contact:'تواصل معنا',
+    live_date:'مباشر', rating_updated:'تم التحديث', rating_submitted:'تم الإرسال',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 350); }, dur);
+}
+
+/* ── API ───────────────────────────────────────────────────────────────── */
+async function api(url, body, method = 'POST') {
+  const opts = { method, headers: { 'X-CSRFToken': APP.csrf } };
+  if (body instanceof FormData) { opts.body = body; }
+  else if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+  const res = await fetch(url, opts);
+  return res.json();
+}
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function setLoading(id, on) {
+  const b = document.getElementById(id);
+  if (!b) return;
+  if (on) { b._orig = b.innerHTML; b.innerHTML = `<span class="spinner"></span>`; b.disabled = true; }
+  else { b.innerHTML = b._orig || b.innerHTML; b.disabled = false; }
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel = document.getElementById('tab-' + name);
+  if (panel) panel.classList.add('active');
+  if (name === 'rating') loadRatingStatus();
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────────── */
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+document.addEventListener('click', e => {
+  const sb = document.getElementById('sidebar');
+  const fab = document.getElementById('sb-fab');
+  if (sb && fab && !sb.contains(e.target) && !fab.contains(e.target)) sb.classList.remove('open');
+});
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RATING
+   ═══════════════════════════════════════════════════════════════════════ */
+let selectedRating = 0;
+
+async function loadRatingStatus() {
+  try {
+    const data = await api(APP.urls.rateStatus, null, 'GET');
+    if (data.ok) updateRatingUI(data.avg_rating, data.total_ratings, data.your_rating);
+  } catch(e) {}
+}
+function updateRatingUI(avg, total, yours) {
+  const avgBig  = document.getElementById('rat-avg-big');
+  const metaAvg = document.getElementById('meta-avg');
+  const metaTot = document.getElementById('meta-total');
+  const totalLbl= document.getElementById('rat-total');
+  if (avgBig)  avgBig.textContent  = (avg||0).toFixed(1);
+  if (metaAvg) metaAvg.textContent = (avg||0).toFixed(1);
+  if (metaTot) metaTot.textContent = total || 0;
+  if (totalLbl) totalLbl.textContent = `${currentLang === 'ar' ? 'بناءً على' : 'Based on'} ${total||0} ${I18N[currentLang].ratings}`;
+  renderStarDisplay(avg || 0);
+  if (yours) {
+    selectedRating = yours; highlightStars(yours);
+    const lbl = document.getElementById('rat-sel-lbl');
+    if (lbl) lbl.textContent = `${yours} ★`;
+    const btn = document.getElementById('rat-submit-btn');
+    if (btn) { btn.textContent = currentLang === 'ar' ? 'تحديث التقييم' : 'Update Rating'; btn.disabled = false; }
+  }
+}
+function renderStarDisplay(avg) {
+  const el = document.getElementById('avg-stars');
+  if (!el) return;
+  let html = '';
+  for (let i = 1; i <= 5; i++) html += i <= Math.round(avg) ? '<span class="sd-full">★</span>' : '<span class="sd-empty">★</span>';
+  el.innerHTML = html;
+}
+function starHover(v)   { highlightStars(v); }
+function starUnhover()  { highlightStars(selectedRating); }
+function starClick(v) {
+  selectedRating = v; highlightStars(v);
+  const lbl = document.getElementById('rat-sel-lbl');
+  if (lbl) lbl.textContent = `${v} ★`;
+  const btn = document.getElementById('rat-submit-btn');
+  if (btn) btn.disabled = false;
+}
+function highlightStars(v) {
+  document.querySelectorAll('.star-btn').forEach(b => {
+    b.classList.toggle('lit', parseInt(b.dataset.val) <= v);
+  });
+}
+async function submitRating() {
+  if (!selectedRating) { toast(currentLang === 'ar' ? 'اختر تقييماً.' : 'Pick a rating first.', 'error'); return; }
+  setLoading('rat-submit-btn', true);
+  try {
+    const data = await api(APP.urls.rate, { rating: selectedRating });
+    if (data.ok) {
+      updateRatingUI(data.avg_rating, data.total_ratings, data.your_rating);
+      const fb = document.getElementById('rat-fb');
+      if (fb) {
+        fb.className = 'rating-fb ok';
+        const word = data.updated ? I18N[currentLang].rating_updated : I18N[currentLang].rating_submitted;
+        fb.innerHTML = `<i class="fas fa-check-circle"></i> ${word}! Avg: ${(data.avg_rating||0).toFixed(1)}★`;
+      }
+      toast(currentLang === 'ar' ? `شكراً! أرسلت ${selectedRating}★` : `Thanks! ${selectedRating}★ submitted.`, 'success');
+    } else { toast(data.error || 'Error.', 'error'); }
+  } catch(e) { toast('Network error.', 'error'); }
+  finally { setLoading('rat-submit-btn', false); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   COMMENTS
+   ═══════════════════════════════════════════════════════════════════════ */
+async function submitComment() {
+  const inp = document.getElementById('comment-inp');
+  const content = (inp?.value || '').trim();
+  if (!content) { toast(currentLang === 'ar' ? 'اكتب تعليقاً.' : 'Write a comment first.', 'error'); return; }
+  setLoading('comment-btn', true);
+  try {
+    const data = await api(APP.urls.comment, { content });
+    if (data.ok) {
+      inp.value = '';
+      document.getElementById('cchar-count').textContent = '0 / 2000';
+      document.getElementById('no-comments')?.remove();
+      const list = document.getElementById('comments-list');
+      const c = data.comment;
+      const el = document.createElement('div');
+      el.className = 'comment-item'; el.id = `comment-${c.id}`;
+      el.innerHTML = `
+        <div class="comment-head">
+          <div class="c-avatar">${escHtml((c.username||'U')[0].toUpperCase())}</div>
+          <div>
+            <div class="c-name">${escHtml(c.user)}</div>
+            <div class="c-date">${c.created_at}</div>
+          </div>
+          <button class="c-del" onclick="deleteComment(${c.id})"><i class="fas fa-trash-alt"></i></button>
+        </div>
+        <div class="c-text">${escHtml(c.content)}</div>`;
+      list.insertBefore(el, list.firstChild);
+      const cnt = document.getElementById('comment-count');
+      if (cnt) cnt.textContent = (parseInt(cnt.textContent)||0)+1;
+      toast(currentLang === 'ar' ? 'تم نشر التعليق.' : 'Comment posted!', 'success');
+    } else { toast(data.error || 'Error.', 'error'); }
+  } catch(e) { toast('Network error.', 'error'); }
+  finally { setLoading('comment-btn', false); }
+}
+
+async function deleteComment(id) {
+  if (!confirm(currentLang === 'ar' ? 'حذف هذا التعليق؟' : 'Delete this comment?')) return;
+  try {
+    const data = await api(`/workshops/recording/${APP.recordingId}/comment/${id}/delete/`, {});
+    if (data.ok) {
+      document.getElementById(`comment-${id}`)?.remove();
+      const cnt = document.getElementById('comment-count');
+      if (cnt) cnt.textContent = Math.max(0,(parseInt(cnt.textContent)||1)-1);
+      toast(currentLang === 'ar' ? 'تم الحذف.' : 'Deleted.', 'info');
+    }
+  } catch(e) { toast('Error.', 'error'); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+
+  // Load rating on init
+  api(APP.urls.rateStatus, null, 'GET')
+    .then(d => { if (d.ok) updateRatingUI(d.avg_rating, d.total_ratings, d.your_rating); })
+    .catch(() => {});
+
+  // Animate strip fill decoratively
+  setTimeout(() => {
+    const fill = document.querySelector('.vid-strip-fill');
+    if (fill) fill.style.width = '100%';
+  }, 800);
+});
+</script>
 </body>
 </html>

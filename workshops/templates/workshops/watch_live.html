@@ -1,51 +1,40 @@
 {% load static i18n %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Live — {{ session.title }} | Eduvia</title>
 
-  <title data-translate="title">Watch Live - {{ session.title }} - Eduvia</title>
-
-  <!-- 🔍 SEO Meta -->
+  <!-- SEO Meta -->
   <meta name="description" content="Watch the live session '{{ session.title }}' on Eduvia and engage with expert instructors in real-time.">
   <meta name="keywords" content="Watch live, Eduvia session, join live workshop, AI, coding, instructor-led, Google Meet, programming, data science, machine learning, cybersecurity, real-time learning">
   <meta name="author" content="Eduvia">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/workshops/{{ session.id }}/{{ session.title|slugify }}/">
 
-  <!-- 🔗 Open Graph Meta -->
+  <!-- Open Graph -->
   <meta property="og:title" content="Watch Live - {{ session.title }} - Eduvia">
   <meta property="og:description" content="Join '{{ session.title }}' live on Eduvia. Learn from expert instructors in real time.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/workshops/{{ session.id }}/{{ session.title|slugify }}/">
   <meta property="og:image" content="https://i.postimg.cc/dV1MQxyK/workshops.jpg">
 
-  <!-- 🐦 Twitter Card -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Watch Live - {{ session.title }} - Eduvia">
-  <meta name="twitter:description" content="Watch live session '{{ session.title }}' on Eduvia. Learn interactively with real-time teaching.">
+  <meta name="twitter:description" content="Watch live session '{{ session.title }}' on Eduvia.">
   <meta name="twitter:image" content="https://i.postimg.cc/dV1MQxyK/workshops.jpg">
 
-  <!-- 🌐 Favicon -->
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
+  <!-- Favicon -->
+  <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-  <!-- 🌐 Fonts & Icons -->
+  <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🌐 CSS -->
-  <link rel="stylesheet" href="{% static 'workshops/watch_live.css' %}">
-
-  <!-- 🎨 Custom Style -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/dV1MQxyK/workshops.jpg");
-    }
-  </style>
-
-  <!-- 🧠 JSON-LD Structured Data -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -55,24 +44,12 @@
         "@id": "https://eduvia-ai.fly.dev/#organization",
         "name": "Eduvia",
         "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg"
-        },
+        "logo": { "@type": "ImageObject", "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg" },
         "sameAs": [
           "https://www.facebook.com/share/18iRSctdxN/",
           "https://x.com/Eduvia7",
           "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
         ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://eduvia-ai.fly.dev/#website",
-        "url": "https://eduvia-ai.fly.dev",
-        "name": "Eduvia AI Learning Platform",
-        "publisher": {
-          "@id": "https://eduvia-ai.fly.dev/#organization"
-        }
       },
       {
         "@type": "Event",
@@ -83,97 +60,1091 @@
         "endDate": "{{ session.end_time|date:'c' }}",
         "eventStatus": "https://schema.org/EventScheduled",
         "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
-        "location": {
-          "@type": "VirtualLocation",
-          "url": "{{ session.meet_link|default:'https://eduvia-ai.fly.dev/workshops/' }}"
-        },
+        "location": { "@type": "VirtualLocation", "url": "{{ session.meet_link|default:'https://eduvia-ai.fly.dev/workshops/' }}" },
         "image": "{{ session.session_image.url|default:'https://i.postimg.cc/dV1MQxyK/workshops.jpg' }}",
-        "organizer": {
-          "@type": "Organization",
-          "name": "Eduvia",
-          "url": "https://eduvia-ai.fly.dev"
-        },
-        "performer": {
-          "@type": "Person",
-          "name": "{{ session.instructor.username }}"
-        }
+        "organizer": { "@type": "Organization", "name": "Eduvia", "url": "https://eduvia-ai.fly.dev" },
+        "performer": { "@type": "Person", "name": "{{ session.instructor.username }}" }
       }
     ]
   }
   </script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-title {
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Live indicator */
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(251,113,133,.1); border: 1px solid rgba(251,113,133,.25);
+  border-radius: 99px; padding: 4px 12px 4px 8px;
+  font-size: 11px; font-weight: 800; color: var(--rose-400);
+  letter-spacing: .5px; text-transform: uppercase; flex-shrink: 0;
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--rose-400);
+  animation: livePulse 1.2s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .5; transform: scale(.7); }
+}
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+.tb-btn-danger { background: var(--danger); color: #fff; }
+.tb-btn-danger:hover { opacity: .88; transform: translateY(-1px); }
+
+/* Desktop nav links */
+.nav-links-desktop { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  padding: 6px 11px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans);
+}
+.nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+
+.coins-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700; color: var(--warning);
+}
+.coins-pill i { font-size: 11px; }
+
+/* Mobile menu button */
+.mobile-menu-btn {
+  display: none; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px; cursor: pointer;
+  transition: var(--trans);
+}
+.mobile-menu-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.mobile-nav {
+  position: fixed; top: var(--topbar-h); left: 0; right: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  padding: 12px 16px; z-index: 500;
+  display: none; flex-direction: column; gap: 4px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.3);
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  padding: 11px 14px; border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--text-p); text-decoration: none;
+  display: flex; align-items: center; gap: 10px; transition: var(--trans);
+}
+.mobile-nav a:hover { background: var(--bg-card); color: var(--text-h); }
+.mobile-nav .sep { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ═══ LAYOUT ════════════════════════════════════════════════════════════ */
+.page-wrap {
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ═══ HERO STRIP ═══════════════════════════════════════════════════════ */
+.hero-strip {
+  background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.hero-strip::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 15% 50%, rgba(251,113,133,.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 80% 30%, rgba(139,92,246,.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-strip::after {
+  content: '\f03d';
+  font-family: 'Font Awesome 6 Free'; font-weight: 900;
+  position: absolute; bottom: -30px; right: 40px;
+  font-size: 160px; color: rgba(251,113,133,.04);
+  pointer-events: none;
+}
+.hero-badge-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 5px 14px; font-size: 11px;
+  font-weight: 700; color: var(--violet-400); letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.hero-badge-live {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(251,113,133,.1); border: 1px solid rgba(251,113,133,.25);
+  border-radius: 99px; padding: 5px 14px; font-size: 11px;
+  font-weight: 800; color: var(--rose-400); letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.hero-badge-live .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--rose-400); animation: livePulse 1.2s ease-in-out infinite; }
+
+.hero-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 36px); font-weight: 800;
+  color: var(--text-h); letter-spacing: -.5px; line-height: 1.2;
+  margin-bottom: 12px; position: relative;
+}
+.hero-h1 span {
+  background: linear-gradient(135deg, var(--rose-400), var(--violet-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 15px; color: var(--text-muted); max-width: 560px;
+  margin: 0 auto 24px; line-height: 1.65; position: relative;
+}
+.hero-meta {
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; flex-wrap: wrap; position: relative;
+}
+.hero-meta-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); }
+.hero-meta-item i { color: var(--accent); }
+.hero-meta-item.live-status i { color: var(--success); }
+
+/* Countdown timer in hero */
+.hero-countdown {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 8px 18px;
+  margin-top: 16px; position: relative;
+}
+.countdown-label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.countdown-val { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--text-h); }
+.countdown-sep { color: var(--text-muted); font-weight: 700; }
+
+/* ═══ MAIN CONTENT ══════════════════════════════════════════════════════ */
+.main-content {
+  flex: 1; max-width: 900px; margin: 0 auto;
+  width: 100%; padding: 40px 24px 80px;
+}
+
+/* ═══ SESSION HEADER CARD ═══════════════════════════════════════════════ */
+.session-header-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow); margin-bottom: 24px;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Session image banner */
+.session-banner {
+  width: 100%; height: 240px; object-fit: cover;
+  display: block; position: relative;
+}
+.session-banner-placeholder {
+  width: 100%; height: 240px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-panel));
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px; color: var(--text-muted);
+}
+.session-banner-placeholder i { font-size: 52px; opacity: .25; }
+.session-banner-wrapper { position: relative; }
+.session-banner-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(8,11,20,.7) 100%);
+  pointer-events: none;
+}
+
+.session-card-body { padding: 24px 28px; }
+.session-card-top {
+  display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px;
+}
+.session-card-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md);
+  background: rgba(251,113,133,.08); border: 1px solid rgba(251,113,133,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--rose-400); flex-shrink: 0;
+}
+.session-card-title {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 800; color: var(--text-h); margin-bottom: 4px;
+}
+.session-card-sub { font-size: 13px; color: var(--text-muted); }
+
+/* Meta grid */
+.meta-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px; margin-bottom: 24px;
+}
+.meta-cell {
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 14px 16px;
+}
+.meta-cell-icon { font-size: 14px; color: var(--accent); margin-bottom: 6px; }
+.meta-cell-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); margin-bottom: 4px; }
+.meta-cell-val { font-size: 14px; font-weight: 700; color: var(--text-h); }
+.meta-cell-val.live { color: var(--success); }
+.meta-cell-val.scheduled { color: var(--warning); }
+.meta-cell-val.ended { color: var(--text-muted); }
+
+/* ═══ MEET LINK CARD ════════════════════════════════════════════════════ */
+.meet-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s .08s cubic-bezier(.34,1.56,.64,1) both;
+  margin-bottom: 24px;
+}
+.meet-card-header {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.meet-card-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--sky-400); flex-shrink: 0;
+}
+.meet-card-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--text-h); margin-bottom: 3px;
+}
+.meet-card-sub { font-size: 12px; color: var(--text-muted); }
+
+.meet-card-body { padding: 24px; }
+
+/* URL display */
+.meet-url-box {
+  background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.meet-url-text {
+  flex: 1; font-family: var(--font-mono); font-size: 13px;
+  color: var(--sky-400); word-break: break-all; min-width: 0;
+}
+.copy-btn {
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: var(--trans); font-family: inherit;
+  display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+  white-space: nowrap;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.copy-btn.copied { border-color: var(--success); color: var(--success); background: rgba(52,211,153,.08); }
+
+/* Join button */
+.join-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 36px; border-radius: var(--radius-md);
+  font-size: 15px; font-weight: 800; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--rose-400), #e11d48);
+  color: #fff; font-family: var(--font-display);
+  text-decoration: none; transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 24px rgba(251,113,133,.35);
+}
+.join-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.15), transparent);
+  border-radius: inherit;
+}
+.join-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(251,113,133,.45); }
+.join-btn:active { transform: translateY(0); }
+.join-btn .pulse-ring {
+  position: absolute; inset: -3px; border-radius: inherit;
+  border: 2px solid rgba(251,113,133,.4);
+  animation: joinPulse 2s ease-in-out infinite;
+}
+@keyframes joinPulse {
+  0%, 100% { transform: scale(1); opacity: .5; }
+  50%       { transform: scale(1.04); opacity: 0; }
+}
+
+.join-hint { font-size: 12px; color: var(--text-muted); margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+.join-hint i { color: var(--accent); }
+
+/* No link state */
+.no-link-card {
+  background: rgba(251,113,133,.05); border: 1px solid rgba(251,113,133,.15);
+  border-radius: var(--radius-md); padding: 24px;
+  text-align: center; color: var(--text-muted);
+}
+.no-link-card i { font-size: 36px; display: block; margin-bottom: 10px; opacity: .3; }
+.no-link-card p { font-size: 14px; }
+
+/* ═══ RECORDING CARD ════════════════════════════════════════════════════ */
+.recording-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow); margin-bottom: 24px;
+  animation: cardReveal .5s .16s cubic-bezier(.34,1.56,.64,1) both;
+}
+.recording-card-header {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(52,211,153,.06), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.recording-card-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--success); flex-shrink: 0;
+}
+.recording-card-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--text-h); margin-bottom: 3px;
+}
+.recording-card-sub { font-size: 12px; color: var(--text-muted); }
+.recording-card-body { padding: 24px; }
+
+/* Video embed */
+.video-embed-wrap {
+  width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-lg);
+  overflow: hidden; background: #000; margin-bottom: 14px;
+}
+.video-embed-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+
+/* ═══ INFO ROW CARDS ════════════════════════════════════════════════════ */
+.info-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px; margin-bottom: 24px;
+  animation: cardReveal .5s .2s cubic-bezier(.34,1.56,.64,1) both;
+}
+.info-block {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.info-block-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; margin-bottom: 4px;
+}
+.info-block-icon.violet { background: var(--violet-glow); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.info-block-icon.sky    { background: rgba(56,189,248,.08); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2); }
+.info-block-icon.gold   { background: rgba(251,191,36,.08); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+.info-block-icon.green  { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+.info-block-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); }
+.info-block-val { font-size: 15px; font-weight: 700; color: var(--text-h); }
+
+/* ═══ DESCRIPTION CARD ══════════════════════════════════════════════════ */
+.desc-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md); padding: 14px 18px;
+  font-size: 14px; color: var(--text-p); line-height: 1.75;
+  margin-bottom: 24px;
+  animation: cardReveal .5s .24s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+/* ═══ BOTTOM NAV ════════════════════════════════════════════════════════ */
+.bottom-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 28px; border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+}
+.nav-btn {
+  padding: 10px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; border: 1px solid var(--border);
+  color: var(--text-muted); background: var(--bg-card);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  transition: var(--trans); cursor: pointer; font-family: inherit;
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-btn.primary:hover { background: var(--accent-d); }
+.nav-btn.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+.nav-btn.danger:hover { opacity: .88; }
+
+/* ═══ TOAST ═════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border); background: var(--bg-card);
+  padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-logo {
+  font-family: var(--font-display); font-size: 16px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-links { display: flex; gap: 16px; }
+.footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer-links a:hover { color: var(--accent); }
+
+/* ═══ STATUS CHIP ════════════════════════════════════════════════════════ */
+.status-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
+}
+.status-chip.live     { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.2); }
+.status-chip.upcoming { background: rgba(251,191,36,.08); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+.status-chip.ended    { background: rgba(90,101,133,.1); color: var(--text-muted); border: 1px solid var(--border); }
+.status-chip.recorded { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══ MOBILE ════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-title { display: none; }
+  .nav-links-desktop { display: none; }
+  .mobile-menu-btn { display: flex !important; }
+  .hero-strip { padding: 32px 16px 28px; }
+  .main-content { padding: 24px 14px 60px; }
+  .session-card-body, .meet-card-body, .recording-card-body { padding: 18px 16px; }
+  .bottom-nav { padding: 12px 14px; }
+  .join-btn { width: 100%; justify-content: center; }
+  .site-footer { flex-direction: column; text-align: center; }
+  .meta-grid { grid-template-columns: 1fr 1fr; }
+  .info-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Watch Live: {{ session.title }}</h1>
-        <p data-translate="hero-subtitle">Join the live session '{{ session.title }}' and engage with expert instructors in real-time.</p>
-        <a href="#session-container" class="btn" data-translate="hero-btn">Join Now</a>
-    </section>
+<!-- ── TOPBAR ─────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-title">
+    <i class="fas fa-broadcast-tower" style="color:var(--rose-400);margin-right:5px;"></i>
+    {{ session.title }}
+  </span>
 
-    <!-- Session Container -->
-    <div class="container" id="session-container">
-        <h1 data-translate="container-title">Watch Live: {{ session.title }}</h1>
-        <p><strong data-translate="instructor-label">Instructor:</strong> {{ session.instructor.username }}</p>
-        <p><strong data-translate="time-label">Time:</strong> {{ session.start_time }} - {{ session.end_time }}</p>
-        {% if session.session_image %}
-            <img src="{{ session.session_image.url }}" alt="{{ session.title }}">
-        {% endif %}
-        {% if session.meet_link %}
-            <p><strong data-translate="meet-link-label">Meet Link:</strong> <a href="{{ session.meet_link }}" target="_blank" class="meet-link">{{ session.meet_link }}</a></p>
-            <a href="{{ session.meet_link }}" target="_blank" class="btn btn-primary mt-3" data-translate="join-btn">Join Live Session</a>
-        {% else %}
-            <p data-translate="no-meet-link">No Meet link available.</p>
-        {% endif %}
+  <!-- Live indicator -->
+  <div class="live-badge" id="live-badge">
+    <div class="live-dot"></div>
+    <span data-i18n="live">LIVE</span>
+  </div>
+
+  <!-- Desktop nav links -->
+  <nav class="nav-links-desktop">
+    <a href="/" class="nav-link" data-i18n="nav_home">Home</a>
+    <a href="/courses/" class="nav-link" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" class="nav-link" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" class="nav-link" data-i18n="nav_competitions">Competitions</a>
+    <a href="/about/" class="nav-link" data-i18n="nav_about">About</a>
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.courses_profile %}
+    <div class="coins-pill">
+      <i class="fas fa-coins"></i>
+      <span>{{ user.courses_profile.coins|default:0 }}</span>
+    </div>
+    {% endif %}
+
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-ghost">
+        <i class="fas fa-tachometer-alt"></i>
+      </a>
+      {% endif %}
+      <a href="/accounts/profile/" class="ctrl-btn" title="Profile">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="/accounts/logout/" class="tb-btn tb-btn-ghost">
+        <i class="fas fa-sign-out-alt"></i>
+      </a>
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent">
+        <i class="fas fa-sign-in-alt"></i>
+        <span data-i18n="login">Login</span>
+      </a>
+    {% endif %}
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="/"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
+  <a href="/courses/"><i class="fas fa-book-open"></i> <span data-i18n="nav_courses">Courses</span></a>
+  <a href="/chatbot/"><i class="fas fa-robot"></i> <span data-i18n="nav_chatbot">Chatbot</span></a>
+  <a href="/competitions/"><i class="fas fa-trophy"></i> <span data-i18n="nav_competitions">Competitions</span></a>
+  <a href="/performance/dashboard/"><i class="fas fa-chart-bar"></i> <span data-i18n="nav_performance">Performance</span></a>
+  <a href="/about/"><i class="fas fa-info-circle"></i> <span data-i18n="nav_about">About Us</span></a>
+  <a href="/contact_us/"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact Us</span></a>
+  <div class="sep"></div>
+  {% if user.is_authenticated %}
+  <a href="/accounts/profile/"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Profile</span></a>
+  <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> <span data-i18n="nav_logout">Logout</span></a>
+  {% else %}
+  <a href="/accounts/register/"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span></a>
+  {% endif %}
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ── HERO STRIP ──────────────────────────────────────────────────── -->
+  <section class="hero-strip">
+    <div class="hero-badge-row">
+      <div class="hero-badge">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <span data-i18n="live_session">Live Session</span>
+      </div>
+      <div class="hero-badge-live">
+        <div class="live-dot"></div>
+        <span data-i18n="live">LIVE</span>
+      </div>
+    </div>
+    <h1 class="hero-h1">
+      <span data-i18n="watch_live">Watch Live:</span><br>
+      <span>{{ session.title }}</span>
+    </h1>
+    <p class="hero-sub" data-i18n="hero_sub">
+      Join the live session and engage with expert instructors in real-time.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <i class="fas fa-user-tie"></i>
+        <span>{{ session.instructor.username }}</span>
+      </div>
+      <div class="hero-meta-item">
+        <i class="fas fa-calendar-alt"></i>
+        <span>{{ session.start_time|date:"M d, Y" }}</span>
+      </div>
+      <div class="hero-meta-item">
+        <i class="fas fa-clock"></i>
+        <span>{{ session.start_time|date:"H:i" }} → {{ session.end_time|date:"H:i" }}</span>
+      </div>
+      <div class="hero-meta-item live-status">
+        <i class="fas fa-circle"></i>
+        <span id="hero-status-text">Checking status…</span>
+      </div>
+    </div>
+    <!-- Countdown -->
+    <div class="hero-countdown" id="hero-countdown" style="display:none;">
+      <span class="countdown-label" data-i18n="starts_in">Starts in</span>
+      <span class="countdown-val" id="countdown-val">--:--:--</span>
+    </div>
+  </section>
+
+  <!-- ── MAIN CONTENT ────────────────────────────────────────────────── -->
+  <main class="main-content" id="session-container">
+
+    <!-- Quick info blocks -->
+    <div class="info-grid">
+      <div class="info-block">
+        <div class="info-block-icon violet"><i class="fas fa-user-tie"></i></div>
+        <div class="info-block-label" data-i18n="instructor">Instructor</div>
+        <div class="info-block-val">{{ session.instructor.username }}</div>
+      </div>
+      <div class="info-block">
+        <div class="info-block-icon sky"><i class="fas fa-calendar-alt"></i></div>
+        <div class="info-block-label" data-i18n="date">Date</div>
+        <div class="info-block-val">{{ session.start_time|date:"M d, Y" }}</div>
+      </div>
+      <div class="info-block">
+        <div class="info-block-icon gold"><i class="fas fa-clock"></i></div>
+        <div class="info-block-label" data-i18n="time">Time</div>
+        <div class="info-block-val">{{ session.start_time|date:"H:i" }} – {{ session.end_time|date:"H:i" }}</div>
+      </div>
+      <div class="info-block">
+        <div class="info-block-icon green"><i class="fas fa-signal"></i></div>
+        <div class="info-block-label" data-i18n="status">Status</div>
+        <div class="info-block-val" id="status-val">
+          <span class="status-chip" id="status-chip">—</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
-    </footer>
+    <!-- Session Header Card with image -->
+    <div class="session-header-card">
+      {% if session.session_image %}
+      <div class="session-banner-wrapper">
+        <img src="{{ session.session_image.url }}" alt="{{ session.title }}" class="session-banner">
+        <div class="session-banner-overlay"></div>
+      </div>
+      {% else %}
+      <div class="session-banner-placeholder">
+        <i class="fas fa-video"></i>
+        <span style="font-size:13px;" data-i18n="no_image">No session image</span>
+      </div>
+      {% endif %}
 
-    <!-- JavaScript -->
-    <script src="{% static 'workshops/watch_live.js' %}"></script>
+      <div class="session-card-body">
+        <div class="session-card-top">
+          <div class="session-card-icon"><i class="fas fa-broadcast-tower"></i></div>
+          <div>
+            <div class="session-card-title">{{ session.title }}</div>
+            <div class="session-card-sub">
+              <span data-i18n="hosted_by">Hosted by</span>
+              <strong style="color:var(--text-h);">{{ session.instructor.username }}</strong>
+            </div>
+          </div>
+        </div>
+
+        {% if session.description %}
+        <div style="font-size:14px;color:var(--text-p);line-height:1.75;margin-bottom:16px;">
+          {{ session.description }}
+        </div>
+        {% endif %}
+
+        <div class="meta-grid">
+          <div class="meta-cell">
+            <div class="meta-cell-icon"><i class="fas fa-hourglass-start"></i></div>
+            <div class="meta-cell-label" data-i18n="start_time">Start Time</div>
+            <div class="meta-cell-val">{{ session.start_time|date:"H:i" }}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-cell-icon"><i class="fas fa-hourglass-end"></i></div>
+            <div class="meta-cell-label" data-i18n="end_time">End Time</div>
+            <div class="meta-cell-val">{{ session.end_time|date:"H:i" }}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-cell-icon"><i class="fas fa-calendar"></i></div>
+            <div class="meta-cell-label" data-i18n="date">Date</div>
+            <div class="meta-cell-val">{{ session.start_time|date:"d M Y" }}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-cell-icon"><i class="fas fa-circle" style="color:var(--rose-400);"></i></div>
+            <div class="meta-cell-label" data-i18n="session_status">Session Status</div>
+            <div class="meta-cell-val" id="meta-status">—</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    {% if session.description %}
+    <div class="desc-card">
+      <strong style="color:var(--accent);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">
+        <i class="fas fa-info-circle"></i>
+        <span data-i18n="about_session">About This Session</span>
+      </strong>
+      <p style="margin-top:8px;">{{ session.description }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Meet Link Card -->
+    <div class="meet-card">
+      <div class="meet-card-header">
+        <div class="meet-card-icon"><i class="fas fa-video"></i></div>
+        <div>
+          <div class="meet-card-title" data-i18n="join_session">Join Live Session</div>
+          <div class="meet-card-sub" data-i18n="meet_sub">Click the button below to join via Google Meet</div>
+        </div>
+      </div>
+      <div class="meet-card-body">
+        {% if session.meet_link %}
+          <div class="meet-url-box">
+            <span class="meet-url-text" id="meet-url-text">{{ session.meet_link }}</span>
+            <button class="copy-btn" id="copy-btn" onclick="copyMeetLink()">
+              <i class="fas fa-copy"></i>
+              <span data-i18n="copy">Copy</span>
+            </button>
+          </div>
+          <div style="text-align:center;">
+            <a href="{{ session.meet_link }}" target="_blank" rel="noopener" class="join-btn" id="join-btn">
+              <div class="pulse-ring"></div>
+              <i class="fas fa-video"></i>
+              <span data-i18n="join_live">Join Live Session</span>
+            </a>
+            <p class="join-hint">
+              <i class="fas fa-shield-alt"></i>
+              <span data-i18n="join_hint">Opens in Google Meet. Make sure your camera and mic are ready.</span>
+            </p>
+          </div>
+        {% else %}
+          <div class="no-link-card">
+            <i class="fas fa-link-slash"></i>
+            <p data-i18n="no_meet_link">No Meet link available for this session yet. Check back before the session starts.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Recording Card (if recording exists) -->
+    {% if session.video_file %}
+    <div class="recording-card">
+      <div class="recording-card-header">
+        <div class="recording-card-icon"><i class="fas fa-film"></i></div>
+        <div>
+          <div class="recording-card-title" data-i18n="session_recording">Session Recording</div>
+          <div class="recording-card-sub" data-i18n="recording_sub">Watch the session recording at any time</div>
+        </div>
+      </div>
+      <div class="recording-card-body">
+        {% with url=session.video_file %}
+        {% if 'drive.google.com' in url %}
+          <div class="video-embed-wrap">
+            <iframe src="{{ url|cut:'view'|add:'preview' }}" allowfullscreen allow="autoplay"></iframe>
+          </div>
+        {% elif 'vimeo.com' in url %}
+          <div class="video-embed-wrap">
+            <iframe src="https://player.vimeo.com/video/{{ url|cut:'https://vimeo.com/' }}?title=0&byline=0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+          </div>
+        {% else %}
+          <div style="text-align:center;padding:16px 0;">
+            <a href="{{ url }}" target="_blank" rel="noopener" class="join-btn" style="background:linear-gradient(135deg,var(--success),var(--emerald-500));box-shadow:0 4px 24px rgba(52,211,153,.3);">
+              <i class="fas fa-external-link-alt"></i>
+              <span data-i18n="watch_recording">Watch Recording</span>
+            </a>
+          </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav" style="border-radius:var(--radius-xl);border:1px solid var(--border);background:var(--bg-card);margin-top:8px;">
+      <a href="{% url 'workshops:live_session_list' %}" class="nav-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span data-i18n="back_sessions">Back to Sessions</span>
+      </a>
+      {% if session.meet_link %}
+      <a href="{{ session.meet_link }}" target="_blank" rel="noopener" class="nav-btn danger">
+        <i class="fas fa-video"></i>
+        <span data-i18n="join_now">Join Now</span>
+      </a>
+      {% endif %}
+    </div>
+
+  </main>
+
+  <!-- ── FOOTER ──────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <a href="/" class="footer-logo">Eduvia</a>
+    <span class="footer-copy" data-i18n="footer_copy">© 2025 Eduvia. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="/about/" data-i18n="nav_about">About</a>
+      <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+      <a href="/courses/" data-i18n="nav_courses">Courses</a>
+    </div>
+  </footer>
+
+</div><!-- /page-wrap -->
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* Session timing from Django */
+const SESSION = {
+  startTime: new Date('{{ session.start_time|date:"c" }}'),
+  endTime:   new Date('{{ session.end_time|date:"c" }}'),
+};
+
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_about:'About Us', nav_contact:'Contact Us', nav_profile:'Profile',
+    nav_logout:'Logout', login:'Login', dashboard:'Dashboard',
+    live:'LIVE', live_session:'Live Session',
+    watch_live:'Watch Live:', hero_sub:'Join the live session and engage with expert instructors in real-time.',
+    instructor:'Instructor', date:'Date', time:'Time', status:'Status',
+    start_time:'Start Time', end_time:'End Time', session_status:'Session Status',
+    about_session:'About This Session', hosted_by:'Hosted by',
+    join_session:'Join Live Session', meet_sub:'Click the button below to join via Google Meet',
+    copy:'Copy', copied:'Copied!',
+    join_live:'Join Live Session', join_now:'Join Now',
+    join_hint:'Opens in Google Meet. Make sure your camera and mic are ready.',
+    no_meet_link:'No Meet link available for this session yet. Check back before the session starts.',
+    session_recording:'Session Recording', recording_sub:'Watch the session recording at any time',
+    watch_recording:'Watch Recording', back_sessions:'Back to Sessions',
+    no_image:'No session image',
+    starts_in:'Starts in', status_live:'🔴 Live Now',
+    status_upcoming:'🟡 Upcoming', status_ended:'⚫ Ended',
+    footer_copy:'© 2025 Eduvia. All rights reserved.',
+  },
+  ar: {
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'المساعد الذكي',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_about:'من نحن', nav_contact:'تواصل معنا', nav_profile:'الملف الشخصي',
+    nav_logout:'تسجيل خروج', login:'تسجيل دخول', dashboard:'لوحة التحكم',
+    live:'مباشر', live_session:'جلسة مباشرة',
+    watch_live:'شاهد المباشر:', hero_sub:'انضم إلى الجلسة المباشرة وتفاعل مع المحاضرين المتخصصين.',
+    instructor:'المحاضر', date:'التاريخ', time:'الوقت', status:'الحالة',
+    start_time:'وقت البدء', end_time:'وقت الانتهاء', session_status:'حالة الجلسة',
+    about_session:'نبذة عن هذه الجلسة', hosted_by:'يقدمها',
+    join_session:'انضم إلى الجلسة', meet_sub:'اضغط على الزر أدناه للانضمام عبر Google Meet',
+    copy:'نسخ', copied:'تم النسخ!',
+    join_live:'انضم إلى الجلسة', join_now:'انضم الآن',
+    join_hint:'يفتح في Google Meet. تأكد من جاهزية الكاميرا والميكروفون.',
+    no_meet_link:'لا يوجد رابط Meet لهذه الجلسة بعد. تحقق قبل بدء الجلسة.',
+    session_recording:'تسجيل الجلسة', recording_sub:'شاهد تسجيل الجلسة في أي وقت',
+    watch_recording:'مشاهدة التسجيل', back_sessions:'العودة للجلسات',
+    no_image:'لا توجد صورة للجلسة',
+    starts_in:'تبدأ في', status_live:'🔴 مباشر الآن',
+    status_upcoming:'🟡 قادمة', status_ended:'⚫ انتهت',
+    footer_copy:'© 2025 Eduvia. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+  updateStatus();
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  const curr = document.documentElement.getAttribute('data-theme');
+  applyTheme(curr === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile menu ──────────────────────────────────────────────────────── */
+function toggleMobileMenu() { document.getElementById('mobile-nav').classList.toggle('open'); }
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  if (!nav.contains(e.target) && !e.target.closest('.mobile-menu-btn')) nav.classList.remove('open');
+});
+
+/* ── Toast ──────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 350); }, dur);
+}
+
+/* ── Copy meet link ────────────────────────────────────────────────────── */
+function copyMeetLink() {
+  const url = document.getElementById('meet-url-text')?.textContent;
+  if (!url) return;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copy-btn');
+    if (btn) {
+      btn.classList.add('copied');
+      btn.innerHTML = `<i class="fas fa-check"></i> ${I18N[currentLang].copied || 'Copied!'}`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<i class="fas fa-copy"></i> ${I18N[currentLang].copy || 'Copy'}`;
+      }, 2000);
+    }
+    toast(currentLang === 'ar' ? 'تم نسخ الرابط!' : 'Link copied!', 'success');
+  }).catch(() => toast('Failed to copy.', 'error'));
+}
+
+/* ── Session status ──────────────────────────────────────────────────── */
+function getSessionStatus() {
+  const now = new Date();
+  if (now >= SESSION.startTime && now <= SESSION.endTime) return 'live';
+  if (now < SESSION.startTime) return 'upcoming';
+  return 'ended';
+}
+
+function updateStatus() {
+  const status = getSessionStatus();
+  const heroText = document.getElementById('hero-status-text');
+  const statusChip = document.getElementById('status-chip');
+  const metaStatus = document.getElementById('meta-status');
+  const liveBadge = document.getElementById('live-badge');
+  const countdown = document.getElementById('hero-countdown');
+
+  const labels = {
+    live:     { text: I18N[currentLang].status_live     || '🔴 Live Now',  chip: 'live',     badge: true  },
+    upcoming: { text: I18N[currentLang].status_upcoming || '🟡 Upcoming',  chip: 'upcoming', badge: false },
+    ended:    { text: I18N[currentLang].status_ended    || '⚫ Ended',      chip: 'ended',    badge: false },
+  };
+  const info = labels[status];
+
+  if (heroText) heroText.textContent = info.text;
+  if (statusChip) { statusChip.className = `status-chip ${info.chip}`; statusChip.textContent = info.text; }
+  if (metaStatus) metaStatus.textContent = info.text;
+  if (liveBadge) liveBadge.style.display = info.badge ? 'flex' : 'none';
+  if (countdown) countdown.style.display = status === 'upcoming' ? 'inline-flex' : 'none';
+}
+
+/* ── Countdown ────────────────────────────────────────────────────────── */
+function updateCountdown() {
+  const status = getSessionStatus();
+  const el = document.getElementById('countdown-val');
+  if (!el || status !== 'upcoming') return;
+  const diff = SESSION.startTime - new Date();
+  if (diff <= 0) { updateStatus(); return; }
+  const h  = Math.floor(diff / 3600000);
+  const m  = Math.floor((diff % 3600000) / 60000);
+  const s  = Math.floor((diff % 60000) / 1000);
+  el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  updateStatus();
+  updateCountdown();
+  setInterval(() => { updateStatus(); updateCountdown(); }, 1000);
+});
+</script>
 </body>
 </html>

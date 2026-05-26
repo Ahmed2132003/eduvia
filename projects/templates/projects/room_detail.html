@@ -1028,8 +1028,7 @@ body {
       <div class="room-meta-top">
         <div class="room-meta-icon"><i class="fas fa-door-open"></i></div>
         <div class="room-meta-title">{{ room.title|default:"Room" }}</div>
-        <div class="room-meta-project">
-          Part of <a href="{% url 'projects:project_details' room.project.id room.project.slugified_title %}">{{ room.project.title|default:"Project" }}</a>
+        Part of <a href="{% url 'projects:project_details' room.project.id room.project.title|custom_slugify %}">
         </div>
       </div>
       <div class="room-meta-body">

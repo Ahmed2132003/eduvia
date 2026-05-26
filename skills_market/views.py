@@ -147,7 +147,8 @@ def order_service(request, service_id, slugified_title):
         return _access_denied(request)
 
     service = get_object_or_404(Service, id=service_id)
-    expected_slug = slugify(service.title)
+    expected_slug = slugify(service.title, allow_unicode=True) or 'no-title'
+    
     if slugified_title != expected_slug:
         return redirect('skills_market:order_service',
                         service_id=service_id, slugified_title=expected_slug)

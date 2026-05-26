@@ -1,210 +1,840 @@
 {% load static i18n widget_tweaks projects_filters %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skills Market — Eduvia</title>
+<meta name="description" content="Browse services offered by skilled students on Eduvia's Skills Market and order the one that fits your need.">
+<meta name="keywords" content="Eduvia, skills market, student services, freelance, order services, microservices, digital marketplace">
+<meta name="author" content="Eduvia">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://eduvia-ai.fly.dev/skills_market/services/">
+<meta property="og:title" content="Services List - Eduvia">
+<meta property="og:description" content="Discover a range of student-powered services on Eduvia. Order digital skills today!">
+<meta property="og:image" content="https://i.postimg.cc/prPmW4Vg/skils3.jpg">
+<meta property="og:url" content="https://eduvia-ai.fly.dev/skills_market/services/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Services List - Eduvia">
+<meta name="twitter:description" content="Browse services from skilled students on Eduvia.">
+<meta name="twitter:image" content="https://i.postimg.cc/prPmW4Vg/skils3.jpg">
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {"@type":"Organization","@id":"https://eduvia-ai.fly.dev/#organization","name":"Eduvia","url":"https://eduvia-ai.fly.dev","logo":{"@type":"ImageObject","url":"https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"}},
+    {"@type":"WebPage","@id":"https://eduvia-ai.fly.dev/skills_market/services/#webpage","url":"https://eduvia-ai.fly.dev/skills_market/services/","name":"Services List - Eduvia","inLanguage":"en"}
+  ]
+}
+</script>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- 🔍 SEO -->
-  <title data-translate="page-title">Services List - Eduvia</title>
-  <meta name="description" content="Browse services offered by skilled students on Eduvia's Skills Market and order the one that fits your need.">
-  <meta name="keywords" content="Eduvia, skills market, student services, freelance, order services, microservices, digital marketplace">
-  <meta name="author" content="Eduvia">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://eduvia-ai.fly.dev/skills_market/services/">
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-  <!-- 🌍 Open Graph -->
-  <meta property="og:title" content="Services List - Eduvia">
-  <meta property="og:description" content="Discover a range of student-powered services on Eduvia. Order digital skills today!">
-  <meta property="og:image" content="https://i.postimg.cc/prPmW4Vg/skils3.jpg">
-  <meta property="og:url" content="https://eduvia-ai.fly.dev/skills_market/services/">
-  <meta property="og:type" content="website">
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
 
-  <!-- 🐦 Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Services List - Eduvia">
-  <meta name="twitter:description" content="Browse services from skilled students on Eduvia.">
-  <meta name="twitter:image" content="https://i.postimg.cc/prPmW4Vg/skils3.jpg">
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
 
-  <!-- 🖼️ Favicon -->
-  <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
 
-  <!-- 🌐 Fonts & Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
 
-  <!-- 🎨 Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'skills_market/services_list.css' %}">
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
 
-  <!-- 🖼️ Hero Background -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/prPmW4Vg/skils3.jpg");
-    }
-  </style>
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
 
-  <!-- 📊 Structured Data (JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://eduvia-ai.fly.dev/#organization",
-        "name": "Eduvia",
-        "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-        },
-        "sameAs": [
-          "https://www.facebook.com/share/18iRSctdxN/",
-          "https://x.com/Eduvia7",
-          "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-        ]
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/services/#webpage",
-        "url": "https://eduvia-ai.fly.dev/skills_market/services/",
-        "name": "Services List - Eduvia",
-        "description": "Explore freelance-style services offered by student providers on Eduvia's Skills Market.",
-        "breadcrumb": {
-          "@id": "https://eduvia-ai.fly.dev/skills_market/services/#breadcrumb"
-        },
-        "inLanguage": "en"
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/services/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Skills Market",
-            "item": "https://eduvia-ai.fly.dev/skills_market/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Services",
-            "item": "https://eduvia-ai.fly.dev/skills_market/services/"
-          }
-        ]
-      }
-    ]
-  }
-  </script>
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-page-title {
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.coins-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 4px 12px;
+  font-size: 12px; font-weight: 700; color: var(--gold-400);
+}
+
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  padding: 6px 11px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans);
+}
+.nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+.nav-link.active { color: var(--accent); background: var(--violet-glow); }
+
+.hamburger {
+  display: none; background: none; border: 1px solid var(--border);
+  color: var(--text-p); width: 36px; height: 36px; border-radius: var(--radius-sm);
+  font-size: 16px; cursor: pointer; transition: var(--trans);
+  align-items: center; justify-content: center;
+}
+.hamburger:hover { border-color: var(--accent); color: var(--accent); }
+
+.mobile-menu {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  padding: 12px 16px; z-index: 599; flex-direction: column; gap: 4px;
+  animation: slideDown .2s ease;
+}
+@keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+.mobile-menu.open { display: flex; }
+.mobile-menu .nav-link { padding: 10px 14px; font-size: 14px; }
+
+/* ═══ PAGE LAYOUT ════════════════════════════════════════════════════════ */
+.page-wrapper { padding-top: var(--topbar-h); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ═══ HERO ══════════════════════════════════════════════════════════════ */
+.page-hero {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 32px 44px;
+  position: relative; overflow: hidden;
+}
+.page-hero::before {
+  content: ''; position: absolute; top: -80px; right: -80px;
+  width: 360px; height: 360px; border-radius: 50%;
+  background: radial-gradient(circle, var(--violet-glow), transparent 70%);
+  pointer-events: none;
+}
+.page-hero::after {
+  content: ''; position: absolute; bottom: -50px; left: 5%;
+  width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,191,36,.07), transparent 70%);
+  pointer-events: none;
+}
+.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.hero-text {}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 5px 14px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  color: var(--violet-400); text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 36px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -.8px; line-height: 1.2; margin-bottom: 8px;
+}
+.hero-subtitle { font-size: 15px; color: var(--text-muted); line-height: 1.65; max-width: 540px; }
+
+/* Stats row */
+.hero-stats { display: flex; gap: 20px; flex-wrap: wrap; }
+.hero-stat {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 14px 20px; text-align: center; min-width: 90px;
+}
+.hero-stat-val {
+  font-family: var(--font-display); font-size: 24px; font-weight: 800;
+  color: var(--text-h); display: block;
+}
+.hero-stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ═══ SEARCH BAR ════════════════════════════════════════════════════════ */
+.search-section { background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 18px 24px; }
+.search-inner { max-width: 1100px; margin: 0 auto; }
+.search-form {
+  display: flex; gap: 10px; align-items: center;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); padding: 6px 6px 6px 16px;
+  transition: var(--trans);
+}
+.search-form:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.search-input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text-h); font-size: 14px; font-family: inherit;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-btn {
+  padding: 9px 20px; border-radius: var(--radius-sm);
+  background: var(--accent); color: #fff; border: none;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--trans); font-family: inherit;
+}
+.search-btn:hover { background: var(--accent-d); }
+
+/* ═══ CONTENT ════════════════════════════════════════════════════════════ */
+.page-content { flex: 1; max-width: 1100px; width: 100%; margin: 0 auto; padding: 32px 24px 80px; }
+
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700; color: var(--text-h);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title i { color: var(--accent); font-size: 16px; }
+.results-count { font-size: 12px; color: var(--text-muted); }
+.results-count strong { color: var(--accent); }
+
+/* ═══ SERVICES GRID ══════════════════════════════════════════════════════ */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Service Card */
+.service-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  transition: var(--trans); display: flex; flex-direction: column;
+  animation: cardReveal .45s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow: var(--glow);
+}
+.service-card:hover {
+  border-color: var(--border-glow); transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(139,92,246,.22);
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Card top accent bar */
+.card-accent-bar { height: 3px; background: linear-gradient(90deg, var(--violet-500), var(--gold-400)); }
+
+.service-card-header {
+  padding: 20px 20px 14px;
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.service-avatar {
+  width: 46px; height: 46px; border-radius: var(--radius-md); flex-shrink: 0;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 18px; font-weight: 800; color: #fff;
+  border: 2px solid var(--border-glow);
+}
+.service-info { flex: 1; min-width: 0; }
+.service-title {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
+  line-height: 1.35; margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.service-provider { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+.service-provider i { font-size: 10px; color: var(--accent); }
+
+/* Skill badge */
+.skill-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 3px 10px;
+  font-size: 10px; font-weight: 700; color: var(--violet-400);
+  text-transform: uppercase; letter-spacing: .4px;
+  margin: 0 20px 14px;
+}
+
+/* Card meta */
+.service-card-meta {
+  padding: 0 20px 16px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.meta-item i { font-size: 11px; color: var(--text-muted); }
+.meta-price { color: var(--gold-400); font-weight: 700; font-family: var(--font-display); font-size: 15px; }
+.meta-coins { font-size: 11px; color: var(--text-muted); }
+.meta-delivery { color: var(--text-p); }
+
+/* Card footer */
+.service-card-footer {
+  margin-top: auto;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-top: 1px solid var(--border);
+}
+.order-btn {
+  width: 100%; padding: 11px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; border: none; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit; text-decoration: none;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: var(--trans);
+  box-shadow: 0 4px 16px rgba(139,92,246,.3);
+  position: relative; overflow: hidden;
+}
+.order-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.08), transparent);
+  border-radius: inherit;
+}
+.order-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,92,246,.45); }
+
+/* ═══ EMPTY STATE ════════════════════════════════════════════════════════ */
+.empty-state {
+  text-align: center; padding: 60px 24px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); grid-column: 1 / -1;
+}
+.empty-state-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: var(--violet-400);
+  margin: 0 auto 18px;
+}
+.empty-state h3 { font-family: var(--font-display); font-size: 20px; color: var(--text-h); margin-bottom: 8px; }
+.empty-state p  { font-size: 14px; color: var(--text-muted); }
+
+/* ═══ ACTION BUTTONS ═════════════════════════════════════════════════════ */
+.action-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
+.action-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); text-decoration: none;
+  transition: var(--trans); cursor: pointer; font-family: inherit;
+}
+.action-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; border-color: transparent;
+  box-shadow: 0 4px 20px rgba(139,92,246,.3);
+}
+.action-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(139,92,246,.4); }
+.action-btn.gold {
+  background: linear-gradient(135deg, var(--gold-400), #f59e0b);
+  color: #1a0f00; border-color: transparent; font-weight: 800;
+  box-shadow: 0 4px 20px rgba(251,191,36,.3);
+}
+.action-btn.gold:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(251,191,36,.4); }
+
+/* ═══ ALERT MESSAGES ═════════════════════════════════════════════════════ */
+.alert-wrap { max-width: 1100px; margin: 16px auto; padding: 0 24px; }
+.alert { padding: 12px 16px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.alert-success { background: rgba(52,211,153,.1); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.alert-error, .alert-danger { background: rgba(251,113,133,.1); color: var(--danger); border: 1px solid rgba(251,113,133,.25); }
+.alert-info { background: rgba(139,92,246,.1); color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+.alert-warning { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.25); }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
+}
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+.footer-grid { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start; margin-bottom: 24px; }
+.footer-brand {}
+.footer-logo {
+  font-family: var(--font-display); font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.footer-tagline { font-size: 13px; color: var(--text-muted); max-width: 280px; line-height: 1.55; }
+.footer-links-group { display: flex; flex-direction: column; gap: 8px; }
+.footer-links-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--text-muted); margin-bottom: 4px; }
+.footer-links-group a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer-links-group a:hover { color: var(--accent); }
+.footer-bottom { border-top: 1px solid var(--border); padding-top: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-socials { display: flex; gap: 10px; }
+.footer-social-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-card); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 13px;
+  text-decoration: none; transition: var(--trans);
+}
+.footer-social-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+/* ═══ TOAST ═════════════════════════════════════════════════════════════ */
+.toast-wrap { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast { padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto; display: flex; align-items: center; gap: 8px; min-width: 220px; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ MOBILE ═════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .services-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .hero-stats { display: none; }
+}
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .nav-links, .topbar-sep, .topbar-page-title { display: none; }
+  .page-hero { padding: 28px 16px; }
+  .hero-title { font-size: 26px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .page-content { padding: 20px 14px 60px; }
+}
+@media (max-width: 480px) {
+  .topbar { padding: 0 14px; }
+  .hero-title { font-size: 22px; }
+  .action-row { flex-direction: column; }
+  .action-btn { justify-content: center; }
+}
+</style>
 </head>
-
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Skills Market</h1>
-        <p data-translate="hero-desc">Explore and offer micro-services in Eduvia's Skills Market, connecting students with opportunities</p>
-    </section>
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-page-title" data-i18n="page_title">Skills Market</span>
 
-    <!-- Search Bar -->
-    <div class="search-container">
-        <form class="search-form" method="POST" action="{% url 'skills_market:services_list' %}">
-            {% csrf_token %}
-            {{ form.search_query|add_class:"form-control"|attr:"data-translate=search-placeholder" }}
-            <button type="submit"><i class="fas fa-search"></i> {% trans "Search" %}</button>
-        </form>
+  <div class="nav-links">
+    <a href="/" class="nav-link" data-i18n="nav_home">Home</a>
+    <a href="/courses/" class="nav-link" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" class="nav-link" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" class="nav-link" data-i18n="nav_competitions">Competitions</a>
+    <a href="/performance/dashboard/" class="nav-link" data-i18n="nav_performance">Performance</a>
+    <a href="{% url 'skills_market:services_list' %}" class="nav-link active" data-i18n="nav_skills">Skills Market</a>
+    <a href="/about/" class="nav-link" data-i18n="nav_about">About</a>
+    <a href="/contact_us/" class="nav-link" data-i18n="nav_contact">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link" data-i18n="nav_dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" class="nav-link" data-i18n="nav_profile">Profile</a>
+      <a href="/accounts/logout/" class="nav-link" data-i18n="nav_logout">Logout</a>
+    {% else %}
+      <a href="/accounts/register/" class="nav-link" data-i18n="nav_login">Login</a>
+    {% endif %}
+  </div>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+      <div class="coins-pill">
+        <i class="fas fa-coins"></i>
+        <span>{{ user.courses_profile.coins|default:0 }}</span>
+      </div>
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/" class="nav-link" data-i18n="nav_home">Home</a>
+  <a href="/courses/" class="nav-link" data-i18n="nav_courses">Courses</a>
+  <a href="/chatbot/" class="nav-link" data-i18n="nav_chatbot">Chatbot</a>
+  <a href="/competitions/" class="nav-link" data-i18n="nav_competitions">Competitions</a>
+  <a href="/performance/dashboard/" class="nav-link" data-i18n="nav_performance">Performance</a>
+  <a href="{% url 'skills_market:services_list' %}" class="nav-link active" data-i18n="nav_skills">Skills Market</a>
+  <a href="/about/" class="nav-link" data-i18n="nav_about">About</a>
+  <a href="/contact_us/" class="nav-link" data-i18n="nav_contact">Contact</a>
+  {% if user.is_authenticated %}
+    {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link" data-i18n="nav_dashboard">Dashboard</a>
+    {% endif %}
+    <a href="/accounts/profile/" class="nav-link" data-i18n="nav_profile">Profile</a>
+    <a href="/accounts/logout/" class="nav-link" data-i18n="nav_logout">Logout</a>
+  {% else %}
+    <a href="/accounts/register/" class="nav-link" data-i18n="nav_login">Login</a>
+  {% endif %}
+</div>
+
+<!-- ── PAGE WRAPPER ──────────────────────────────────────────────────────── -->
+<div class="page-wrapper">
+
+  <!-- ── HERO ─────────────────────────────────────────────────────────── -->
+  <div class="page-hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-badge"><i class="fas fa-store"></i> <span data-i18n="hero_badge">Skills Market</span></div>
+        <h1 class="hero-title" data-i18n="hero_title">Skills Market</h1>
+        <p class="hero-subtitle" data-i18n="hero_subtitle">Explore and order micro-services from talented students — connect, collaborate, and grow together</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-val">{{ services|length }}</span>
+          <span class="hero-stat-lbl" data-i18n="stat_services">Services</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-val" style="color:var(--gold-400);">⭐</span>
+          <span class="hero-stat-lbl" data-i18n="stat_quality">Quality</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEARCH ────────────────────────────────────────────────────────── -->
+  <div class="search-section">
+    <div class="search-inner">
+      <form class="search-form" method="POST" action="{% url 'skills_market:services_list' %}">
+        {% csrf_token %}
+        <i class="fas fa-search" style="color:var(--text-muted);font-size:14px;flex-shrink:0;"></i>
+        {{ form.search_query|add_class:"search-input"|attr:"placeholder=Search services…" }}
+        <button type="submit" class="search-btn">
+          <i class="fas fa-search"></i>
+          <span data-i18n="search_btn">Search</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── ALERT MESSAGES ────────────────────────────────────────────────── -->
+  {% if messages %}
+  <div class="alert-wrap">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ── CONTENT ───────────────────────────────────────────────────────── -->
+  <div class="page-content">
+
+    <div class="section-header">
+      <div class="section-title">
+        <i class="fas fa-th-large"></i>
+        <span data-i18n="section_title">Available Services</span>
+      </div>
+      <span class="results-count">
+        <strong>{{ services|length }}</strong> <span data-i18n="results_found">services found</span>
+      </span>
     </div>
 
-    <!-- Messages -->
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} fadeIn">{{ message }}</div>
-            {% endfor %}
+    <!-- Services Grid -->
+    <div class="services-grid">
+      {% for service in services %}
+      <div class="service-card" style="animation-delay: {{ forloop.counter0|floatformat:1 }}00ms">
+        <div class="card-accent-bar"></div>
+        <div class="service-card-header">
+          <div class="service-avatar">{{ service.provider.username|slice:":1"|upper }}</div>
+          <div class="service-info">
+            <div class="service-title">{{ service.title|default:"Service" }}</div>
+            <div class="service-provider">
+              <i class="fas fa-user-circle"></i>
+              {{ service.provider.username|default:"Unknown" }}
+            </div>
+          </div>
         </div>
-    {% endif %}
 
-    <!-- Cards Container -->
-    <div class="cards-container">
-        {% for service in services %}
-            <section class="hero-card">
-                <h1>{{ service.title|default:"Service" }}</h1>
-                <p><span data-translate="card-provider">Provider:</span> {{ service.provider.username|default:"Unknown" }}</p>
-                <p><span data-translate="card-skill">Skill:</span> {{ service.skill.name|default:"Unknown" }}</p>
-                <p><span data-translate="card-price">Price:</span> {{ service.price_coins|default:0 }} <span data-translate="card-coins">Coins</span></p>
-                <p><span data-translate="card-delivery">Delivery:</span> {{ service.delivery_time_days|default:0 }} <span data-translate="card-day">Day</span>{{ service.delivery_time_days|pluralize }}</p>
-                <a href="{% url 'skills_market:order_service' service.id service.title|custom_slugify %}" class="btn" data-translate="card-order">Order Now</a>
-            </section>
-        {% empty %}
-            <p class="text-center" data-translate="cards-empty">No services available.</p>
-        {% endfor %}
+        {% if service.skill %}
+        <div>
+          <span class="skill-badge">
+            <i class="fas fa-tag"></i>
+            {{ service.skill.name|default:"Unknown" }}
+          </span>
+        </div>
+        {% endif %}
+
+        <div class="service-card-meta">
+          <div class="meta-item">
+            <i class="fas fa-coins"></i>
+            <span class="meta-price">{{ service.price_coins|default:0 }}</span>
+            <span class="meta-coins" data-i18n="coins">Coins</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-clock"></i>
+            <span class="meta-delivery">
+              {{ service.delivery_time_days|default:0 }}
+              <span data-i18n="days">day{{ service.delivery_time_days|pluralize }}</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="service-card-footer">
+          <a href="{% url 'skills_market:order_service' service.id service.title|custom_slugify %}" class="order-btn">
+            <i class="fas fa-shopping-cart"></i>
+            <span data-i18n="order_now">Order Now</span>
+          </a>
+        </div>
+      </div>
+
+      {% empty %}
+      <div class="empty-state">
+        <div class="empty-state-icon"><i class="fas fa-store-slash"></i></div>
+        <h3 data-i18n="empty_title">No Services Available</h3>
+        <p data-i18n="empty_desc">Be the first to offer a service in the Skills Market!</p>
+      </div>
+      {% endfor %}
     </div>
 
     <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{% url 'skills_market:skills_list' %}" class="btn" data-translate="btn-skills">View Skills</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'skills_market:add_service' %}" class="btn" data-translate="btn-add-service">Add Service</a>
-            {% if user.courses_profile.role == 'instructor' %}
-                <a href="{% url 'skills_market:add_opportunity' %}" class="btn" data-translate="btn-add-opportunity">Add Opportunity</a>
-            {% endif %}
-            <a href="{% url 'skills_market:opportunities_list' %}" class="btn" data-translate="btn-opportunities">View Opportunities</a>
+    <div class="action-row">
+      <a href="{% url 'skills_market:skills_list' %}" class="action-btn">
+        <i class="fas fa-layer-group"></i>
+        <span data-i18n="btn_skills">View Skills</span>
+      </a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'skills_market:add_service' %}" class="action-btn primary">
+          <i class="fas fa-plus"></i>
+          <span data-i18n="btn_add_service">Add Service</span>
+        </a>
+        {% if user.courses_profile.role == 'instructor' %}
+          <a href="{% url 'skills_market:add_opportunity' %}" class="action-btn gold">
+            <i class="fas fa-bolt"></i>
+            <span data-i18n="btn_add_opportunity">Add Opportunity</span>
+          </a>
         {% endif %}
+        <a href="{% url 'skills_market:opportunities_list' %}" class="action-btn">
+          <i class="fas fa-rocket"></i>
+          <span data-i18n="btn_opportunities">View Opportunities</span>
+        </a>
+      {% endif %}
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+  </div>{# /page-content #}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'skills_market/services_list.js' %}"></script>
+  <!-- ── FOOTER ──────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Eduvia</div>
+          <p class="footer-tagline" data-i18n="footer_tagline">Empowering students through knowledge, skills, and connections.</p>
+        </div>
+        <div class="footer-links-group">
+          <div class="footer-links-title" data-i18n="footer_links_title">Quick Links</div>
+          <a href="/" data-i18n="nav_home">Home</a>
+          <a href="/courses/" data-i18n="nav_courses">Courses</a>
+          <a href="{% url 'skills_market:services_list' %}" data-i18n="nav_skills">Skills Market</a>
+          <a href="{% url 'skills_market:opportunities_list' %}" data-i18n="btn_opportunities">Opportunities</a>
+          <a href="/about/" data-i18n="nav_about">About Us</a>
+          <a href="/contact_us/" data-i18n="nav_contact">Contact Us</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy" data-i18n="footer_copy">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" rel="noopener" class="footer-social-btn"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://x.com/Eduvia7" target="_blank" rel="noopener" class="footer-social-btn"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" rel="noopener" class="footer-social-btn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>{# /page-wrapper #}
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    page_title:'Skills Market', hero_badge:'Skills Market',
+    hero_title:'Skills Market',
+    hero_subtitle:'Explore and order micro-services from talented students — connect, collaborate, and grow together',
+    stat_services:'Services', stat_quality:'Quality',
+    search_btn:'Search', section_title:'Available Services',
+    results_found:'services found', coins:'Coins', days:'days',
+    order_now:'Order Now', empty_title:'No Services Available',
+    empty_desc:'Be the first to offer a service in the Skills Market!',
+    btn_skills:'View Skills', btn_add_service:'Add Service',
+    btn_add_opportunity:'Add Opportunity', btn_opportunities:'View Opportunities',
+    footer_tagline:'Empowering students through knowledge, skills, and connections.',
+    footer_links_title:'Quick Links', footer_copy:'© 2025 Eduvia and creativitycode. All rights reserved.',
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_skills:'Skills Market', nav_about:'About', nav_contact:'Contact',
+    nav_dashboard:'Dashboard', nav_profile:'Profile', nav_logout:'Logout', nav_login:'Login',
+  },
+  ar: {
+    page_title:'سوق المهارات', hero_badge:'سوق المهارات',
+    hero_title:'سوق المهارات',
+    hero_subtitle:'استكشف واطلب خدمات المهارات من الطلاب الموهوبين — تواصل وتعاون وانمُ معاً',
+    stat_services:'خدمة', stat_quality:'جودة',
+    search_btn:'بحث', section_title:'الخدمات المتاحة',
+    results_found:'خدمة متاحة', coins:'عملة', days:'يوم',
+    order_now:'اطلب الآن', empty_title:'لا توجد خدمات بعد',
+    empty_desc:'كن أول من يقدم خدمة في سوق المهارات!',
+    btn_skills:'عرض المهارات', btn_add_service:'إضافة خدمة',
+    btn_add_opportunity:'إضافة فرصة', btn_opportunities:'عرض الفرص',
+    footer_tagline:'نمكّن الطلاب من خلال المعرفة والمهارات والروابط.',
+    footer_links_title:'روابط سريعة', footer_copy:'© 2025 Eduvia وcreativotycode. جميع الحقوق محفوظة.',
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'الشات بوت',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_skills:'سوق المهارات', nav_about:'عن المنصة', nav_contact:'تواصل معنا',
+    nav_dashboard:'لوحة التحكم', nav_profile:'الملف الشخصي', nav_logout:'تسجيل الخروج', nav_login:'تسجيل الدخول',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ───────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile Menu ─────────────────────────────────────────────────────── */
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger-btn');
+  if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+/* ── Toast ───────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+
+  // Stagger card animations
+  document.querySelectorAll('.service-card').forEach((card, i) => {
+    card.style.animationDelay = (i * 80) + 'ms';
+  });
+});
+</script>
 </body>
 </html>

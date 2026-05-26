@@ -1,205 +1,846 @@
 {% load static i18n projects_filters %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 🔍 SEO -->
-  <title data-translate="page-title">Opportunities - Eduvia</title>
+  <title data-i18n="page_title">Job Opportunities — Eduvia</title>
   <meta name="description" content="Discover job opportunities in Eduvia's Skills Market, connecting students with career prospects.">
   <meta name="keywords" content="job opportunities, freelance jobs, student jobs, Eduvia, skills market, tech jobs">
   <meta name="author" content="Eduvia">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/skills_market/opportunities/">
 
-  <!-- 🌍 Open Graph -->
   <meta property="og:title" content="Opportunities - Eduvia">
   <meta property="og:description" content="Explore freelance and student-friendly job opportunities on Eduvia's Skills Market.">
   <meta property="og:image" content="https://i.postimg.cc/mZXhsz4Z/oppo1.jpg">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/skills_market/opportunities/">
   <meta property="og:type" content="website">
 
-  <!-- 🐦 Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Opportunities - Eduvia">
   <meta name="twitter:description" content="Browse job opportunities in various fields and apply directly through Eduvia's Skills Market.">
   <meta name="twitter:image" content="https://i.postimg.cc/mZXhsz4Z/oppo1.jpg">
 
-  <!-- 🖼️ Favicon -->
   <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-  <!-- 🌐 Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🎨 Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'skills_market/opportunities.css' %}">
-
-  <!-- 🖼️ Background Image Variable -->
   <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/mZXhsz4Z/oppo1.jpg");
-    }
-  </style>
+  /* ═══════════════════════════════════════════════════════════════════════
+     DESIGN SYSTEM — "Obsidian Academy"
+     ═══════════════════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- 📊 Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://eduvia-ai.fly.dev/#organization",
-        "name": "Eduvia",
-        "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-        },
-        "sameAs": [
-          "https://www.facebook.com/share/18iRSctdxN/",
-          "https://x.com/Eduvia7",
-          "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-        ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://eduvia-ai.fly.dev/#website",
-        "url": "https://eduvia-ai.fly.dev",
-        "name": "Eduvia AI Learning Platform",
-        "publisher": {
-          "@id": "https://eduvia-ai.fly.dev/#organization"
-        }
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/opportunities/#webpage",
-        "url": "https://eduvia-ai.fly.dev/skills_market/opportunities/",
-        "name": "Opportunities - Eduvia",
-        "description": "Find and apply for job opportunities available in Eduvia's Skills Market.",
-        "breadcrumb": {
-          "@id": "https://eduvia-ai.fly.dev/skills_market/opportunities/#breadcrumb"
-        },
-        "inLanguage": "en"
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/opportunities/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Skills Market",
-            "item": "https://eduvia-ai.fly.dev/skills_market/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Opportunities",
-            "item": "https://eduvia-ai.fly.dev/skills_market/opportunities/"
-          }
-        ]
-      }
-    ]
+  :root {
+    --bg-base:     #080b14;
+    --bg-panel:    #0d1120;
+    --bg-card:     #131929;
+    --bg-card-2:   #1a2236;
+    --bg-hover:    #1e2840;
+    --border:      rgba(120,130,180,.12);
+    --border-glow: rgba(139,92,246,.25);
+
+    --violet-400:  #a78bfa;
+    --violet-500:  #8b5cf6;
+    --violet-600:  #7c3aed;
+    --violet-glow: rgba(139,92,246,.18);
+    --gold-400:    #fbbf24;
+    --gold-300:    #fcd34d;
+    --emerald-400: #34d399;
+    --emerald-500: #10b981;
+    --rose-400:    #fb7185;
+    --sky-400:     #38bdf8;
+    --sky-500:     #0ea5e9;
+
+    --text-h:      #f1f5ff;
+    --text-p:      #94a3c4;
+    --text-muted:  #5a6585;
+
+    --accent:      var(--violet-500);
+    --accent-d:    var(--violet-600);
+    --success:     var(--emerald-400);
+    --warning:     var(--gold-400);
+    --danger:      var(--rose-400);
+    --info:        var(--sky-400);
+
+    --radius-sm:  6px;
+    --radius-md:  12px;
+    --radius-lg:  18px;
+    --radius-xl:  24px;
+    --topbar-h:   62px;
+    --trans:      all .22s cubic-bezier(.4,0,.2,1);
+    --glow:       0 0 40px rgba(139,92,246,.15);
+
+    --font-display: 'Syne', sans-serif;
+    --font-body:    'DM Sans', sans-serif;
+    --font-arabic:  'Cairo', sans-serif;
   }
-  </script>
+
+  [data-theme="light"] {
+    --bg-base:     #f4f6fc;
+    --bg-panel:    #ffffff;
+    --bg-card:     #f8faff;
+    --bg-card-2:   #eef2fc;
+    --bg-hover:    #e8ecf8;
+    --border:      rgba(100,110,160,.14);
+    --border-glow: rgba(139,92,246,.3);
+    --text-h:      #0f172a;
+    --text-p:      #374365;
+    --text-muted:  #8896b3;
+    --violet-glow: rgba(139,92,246,.1);
+    --glow:        0 0 40px rgba(139,92,246,.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-base);
+    color: var(--text-p);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background .35s, color .35s;
+  }
+
+  [lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+  [lang="ar"] { direction: rtl; }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg-base); }
+  ::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+    height: var(--topbar-h);
+    background: rgba(8,11,20,.88);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 16px;
+  }
+  [data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+  .topbar-logo {
+    font-family: var(--font-display);
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+  }
+  .topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+  .topbar-page-label {
+    font-size: 13px; color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .topbar-nav {
+    display: flex; align-items: center; gap: 2px;
+    flex: 1; justify-content: center;
+  }
+  .topbar-nav a {
+    padding: 7px 12px; border-radius: var(--radius-sm);
+    font-size: 12.5px; font-weight: 500; color: var(--text-muted);
+    text-decoration: none; transition: var(--trans); white-space: nowrap;
+  }
+  .topbar-nav a:hover { color: var(--text-p); background: var(--bg-card); }
+  .topbar-nav a.active { color: var(--accent); background: var(--violet-glow); }
+
+  .topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  .ctrl-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--bg-card);
+    color: var(--text-p); font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: var(--trans);
+  }
+  .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+  .tb-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: none; text-decoration: none; transition: var(--trans);
+    font-family: inherit;
+  }
+  .tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+  .tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .tb-btn-accent { background: var(--accent); color: #fff; }
+  .tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+  .coins-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2);
+    border-radius: 99px; padding: 5px 12px;
+    font-size: 12px; font-weight: 700; color: var(--gold-400);
+  }
+
+  /* ── Hamburger ── */
+  .hamburger {
+    display: none; background: none; border: 1px solid var(--border);
+    color: var(--text-p); width: 36px; height: 36px; border-radius: var(--radius-sm);
+    cursor: pointer; font-size: 16px; align-items: center; justify-content: center;
+    transition: var(--trans);
+  }
+  .hamburger:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Mobile nav drawer */
+  .mobile-nav {
+    display: none; flex-direction: column; gap: 0;
+    position: fixed; top: var(--topbar-h); left: 0; right: 0;
+    background: var(--bg-panel); border-bottom: 1px solid var(--border);
+    z-index: 590; padding: 8px 0;
+    box-shadow: 0 10px 40px rgba(0,0,0,.4);
+    transform: translateY(-10px); opacity: 0;
+    transition: transform .3s ease, opacity .3s ease;
+  }
+  .mobile-nav.open { display: flex; transform: translateY(0); opacity: 1; }
+  .mobile-nav a {
+    padding: 12px 24px; font-size: 14px; color: var(--text-p);
+    text-decoration: none; border-bottom: 1px solid var(--border);
+    transition: var(--trans);
+  }
+  .mobile-nav a:hover { background: var(--bg-card); color: var(--accent); }
+
+  /* ═══ PAGE LAYOUT ════════════════════════════════════════════════════════ */
+  .page-wrap {
+    padding-top: var(--topbar-h);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  /* ═══ HERO ══════════════════════════════════════════════════════════════ */
+  .hero-section {
+    position: relative; overflow: hidden;
+    padding: 64px 24px 52px;
+    background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-section::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, rgba(139,92,246,.12), transparent),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(251,191,36,.06), transparent);
+    pointer-events: none;
+  }
+  .hero-section::after {
+    content: '\f0b1'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+    position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+    font-size: 180px; color: rgba(139,92,246,.04); pointer-events: none;
+    line-height: 1;
+  }
+  .hero-inner { position: relative; max-width: 900px; margin: 0 auto; }
+  .hero-breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text-muted); margin-bottom: 16px;
+  }
+  .hero-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+  .hero-breadcrumb a:hover { color: var(--accent); }
+  .hero-breadcrumb i { font-size: 9px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--violet-glow); border: 1px solid var(--border-glow);
+    border-radius: 99px; padding: 5px 14px;
+    font-size: 11px; font-weight: 700; color: var(--violet-400);
+    letter-spacing: .5px; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: 38px; font-weight: 800; color: var(--text-h);
+    letter-spacing: -1px; line-height: 1.15; margin-bottom: 12px;
+  }
+  .hero-title span {
+    background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-desc { font-size: 15px; color: var(--text-p); max-width: 560px; line-height: 1.7; }
+  .hero-stats {
+    display: flex; gap: 28px; margin-top: 28px; flex-wrap: wrap;
+  }
+  .hero-stat { display: flex; flex-direction: column; gap: 2px; }
+  .hero-stat-val {
+    font-family: var(--font-display);
+    font-size: 26px; font-weight: 800; color: var(--text-h); line-height: 1;
+  }
+  .hero-stat-val.accent { color: var(--accent); }
+  .hero-stat-val.gold   { color: var(--gold-400); }
+  .hero-stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+
+  /* ═══ MESSAGES ══════════════════════════════════════════════════════════ */
+  .messages-wrap { max-width: 960px; margin: 20px auto 0; padding: 0 24px; }
+  .alert {
+    padding: 13px 18px; border-radius: var(--radius-md);
+    font-size: 13px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+    animation: fadeIn .3s ease;
+  }
+  .alert-success { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25); color: var(--success); }
+  .alert-error,.alert-danger { background: rgba(251,113,133,.08); border: 1px solid rgba(251,113,133,.2); color: var(--danger); }
+  .alert-info { background: rgba(139,92,246,.1); border: 1px solid rgba(139,92,246,.25); color: var(--violet-400); }
+  .alert-warning { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2); color: var(--gold-400); }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ═══ MAIN CONTENT ═══════════════════════════════════════════════════════ */
+  .content-area {
+    flex: 1;
+    max-width: 960px; width: 100%; margin: 36px auto 0;
+    padding: 0 24px 80px;
+  }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .toolbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .toolbar-title {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 700; color: var(--text-h);
+  }
+  .count-badge {
+    background: var(--bg-card); border: 1px solid var(--border);
+    padding: 2px 10px; border-radius: 99px;
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+  }
+  .toolbar-right { display: flex; align-items: center; gap: 8px; }
+  .add-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+    color: #fff; font-size: 13px; font-weight: 700;
+    text-decoration: none; border: none; cursor: pointer;
+    font-family: inherit; transition: var(--trans);
+    box-shadow: 0 4px 20px rgba(139,92,246,.3);
+  }
+  .add-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.4); }
+
+  /* ═══ OPPORTUNITY CARDS ══════════════════════════════════════════════════ */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .opp-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-xl); overflow: hidden;
+    transition: var(--trans);
+    animation: cardReveal .45s cubic-bezier(.34,1.56,.64,1) both;
+    display: flex; flex-direction: column;
+  }
+  .opp-card:nth-child(1) { animation-delay: .05s; }
+  .opp-card:nth-child(2) { animation-delay: .10s; }
+  .opp-card:nth-child(3) { animation-delay: .15s; }
+  .opp-card:nth-child(4) { animation-delay: .20s; }
+  .opp-card:nth-child(5) { animation-delay: .25s; }
+  .opp-card:nth-child(6) { animation-delay: .30s; }
+  @keyframes cardReveal {
+    from { opacity: 0; transform: translateY(20px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .opp-card:hover {
+    border-color: var(--border-glow);
+    box-shadow: var(--glow);
+    transform: translateY(-3px);
+  }
+
+  /* Card header stripe */
+  .opp-card-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, var(--violet-500), var(--gold-400));
+  }
+
+  .opp-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+
+  .opp-card-top { display: flex; align-items: flex-start; gap: 12px; }
+  .opp-icon {
+    width: 46px; height: 46px; border-radius: var(--radius-md);
+    background: var(--violet-glow); border: 1px solid var(--border-glow);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--violet-400); flex-shrink: 0;
+  }
+  .opp-card-meta { flex: 1; }
+  .opp-provider {
+    font-size: 11px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px;
+  }
+  .opp-title {
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 700; color: var(--text-h); line-height: 1.3;
+  }
+
+  .opp-desc {
+    font-size: 13.5px; color: var(--text-p); line-height: 1.65;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .opp-details { display: flex; flex-direction: column; gap: 7px; }
+  .opp-detail-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12.5px; color: var(--text-muted);
+  }
+  .opp-detail-row i { width: 14px; text-align: center; flex-shrink: 0; font-size: 12px; }
+  .opp-detail-val { color: var(--text-p); font-weight: 500; }
+  .opp-detail-val.gold { color: var(--gold-400); font-weight: 700; }
+
+  .opp-card-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+
+  .apply-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 20px; border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+    color: #fff; font-size: 13px; font-weight: 700;
+    text-decoration: none; transition: var(--trans);
+    box-shadow: 0 4px 16px rgba(139,92,246,.3);
+    border: none; cursor: pointer; font-family: inherit;
+  }
+  .apply-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(139,92,246,.4); }
+
+  .opp-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 99px;
+    font-size: 10px; font-weight: 700; letter-spacing: .4px;
+    background: rgba(52,211,153,.1); color: var(--success);
+    border: 1px solid rgba(52,211,153,.2);
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center; padding: 80px 24px;
+    background: var(--bg-card); border: 1px dashed var(--border);
+    border-radius: var(--radius-xl);
+  }
+  .empty-state i { font-size: 48px; color: var(--text-muted); opacity: .3; display: block; margin-bottom: 16px; }
+  .empty-state h3 {
+    font-family: var(--font-display);
+    font-size: 20px; font-weight: 700; color: var(--text-h); margin-bottom: 8px;
+  }
+  .empty-state p { font-size: 14px; color: var(--text-muted); }
+
+  /* ═══ ACTION ROW ═════════════════════════════════════════════════════════ */
+  .action-row {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 32px;
+  }
+  .action-link {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 20px; border-radius: var(--radius-md);
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    transition: var(--trans); font-family: inherit; border: none; cursor: pointer;
+  }
+  .action-link-ghost {
+    background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border);
+  }
+  .action-link-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .action-link-accent {
+    background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+    color: #fff; box-shadow: 0 4px 16px rgba(139,92,246,.25);
+  }
+  .action-link-accent:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(139,92,246,.35); }
+  .action-link-gold {
+    background: linear-gradient(135deg, var(--gold-400), #f59e0b);
+    color: #1a0f00; box-shadow: 0 4px 16px rgba(251,191,36,.2);
+  }
+  .action-link-gold:hover { transform: translateY(-1px); }
+
+  /* ═══ FOOTER ═════════════════════════════════════════════════════════════ */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--bg-panel);
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .footer-inner { max-width: 960px; margin: 0 auto; }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 800; display: inline-block; margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .footer-links {
+    display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .footer-links a {
+    font-size: 12.5px; color: var(--text-muted); text-decoration: none; transition: var(--trans);
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-social {
+    display: flex; justify-content: center; gap: 12px; margin-bottom: 16px;
+  }
+  .footer-social a {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 13px; text-decoration: none;
+    transition: var(--trans);
+  }
+  .footer-social a:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+  .footer-copy { font-size: 12px; color: var(--text-muted); }
+
+  /* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+  .toast-wrap {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+  }
+  .toast {
+    padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+    display: flex; align-items: center; gap: 8px; min-width: 220px;
+  }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+  .toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+  .toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+  /* ═══ MOBILE ══════════════════════════════════════════════════════════════ */
+  @media (max-width: 960px) {
+    .topbar-nav { display: none; }
+    .hamburger { display: flex; }
+    .topbar-page-label { display: none; }
+  }
+  @media (max-width: 640px) {
+    .hero-title { font-size: 26px; }
+    .content-area { padding: 0 14px 60px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .hero-section { padding: 44px 14px 36px; }
+    .topbar { padding: 0 14px; gap: 10px; }
+    .hero-section::after { display: none; }
+  }
+  </style>
 </head>
-
 <body>
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <section class="hero">
-        <h1 data-translate="hero-title">Job Opportunities</h1>
-        <p data-translate="hero-desc">Discover job opportunities in Eduvia's Skills Market, connecting students with career prospects.</p>
-    </section>
+{# ── TOPBAR ──────────────────────────────────────────────────────────────── #}
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-page-label" data-i18n="opportunities">Opportunities</span>
 
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} fadeIn">{{ message }}</div>
-            {% endfor %}
-        </div>
+  <nav class="topbar-nav">
+    <a href="/" data-i18n="nav_home">Home</a>
+    <a href="/courses/" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" data-i18n="nav_competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
+    <a href="{% url 'skills_market:services_list' %}" class="active" data-i18n="nav_skills">Skills Market</a>
+    <a href="/about/" data-i18n="nav_about">About Us</a>
+    <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated %}
+      {% if user.courses_profile %}
+        <div class="coins-pill"><i class="fas fa-coins"></i> {{ user.courses_profile.coins|default:0 }}</div>
+      {% endif %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-ghost">
+          <i class="fas fa-tachometer-alt"></i>
+        </a>
+      {% endif %}
+      <a href="/accounts/profile/" class="tb-btn tb-btn-ghost">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="/accounts/logout/" class="tb-btn tb-btn-ghost">
+        <i class="fas fa-sign-out-alt"></i>
+      </a>
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-ghost" data-i18n="nav_login">Login</a>
     {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme"><i class="fas fa-moon" id="theme-icon"></i></button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language"><i class="fas fa-globe"></i></button>
+    <button class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
 
-    <div class="cards-container">
-        {% for opportunity in opportunities %}
-            <section class="hero-card">
-                <h1>{{ opportunity.title|default:"Opportunity" }}</h1>
-                <p><span data-translate="card-provider">Provider:</span> {{ opportunity.provider.username|default:"Unknown" }}</p>
-                <p>{{ opportunity.description|default:"No description available" }}</p>
-                <p><span data-translate="card-salary">Salary:</span> {{ opportunity.salary|default:"Not specified" }} <span data-translate="card-coins">Coins</span></p>
-                <p><span data-translate="card-address">Address:</span> {{ opportunity.address|default:"Not specified" }}</p>
-                <a href="{% url 'skills_market:apply_opportunity' opportunity_id=opportunity.id %}" class="btn" data-translate="card-apply">Apply Now</a>
-            </section>
-        {% empty %}
-            <p class="text-center" data-translate="no-opportunities">No opportunities available.</p>
-        {% endfor %}
+{# Mobile nav #}
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="/" data-i18n="nav_home">Home</a>
+  <a href="/courses/" data-i18n="nav_courses">Courses</a>
+  <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
+  <a href="/competitions/" data-i18n="nav_competitions">Competitions</a>
+  <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
+  <a href="{% url 'skills_market:services_list' %}" data-i18n="nav_skills">Skills Market</a>
+  <a href="/about/" data-i18n="nav_about">About Us</a>
+  <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+  {% if user.is_authenticated %}
+    <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
+    <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
+  {% else %}
+    <a href="/accounts/register/" data-i18n="nav_login">Login</a>
+  {% endif %}
+</nav>
+
+<div class="page-wrap">
+
+  {# ── HERO ─────────────────────────────────────────────────────────────── #}
+  <section class="hero-section">
+    <div class="hero-inner">
+      <div class="hero-breadcrumb">
+        <a href="/"><i class="fas fa-home"></i></a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="{% url 'skills_market:services_list' %}" data-i18n="skills_market">Skills Market</a>
+        <i class="fas fa-chevron-right"></i>
+        <span data-i18n="opportunities">Opportunities</span>
+      </div>
+      <div class="hero-badge"><i class="fas fa-briefcase"></i> <span data-i18n="skills_market">Skills Market</span></div>
+      <h1 class="hero-title">
+        <span data-i18n="hero_title_span">Job</span> <span data-i18n="hero_title_span2">Opportunities</span>
+      </h1>
+      <p class="hero-desc" data-i18n="hero_desc">Discover job opportunities in Eduvia's Skills Market, connecting students with career prospects.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-val accent">{{ opportunities|length|default:"0" }}</div>
+          <div class="hero-stat-lbl" data-i18n="open_positions">Open Positions</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val gold">∞</div>
+          <div class="hero-stat-lbl" data-i18n="career_paths">Career Paths</div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="action-buttons">
-        {% if user.is_authenticated %}
-            {% if user.courses_profile.role == 'instructor' %}
-                <a href="{% url 'skills_market:add_opportunity' %}" class="btn" data-translate="btn-add-opportunity">Add Opportunity</a>
-                <a href="{% url 'skills_market:opportunity_applications' %}" class="btn" data-translate="btn-view-applications">View Applications</a>
-            {% endif %}
-            <a href="{% url 'skills_market:applicant_messages' %}" class="btn" data-translate="btn-applicant-messages">Applicant Messages</a>
+  {# ── Messages ─────────────────────────────────────────────────────────── #}
+  {% if messages %}
+    <div class="messages-wrap">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          <i class="fas {% if 'success' in message.tags %}fa-check-circle{% elif 'error' in message.tags or 'danger' in message.tags %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# ── Main Content ─────────────────────────────────────────────────────── #}
+  <div class="content-area">
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <span class="toolbar-title" data-i18n="all_opportunities">All Opportunities</span>
+        <span class="count-badge">{{ opportunities|length }} <span data-i18n="positions">positions</span></span>
+      </div>
+      <div class="toolbar-right">
+        {% if user.is_authenticated and user.courses_profile.role == 'instructor' %}
+          <a href="{% url 'skills_market:add_opportunity' %}" class="add-btn">
+            <i class="fas fa-plus"></i>
+            <span data-i18n="add_opportunity">Add Opportunity</span>
+          </a>
         {% endif %}
-        <a href="{% url 'skills_market:services_list' %}" class="btn" data-translate="btn-back-services">Back to Services</a>
+      </div>
     </div>
 
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+    {# Cards Grid #}
+    <div class="cards-grid">
+      {% for opportunity in opportunities %}
+        <div class="opp-card">
+          <div class="opp-card-stripe"></div>
+          <div class="opp-card-body">
+            <div class="opp-card-top">
+              <div class="opp-icon"><i class="fas fa-briefcase"></i></div>
+              <div class="opp-card-meta">
+                <div class="opp-provider">{{ opportunity.provider.username|default:"Unknown" }}</div>
+                <div class="opp-title">{{ opportunity.title|default:"Opportunity" }}</div>
+              </div>
+            </div>
+            <p class="opp-desc">{{ opportunity.description|default:"No description available" }}</p>
+            <div class="opp-details">
+              <div class="opp-detail-row">
+                <i class="fas fa-coins" style="color:var(--gold-400);"></i>
+                <span data-i18n="salary">Salary</span>:
+                <span class="opp-detail-val gold">{{ opportunity.salary|default:"Not specified" }} <span data-i18n="coins">Coins</span></span>
+              </div>
+              <div class="opp-detail-row">
+                <i class="fas fa-map-marker-alt" style="color:var(--rose-400);"></i>
+                <span data-i18n="address">Address</span>:
+                <span class="opp-detail-val">{{ opportunity.address|default:"Not specified" }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="opp-card-footer">
+            <span class="opp-badge"><i class="fas fa-circle" style="font-size:7px;"></i> <span data-i18n="open">Open</span></span>
+            <a href="{% url 'skills_market:apply_opportunity' opportunity_id=opportunity.id %}" class="apply-btn">
+              <i class="fas fa-paper-plane"></i>
+              <span data-i18n="apply_now">Apply Now</span>
+            </a>
+          </div>
+        </div>
+      {% empty %}
+        <div class="empty-state" style="grid-column:1/-1;">
+          <i class="fas fa-briefcase"></i>
+          <h3 data-i18n="no_opps_title">No Opportunities Yet</h3>
+          <p data-i18n="no_opps_desc">New opportunities will appear here. Check back soon!</p>
+        </div>
+      {% endfor %}
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'skills_market/opportunities.js' %}"></script>
+    {# Action Row #}
+    <div class="action-row">
+      {% if user.is_authenticated %}
+        {% if user.courses_profile.role == 'instructor' %}
+          <a href="{% url 'skills_market:add_opportunity' %}" class="action-link action-link-accent">
+            <i class="fas fa-plus-circle"></i> <span data-i18n="add_opportunity">Add Opportunity</span>
+          </a>
+          <a href="{% url 'skills_market:opportunity_applications' %}" class="action-link action-link-gold">
+            <i class="fas fa-users"></i> <span data-i18n="view_applications">View Applications</span>
+          </a>
+        {% endif %}
+        <a href="{% url 'skills_market:applicant_messages' %}" class="action-link action-link-ghost">
+          <i class="fas fa-envelope"></i> <span data-i18n="applicant_messages">Applicant Messages</span>
+        </a>
+      {% endif %}
+      <a href="{% url 'skills_market:services_list' %}" class="action-link action-link-ghost">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="back_services">Back to Services</span>
+      </a>
+    </div>
+
+  </div>{# /content-area #}
+
+  {# ── FOOTER ──────────────────────────────────────────────────────────── #}
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">Eduvia</div>
+      <div class="footer-links">
+        <a href="/" data-i18n="nav_home">Home</a>
+        <a href="/courses/" data-i18n="nav_courses">Courses</a>
+        <a href="{% url 'skills_market:services_list' %}" data-i18n="nav_skills">Skills Market</a>
+        <a href="/about/" data-i18n="nav_about">About Us</a>
+        <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+      </div>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://x.com/Eduvia7" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <p class="footer-copy" data-i18n="footer_copy">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+    </div>
+  </footer>
+
+</div>{# /page-wrap #}
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://eduvia-ai.fly.dev/#organization", "name": "Eduvia", "url": "https://eduvia-ai.fly.dev", "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" } },
+    { "@type": "WebPage", "@id": "https://eduvia-ai.fly.dev/skills_market/opportunities/#webpage", "url": "https://eduvia-ai.fly.dev/skills_market/opportunities/", "name": "Opportunities - Eduvia" }
+  ]
+}
+</script>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    page_title:'Job Opportunities — Eduvia',
+    opportunities:'Opportunities', skills_market:'Skills Market',
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_skills:'Skills Market', nav_about:'About Us', nav_contact:'Contact',
+    nav_profile:'Profile', nav_logout:'Logout', nav_login:'Login',
+    nav_dashboard:'Dashboard',
+    hero_title_span:'Job', hero_title_span2:'Opportunities',
+    hero_desc:"Discover job opportunities in Eduvia's Skills Market, connecting students with career prospects.",
+    open_positions:'Open Positions', career_paths:'Career Paths',
+    all_opportunities:'All Opportunities', positions:'positions',
+    add_opportunity:'Add Opportunity',
+    salary:'Salary', coins:'Coins', address:'Address', open:'Open',
+    apply_now:'Apply Now',
+    no_opps_title:'No Opportunities Yet', no_opps_desc:'New opportunities will appear here. Check back soon!',
+    view_applications:'View Applications', applicant_messages:'Applicant Messages',
+    back_services:'Back to Services',
+    footer_copy:'© 2025 Eduvia and creativitycode. All rights reserved.',
+  },
+  ar: {
+    page_title:'فرص العمل — Eduvia',
+    opportunities:'الفرص', skills_market:'سوق المهارات',
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'الشات بوت',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_skills:'سوق المهارات', nav_about:'من نحن', nav_contact:'اتصل بنا',
+    nav_profile:'الملف الشخصي', nav_logout:'تسجيل الخروج', nav_login:'تسجيل الدخول',
+    nav_dashboard:'لوحة التحكم',
+    hero_title_span:'فرص', hero_title_span2:'العمل',
+    hero_desc:'اكتشف فرص العمل في سوق مهارات Eduvia، وتواصل مع آفاق مهنية.',
+    open_positions:'وظائف متاحة', career_paths:'مسارات مهنية',
+    all_opportunities:'جميع الفرص', positions:'فرصة',
+    add_opportunity:'إضافة فرصة',
+    salary:'الراتب', coins:'عملة', address:'العنوان', open:'متاحة',
+    apply_now:'تقدم الآن',
+    no_opps_title:'لا توجد فرص بعد', no_opps_desc:'ستظهر الفرص الجديدة هنا. تحقق لاحقاً!',
+    view_applications:'عرض الطلبات', applicant_messages:'رسائل المتقدمين',
+    back_services:'العودة للخدمات',
+    footer_copy:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  document.title = I18N[lang].page_title;
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ───────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile Menu ─────────────────────────────────────────────────────── */
+function toggleMenu() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.querySelector('.hamburger');
+  if (nav && ham && !nav.contains(e.target) && !ham.contains(e.target)) {
+    nav.classList.remove('open');
+  }
+});
+
+/* ── Toast ───────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 350); }, dur);
+}
+
+/* ── Init ────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  {% if messages %}
+  {% for message in messages %}
+    {% if 'success' in message.tags %}toast('{{ message|escapejs }}', 'success');{% elif 'error' in message.tags %}toast('{{ message|escapejs }}', 'error');{% else %}toast('{{ message|escapejs }}', 'info');{% endif %}
+  {% endfor %}
+  {% endif %}
+});
+</script>
 </body>
 </html>

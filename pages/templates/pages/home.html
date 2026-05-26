@@ -467,9 +467,6 @@ footer{
     <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
       <i class="fas fa-globe"></i>
     </button>
-    {% if not user.is_authenticated %}
-    <a href="{% url 'accounts:subscribe' %}" class="tb-btn tb-btn-accent" data-i18n="nav_subscribe">Subscribe</a>
-    {% endif %}
     <button class="ham-btn" id="ham-btn" onclick="toggleMobileNav()">
       <i class="fas fa-bars"></i>
     </button>
@@ -490,7 +487,6 @@ footer{
     <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
   {% else %}
     <a href="/accounts/register/" data-i18n="nav_login">Login</a>
-    <a href="{% url 'accounts:subscribe' %}" data-i18n="nav_subscribe">Subscribe</a>
   {% endif %}
 </div>
 

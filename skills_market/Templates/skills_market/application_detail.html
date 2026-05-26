@@ -1,13 +1,13 @@
 {% load static i18n %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- 🔍 SEO -->
-  <title data-translate="page-title">Application Details - Eduvia</title>
+  <title data-translate="page-title">Application Details — Eduvia</title>
   <meta name="description" content="View detailed information about an applicant in Eduvia's Skills Market.">
   <meta name="keywords" content="application details, applicant profile, Eduvia, skills market">
   <meta name="author" content="Eduvia">
@@ -32,18 +32,7 @@
 
   <!-- 🌐 Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <!-- 🎨 Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'skills_market/application_details.css' %}">
-
-  <!-- Background -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/zfbYK6hg/oppo2.jpg");
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- 📊 Structured Data -->
   <script type="application/ld+json">
@@ -55,10 +44,7 @@
         "@id": "https://eduvia-ai.fly.dev/#organization",
         "name": "Eduvia",
         "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg"
-        },
+        "logo": { "@type": "ImageObject", "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg" },
         "sameAs": [
           "https://www.facebook.com/share/18iRSctdxN/",
           "https://x.com/Eduvia7",
@@ -66,153 +52,882 @@
         ]
       },
       {
-        "@type": "WebSite",
-        "@id": "https://eduvia-ai.fly.dev/#website",
-        "url": "https://eduvia-ai.fly.dev",
-        "name": "Eduvia AI Learning Platform",
-        "publisher": {
-          "@id": "https://eduvia-ai.fly.dev/#organization"
-        }
-      },
-      {
         "@type": "WebPage",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/opportunities/applications/{{ application.id }}/#webpage",
         "url": "https://eduvia-ai.fly.dev/skills_market/opportunities/applications/{{ application.id }}/",
         "name": "Application Details",
         "description": "Detailed view of an applicant profile including skills, CV, LinkedIn, and contact info.",
-        "breadcrumb": {
-          "@id": "https://eduvia-ai.fly.dev/skills_market/opportunities/applications/{{ application.id }}/#breadcrumb"
-        },
         "inLanguage": "en"
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/opportunities/applications/{{ application.id }}/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Skills Market",
-            "item": "https://eduvia-ai.fly.dev/skills_market/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Opportunity Applications",
-            "item": "https://eduvia-ai.fly.dev/skills_market/opportunities/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 4,
-            "name": "Application Details",
-            "item": "https://eduvia-ai.fly.dev/skills_market/opportunities/applications/{{ application.id }}/"
-          }
-        ]
       }
     ]
   }
   </script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   Matching lesson_view.html exactly
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-breadcrumb {
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 6px;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .sep { opacity: .4; }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+.tb-btn-danger { background: rgba(251,113,133,.12); color: var(--danger); border: 1px solid rgba(251,113,133,.25); }
+.tb-btn-danger:hover { background: rgba(251,113,133,.2); }
+
+/* ── Hamburger ── */
+.hamburger {
+  display: none; background: none; border: 1px solid var(--border);
+  color: var(--text-p); border-radius: var(--radius-sm); padding: 6px 10px;
+  font-size: 16px; cursor: pointer; transition: var(--trans);
+}
+.hamburger:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ NAV DRAWER (mobile) ════════════════════════════════════════════════ */
+.nav-drawer {
+  position: fixed; inset: 0; z-index: 700;
+  display: flex; pointer-events: none;
+}
+.nav-drawer.open { pointer-events: auto; }
+.nav-drawer-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.65);
+  opacity: 0; transition: opacity .3s; backdrop-filter: blur(4px);
+}
+.nav-drawer.open .nav-drawer-overlay { opacity: 1; }
+.nav-drawer-panel {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 280px;
+  background: var(--bg-panel); border-right: 1px solid var(--border);
+  padding: 24px 0; display: flex; flex-direction: column; gap: 4px;
+  transform: translateX(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
+  overflow-y: auto;
+}
+[lang="ar"] .nav-drawer-panel { left: auto; right: 0; border-right: none; border-left: 1px solid var(--border); transform: translateX(100%); }
+.nav-drawer.open .nav-drawer-panel { transform: translateX(0); }
+.drawer-logo {
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  padding: 0 20px 16px; border-bottom: 1px solid var(--border); margin-bottom: 8px;
+}
+.drawer-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 20px; color: var(--text-p); text-decoration: none;
+  font-size: 14px; font-weight: 500; transition: var(--trans); border-radius: 0;
+}
+.drawer-link:hover { background: var(--bg-card); color: var(--accent); }
+.drawer-link i { width: 16px; text-align: center; color: var(--text-muted); font-size: 13px; }
+.drawer-link:hover i { color: var(--accent); }
+.drawer-coins {
+  display: flex; align-items: center; gap: 8px;
+  margin: 8px 16px 0; padding: 10px 14px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); font-size: 13px; color: var(--gold-400);
+}
+
+/* ═══ DESKTOP NAV LINKS (topbar) ══════════════════════════════════════════ */
+.nav-links {
+  display: flex; align-items: center; gap: 2px; flex: 1; overflow: hidden;
+}
+.nav-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 11px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+.nav-link.active { color: var(--accent); background: var(--violet-glow); }
+.nav-coins-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 99px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 12px; font-weight: 600; color: var(--gold-400); white-space: nowrap;
+}
+
+/* ═══ PAGE LAYOUT ════════════════════════════════════════════════════════ */
+.page-wrap {
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ── Hero ── */
+.hero {
+  position: relative; overflow: hidden;
+  padding: 52px 32px 44px;
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, var(--violet-glow) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '\f2bb'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+  position: absolute; right: 48px; top: 50%; transform: translateY(-50%);
+  font-size: 120px; color: rgba(139,92,246,.04); pointer-events: none;
+}
+.hero-inner { position: relative; max-width: 900px; margin: 0 auto; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 4px 14px; font-size: 11px;
+  font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--violet-400); margin-bottom: 14px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 36px); font-weight: 800;
+  color: var(--text-h); line-height: 1.2; letter-spacing: -.5px;
+  margin-bottom: 10px;
+}
+.hero-title span {
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub { font-size: 14px; color: var(--text-muted); max-width: 480px; }
+
+/* Status badge in hero */
+.hero-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 16px; padding: 6px 14px; border-radius: 99px;
+  font-size: 12px; font-weight: 700;
+}
+.hero-status.pending  { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.25); }
+.hero-status.accepted { background: rgba(52,211,153,.1); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.25); }
+.hero-status.rejected { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.25); }
+
+/* ── Messages ── */
+.messages-wrap { max-width: 900px; margin: 20px auto 0; padding: 0 24px; }
+.alert {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 500; margin-bottom: 10px;
+  animation: fadeUp .3s ease;
+}
+@keyframes fadeUp { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+.alert-success { background: rgba(52,211,153,.1); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.25); }
+.alert-error, .alert-danger { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.25); }
+.alert-info, .alert-warning { background: rgba(251,191,36,.08); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+
+/* ═══ MAIN CONTENT ════════════════════════════════════════════════════════ */
+.content-area {
+  flex: 1; max-width: 900px; width: 100%;
+  margin: 32px auto; padding: 0 24px 60px;
+}
+
+/* ── Section heading ── */
+.section-heading {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px;
+}
+.section-heading-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--violet-400); font-size: 15px; flex-shrink: 0;
+}
+.section-heading h2 {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700; color: var(--text-h); letter-spacing: -.3px;
+}
+
+/* ── Detail card ── */
+.detail-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow); margin-bottom: 24px;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.detail-card-header {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 16px;
+}
+.applicant-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 22px; font-weight: 800;
+  color: #fff; flex-shrink: 0; border: 2px solid var(--border-glow);
+}
+.applicant-info { flex: 1; }
+.applicant-name {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 800; color: var(--text-h); letter-spacing: -.3px;
+}
+.applicant-meta { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+/* ── Fields grid ── */
+.fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px; background: var(--border);
+}
+.field-row {
+  background: var(--bg-card);
+  padding: 18px 24px; display: flex; flex-direction: column; gap: 5px;
+  transition: var(--trans);
+}
+.field-row:hover { background: var(--bg-hover); }
+.field-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 5px;
+}
+.field-label i { font-size: 10px; color: var(--accent); }
+.field-value {
+  font-size: 14px; color: var(--text-h); font-weight: 500;
+  word-break: break-word; line-height: 1.5;
+}
+.field-value a {
+  color: var(--violet-400); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 5px; transition: var(--trans);
+}
+.field-value a:hover { color: var(--violet-300, #c4b5fd); text-decoration: underline; }
+.field-value.muted { color: var(--text-muted); font-style: italic; }
+.field-value.full-width { grid-column: 1 / -1; }
+
+/* Long text fields (skills, experience) */
+.field-row.full {
+  grid-column: 1 / -1;
+}
+.field-value-block {
+  font-size: 14px; color: var(--text-p); line-height: 1.75;
+  background: var(--bg-base); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 14px 16px; margin-top: 4px;
+}
+
+/* ── Status badge ── */
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px; border-radius: 99px;
+  font-size: 12px; font-weight: 700;
+}
+.status-pill.pending  { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.25); }
+.status-pill.accepted { background: rgba(52,211,153,.1); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.25); }
+.status-pill.rejected { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.25); }
+
+/* ── Links bar (LinkedIn, GitHub, CV) ── */
+.links-bar {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 18px 24px; border-top: 1px solid var(--border);
+}
+.link-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; text-decoration: none;
+  border: 1px solid var(--border); transition: var(--trans);
+}
+.link-chip-linkedin { background: rgba(10,102,194,.1); color: #58a6ff; border-color: rgba(10,102,194,.25); }
+.link-chip-linkedin:hover { background: rgba(10,102,194,.18); border-color: rgba(10,102,194,.45); }
+.link-chip-github { background: rgba(240,246,252,.06); color: var(--text-h); border-color: rgba(240,246,252,.12); }
+.link-chip-github:hover { background: rgba(240,246,252,.12); border-color: rgba(240,246,252,.2); }
+.link-chip-cv { background: var(--violet-glow); color: var(--violet-400); border-color: var(--border-glow); }
+.link-chip-cv:hover { background: rgba(139,92,246,.25); }
+
+/* ── Accept form (action card) ── */
+.action-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow); margin-bottom: 24px;
+  animation: cardReveal .5s .1s cubic-bezier(.34,1.56,.64,1) both;
+}
+.action-card-header {
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(52,211,153,.06), var(--bg-card));
+  border-bottom: 1px solid rgba(52,211,153,.15);
+  display: flex; align-items: center; gap: 12px;
+}
+.action-card-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-sm);
+  background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.25);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--emerald-400); font-size: 16px; flex-shrink: 0;
+}
+.action-card-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--text-h);
+}
+.action-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.action-card-body { padding: 20px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+/* ── Accept button ── */
+.accept-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  color: #fff; font-size: 14px; font-weight: 700; border: none;
+  cursor: pointer; font-family: inherit; transition: var(--trans);
+  box-shadow: 0 4px 20px rgba(52,211,153,.3);
+}
+.accept-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(52,211,153,.4); }
+
+/* ── Bottom nav buttons ── */
+.nav-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 24px; border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  flex-wrap: wrap; gap: 10px;
+}
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  display: flex; flex-direction: column; gap: 10px; align-items: center;
+}
+.footer-links { display: flex; gap: 16px; }
+.footer-links a {
+  color: var(--text-muted); text-decoration: none; font-size: 12px;
+  transition: var(--trans);
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 12px; text-decoration: none;
+  transition: var(--trans);
+}
+.footer-social a:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; align-items: center; justify-content: center; }
+  .topbar-breadcrumb { display: none; }
+  .content-area { padding: 0 14px 60px; }
+  .hero { padding: 36px 16px 28px; }
+  .hero::after { display: none; }
+  .fields-grid { grid-template-columns: 1fr; }
+  .action-card-body { flex-direction: column; align-items: flex-start; }
+  .nav-row { padding: 14px 16px; }
+}
+@media (max-width: 480px) {
+  .topbar { padding: 0 14px; }
+  .detail-card-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .links-bar { flex-direction: column; }
+  .link-chip { justify-content: center; }
+}
+</style>
 </head>
 
 <body>
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <section class="hero">
-        <h1 data-translate="hero-title">Application Details</h1>
-        <p data-translate="hero-desc">Review detailed information for the applicant</p>
-    </section>
+<!-- ═══ TOPBAR ════════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
 
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} fadeIn">{{ message }}</div>
-            {% endfor %}
-        </div>
+  <!-- Desktop nav links -->
+  <nav class="nav-links">
+    <a href="/" class="nav-link" data-i18n="nav_home"><i class="fas fa-home"></i> Home</a>
+    <a href="/courses/" class="nav-link" data-i18n="nav_courses"><i class="fas fa-graduation-cap"></i> Courses</a>
+    <a href="/chatbot/" class="nav-link" data-i18n="nav_chatbot"><i class="fas fa-robot"></i> Chatbot</a>
+    <a href="/competitions/" class="nav-link" data-i18n="nav_competitions"><i class="fas fa-trophy"></i> Competitions</a>
+    <a href="/performance/dashboard/" class="nav-link" data-i18n="nav_performance"><i class="fas fa-chart-line"></i> Performance</a>
+    <a href="{% url 'skills_market:services_list' %}" class="nav-link active" data-i18n="nav_skills"><i class="fas fa-briefcase"></i> Skills Market</a>
+    <a href="/about/" class="nav-link" data-i18n="nav_about"><i class="fas fa-info-circle"></i> About</a>
+    <a href="/contact_us/" class="nav-link" data-i18n="nav_contact"><i class="fas fa-envelope"></i> Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link" data-i18n="nav_dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" class="nav-link" data-i18n="nav_profile"><i class="fas fa-user"></i> Profile</a>
+      <a href="/accounts/logout/" class="nav-link" data-i18n="nav_logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    {% else %}
+      <a href="/accounts/register/" class="nav-link" data-i18n="nav_login"><i class="fas fa-sign-in-alt"></i> Login</a>
     {% endif %}
+  </nav>
 
-    <div class="application-details">
-        <h2 data-translate="details-title">Applicant Details</h2>
-        <p><span data-translate="app-name">Full Name:</span> {{ application.full_name }}</p>
-        <p><span data-translate="app-phone">Phone Number:</span> {{ application.phone_number }}</p>
-        <p><span data-translate="app-address">Address:</span> {{ application.address|default:"Not provided" }}</p>
-        <p><span data-translate="app-age">Age:</span> {{ application.age }}</p>
-        <p><span data-translate="app-email">Email:</span> {{ application.email|default:"Not provided" }}</p>
-        <p><span data-translate="app-skills">Skills:</span> {{ application.skills|default:"Not provided" }}</p>
-        <p><span data-translate="app-experience">Experience:</span> {{ application.experience|default:"Not provided" }}</p>
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+    <span class="nav-coins-pill">
+      <i class="fas fa-coins"></i>
+      {{ user.courses_profile.coins }}
+    </span>
+    {% endif %}
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <button class="hamburger" onclick="openDrawer()" aria-label="Menu">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ═══ MOBILE NAV DRAWER ════════════════════════════════════════════════ -->
+<div class="nav-drawer" id="nav-drawer">
+  <div class="nav-drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="nav-drawer-panel">
+    <div class="drawer-logo">Eduvia</div>
+    <a href="/" class="drawer-link"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
+    <a href="/courses/" class="drawer-link"><i class="fas fa-graduation-cap"></i> <span data-i18n="nav_courses">Courses</span></a>
+    <a href="/chatbot/" class="drawer-link"><i class="fas fa-robot"></i> <span data-i18n="nav_chatbot">Chatbot</span></a>
+    <a href="/competitions/" class="drawer-link"><i class="fas fa-trophy"></i> <span data-i18n="nav_competitions">Competitions</span></a>
+    <a href="/performance/dashboard/" class="drawer-link"><i class="fas fa-chart-line"></i> <span data-i18n="nav_performance">Performance</span></a>
+    <a href="{% url 'skills_market:services_list' %}" class="drawer-link"><i class="fas fa-briefcase"></i> <span data-i18n="nav_skills">Skills Market</span></a>
+    <a href="/about/" class="drawer-link"><i class="fas fa-info-circle"></i> <span data-i18n="nav_about">About Us</span></a>
+    <a href="/contact_us/" class="drawer-link"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact Us</span></a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="drawer-link"><i class="fas fa-tachometer-alt"></i> <span data-i18n="nav_dashboard">Dashboard</span></a>
+      {% endif %}
+      <a href="/accounts/profile/" class="drawer-link"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Profile</span></a>
+      <a href="/accounts/logout/" class="drawer-link"><i class="fas fa-sign-out-alt"></i> <span data-i18n="nav_logout">Logout</span></a>
+      {% if user.courses_profile %}
+      <div class="drawer-coins">
+        <i class="fas fa-coins"></i>
+        <span data-i18n="nav_coins">Coins:</span> {{ user.courses_profile.coins }}
+      </div>
+      {% endif %}
+    {% else %}
+      <a href="/accounts/register/" class="drawer-link"><i class="fas fa-sign-in-alt"></i> <span data-i18n="nav_login">Login</span></a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- ═══ HERO ════════════════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <i class="fas fa-id-card"></i>
+        <span data-i18n="hero_eyebrow">Skills Market</span>
+      </div>
+      <h1 class="hero-title">
+        <span data-i18n="hero_title">Application</span> Details
+      </h1>
+      <p class="hero-sub" data-i18n="hero_sub">Review detailed information and profile for this applicant</p>
+      <div class="hero-status {{ application.status }}">
+        {% if application.status == 'pending' %}
+          <i class="fas fa-clock"></i> Pending Review
+        {% elif application.status == 'accepted' %}
+          <i class="fas fa-check-circle"></i> Accepted
+        {% else %}
+          <i class="fas fa-times-circle"></i> Rejected
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MESSAGES ═════════════════════════════════════════════════════════ -->
+  {% if messages %}
+  <div class="messages-wrap">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      <i class="fas {% if 'success' in message.tags %}fa-check-circle{% elif 'error' in message.tags or 'danger' in message.tags %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ═══ CONTENT ══════════════════════════════════════════════════════════ -->
+  <main class="content-area">
+
+    <!-- Section heading -->
+    <div class="section-heading">
+      <div class="section-heading-icon"><i class="fas fa-user-tie"></i></div>
+      <h2 data-i18n="section_title">Applicant Details</h2>
+    </div>
+
+    <!-- Detail card -->
+    <div class="detail-card">
+
+      <!-- Header: avatar + name -->
+      <div class="detail-card-header">
+        <div class="applicant-avatar">{{ application.full_name|slice:":1"|upper }}</div>
+        <div class="applicant-info">
+          <div class="applicant-name">{{ application.full_name }}</div>
+          <div class="applicant-meta">
+            <i class="fas fa-calendar-alt" style="color:var(--accent);margin-right:4px;"></i>
+            Applied {{ application.applied_at|date:"F d, Y · H:i" }}
+          </div>
+        </div>
+        <div>
+          <span class="status-pill {{ application.status }}">
+            {% if application.status == 'pending' %}<i class="fas fa-clock"></i>{% elif application.status == 'accepted' %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-times-circle"></i>{% endif %}
+            {{ application.get_status_display }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Fields grid -->
+      <div class="fields-grid">
+
+        <div class="field-row">
+          <div class="field-label"><i class="fas fa-phone"></i> <span data-i18n="field_phone">Phone Number</span></div>
+          <div class="field-value">{{ application.phone_number }}</div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-label"><i class="fas fa-birthday-cake"></i> <span data-i18n="field_age">Age</span></div>
+          <div class="field-value">{{ application.age }}</div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-label"><i class="fas fa-envelope"></i> <span data-i18n="field_email">Email</span></div>
+          <div class="field-value {% if not application.email %}muted{% endif %}">
+            {% if application.email %}
+              <a href="mailto:{{ application.email }}"><i class="fas fa-external-link-alt" style="font-size:10px;"></i> {{ application.email }}</a>
+            {% else %}
+              Not provided
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-label"><i class="fas fa-map-marker-alt"></i> <span data-i18n="field_address">Address</span></div>
+          <div class="field-value {% if not application.address %}muted{% endif %}">
+            {{ application.address|default:"Not provided" }}
+          </div>
+        </div>
+
+        <div class="field-row full">
+          <div class="field-label"><i class="fas fa-code"></i> <span data-i18n="field_skills">Skills</span></div>
+          <div class="field-value-block {% if not application.skills %}muted{% endif %}">
+            {{ application.skills|default:"Not provided" }}
+          </div>
+        </div>
+
+        <div class="field-row full">
+          <div class="field-label"><i class="fas fa-briefcase"></i> <span data-i18n="field_experience">Experience</span></div>
+          <div class="field-value-block {% if not application.experience %}muted{% endif %}">
+            {{ application.experience|default:"Not provided" }}
+          </div>
+        </div>
+
+      </div><!-- /fields-grid -->
+
+      <!-- Links bar: LinkedIn, GitHub, CV -->
+      {% if application.linkedin or application.github or application.cv %}
+      <div class="links-bar">
         {% if application.linkedin %}
-            <p><span data-translate="app-linkedin">LinkedIn:</span> <a href="{{ application.linkedin }}" target="_blank">{{ application.linkedin }}</a></p>
+        <a href="{{ application.linkedin }}" target="_blank" rel="noopener" class="link-chip link-chip-linkedin">
+          <i class="fab fa-linkedin"></i> LinkedIn Profile
+        </a>
         {% endif %}
         {% if application.github %}
-            <p><span data-translate="app-github">GitHub:</span> <a href="{{ application.github }}" target="_blank">{{ application.github }}</a></p>
+        <a href="{{ application.github }}" target="_blank" rel="noopener" class="link-chip link-chip-github">
+          <i class="fab fa-github"></i> GitHub Profile
+        </a>
         {% endif %}
         {% if application.cv %}
-            <p><span data-translate="app-cv">CV:</span> <a href="{{ application.cv.url }}" target="_blank">Download CV</a></p>
+        <a href="{{ application.cv.url }}" target="_blank" class="link-chip link-chip-cv">
+          <i class="fas fa-file-pdf"></i> Download CV
+        </a>
         {% endif %}
-        <p><span data-translate="app-status">Status:</span> {{ application.get_status_display }}</p>
-        <p><span data-translate="app-applied">Applied At:</span> {{ application.applied_at|date:"F d, Y H:i" }}</p>
-        {% if application.status == 'pending' %}
-            <form method="post" action="{% url 'skills_market:accept_application' application_id=application.id %}">
-                {% csrf_token %}
-                <button type="submit" data-translate="app-accept">Accept Application</button>
-            </form>
-        {% endif %}
+      </div>
+      {% endif %}
+
+      <!-- Bottom navigation row -->
+      <div class="nav-row">
+        <a href="{% url 'skills_market:opportunity_applications' %}" class="tb-btn tb-btn-ghost">
+          <i class="fas fa-arrow-left"></i>
+          <span data-i18n="btn_back_apps">Back to Applications</span>
+        </a>
+        <a href="{% url 'skills_market:opportunities_list' %}" class="tb-btn tb-btn-ghost">
+          <i class="fas fa-list-ul"></i>
+          <span data-i18n="btn_back_opps">All Opportunities</span>
+        </a>
+      </div>
+
+    </div><!-- /detail-card -->
+
+    <!-- ── Accept action card (only when pending) ── -->
+    {% if application.status == 'pending' %}
+    <div class="action-card">
+      <div class="action-card-header">
+        <div class="action-card-icon"><i class="fas fa-user-check"></i></div>
+        <div>
+          <div class="action-card-title" data-i18n="accept_title">Accept Application</div>
+          <div class="action-card-sub" data-i18n="accept_sub">Approve this applicant for the opportunity</div>
+        </div>
+      </div>
+      <div class="action-card-body">
+        <form method="post" action="{% url 'skills_market:accept_application' application_id=application.id %}" style="display:contents;">
+          {% csrf_token %}
+          <button type="submit" class="accept-btn" onclick="return confirm('Accept this application?')">
+            <i class="fas fa-check-circle"></i>
+            <span data-i18n="btn_accept">Accept Application</span>
+          </button>
+        </form>
+        <p style="font-size:12px; color:var(--text-muted);">
+          <i class="fas fa-info-circle" style="color:var(--accent);"></i>
+          <span data-i18n="accept_hint">This will notify the applicant and update their status.</span>
+        </p>
+      </div>
     </div>
+    {% endif %}
 
-    <div class="action-buttons">
-        <a href="{% url 'skills_market:opportunity_applications' %}" class="btn" data-translate="btn-back-applications">Back to Applications</a>
-        <a href="{% url 'skills_market:opportunities_list' %}" class="btn" data-translate="btn-back-opportunities">Back to Opportunities</a>
+  </main><!-- /content-area -->
+
+  <!-- ═══ FOOTER ═══════════════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-social">
+      <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://x.com/Eduvia7" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
     </div>
+    <div class="footer-links">
+      <a href="/about/" data-i18n="footer_about">About Us</a>
+      <a href="/contact_us/" data-i18n="footer_contact">Contact</a>
+      <a href="{% url 'skills_market:services_list' %}" data-i18n="footer_market">Skills Market</a>
+    </div>
+    <span data-i18n="footer_copy">© 2025 Eduvia and creativitycode. All rights reserved.</span>
+  </footer>
 
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+</div><!-- /page-wrap -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'skills_market/application_details.js' %}"></script>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ──────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_skills:'Skills Market', nav_about:'About Us', nav_contact:'Contact Us',
+    nav_dashboard:'Dashboard', nav_profile:'Profile', nav_logout:'Logout',
+    nav_login:'Login', nav_coins:'Coins',
+    hero_eyebrow:'Skills Market', hero_title:'Application', hero_sub:'Review detailed information and profile for this applicant',
+    section_title:'Applicant Details',
+    field_phone:'Phone Number', field_age:'Age', field_email:'Email',
+    field_address:'Address', field_skills:'Skills', field_experience:'Experience',
+    btn_back_apps:'Back to Applications', btn_back_opps:'All Opportunities',
+    accept_title:'Accept Application', accept_sub:'Approve this applicant for the opportunity',
+    btn_accept:'Accept Application', accept_hint:'This will notify the applicant and update their status.',
+    footer_about:'About Us', footer_contact:'Contact', footer_market:'Skills Market',
+    footer_copy:'© 2025 Eduvia and creativitycode. All rights reserved.',
+  },
+  ar: {
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'المساعد',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_skills:'سوق المهارات', nav_about:'من نحن', nav_contact:'تواصل معنا',
+    nav_dashboard:'لوحة التحكم', nav_profile:'الملف الشخصي', nav_logout:'تسجيل الخروج',
+    nav_login:'تسجيل الدخول', nav_coins:'نقاط',
+    hero_eyebrow:'سوق المهارات', hero_title:'تفاصيل', hero_sub:'راجع المعلومات التفصيلية لهذا المتقدم',
+    section_title:'بيانات المتقدم',
+    field_phone:'رقم الهاتف', field_age:'العمر', field_email:'البريد الإلكتروني',
+    field_address:'العنوان', field_skills:'المهارات', field_experience:'الخبرة',
+    btn_back_apps:'العودة للطلبات', btn_back_opps:'كل الفرص',
+    accept_title:'قبول الطلب', accept_sub:'الموافقة على هذا المتقدم للفرصة',
+    btn_accept:'قبول الطلب', accept_hint:'سيتم إخطار المتقدم وتحديث حالته.',
+    footer_about:'من نحن', footer_contact:'تواصل', footer_market:'سوق المهارات',
+    footer_copy:'© 2025 Eduvia وcreativitycode. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Drawer ─────────────────────────────────────────────────────────────── */
+function openDrawer() { document.getElementById('nav-drawer').classList.add('open'); }
+function closeDrawer() { document.getElementById('nav-drawer').classList.remove('open'); }
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+
+  // Auto-dismiss Django messages
+  document.querySelectorAll('.alert').forEach(a => {
+    setTimeout(() => { a.style.opacity='0'; a.style.transition='opacity .5s'; setTimeout(()=>a.remove(),500); }, 5000);
+  });
+});
+</script>
+
 </body>
 </html>

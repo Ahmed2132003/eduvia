@@ -1,217 +1,811 @@
 {% load static i18n %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- 🔍 SEO Meta -->
-  <meta name="description" content="Create and schedule your own live workshops on Eduvia. Teach programming, AI, data science, and more through Google Meet. Engage learners in real time and grow your teaching impact.">
-  <meta name="keywords" content="Create live session, Eduvia instructor, AI teaching, coding workshops, online classes, live workshops, Google Meet sessions, real-time teaching, schedule session, programming instructors, teach online, data science, cybersecurity">
+  <meta name="description" content="Create and schedule your own live workshops on Eduvia. Teach programming, AI, data science, and more through Google Meet.">
+  <meta name="keywords" content="Create live session, Eduvia instructor, AI teaching, coding workshops, online classes, live workshops, Google Meet sessions">
   <meta name="author" content="Eduvia Team">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/workshops/create-session/">
-
-  <!-- 🔗 Open Graph Meta -->
   <meta property="og:title" content="Create Live Session | Eduvia Instructor Portal">
-  <meta property="og:description" content="Launch your own live coding or AI workshop with Eduvia. Share your Google Meet link and connect with learners in real-time.">
+  <meta property="og:description" content="Launch your own live coding or AI workshop with Eduvia.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/workshops/create-session/">
   <meta property="og:image" content="https://i.postimg.cc/dV1MQxyK/workshops.jpg">
-
-  <!-- 🐦 Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Create Live Session | Eduvia Instructor Portal">
-  <meta name="twitter:description" content="Teach live coding, AI, or cybersecurity classes on Eduvia. Schedule, manage, and share your live session with global students.">
   <meta name="twitter:image" content="https://i.postimg.cc/dV1MQxyK/workshops.jpg">
-
-  <!-- ✅ Title -->
   <title>Create Live Workshop | Eduvia Instructor Panel</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
-  
-  <!--https://i.postimg.cc/6p9jLjV1/logo-eduvia1.jpg -->
-
-
-  <!-- 🌐 Styles -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'workshops/create_live_session.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🎨 Custom CSS Variable for Hero Image -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/dV1MQxyK/workshops.jpg");
-    }
-  </style>
-
-  <!-- ✅ Schema.org Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://eduvia-ai.fly.dev/#organization",
-        "name": "Eduvia",
-        "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg"
-        },
-        "sameAs": [
-          "https://www.facebook.com/share/18iRSctdxN/",
-          "https://x.com/Eduvia7",
-          "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-        ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://eduvia-ai.fly.dev/#website",
-        "url": "https://eduvia-ai.fly.dev",
-        "name": "Eduvia AI Learning Platform",
-        "publisher": {
-          "@id": "https://eduvia-ai.fly.dev/#organization"
-        }
-      },
-      {
-        "@type": "Course",
-        "@id": "https://eduvia-ai.fly.dev/workshops/#course",
-        "name": "Live Coding & AI Workshops",
-        "description": "Schedule and create live sessions on Eduvia to teach coding, AI, and more to students worldwide.",
-        "provider": {
-          "@type": "Organization",
-          "name": "Eduvia",
-          "url": "https://eduvia-ai.fly.dev"
-        }
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://eduvia-ai.fly.dev/workshops/create-session/",
-        "url": "https://eduvia-ai.fly.dev/workshops/create-session/",
-        "name": "Create Live Session - Eduvia",
-        "description": "Create a live session on Eduvia to engage with learners. Schedule your online workshop, add details, and share your Google Meet link for interactive teaching.",
-        "inLanguage": "en",
-        "isPartOf": {
-          "@id": "https://eduvia-ai.fly.dev/#website"
-        },
-        "breadcrumb": {
-          "@id": "https://eduvia-ai.fly.dev/workshops/create-session/#breadcrumb"
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://eduvia-ai.fly.dev/workshops/create-session/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Workshops",
-            "item": "https://eduvia-ai.fly.dev/workshops/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Create Session",
-            "item": "https://eduvia-ai.fly.dev/workshops/create-session/"
-          }
-        ]
-      }
+      {"@type":"Organization","@id":"https://eduvia-ai.fly.dev/#organization","name":"Eduvia","url":"https://eduvia-ai.fly.dev"},
+      {"@type":"WebPage","@id":"https://eduvia-ai.fly.dev/workshops/create-session/","url":"https://eduvia-ai.fly.dev/workshops/create-session/","name":"Create Live Session - Eduvia","inLanguage":"en"},
+      {"@type":"BreadcrumbList","@id":"https://eduvia-ai.fly.dev/workshops/create-session/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Eduvia","item":"https://eduvia-ai.fly.dev/"},{"@type":"ListItem","position":2,"name":"Workshops","item":"https://eduvia-ai.fly.dev/workshops/"},{"@type":"ListItem","position":3,"name":"Create Session","item":"https://eduvia-ai.fly.dev/workshops/create-session/"}]}
     ]
   }
   </script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --sidebar-w:  280px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ══ TOPBAR ══════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0;
+  text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-breadcrumb {
+  font-size: 13px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+  flex: 1; overflow: hidden;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .sep { font-size: 11px; opacity: .4; }
+.topbar-breadcrumb .current { color: var(--text-p); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ══ HERO ═════════════════════════════════════════════════════════════════ */
+.hero-section {
+  margin-top: var(--topbar-h);
+  background: linear-gradient(135deg, var(--bg-panel) 0%, #110a25 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 28px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero-section::before {
+  content: '';
+  position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(139,92,246,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(139,92,246,.12); border: 1px solid var(--border-glow);
+  color: var(--violet-400); font-size: 11px; font-weight: 700;
+  letter-spacing: .6px; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 99px; margin-bottom: 16px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 800; color: var(--text-h);
+  letter-spacing: -1px; line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero-title span {
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 15px; color: var(--text-muted);
+  max-width: 500px; margin: 0 auto 28px; line-height: 1.65;
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-size: 14px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer;
+  font-family: inherit; transition: var(--trans);
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+/* ══ MAIN LAYOUT ══════════════════════════════════════════════════════════ */
+.page-layout {
+  display: flex;
+  min-height: calc(100vh - var(--topbar-h));
+  background: var(--bg-base);
+}
+.page-main {
+  flex: 1; max-width: 760px; margin: 0 auto;
+  padding: 40px 28px 100px; min-width: 0;
+}
+
+/* ══ FORM CARD ════════════════════════════════════════════════════════════ */
+.form-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.form-card-header {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 16px;
+}
+.form-card-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--violet-400); flex-shrink: 0;
+}
+.form-card-title {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -.4px;
+}
+.form-card-sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+.form-body { padding: 28px; }
+.form-body form { display: flex; flex-direction: column; gap: 22px; }
+
+/* Field groups */
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.field-label i { font-size: 11px; color: var(--accent); }
+.field-required { color: var(--danger); font-size: 13px; }
+
+.field-inp,
+.field-textarea {
+  width: 100%;
+  background: var(--bg-base);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-p);
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: var(--trans);
+}
+.field-inp:focus,
+.field-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+}
+.field-inp::placeholder,
+.field-textarea::placeholder { color: var(--text-muted); }
+.field-textarea { resize: vertical; min-height: 110px; line-height: 1.65; }
+
+/* Date row */
+.date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Field hint */
+.field-hint { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Section divider */
+.form-divider {
+  height: 1px; background: var(--border); margin: 6px 0;
+}
+.form-section-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1.2px; color: var(--text-muted);
+  padding: 0 0 2px; display: flex; align-items: center; gap: 8px;
+}
+.form-section-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* Submit button */
+.form-footer {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  justify-content: space-between;
+}
+.submit-btn {
+  padding: 13px 36px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+.submit-btn:active { transform: translateY(0); }
+
+.cancel-link {
+  color: var(--text-muted); font-size: 13px; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 5px; transition: var(--trans);
+}
+.cancel-link:hover { color: var(--danger); }
+
+/* ══ INFO CARDS ═══════════════════════════════════════════════════════════ */
+.info-cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px; margin: 32px 0 0;
+}
+.info-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  transition: var(--trans);
+}
+.info-card:hover { border-color: var(--border-glow); background: var(--bg-card-2); }
+.info-card-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; margin-bottom: 10px;
+}
+.info-card-icon.violet { background: var(--violet-glow); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.info-card-icon.gold   { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+.info-card-icon.sky    { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2); }
+.info-card-title { font-size: 13px; font-weight: 700; color: var(--text-h); margin-bottom: 4px; }
+.info-card-desc  { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+
+/* ══ TOAST ════════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ══ FOOTER ══════════════════════════════════════════════════════════════ */
+.page-footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 16px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ══ MOBILE ══════════════════════════════════════════════════════════════ */
+.nav-mobile-overlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+}
+.nav-mobile-overlay.open { display: block; }
+.mobile-nav {
+  position: fixed; top: var(--topbar-h); right: -100%; z-index: 501;
+  width: min(320px, 85vw); height: calc(100vh - var(--topbar-h));
+  background: var(--bg-panel); border-left: 1px solid var(--border);
+  overflow-y: auto; display: flex; flex-direction: column;
+  transition: right .3s cubic-bezier(.4,0,.2,1);
+  padding: 16px 0;
+}
+[lang="ar"] .mobile-nav { right: auto; left: -100%; border-left: none; border-right: 1px solid var(--border); }
+.mobile-nav.open { right: 0; }
+[lang="ar"] .mobile-nav.open { left: 0; right: auto; }
+.mobile-nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 20px; font-size: 14px; color: var(--text-p);
+  text-decoration: none; border-bottom: 1px solid var(--border);
+  transition: var(--trans);
+}
+.mobile-nav a:hover { background: var(--bg-card); color: var(--accent); }
+.mobile-nav a i { width: 18px; text-align: center; color: var(--accent); }
+.mobile-nav-coins {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 20px; font-size: 13px; color: var(--gold-400);
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  .hero-section { padding: 40px 16px 36px; }
+  .page-main { padding: 24px 14px 80px; }
+  .form-card-header { padding: 18px 16px; }
+  .form-body { padding: 18px 16px; }
+  .form-footer { padding: 16px; flex-direction: column; align-items: stretch; }
+  .submit-btn { width: 100%; justify-content: center; }
+  .date-row { grid-template-columns: 1fr; }
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-breadcrumb { display: none; }
+}
+</style>
 </head>
-
-
 <body>
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <section class="hero" itemscope itemtype="http://schema.org/WebPage">
-        <h1 data-translate="hero-title" itemprop="name">Create Your Live Workshop</h1>
-        <p data-translate="hero-desc" itemprop="description">Engage with learners worldwide by scheduling interactive live sessions on Eduvia.</p>
-        <a href="#create-session-form" class="btn" data-translate="hero-btn">Get Started</a>
-    </section>
+<!-- ══ TOPBAR ══════════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+    <a href="/workshops/" data-i18n="workshops">Workshops</a>
+    <span class="sep"><i class="fas fa-chevron-right"></i></span>
+    <span class="current" data-i18n="create_session">Create Session</span>
+  </nav>
+  <div class="topbar-actions">
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" id="lang-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <a href="/workshops/" class="tb-btn tb-btn-ghost">
+      <i class="fas fa-list-ul"></i>
+      <span data-i18n="all_sessions">All Sessions</span>
+    </a>
+    <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-accent">
+      <i class="fas fa-tachometer-alt"></i>
+      <span data-i18n="dashboard">Dashboard</span>
+    </a>
+    <!-- Hamburger for mobile -->
+    <button class="ctrl-btn" id="ham-btn" onclick="toggleMobileNav()" style="display:none;" aria-label="Menu">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
 
-    <div class="container" id="create-session-form">
-        <h1 data-translate="form-title">Create Live Session</h1>
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="title" class="form-label" data-translate="form-title-label">Title</label>
-                <input type="text" class="form-control" id="title" name="title" required aria-label="Session Title">
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label" data-translate="form-desc-label">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="3" aria-label="Session Description"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="meet_link" class="form-label" data-translate="form-meet-label">Google Meet Link</label>
-                <input type="url" class="form-control" id="meet_link" name="meet_link" required aria-label="Google Meet Link">
-            </div>
-            <div class="mb-3">
-                <label for="session_image" class="form-label" data-translate="form-image-label">Session Image URL</label>
-                <input type="url" class="form-control" id="session_image" name="session_image" placeholder="e.g., https://postimg.cc/xxxx" aria-label="Session Image URL">
-            </div>
-            <div class="mb-3">
-                <label for="start_time" class="form-label" data-translate="form-start-label">Start Time</label>
-                <input type="datetime-local" class="form-control" id="start_time" name="start_time" required aria-label="Start Time">
-            </div>
-            <div class="mb-3">
-                <label for="end_time" class="form-label" data-translate="form-end-label">End Time</label>
-                <input type="datetime-local" class="form-control" id="end_time" name="end_time" required aria-label="End Time">
-            </div>
-            <button type="submit" class="btn btn-primary" data-translate="form-submit">Create Session</button>
-        </form>
+<!-- Mobile nav overlay -->
+<div class="nav-mobile-overlay" id="nav-overlay" onclick="closeMobileNav()"></div>
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="/"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
+  <a href="/courses/"><i class="fas fa-graduation-cap"></i> <span data-i18n="nav_courses">Courses</span></a>
+  <a href="/chatbot/"><i class="fas fa-robot"></i> <span data-i18n="nav_chatbot">Chatbot</span></a>
+  <a href="/competitions/"><i class="fas fa-trophy"></i> <span data-i18n="nav_competitions">Competitions</span></a>
+  <a href="/performance/dashboard/"><i class="fas fa-chart-bar"></i> <span data-i18n="nav_performance">Performance</span></a>
+  <a href="/about/"><i class="fas fa-info-circle"></i> <span data-i18n="nav_about">About Us</span></a>
+  <a href="/contact_us/"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact</span></a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard">Dashboard</span></a>
+    <a href="/accounts/profile/"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Profile</span></a>
+    <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> <span data-i18n="nav_logout">Logout</span></a>
+    {% if user.courses_profile %}
+    <div class="mobile-nav-coins">
+      <i class="fas fa-coins"></i>
+      <span data-i18n="nav_coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
+    </div>
+    {% endif %}
+  {% else %}
+    <a href="/accounts/register/"><i class="fas fa-sign-in-alt"></i> <span data-i18n="nav_login">Login</span></a>
+  {% endif %}
+</nav>
+
+<!-- ══ HERO ════════════════════════════════════════════════════════════════ -->
+<section class="hero-section" itemscope itemtype="http://schema.org/WebPage">
+  <div class="hero-badge"><i class="fas fa-broadcast-tower"></i> <span data-i18n="live_instructor">Live Instructor Portal</span></div>
+  <h1 class="hero-title" itemprop="name">
+    <span data-i18n="hero_title_1">Create Your</span> <span><span data-i18n="hero_title_2">Live Workshop</span></span>
+  </h1>
+  <p class="hero-sub" itemprop="description" data-i18n="hero_sub">
+    Engage with learners worldwide by scheduling interactive live sessions on Eduvia.
+  </p>
+  <a href="#session-form" class="hero-cta">
+    <i class="fas fa-plus-circle"></i>
+    <span data-i18n="get_started">Get Started</span>
+  </a>
+</section>
+
+<!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
+<div class="page-layout">
+  <main class="page-main" id="session-form">
+
+    <!-- Info cards -->
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-card-icon violet"><i class="fas fa-video"></i></div>
+        <div class="info-card-title" data-i18n="ic1_title">Live via Google Meet</div>
+        <div class="info-card-desc" data-i18n="ic1_desc">Connect your session with any Google Meet link for real-time teaching.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon gold"><i class="fas fa-users"></i></div>
+        <div class="info-card-title" data-i18n="ic2_title">Global Audience</div>
+        <div class="info-card-desc" data-i18n="ic2_desc">Reach students from around the world in your scheduled sessions.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon sky"><i class="fas fa-record-vinyl"></i></div>
+        <div class="info-card-title" data-i18n="ic3_title">Recording Ready</div>
+        <div class="info-card-desc" data-i18n="ic3_desc">Upload recordings after the session so students can rewatch anytime.</div>
+      </div>
     </div>
 
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
-    </footer>
+    <!-- Form card -->
+    <div class="form-card" style="margin-top: 28px;">
+      <div class="form-card-header">
+        <div class="form-card-icon"><i class="fas fa-calendar-plus"></i></div>
+        <div>
+          <div class="form-card-title" data-i18n="form_card_title">New Live Session</div>
+          <div class="form-card-sub" data-i18n="form_card_sub">Fill in the details below to schedule your workshop</div>
+        </div>
+      </div>
 
-    <script src="{% static 'workshops/create_live_session.js' %}"></script>
+      <div class="form-body">
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Section: Basic Info -->
+          <div class="form-section-label"><i class="fas fa-info-circle" style="font-size:10px;"></i> <span data-i18n="section_basic">Basic Information</span></div>
+
+          <div class="field-group">
+            <label class="field-label" for="title">
+              <i class="fas fa-heading"></i>
+              <span data-i18n="field_title">Session Title</span>
+              <span class="field-required">*</span>
+            </label>
+            <input type="text" class="field-inp" id="title" name="title"
+                   placeholder="e.g. Python for Beginners — Week 1" required
+                   data-placeholder-en="e.g. Python for Beginners — Week 1"
+                   data-placeholder-ar="مثال: بايثون للمبتدئين — الأسبوع الأول">
+            <span class="field-hint" data-i18n="field_title_hint">Keep it clear and descriptive (max 100 characters)</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="description">
+              <i class="fas fa-align-left"></i>
+              <span data-i18n="field_desc">Description</span>
+            </label>
+            <textarea class="field-textarea" id="description" name="description" rows="4"
+                      placeholder="What will students learn in this session?"
+                      data-placeholder-en="What will students learn in this session?"
+                      data-placeholder-ar="ماذا سيتعلم الطلاب في هذه الجلسة؟"></textarea>
+            <span class="field-hint" data-i18n="field_desc_hint">Brief overview of topics, goals, or prerequisites</span>
+          </div>
+
+          <!-- Section: Links -->
+          <div class="form-section-label"><i class="fas fa-link" style="font-size:10px;"></i> <span data-i18n="section_links">Links & Media</span></div>
+
+          <div class="field-group">
+            <label class="field-label" for="meet_link">
+              <i class="fas fa-video"></i>
+              <span data-i18n="field_meet">Google Meet Link</span>
+              <span class="field-required">*</span>
+            </label>
+            <input type="url" class="field-inp" id="meet_link" name="meet_link"
+                   placeholder="https://meet.google.com/xxx-xxxx-xxx" required
+                   data-placeholder-en="https://meet.google.com/xxx-xxxx-xxx"
+                   data-placeholder-ar="https://meet.google.com/xxx-xxxx-xxx">
+            <span class="field-hint" data-i18n="field_meet_hint">Create a meeting in Google Meet and paste the link here</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="session_image">
+              <i class="fas fa-image"></i>
+              <span data-i18n="field_image">Session Image URL</span>
+            </label>
+            <input type="url" class="field-inp" id="session_image" name="session_image"
+                   placeholder="https://postimg.cc/xxxx"
+                   data-placeholder-en="https://postimg.cc/xxxx (optional)"
+                   data-placeholder-ar="https://postimg.cc/xxxx (اختياري)">
+            <span class="field-hint" data-i18n="field_image_hint">Optional cover image for your session card</span>
+          </div>
+
+          <!-- Section: Schedule -->
+          <div class="form-section-label"><i class="fas fa-clock" style="font-size:10px;"></i> <span data-i18n="section_schedule">Schedule</span></div>
+
+          <div class="date-row">
+            <div class="field-group">
+              <label class="field-label" for="start_time">
+                <i class="fas fa-play-circle"></i>
+                <span data-i18n="field_start">Start Time</span>
+                <span class="field-required">*</span>
+              </label>
+              <input type="datetime-local" class="field-inp" id="start_time" name="start_time" required>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="end_time">
+                <i class="fas fa-stop-circle"></i>
+                <span data-i18n="field_end">End Time</span>
+                <span class="field-required">*</span>
+              </label>
+              <input type="datetime-local" class="field-inp" id="end_time" name="end_time" required>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="form-footer">
+        <a href="/workshops/" class="cancel-link">
+          <i class="fas fa-arrow-left"></i>
+          <span data-i18n="cancel">Cancel</span>
+        </a>
+        <button type="button" class="submit-btn" onclick="submitForm()">
+          <i class="fas fa-broadcast-tower"></i>
+          <span data-i18n="create_session_btn">Create Session</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<footer class="page-footer">
+  <p data-i18n="footer_text">© 2025 Eduvia. All rights reserved.</p>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    workshops:'Workshops', create_session:'Create Session',
+    all_sessions:'All Sessions', dashboard:'Dashboard',
+    live_instructor:'Live Instructor Portal',
+    hero_title_1:'Create Your', hero_title_2:'Live Workshop',
+    hero_sub:'Engage with learners worldwide by scheduling interactive live sessions on Eduvia.',
+    get_started:'Get Started',
+    ic1_title:'Live via Google Meet', ic1_desc:'Connect your session with any Google Meet link for real-time teaching.',
+    ic2_title:'Global Audience', ic2_desc:'Reach students from around the world in your scheduled sessions.',
+    ic3_title:'Recording Ready', ic3_desc:'Upload recordings after the session so students can rewatch anytime.',
+    form_card_title:'New Live Session', form_card_sub:'Fill in the details below to schedule your workshop',
+    section_basic:'Basic Information', section_links:'Links & Media', section_schedule:'Schedule',
+    field_title:'Session Title', field_title_hint:'Keep it clear and descriptive (max 100 characters)',
+    field_desc:'Description', field_desc_hint:'Brief overview of topics, goals, or prerequisites',
+    field_meet:'Google Meet Link', field_meet_hint:'Create a meeting in Google Meet and paste the link here',
+    field_image:'Session Image URL', field_image_hint:'Optional cover image for your session card',
+    field_start:'Start Time', field_end:'End Time',
+    cancel:'Cancel', create_session_btn:'Create Session',
+    footer_text:'© 2025 Eduvia. All rights reserved.',
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_about:'About Us', nav_contact:'Contact',
+    nav_profile:'Profile', nav_logout:'Logout', nav_login:'Login',
+    nav_coins:'Coins:',
+    validation_title:'Please enter a session title.',
+    validation_meet:'Please enter a valid Google Meet link.',
+    validation_start:'Please set a start time.',
+    validation_end:'Please set an end time.',
+    validation_time:'End time must be after start time.',
+  },
+  ar: {
+    workshops:'الورش', create_session:'إنشاء جلسة',
+    all_sessions:'كل الجلسات', dashboard:'لوحة التحكم',
+    live_instructor:'بوابة المحاضر المباشر',
+    hero_title_1:'أنشئ', hero_title_2:'ورشة مباشرة',
+    hero_sub:'تواصل مع المتعلمين حول العالم من خلال جدولة جلسات تعليمية تفاعلية على Eduvia.',
+    get_started:'ابدأ الآن',
+    ic1_title:'مباشر عبر Google Meet', ic1_desc:'ربط جلستك بأي رابط Google Meet للتدريس الفوري.',
+    ic2_title:'جمهور عالمي', ic2_desc:'تواصل مع الطلاب من حول العالم في جلساتك المجدولة.',
+    ic3_title:'التسجيلات جاهزة', ic3_desc:'ارفع التسجيلات بعد الجلسة ليتمكن الطلاب من المراجعة.',
+    form_card_title:'جلسة مباشرة جديدة', form_card_sub:'املأ التفاصيل أدناه لجدولة ورشتك',
+    section_basic:'المعلومات الأساسية', section_links:'الروابط والوسائط', section_schedule:'الجدول الزمني',
+    field_title:'عنوان الجلسة', field_title_hint:'اجعله واضحاً ووصفياً (100 حرف كحد أقصى)',
+    field_desc:'الوصف', field_desc_hint:'نظرة عامة مختصرة على الموضوعات والأهداف والمتطلبات',
+    field_meet:'رابط Google Meet', field_meet_hint:'أنشئ اجتماعاً في Google Meet والصق الرابط هنا',
+    field_image:'رابط صورة الجلسة', field_image_hint:'صورة غلاف اختيارية لبطاقة جلستك',
+    field_start:'وقت البدء', field_end:'وقت الانتهاء',
+    cancel:'إلغاء', create_session_btn:'إنشاء الجلسة',
+    footer_text:'© 2025 Eduvia. جميع الحقوق محفوظة.',
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'الشات بوت',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_about:'عنا', nav_contact:'تواصل',
+    nav_profile:'الملف الشخصي', nav_logout:'تسجيل الخروج', nav_login:'تسجيل الدخول',
+    nav_coins:'العملات:',
+    validation_title:'يرجى إدخال عنوان الجلسة.',
+    validation_meet:'يرجى إدخال رابط Google Meet صحيح.',
+    validation_start:'يرجى تحديد وقت البدء.',
+    validation_end:'يرجى تحديد وقت الانتهاء.',
+    validation_time:'يجب أن يكون وقت الانتهاء بعد وقت البدء.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  document.querySelectorAll('[data-placeholder-' + lang + ']').forEach(el => {
+    el.placeholder = el.getAttribute('data-placeholder-' + lang);
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile nav ───────────────────────────────────────────────────────── */
+function toggleMobileNav() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+  document.getElementById('nav-overlay').classList.toggle('open');
+}
+function closeMobileNav() {
+  document.getElementById('mobile-nav').classList.remove('open');
+  document.getElementById('nav-overlay').classList.remove('open');
+}
+
+/* ── Toast ────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 350); }, dur);
+}
+
+/* ── Form submit with validation ──────────────────────────────────────── */
+function submitForm() {
+  const title = document.getElementById('title').value.trim();
+  const meet  = document.getElementById('meet_link').value.trim();
+  const start = document.getElementById('start_time').value;
+  const end   = document.getElementById('end_time').value;
+  const L = I18N[currentLang];
+
+  if (!title)  { toast(L.validation_title, 'error'); document.getElementById('title').focus(); return; }
+  if (!meet)   { toast(L.validation_meet, 'error');  document.getElementById('meet_link').focus(); return; }
+  if (!start)  { toast(L.validation_start, 'error'); document.getElementById('start_time').focus(); return; }
+  if (!end)    { toast(L.validation_end, 'error');   document.getElementById('end_time').focus(); return; }
+  if (new Date(end) <= new Date(start)) { toast(L.validation_time, 'error'); return; }
+
+  document.querySelector('.form-body form').submit();
+}
+
+/* ── Responsive ham button ────────────────────────────────────────────── */
+function checkHamVisibility() {
+  const ham = document.getElementById('ham-btn');
+  if (window.innerWidth <= 768) ham.style.display = 'flex';
+  else { ham.style.display = 'none'; closeMobileNav(); }
+}
+
+/* ── Init ─────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  checkHamVisibility();
+  window.addEventListener('resize', checkHamVisibility);
+  // Set default start time to now + 1h
+  const now = new Date(); now.setHours(now.getHours() + 1, 0, 0, 0);
+  const end = new Date(now); end.setHours(end.getHours() + 1);
+  const fmt = d => d.toISOString().slice(0,16);
+  document.getElementById('start_time').value = fmt(now);
+  document.getElementById('end_time').value   = fmt(end);
+});
+</script>
 </body>
 </html>

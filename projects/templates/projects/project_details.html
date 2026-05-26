@@ -724,7 +724,7 @@ body {
             {% if user.courses_profile.role == 'student' %}
               {% if user not in task.assigned_to.all %}
                 {% if task.id %}
-                  <form method="post" action="{% url 'projects:join_task' task.id %}" style="display:inline;">
+                  <form method="post" action="{% url 'projects:join_task' task.id task.slugified_title %}" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn-primary">
                       <i class="fas fa-user-plus"></i> Join Task

@@ -1,13 +1,13 @@
 {% load static i18n %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- 🔍 SEO -->
-  <title data-translate="page-title">My Messages - Eduvia</title>
+  <title>My Messages | Eduvia</title>
   <meta name="description" content="View and manage your messages and conversations in Eduvia's Skills Market.">
   <meta name="keywords" content="messages, Eduvia, skills market, applicant messages, provider communication">
   <meta name="author" content="Eduvia">
@@ -30,182 +30,809 @@
   <!-- 🖼️ Favicon -->
   <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-  <!-- 🌐 Fonts & Icons -->
+  <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <!-- 🎨 Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'skills_market/applicant_messages.css' %}">
-
-  <!-- Background -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/3RbkxP2b/oppo3.jpg");
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- 📊 Structured Data -->
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://eduvia-ai.fly.dev/#organization",
-        "name": "Eduvia",
-        "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg"
-        },
-        "sameAs": [
-          "https://www.facebook.com/share/18iRSctdxN/",
-          "https://x.com/Eduvia7",
-          "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-        ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://eduvia-ai.fly.dev/#website",
-        "url": "https://eduvia-ai.fly.dev",
-        "name": "Eduvia AI Learning Platform",
-        "publisher": {
-          "@id": "https://eduvia-ai.fly.dev/#organization"
-        }
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/applicant/messages/#webpage",
-        "url": "https://eduvia-ai.fly.dev/skills_market/applicant/messages/",
-        "name": "My Messages",
-        "description": "List of all your active and past chat conversations within the Eduvia platform.",
-        "breadcrumb": {
-          "@id": "https://eduvia-ai.fly.dev/skills_market/applicant/messages/#breadcrumb"
-        },
-        "inLanguage": "en"
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://eduvia-ai.fly.dev/skills_market/applicant/messages/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Skills Market",
-            "item": "https://eduvia-ai.fly.dev/skills_market/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "My Messages",
-            "item": "https://eduvia-ai.fly.dev/skills_market/applicant/messages/"
-          }
-        ]
-      }
+    "@context":"https://schema.org","@graph":[
+      {"@type":"Organization","@id":"https://eduvia-ai.fly.dev/#organization","name":"Eduvia","url":"https://eduvia-ai.fly.dev"},
+      {"@type":"WebPage","@id":"https://eduvia-ai.fly.dev/skills_market/applicant/messages/#webpage","url":"https://eduvia-ai.fly.dev/skills_market/applicant/messages/","name":"My Messages","inLanguage":"en"}
     ]
   }
   </script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+  display: flex; flex-direction: column;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ═════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  overflow: hidden; white-space: nowrap;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .sep { opacity: .4; }
+.topbar-breadcrumb .current { color: var(--text-p); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.coins-badge {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.2);
+  border-radius: 99px; padding: 4px 12px 4px 8px;
+  font-size: 12px; font-weight: 700; color: var(--gold-400); flex-shrink: 0;
+}
+
+/* Nav dropdown */
+.nav-dropdown { position: relative; }
+.nav-dropdown-toggle {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  background: var(--bg-card); color: var(--text-p);
+  border: 1px solid var(--border); transition: var(--trans);
+  font-family: inherit;
+}
+.nav-dropdown-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 8px;
+  min-width: 200px; z-index: 700;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  display: none; flex-direction: column; gap: 2px;
+}
+.nav-dropdown-menu.open { display: flex; animation: fadeIn .2s ease; }
+.nav-dropdown-menu a, .nav-dropdown-menu span {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--text-p); text-decoration: none;
+  transition: var(--trans); cursor: pointer;
+}
+.nav-dropdown-menu a:hover { background: var(--bg-hover); color: var(--accent); }
+.nav-dropdown-menu .menu-sep {
+  height: 1px; background: var(--border); margin: 4px 0; padding: 0; pointer-events: none;
+}
+
+/* ═══ PAGE LAYOUT ════════════════════════════════════════════════════════ */
+.page-wrap { padding-top: var(--topbar-h); flex: 1; display: flex; flex-direction: column; }
+
+/* ═══ PAGE HEADER ════════════════════════════════════════════════════════ */
+.page-header {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 24px 28px; position: relative; overflow: hidden;
+}
+.page-header::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.1), transparent 70%);
+  pointer-events: none;
+}
+.page-header-inner { max-width: 900px; margin: 0 auto; position: relative; }
+.page-header-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 4px 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  color: var(--violet-400); text-transform: uppercase; margin-bottom: 12px;
+}
+.page-header h1 {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 800;
+  color: var(--text-h); letter-spacing: -.5px; margin-bottom: 6px;
+}
+.page-header-sub { font-size: 14px; color: var(--text-muted); }
+
+/* Stats row */
+.stats-row {
+  display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;
+}
+.stat-chip {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 8px 14px;
+  font-size: 12px; color: var(--text-muted);
+}
+.stat-chip strong { color: var(--text-h); font-size: 15px; }
+.stat-chip i { color: var(--accent); }
+
+/* ═══ MAIN CONTENT ═══════════════════════════════════════════════════════ */
+.content-outer {
+  flex: 1; max-width: 900px; width: 100%;
+  margin: 0 auto; padding: 28px 24px 48px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+/* Search + filter bar */
+.filter-bar {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.search-inp-wrap {
+  flex: 1; min-width: 180px; position: relative;
+}
+.search-inp-wrap i {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); font-size: 13px;
+}
+[lang="ar"] .search-inp-wrap i { left: auto; right: 12px; }
+.search-inp {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text-p);
+  padding: 9px 12px 9px 36px; font-size: 13px; font-family: inherit;
+  transition: var(--trans);
+}
+[lang="ar"] .search-inp { padding: 9px 36px 9px 12px; }
+.search-inp:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
+.search-inp::placeholder { color: var(--text-muted); }
+
+.filter-btns { display: flex; gap: 6px; }
+.filter-btn {
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border);
+  background: var(--bg-card-2); color: var(--text-muted);
+  transition: var(--trans); font-family: inherit;
+}
+.filter-btn:hover, .filter-btn.active {
+  border-color: var(--accent); color: var(--accent);
+  background: var(--violet-glow);
+}
+
+/* Alerts */
+.alert-strip {
+  padding: 12px 16px; border-radius: var(--radius-md);
+  font-size: 13px; display: flex; align-items: center; gap: 8px;
+  animation: fadeIn .3s ease;
+}
+.alert-strip.warning { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2); color: var(--gold-400); }
+.alert-strip.success { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.2); color: var(--emerald-400); }
+.alert-strip.error   { background: rgba(251,113,133,.06); border: 1px solid rgba(251,113,133,.2); color: var(--rose-400); }
+
+/* Section header */
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 4px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title i { color: var(--accent); }
+.count-badge {
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 2px 10px; border-radius: 99px;
+  font-size: 11px; color: var(--text-muted);
+}
+
+/* Order / conversation cards */
+.orders-list { display: flex; flex-direction: column; gap: 10px; }
+.order-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  display: flex; align-items: center; gap: 14px;
+  transition: var(--trans); text-decoration: none;
+  position: relative; overflow: hidden;
+  animation: cardReveal .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.order-card:hover {
+  border-color: var(--accent); background: var(--bg-hover);
+  transform: translateX(4px); box-shadow: var(--glow);
+}
+[lang="ar"] .order-card:hover { transform: translateX(-4px); }
+.order-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--accent); border-radius: 0 3px 3px 0;
+  transform: scaleY(0); transition: transform .2s ease;
+}
+[lang="ar"] .order-card::before { left: auto; right: 0; border-radius: 3px 0 0 3px; }
+.order-card:hover::before { transform: scaleY(1); }
+
+/* Avatar in card */
+.order-avatar {
+  width: 46px; height: 46px; border-radius: var(--radius-md); flex-shrink: 0;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; color: #fff;
+}
+
+.order-info { flex: 1; min-width: 0; }
+.order-title {
+  font-size: 14px; font-weight: 600; color: var(--text-h);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+.order-meta {
+  display: flex; gap: 12px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap;
+}
+.order-meta span { display: flex; align-items: center; gap: 4px; }
+
+.order-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+[lang="ar"] .order-right { align-items: flex-start; }
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 99px;
+  font-size: 11px; font-weight: 700;
+}
+.status-pending   { background: rgba(251,191,36,.1);  color: var(--gold-400);    border: 1px solid rgba(251,191,36,.2);  }
+.status-active    { background: rgba(52,211,153,.1);  color: var(--emerald-400); border: 1px solid rgba(52,211,153,.2);  }
+.status-completed { background: rgba(139,92,246,.1);  color: var(--violet-400);  border: 1px solid rgba(139,92,246,.2);  }
+.status-cancelled { background: rgba(251,113,133,.08); color: var(--rose-400);   border: 1px solid rgba(251,113,133,.18); }
+
+.open-chat-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 600; color: var(--accent);
+  padding: 5px 10px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-glow); background: var(--violet-glow);
+  transition: var(--trans);
+}
+.order-card:hover .open-chat-btn { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 56px 24px;
+  background: var(--bg-card); border: 1px dashed var(--border);
+  border-radius: var(--radius-xl); color: var(--text-muted);
+}
+.empty-state i { font-size: 48px; display: block; margin-bottom: 16px; opacity: .2; }
+.empty-state h3 { font-family: var(--font-display); font-size: 18px; color: var(--text-h); margin-bottom: 8px; }
+.empty-state p { font-size: 14px; margin-bottom: 20px; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 24px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; text-decoration: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; transition: var(--trans);
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+/* ═══ ACTION ROW ═════════════════════════════════════════════════════════ */
+.action-row { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 8px; }
+.nav-btn {
+  padding: 10px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; border: 1px solid var(--border);
+  color: var(--text-muted); background: var(--bg-card);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  transition: var(--trans);
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-btn.primary:hover { background: var(--accent-d); }
+
+/* ═══ FOOTER ═════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 24px;
+  text-align: center; color: var(--text-muted); font-size: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+}
+.site-footer a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.site-footer a:hover { color: var(--accent); }
+.footer-logo {
+  font-family: var(--font-display); font-size: 14px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══ MOBILE ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .page-header h1 { font-size: 20px; }
+  .content-outer { padding: 16px 14px 32px; }
+  .order-card { flex-wrap: wrap; }
+  .order-right { flex-direction: row; align-items: center; width: 100%; }
+  .filter-bar { flex-direction: column; }
+  .stats-row { gap: 8px; }
+}
+</style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">My Messages</h1>
-        <p data-translate="hero-desc">View and manage your messages in Eduvia's Skills Market</p>
-    </section>
+{# ── TOPBAR ─────────────────────────────────────────────────────────────── #}
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-breadcrumb">
+    <a href="{% url 'skills_market:services_list' %}"><i class="fas fa-store" style="font-size:11px;"></i> Skills Market</a>
+    <span class="sep">/</span>
+    <span class="current" data-i18n="my_messages">My Messages</span>
+  </div>
+  <div class="topbar-actions">
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
 
-    <!-- Messages -->
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} fadeIn">{{ message }}</div>
-            {% endfor %}
+    {% if user.is_authenticated %}
+      {% if user.courses_profile %}
+      <div class="coins-badge">
+        <i class="fas fa-coins"></i>
+        <span>{{ user.courses_profile.coins }}</span>
+      </div>
+      {% endif %}
+
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle" onclick="toggleNav()">
+          <i class="fas fa-bars"></i>
+          <span data-i18n="menu">Menu</span>
+          <i class="fas fa-chevron-down" style="font-size:10px;opacity:.6;"></i>
+        </button>
+        <div class="nav-dropdown-menu" id="nav-menu">
+          <a href="/"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
+          <a href="/courses/"><i class="fas fa-book"></i> <span data-i18n="nav_courses">Courses</span></a>
+          <a href="/chatbot/"><i class="fas fa-robot"></i> <span data-i18n="nav_chatbot">Chatbot</span></a>
+          <a href="/competitions/"><i class="fas fa-trophy"></i> <span data-i18n="nav_competitions">Competitions</span></a>
+          <a href="/performance/dashboard/"><i class="fas fa-chart-line"></i> <span data-i18n="nav_performance">Performance</span></a>
+          <a href="{% url 'skills_market:services_list' %}"><i class="fas fa-store"></i> <span data-i18n="nav_skills">Skills Market</span></a>
+          <a href="/about/"><i class="fas fa-info-circle"></i> <span data-i18n="nav_about">About Us</span></a>
+          <a href="/contact_us/"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact Us</span></a>
+          <div class="menu-sep"></div>
+          {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+          <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-chalkboard-teacher"></i> <span data-i18n="nav_dashboard">Dashboard</span></a>
+          {% endif %}
+          <a href="/accounts/profile/"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Profile</span></a>
+          <a href="/accounts/logout/" style="color:var(--rose-400)!important;"><i class="fas fa-sign-out-alt"></i> <span data-i18n="nav_logout">Logout</span></a>
         </div>
+      </div>
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent">
+        <i class="fas fa-sign-in-alt"></i>
+        <span data-i18n="nav_login">Login</span>
+      </a>
+    {% endif %}
+  </div>
+</header>
+
+{# ── PAGE WRAP ──────────────────────────────────────────────────────────── #}
+<div class="page-wrap">
+
+  {# ── Page Header ────────────────────────────────────────────────────── #}
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div class="page-header-badge">
+        <i class="fas fa-inbox"></i>
+        <span data-i18n="messages_badge">Messages</span>
+      </div>
+      <h1 data-i18n="page_title">My Messages</h1>
+      <p class="page-header-sub" data-i18n="page_sub">View and manage your conversations in Eduvia's Skills Market</p>
+      <div class="stats-row">
+        <div class="stat-chip">
+          <i class="fas fa-comments"></i>
+          <strong>{{ orders|length|default:"0" }}</strong>
+          <span data-i18n="conversations">Conversations</span>
+        </div>
+        <div class="stat-chip">
+          <i class="fas fa-store"></i>
+          <span data-i18n="skills_market">Skills Market</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# ── Content Outer ──────────────────────────────────────────────────── #}
+  <div class="content-outer">
+
+    {# Django messages / alerts #}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-strip {% if message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}error{% endif %}">
+          <i class="fas {% if message.tags == 'warning' %}fa-exclamation-triangle{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
     {% endif %}
 
-    <!-- Messages Container -->
-    <div class="messages-container">
-        <h2 data-translate="messages-title">My Messages</h2>
-        {% if orders %}
-            {% for order in orders %}
-                <div class="order-item">
-                    <a href="{% url 'skills_market:applicant_chat' order_id=order.id %}">
-                        {% if order.service %}
-                            <span data-translate="order-service">Chat with</span> {{ order.service.provider.username }} (<span data-translate="order-service-title">Order:</span> {{ order.service.title }})
-                        {% else %}
-                            <span data-translate="order-opportunity">Chat with</span> {{ order.opportunity_applications.first.opportunity.provider.username }} (<span data-translate="order-opportunity-title">Opportunity:</span> {{ order.details|slice:"11:" }})
-                        {% endif %}
-                    </a>
-                    <p><span data-translate="order-status">Status:</span> {{ order.get_status_display }}</p>
-                    <p><span data-translate="order-created">Created At:</span> {{ order.created_at|date:"F d, Y H:i" }}</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p class="text-center" data-translate="no-messages">No messages yet.</p>
-        {% endif %}
+    {# Filter bar #}
+    {% if orders %}
+    <div class="filter-bar">
+      <div class="search-inp-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" class="search-inp" id="search-inp"
+               placeholder="Search conversations…" oninput="filterOrders(this.value)">
+      </div>
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="setFilter('all', this)" data-i18n="filter_all">All</button>
+        <button class="filter-btn" onclick="setFilter('active', this)" data-i18n="filter_active">Active</button>
+        <button class="filter-btn" onclick="setFilter('pending', this)" data-i18n="filter_pending">Pending</button>
+        <button class="filter-btn" onclick="setFilter('completed', this)" data-i18n="filter_completed">Completed</button>
+      </div>
+    </div>
+    {% endif %}
+
+    {# Section head #}
+    {% if orders %}
+    <div class="section-head">
+      <div class="section-title">
+        <i class="fas fa-comments"></i>
+        <span data-i18n="conversations">Conversations</span>
+      </div>
+      <span class="count-badge" id="visible-count">{{ orders|length }}</span>
+    </div>
+    {% endif %}
+
+    {# Orders list #}
+    <div class="orders-list" id="orders-list">
+      {% for order in orders %}
+      <a href="{% url 'skills_market:applicant_chat' order_id=order.id %}"
+         class="order-card"
+         data-status="{{ order.status }}"
+         data-title="{% if order.service %}{{ order.service.title }}{% else %}{{ order.details|slice:'11:' }}{% endif %}"
+         data-provider="{% if order.service %}{{ order.service.provider.username }}{% else %}{{ order.opportunity_applications.first.opportunity.provider.username }}{% endif %}">
+
+        {# Avatar #}
+        <div class="order-avatar">
+          {% if order.service %}
+            {{ order.service.provider.username|slice:":1"|upper }}
+          {% else %}
+            {{ order.opportunity_applications.first.opportunity.provider.username|slice:":1"|upper }}
+          {% endif %}
+        </div>
+
+        {# Info #}
+        <div class="order-info">
+          <div class="order-title">
+            {% if order.service %}
+              {{ order.service.title }}
+            {% else %}
+              {{ order.details|slice:"11:" }}
+            {% endif %}
+          </div>
+          <div class="order-meta">
+            <span>
+              <i class="fas fa-user"></i>
+              {% if order.service %}{{ order.service.provider.username }}{% else %}{{ order.opportunity_applications.first.opportunity.provider.username }}{% endif %}
+            </span>
+            <span>
+              <i class="fas fa-calendar"></i>
+              {{ order.created_at|date:"M d, Y" }}
+            </span>
+            <span>
+              {% if order.service %}
+                <i class="fas fa-briefcase"></i>
+                <span data-i18n="service">Service</span>
+              {% else %}
+                <i class="fas fa-lightbulb"></i>
+                <span data-i18n="opportunity">Opportunity</span>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+
+        {# Right side #}
+        <div class="order-right">
+          <span class="status-pill status-{{ order.status }}">
+            <i class="fas {% if order.status == 'active' %}fa-circle-dot{% elif order.status == 'completed' %}fa-check-circle{% elif order.status == 'cancelled' %}fa-times-circle{% else %}fa-clock{% endif %}" style="font-size:9px;"></i>
+            {{ order.get_status_display }}
+          </span>
+          <span class="open-chat-btn">
+            <i class="fas fa-comments"></i>
+            <span data-i18n="open_chat">Open Chat</span>
+            <i class="fas fa-arrow-right" style="font-size:10px;"></i>
+          </span>
+        </div>
+
+      </a>
+      {% empty %}
+        <div class="empty-state">
+          <i class="fas fa-comment-slash"></i>
+          <h3 data-i18n="no_conv_title">No Conversations Yet</h3>
+          <p data-i18n="no_conv_desc">You haven't started any conversations. Browse the Skills Market to get started.</p>
+          <a href="{% url 'skills_market:services_list' %}" class="cta-btn">
+            <i class="fas fa-store"></i>
+            <span data-i18n="browse_services">Browse Services</span>
+          </a>
+        </div>
+      {% endfor %}
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{% url 'skills_market:applicant_messages' %}" class="btn" data-translate="back-to-messages">Back to Messages</a>
-        <a href="{% url 'skills_market:services_list' %}" class="btn" data-translate="back-to-services">Back to Services</a>
+    {# Empty after filter #}
+    <div class="empty-state" id="filter-empty" style="display:none;">
+      <i class="fas fa-search"></i>
+      <h3 data-i18n="no_results">No Results Found</h3>
+      <p data-i18n="try_different">Try a different search or filter.</p>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+    {# Action row #}
+    <div class="action-row">
+      <a href="{% url 'skills_market:services_list' %}" class="nav-btn primary">
+        <i class="fas fa-store"></i>
+        <span data-i18n="back_services">Back to Services</span>
+      </a>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'skills_market/applicant_messages.js' %}"></script>
+  </div>{# /content-outer #}
+
+  {# ── Footer ─────────────────────────────────────────────────────────── #}
+  <footer class="site-footer">
+    <span class="footer-logo">Eduvia</span>
+    <span>·</span>
+    <span data-i18n="footer">© 2025 Eduvia and creativitycode. All rights reserved.</span>
+    <span>·</span>
+    <a href="/about/" data-i18n="about">About</a>
+    <a href="/contact_us/" data-i18n="contact">Contact</a>
+    <a href="/accounts/profile/" data-i18n="profile">Profile</a>
+  </footer>
+
+</div>{# /page-wrap #}
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ──────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    menu:'Menu', nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance', nav_skills:'Skills Market',
+    nav_about:'About Us', nav_contact:'Contact Us', nav_dashboard:'Dashboard',
+    nav_profile:'Profile', nav_logout:'Logout', nav_login:'Login',
+    messages_badge:'Messages', page_title:'My Messages',
+    page_sub:"View and manage your conversations in Eduvia's Skills Market",
+    conversations:'Conversations', skills_market:'Skills Market',
+    filter_all:'All', filter_active:'Active', filter_pending:'Pending', filter_completed:'Completed',
+    service:'Service', opportunity:'Opportunity', open_chat:'Open Chat',
+    no_conv_title:'No Conversations Yet',
+    no_conv_desc:"You haven't started any conversations. Browse the Skills Market to get started.",
+    browse_services:'Browse Services', back_services:'Back to Services',
+    no_results:'No Results Found', try_different:'Try a different search or filter.',
+    my_messages:'My Messages',
+    footer:'© 2025 Eduvia and creativitycode. All rights reserved.',
+    about:'About', contact:'Contact', profile:'Profile',
+  },
+  ar: {
+    menu:'القائمة', nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'المحادثة الذكية',
+    nav_competitions:'المسابقات', nav_performance:'الأداء', nav_skills:'سوق المهارات',
+    nav_about:'عن Eduvia', nav_contact:'تواصل معنا', nav_dashboard:'لوحة التحكم',
+    nav_profile:'الملف الشخصي', nav_logout:'تسجيل الخروج', nav_login:'تسجيل الدخول',
+    messages_badge:'الرسائل', page_title:'رسائلي',
+    page_sub:'اعرض وتابع محادثاتك في سوق مهارات Eduvia',
+    conversations:'المحادثات', skills_market:'سوق المهارات',
+    filter_all:'الكل', filter_active:'نشط', filter_pending:'قيد الانتظار', filter_completed:'مكتمل',
+    service:'خدمة', opportunity:'فرصة', open_chat:'فتح المحادثة',
+    no_conv_title:'لا توجد محادثات بعد',
+    no_conv_desc:'لم تبدأ أي محادثة حتى الآن. تصفح سوق المهارات للبدء.',
+    browse_services:'تصفح الخدمات', back_services:'العودة للخدمات',
+    no_results:'لا توجد نتائج', try_different:'جرب بحثاً أو فلتراً مختلفاً.',
+    my_messages:'رسائلي',
+    footer:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+    about:'عن Eduvia', contact:'تواصل', profile:'الملف',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+let currentFilter = 'all';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  const si = document.getElementById('search-inp');
+  if (si) si.placeholder = lang === 'ar' ? 'ابحث في المحادثات…' : 'Search conversations…';
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Nav dropdown ─────────────────────────────────────────────────────── */
+function toggleNav() { document.getElementById('nav-menu').classList.toggle('open'); }
+document.addEventListener('click', e => {
+  const m = document.getElementById('nav-menu');
+  if (m && !m.closest('.nav-dropdown')?.contains(e.target)) m.classList.remove('open');
+});
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Filter & search ──────────────────────────────────────────────────── */
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+function filterOrders(query) { applyFilters(query); }
+function applyFilters(query) {
+  const q = (query ?? document.getElementById('search-inp')?.value ?? '').toLowerCase();
+  const cards = document.querySelectorAll('.order-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const status = card.dataset.status || '';
+    const title = (card.dataset.title || '').toLowerCase();
+    const provider = (card.dataset.provider || '').toLowerCase();
+    const matchFilter = currentFilter === 'all' || status === currentFilter;
+    const matchQuery = !q || title.includes(q) || provider.includes(q);
+    const show = matchFilter && matchQuery;
+    card.style.display = show ? 'flex' : 'none';
+    if (show) visible++;
+  });
+  const vc = document.getElementById('visible-count');
+  if (vc) vc.textContent = visible;
+  const fe = document.getElementById('filter-empty');
+  if (fe) fe.style.display = visible === 0 && cards.length > 0 ? 'block' : 'none';
+}
+
+/* ── Stagger card animations ─────────────────────────────────────────── */
+function staggerCards() {
+  document.querySelectorAll('.order-card').forEach((card, i) => {
+    card.style.animationDelay = `${i * 0.06}s`;
+  });
+}
+
+/* ── Init ─────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  staggerCards();
+});
+</script>
 </body>
 </html>

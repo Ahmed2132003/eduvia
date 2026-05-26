@@ -1,49 +1,40 @@
 {% load static i18n %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Recording — {{ session.title }} | Eduvia</title>
 
-  <title>Upload Recording - {{ session.title }} | Eduvia</title>
-
-  <!-- 🔍 SEO Meta -->
+  <!-- SEO Meta -->
   <meta name="description" content="Upload a recording of '{{ session.title }}' to Eduvia and share it with your students for continuous learning.">
   <meta name="keywords" content="Upload session recording, Eduvia, Eduvia instructor, session video, AI workshops, coding sessions, online learning, teaching video, Google Drive recording, programming tutorials">
   <meta name="author" content="Eduvia Team">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/workshops/upload-recording/{{ session.id }}/{{ session.title|slugify }}/">
 
-  <!-- 🔗 Open Graph Meta -->
+  <!-- Open Graph -->
   <meta property="og:title" content="Upload Recording - {{ session.title }} | Eduvia">
   <meta property="og:description" content="Upload the recorded video for '{{ session.title }}' and let learners revisit your live session anytime.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/workshops/upload-recording/{{ session.id }}/{{ session.title|slugify }}/">
   <meta property="og:image" content="https://i.postimg.cc/GtYxPYSQ/workshops3.jpg">
 
-  <!-- 🐦 Twitter Card -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Upload Recording - {{ session.title }} | Eduvia">
   <meta name="twitter:description" content="Share your live session recording '{{ session.title }}' with students on Eduvia.">
   <meta name="twitter:image" content="https://i.postimg.cc/GtYxPYSQ/workshops3.jpg">
 
-  <!-- 🌐 Favicon -->
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png">
+  <!-- Favicon -->
+  <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-  <!-- 🌐 Styles -->
+  <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'workshops/upload_recording.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🎨 Custom Style -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/GtYxPYSQ/workshops3.jpg");
-    }
-  </style>
-
-  <!-- 🧠 Structured Data (JSON-LD) -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -53,10 +44,7 @@
         "@id": "https://eduvia-ai.fly.dev/#organization",
         "name": "Eduvia",
         "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg"
-        },
+        "logo": { "@type": "ImageObject", "url": "https://eduvia-ai.fly.dev/static/images/logo_eduvia1.jpg" },
         "sameAs": [
           "https://www.facebook.com/share/18iRSctdxN/",
           "https://x.com/Eduvia7",
@@ -64,107 +52,1010 @@
         ]
       },
       {
-        "@type": "WebSite",
-        "@id": "https://eduvia-ai.fly.dev/#website",
-        "url": "https://eduvia-ai.fly.dev",
-        "name": "Eduvia AI Learning Platform",
-        "publisher": {
-          "@id": "https://eduvia-ai.fly.dev/#organization"
-        }
-      },
-      {
         "@type": "MediaObject",
         "@id": "https://eduvia-ai.fly.dev/workshops/upload-recording/{{ session.id }}/{{ session.title|slugify }}/",
         "name": "{{ session.title|escapejs }}",
         "description": "Recording for the live session '{{ session.title|escapejs }}' uploaded by the instructor on Eduvia.",
         "uploadDate": "{{ session.start_time|date:'c' }}",
-        "contentUrl": "{{ session.video_file|default:'https://drive.google.com/' }}",
-        "thumbnailUrl": "{{ session.session_image.url|default:'https://i.postimg.cc/GtYxPYSQ/workshops3.jpg' }}",
-        "author": {
-          "@type": "Person",
-          "name": "{{ session.instructor.username }}"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "Eduvia",
-          "url": "https://eduvia-ai.fly.dev"
-        }
+        "author": { "@type": "Person", "name": "{{ session.instructor.username }}" },
+        "publisher": { "@type": "Organization", "name": "Eduvia", "url": "https://eduvia-ai.fly.dev" }
       }
     ]
   }
   </script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-title {
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ── Nav dropdown ── */
+.nav-dropdown { position: relative; }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 6px;
+  min-width: 180px; z-index: 700;
+  box-shadow: 0 12px 40px rgba(0,0,0,.4);
+  display: none; flex-direction: column; gap: 2px;
+  animation: fadeIn .2s ease;
+}
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown-menu:hover { display: flex; }
+.nav-dropdown-menu a {
+  padding: 9px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--text-p); text-decoration: none;
+  display: flex; align-items: center; gap: 8px; transition: var(--trans);
+}
+.nav-dropdown-menu a:hover { background: var(--bg-hover); color: var(--text-h); }
+.nav-dropdown-menu .sep { height: 1px; background: var(--border); margin: 4px 0; }
+
+.coins-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700; color: var(--warning);
+}
+.coins-pill i { font-size: 11px; }
+
+/* ═══ LAYOUT ════════════════════════════════════════════════════════════ */
+.page-wrap {
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══ HERO STRIP ═══════════════════════════════════════════════════════ */
+.hero-strip {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero-strip::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 20% 50%, rgba(139,92,246,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 80% 30%, rgba(251,191,36,.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-strip::after {
+  content: '\f01c';
+  font-family: 'Font Awesome 6 Free'; font-weight: 900;
+  position: absolute; bottom: -30px; right: 40px;
+  font-size: 160px; color: rgba(139,92,246,.04);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 5px 14px; font-size: 11px;
+  font-weight: 700; color: var(--violet-400); letter-spacing: .5px;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.hero-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 34px); font-weight: 800;
+  color: var(--text-h); letter-spacing: -.5px; line-height: 1.2;
+  margin-bottom: 12px; position: relative;
+}
+.hero-h1 span {
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 15px; color: var(--text-muted); max-width: 540px;
+  margin: 0 auto 24px; line-height: 1.65; position: relative;
+}
+.hero-meta {
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; flex-wrap: wrap; position: relative;
+}
+.hero-meta-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; color: var(--text-muted);
+}
+.hero-meta-item i { color: var(--accent); }
+
+/* ═══ MAIN CONTENT ══════════════════════════════════════════════════════ */
+.main-content {
+  flex: 1;
+  max-width: 760px; margin: 0 auto;
+  width: 100%; padding: 40px 24px 80px;
+}
+
+/* ═══ FORM CARD ═════════════════════════════════════════════════════════ */
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.form-card-header {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.form-card-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--violet-400); flex-shrink: 0;
+}
+.form-card-title {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 800; color: var(--text-h); margin-bottom: 3px;
+}
+.form-card-sub { font-size: 13px; color: var(--text-muted); }
+
+.form-card-body { padding: 28px; }
+
+/* ═══ FIELD GROUP ════════════════════════════════════════════════════════ */
+.field-group { margin-bottom: 22px; }
+.field-label {
+  display: block; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: .5px; margin-bottom: 8px;
+}
+.field-label span { color: var(--danger); margin-left: 2px; }
+
+.field-inp {
+  width: 100%; background: var(--bg-base);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-h);
+  padding: 13px 16px; font-size: 14px; font-family: inherit;
+  transition: var(--trans);
+}
+.field-inp:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.field-inp::placeholder { color: var(--text-muted); }
+.field-inp.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(251,113,133,.1); }
+
+.field-help {
+  font-size: 12px; color: var(--text-muted); margin-top: 6px;
+  display: flex; align-items: flex-start; gap: 5px;
+}
+.field-help i { margin-top: 1px; flex-shrink: 0; color: var(--accent); }
+.field-error {
+  font-size: 12px; color: var(--danger); margin-top: 6px;
+  display: none; align-items: center; gap: 5px;
+}
+.field-error.visible { display: flex; }
+.field-error i { flex-shrink: 0; }
+
+/* ═══ URL PREVIEW ════════════════════════════════════════════════════════ */
+.url-preview {
+  margin-top: 12px; padding: 14px 16px;
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: none; align-items: center; gap: 12px;
+  animation: fadeIn .25s ease;
+}
+.url-preview.visible { display: flex; }
+.url-preview-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: rgba(56,189,248,.1); color: var(--sky-400);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.url-preview-info { flex: 1; min-width: 0; }
+.url-preview-label { font-size: 12px; font-weight: 700; color: var(--text-h); margin-bottom: 2px; }
+.url-preview-url { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.url-preview-status {
+  font-size: 11px; font-weight: 700; padding: 3px 9px;
+  border-radius: 99px; flex-shrink: 0;
+}
+.url-preview-status.valid { background: rgba(52,211,153,.1); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.url-preview-status.invalid { background: rgba(251,113,133,.08); color: var(--danger); border: 1px solid rgba(251,113,133,.2); }
+
+/* ═══ INFO CARD ═════════════════════════════════════════════════════════ */
+.info-card {
+  background: rgba(139,92,246,.06);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-md);
+  padding: 16px 18px; margin-bottom: 22px;
+  display: flex; gap: 12px;
+}
+.info-card-icon { color: var(--violet-400); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.info-card-body { flex: 1; }
+.info-card-title { font-size: 13px; font-weight: 700; color: var(--violet-400); margin-bottom: 4px; }
+.info-card-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.info-card-text ul { list-style: none; padding: 0; margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
+.info-card-text ul li { display: flex; align-items: flex-start; gap: 7px; }
+.info-card-text ul li::before { content: '→'; color: var(--accent); flex-shrink: 0; font-weight: 700; }
+
+/* ═══ STEPS INDICATOR ═══════════════════════════════════════════════════ */
+.steps-row {
+  display: flex; gap: 0; margin-bottom: 28px;
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+.step-item {
+  flex: 1; padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--text-muted); position: relative;
+  border-right: 1px solid var(--border);
+}
+.step-item:last-child { border-right: none; }
+.step-item.active { background: var(--violet-glow); color: var(--text-h); }
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; border: 1.5px solid var(--border);
+  color: var(--text-muted);
+}
+.step-item.active .step-num { border-color: var(--accent); background: var(--accent); color: #fff; }
+.step-item.done .step-num { border-color: var(--success); background: var(--success); color: #fff; }
+.step-item.done .step-num::after { content: '✓'; font-size: 11px; }
+.step-label { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ═══ FORM FOOTER ════════════════════════════════════════════════════════ */
+.form-card-footer {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+
+.submit-btn {
+  padding: 13px 32px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+.submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+.back-btn {
+  padding: 12px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  background: var(--bg-card); color: var(--text-p);
+  border: 1px solid var(--border); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--trans); font-family: inherit;
+}
+.back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ SESSION SUMMARY CARD ══════════════════════════════════════════════ */
+.session-summary {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px 22px;
+  margin-bottom: 24px;
+  animation: cardReveal .5s .1s cubic-bezier(.34,1.56,.64,1) both;
+}
+.session-summary-head {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--accent); margin-bottom: 14px;
+}
+.session-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.session-field { flex: 1; min-width: 140px; }
+.session-field-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 3px; }
+.session-field-val { font-size: 14px; color: var(--text-h); font-weight: 600; }
+
+/* ═══ SUCCESS STATE ══════════════════════════════════════════════════════ */
+.success-card {
+  background: rgba(52,211,153,.07); border: 1px solid rgba(52,211,153,.25);
+  border-radius: var(--radius-xl); padding: 40px 32px; text-align: center;
+  display: none; animation: cardReveal .5s ease both;
+}
+.success-card.visible { display: block; }
+.success-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(52,211,153,.12); border: 1px solid rgba(52,211,153,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; color: var(--success); margin: 0 auto 20px;
+}
+.success-title {
+  font-family: var(--font-display);
+  font-size: 24px; font-weight: 800; color: var(--success); margin-bottom: 8px;
+}
+.success-msg { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 24px; }
+
+/* ═══ TOAST ═════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ SPINNER ════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-logo {
+  font-family: var(--font-display); font-size: 16px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-links { display: flex; gap: 16px; }
+.footer-links a {
+  font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans);
+}
+.footer-links a:hover { color: var(--accent); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══ MOBILE ════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-title { display: none; }
+  .hero-strip { padding: 32px 16px 28px; }
+  .main-content { padding: 24px 14px 60px; }
+  .form-card-header, .form-card-body, .form-card-footer { padding: 18px 16px; }
+  .steps-row { flex-direction: column; border-radius: var(--radius-md); }
+  .step-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .step-item:last-child { border-bottom: none; }
+  .site-footer { flex-direction: column; text-align: center; }
+  .nav-links-desktop { display: none; }
+  .mobile-menu-btn { display: flex !important; }
+}
+
+/* Desktop nav links in topbar */
+.nav-links-desktop {
+  display: flex; align-items: center; gap: 4px;
+}
+.nav-link {
+  padding: 6px 11px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans);
+}
+.nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+
+/* Mobile menu */
+.mobile-menu-btn {
+  display: none; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px; cursor: pointer;
+  transition: var(--trans);
+}
+.mobile-menu-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.mobile-nav {
+  position: fixed; top: var(--topbar-h); left: 0; right: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  padding: 12px 16px; z-index: 500;
+  display: none; flex-direction: column; gap: 4px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.3);
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  padding: 11px 14px; border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--text-p); text-decoration: none;
+  display: flex; align-items: center; gap: 10px; transition: var(--trans);
+}
+.mobile-nav a:hover { background: var(--bg-card); color: var(--text-h); }
+.mobile-nav .sep { height: 1px; background: var(--border); margin: 4px 0; }
+</style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Upload Recording for {{ session.title }}</h1>
-        <p data-translate="hero-subtitle">Share your session recording with learners to enhance their educational experience.</p>
-        <a href="#upload-form" class="btn" data-translate="hero-btn">Upload Now</a>
-    </section>
+<!-- ── TOPBAR ─────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-title">
+    <i class="fas fa-upload" style="color:var(--accent);margin-right:5px;"></i>
+    {{ session.title }}
+  </span>
 
-    <!-- Form Container -->
-    <div class="container" id="upload-form">
-        <h1 data-translate="container-title">Upload Recording for {{ session.title }}</h1>
-        <form method="post" id="upload-form-element">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="video_file" class="form-label" data-translate="form-label">Video URL</label>
-                <input type="url" class="form-control" id="video_file" name="video_file" placeholder="Enter Google Drive video URL" required>
-                <p class="form-error" id="url-error">Please enter a valid Google Drive URL (e.g., https://drive.google.com/file/d/...).</p>
-            </div>
-            <button type="submit" class="btn btn-primary" data-translate="submit-btn">Upload Recording</button>
-            <a href="{% url 'workshops:live_session_list' %}" class="btn btn-secondary" data-translate="back-btn">Back to Sessions</a>
-        </form>
+  <!-- Desktop nav links -->
+  <nav class="nav-links-desktop">
+    <a href="/" class="nav-link" data-i18n="nav_home">Home</a>
+    <a href="/courses/" class="nav-link" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" class="nav-link" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" class="nav-link" data-i18n="nav_competitions">Competitions</a>
+    <a href="/about/" class="nav-link" data-i18n="nav_about">About</a>
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.courses_profile %}
+    <div class="coins-pill">
+      <i class="fas fa-coins"></i>
+      <span>{{ user.courses_profile.coins|default:0 }}</span>
+    </div>
+    {% endif %}
+
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-ghost">
+        <i class="fas fa-tachometer-alt"></i>
+        <span class="nav-links-desktop" style="display:inline;" data-i18n="dashboard">Dashboard</span>
+      </a>
+      {% endif %}
+      <a href="/accounts/profile/" class="ctrl-btn" title="Profile">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="/accounts/logout/" class="tb-btn tb-btn-ghost">
+        <i class="fas fa-sign-out-alt"></i>
+      </a>
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent">
+        <i class="fas fa-sign-in-alt"></i>
+        <span data-i18n="login">Login</span>
+      </a>
+    {% endif %}
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="/"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
+  <a href="/courses/"><i class="fas fa-book-open"></i> <span data-i18n="nav_courses">Courses</span></a>
+  <a href="/chatbot/"><i class="fas fa-robot"></i> <span data-i18n="nav_chatbot">Chatbot</span></a>
+  <a href="/competitions/"><i class="fas fa-trophy"></i> <span data-i18n="nav_competitions">Competitions</span></a>
+  <a href="/performance/dashboard/"><i class="fas fa-chart-bar"></i> <span data-i18n="nav_performance">Performance</span></a>
+  <a href="/about/"><i class="fas fa-info-circle"></i> <span data-i18n="nav_about">About Us</span></a>
+  <a href="/contact_us/"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact Us</span></a>
+  <div class="sep"></div>
+  {% if user.is_authenticated %}
+  <a href="/accounts/profile/"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Profile</span></a>
+  <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> <span data-i18n="nav_logout">Logout</span></a>
+  {% else %}
+  <a href="/accounts/register/"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span></a>
+  {% endif %}
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ── HERO STRIP ──────────────────────────────────────────────────── -->
+  <section class="hero-strip">
+    <div class="hero-badge">
+      <i class="fas fa-video"></i>
+      <span data-i18n="workshop_recording">Workshop Recording</span>
+    </div>
+    <h1 class="hero-h1">
+      <span data-i18n="upload_for">Upload Recording for</span><br>
+      <span>{{ session.title }}</span>
+    </h1>
+    <p class="hero-sub" data-i18n="hero_sub">
+      Share your session recording with learners to enhance their educational experience.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <i class="fas fa-user-tie"></i>
+        <span>{{ session.instructor.username }}</span>
+      </div>
+      <div class="hero-meta-item">
+        <i class="fas fa-calendar-alt"></i>
+        <span>{{ session.start_time|date:"M d, Y" }}</span>
+      </div>
+      <div class="hero-meta-item">
+        <i class="fas fa-clock"></i>
+        <span>{{ session.start_time|date:"H:i" }} → {{ session.end_time|date:"H:i" }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MAIN CONTENT ────────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- Session Summary -->
+    <div class="session-summary">
+      <div class="session-summary-head">
+        <i class="fas fa-info-circle"></i>
+        <span data-i18n="session_info">Session Details</span>
+      </div>
+      <div class="session-row">
+        <div class="session-field">
+          <div class="session-field-label" data-i18n="session_title">Session</div>
+          <div class="session-field-val">{{ session.title }}</div>
+        </div>
+        <div class="session-field">
+          <div class="session-field-label" data-i18n="instructor">Instructor</div>
+          <div class="session-field-val">{{ session.instructor.username }}</div>
+        </div>
+        <div class="session-field">
+          <div class="session-field-label" data-i18n="session_date">Date</div>
+          <div class="session-field-val">{{ session.start_time|date:"M d, Y" }}</div>
+        </div>
+        <div class="session-field">
+          <div class="session-field-label" data-i18n="duration">Duration</div>
+          <div class="session-field-val">{{ session.start_time|date:"H:i" }} – {{ session.end_time|date:"H:i" }}</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia. All rights reserved.</p>
-    </footer>
+    <!-- Steps indicator -->
+    <div class="steps-row">
+      <div class="step-item active">
+        <div class="step-num">1</div>
+        <span class="step-label" data-i18n="step_prepare">Prepare your video</span>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <span class="step-label" data-i18n="step_upload">Upload the URL</span>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <span class="step-label" data-i18n="step_share">Students can watch</span>
+      </div>
+    </div>
 
-    <!-- JavaScript -->
-    <script src="{% static 'workshops/upload_recording.js' %}"></script>
+    <!-- Form Card -->
+    <div class="form-card" id="form-card">
+      <div class="form-card-header">
+        <div class="form-card-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+        <div>
+          <div class="form-card-title" data-i18n="form_title">Upload Session Recording</div>
+          <div class="form-card-sub" data-i18n="form_sub">Provide a Google Drive or any public video URL</div>
+        </div>
+      </div>
+
+      <div class="form-card-body">
+
+        <!-- Info box -->
+        <div class="info-card">
+          <div class="info-card-icon"><i class="fas fa-lightbulb"></i></div>
+          <div class="info-card-body">
+            <div class="info-card-title" data-i18n="info_title">How to get a shareable link</div>
+            <div class="info-card-text">
+              <ul>
+                <li data-i18n="info_1">Upload your video to Google Drive</li>
+                <li data-i18n="info_2">Right-click the file → "Share" → "Copy link"</li>
+                <li data-i18n="info_3">Set access to "Anyone with the link can view"</li>
+                <li data-i18n="info_4">Paste the link below</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <form method="post" id="upload-form-element" novalidate>
+          {% csrf_token %}
+
+          <!-- URL Field -->
+          <div class="field-group">
+            <label class="field-label" for="video_file">
+              <span data-i18n="label_url">Video URL</span>
+              <span>*</span>
+            </label>
+            <input
+              type="url"
+              class="field-inp"
+              id="video_file"
+              name="video_file"
+              placeholder="https://drive.google.com/file/d/..."
+              required
+              oninput="handleUrlInput(this.value)"
+              autocomplete="off"
+            >
+            <div class="field-error" id="url-error">
+              <i class="fas fa-exclamation-circle"></i>
+              <span id="url-error-msg" data-i18n="error_url">Please enter a valid Google Drive or video URL.</span>
+            </div>
+            <div class="field-help">
+              <i class="fas fa-info-circle"></i>
+              <span data-i18n="help_url">Accepted: Google Drive, Vimeo, or any direct public video URL</span>
+            </div>
+
+            <!-- URL preview -->
+            <div class="url-preview" id="url-preview">
+              <div class="url-preview-icon"><i class="fas fa-link"></i></div>
+              <div class="url-preview-info">
+                <div class="url-preview-label" id="preview-provider">Google Drive</div>
+                <div class="url-preview-url" id="preview-url-text"></div>
+              </div>
+              <span class="url-preview-status valid" id="preview-status" data-i18n="valid">Valid</span>
+            </div>
+          </div>
+
+        </form>
+
+      </div><!-- /form-card-body -->
+
+      <div class="form-card-footer">
+        <a href="{% url 'workshops:live_session_list' %}" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+          <span data-i18n="back_sessions">Back to Sessions</span>
+        </a>
+        <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span data-i18n="upload_recording">Upload Recording</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Success state (shown after submission) -->
+    <div class="success-card" id="success-card">
+      <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="success-title" data-i18n="success_title">Recording Uploaded!</div>
+      <p class="success-msg" data-i18n="success_msg">
+        Your session recording has been uploaded successfully. Students can now watch the recording at any time.
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="{% url 'workshops:live_session_list' %}" class="submit-btn" style="text-decoration:none;">
+          <i class="fas fa-list"></i>
+          <span data-i18n="view_sessions">View All Sessions</span>
+        </a>
+        <a href="{% url 'courses:instructor_dashboard' %}" class="back-btn" style="text-decoration:none;">
+          <i class="fas fa-tachometer-alt"></i>
+          <span data-i18n="dashboard">Dashboard</span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── FOOTER ──────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <a href="/" class="footer-logo">Eduvia</a>
+    <span class="footer-copy" data-i18n="footer_copy">© 2025 Eduvia. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="/about/" data-i18n="nav_about">About</a>
+      <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+      <a href="/courses/" data-i18n="nav_courses">Courses</a>
+    </div>
+  </footer>
+
+</div><!-- /page-wrap -->
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_about:'About Us', nav_contact:'Contact Us', nav_profile:'Profile',
+    nav_logout:'Logout', login:'Login', dashboard:'Dashboard',
+    workshop_recording:'Workshop Recording',
+    upload_for:'Upload Recording for',
+    hero_sub:'Share your session recording with learners to enhance their educational experience.',
+    session_info:'Session Details', session_title:'Session',
+    instructor:'Instructor', session_date:'Date', duration:'Duration',
+    step_prepare:'Prepare your video', step_upload:'Upload the URL', step_share:'Students can watch',
+    form_title:'Upload Session Recording', form_sub:'Provide a Google Drive or any public video URL',
+    info_title:'How to get a shareable link',
+    info_1:'Upload your video to Google Drive',
+    info_2:'Right-click the file → "Share" → "Copy link"',
+    info_3:'Set access to "Anyone with the link can view"',
+    info_4:'Paste the link below',
+    label_url:'Video URL', error_url:'Please enter a valid Google Drive or video URL.',
+    help_url:'Accepted: Google Drive, Vimeo, or any direct public video URL',
+    valid:'Valid', back_sessions:'Back to Sessions', upload_recording:'Upload Recording',
+    success_title:'Recording Uploaded!',
+    success_msg:'Your session recording has been uploaded successfully. Students can now watch the recording at any time.',
+    view_sessions:'View All Sessions', footer_copy:'© 2025 Eduvia. All rights reserved.',
+  },
+  ar: {
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'المساعد الذكي',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_about:'من نحن', nav_contact:'تواصل معنا', nav_profile:'الملف الشخصي',
+    nav_logout:'تسجيل خروج', login:'تسجيل دخول', dashboard:'لوحة التحكم',
+    workshop_recording:'تسجيل الجلسة',
+    upload_for:'رفع التسجيل لـ',
+    hero_sub:'شارك تسجيل جلستك مع المتعلمين لتعزيز تجربتهم التعليمية.',
+    session_info:'تفاصيل الجلسة', session_title:'الجلسة',
+    instructor:'المحاضر', session_date:'التاريخ', duration:'المدة',
+    step_prepare:'جهّز الفيديو', step_upload:'ارفع الرابط', step_share:'الطلاب يشاهدون',
+    form_title:'رفع تسجيل الجلسة', form_sub:'أدخل رابط Google Drive أو أي رابط فيديو عام',
+    info_title:'كيف تحصل على رابط مشاركة',
+    info_1:'ارفع الفيديو على Google Drive',
+    info_2:'انقر بالزر الأيمن على الملف → "مشاركة" → "نسخ الرابط"',
+    info_3:'اضبط الوصول على "أي شخص لديه الرابط"',
+    info_4:'الصق الرابط أدناه',
+    label_url:'رابط الفيديو', error_url:'يرجى إدخال رابط Google Drive أو رابط فيديو صحيح.',
+    help_url:'مقبول: Google Drive أو Vimeo أو أي رابط فيديو عام',
+    valid:'صالح', back_sessions:'العودة للجلسات', upload_recording:'رفع التسجيل',
+    success_title:'تم رفع التسجيل!',
+    success_msg:'تم رفع تسجيل الجلسة بنجاح. يمكن للطلاب الآن مشاهدة التسجيل في أي وقت.',
+    view_sessions:'عرض كل الجلسات', footer_copy:'© 2025 Eduvia. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  const curr = document.documentElement.getAttribute('data-theme');
+  applyTheme(curr === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile menu ──────────────────────────────────────────────────────── */
+function toggleMobileMenu() { document.getElementById('mobile-nav').classList.toggle('open'); }
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  if (!nav.contains(e.target) && !e.target.closest('.mobile-menu-btn')) nav.classList.remove('open');
+});
+
+/* ── Toast ──────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 350); }, dur);
+}
+
+/* ── URL detection ─────────────────────────────────────────────────────── */
+function detectProvider(url) {
+  if (!url) return null;
+  if (url.includes('drive.google.com')) return 'Google Drive';
+  if (url.includes('vimeo.com'))        return 'Vimeo';
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
+  if (url.includes('dropbox.com'))      return 'Dropbox';
+  if (url.match(/\.(mp4|webm|mov|mkv)$/i)) return 'Direct Video';
+  if (url.startsWith('http'))           return 'Web URL';
+  return null;
+}
+
+function isValidUrl(url) {
+  try { new URL(url); return url.startsWith('http'); } catch { return false; }
+}
+
+function handleUrlInput(val) {
+  const preview   = document.getElementById('url-preview');
+  const errEl     = document.getElementById('url-error');
+  const provEl    = document.getElementById('preview-provider');
+  const urlEl     = document.getElementById('preview-url-text');
+  const statusEl  = document.getElementById('preview-status');
+  const inp       = document.getElementById('video_file');
+
+  if (!val) {
+    preview.classList.remove('visible');
+    errEl.classList.remove('visible');
+    inp.classList.remove('error');
+    return;
+  }
+
+  const provider = detectProvider(val);
+  const valid    = isValidUrl(val) && !!provider;
+
+  if (provider) {
+    preview.classList.add('visible');
+    provEl.textContent = provider;
+    urlEl.textContent  = val;
+    statusEl.className = `url-preview-status ${valid ? 'valid' : 'invalid'}`;
+    statusEl.textContent = valid
+      ? (currentLang === 'ar' ? 'صالح' : 'Valid')
+      : (currentLang === 'ar' ? 'تحقق' : 'Check URL');
+  } else {
+    preview.classList.remove('visible');
+  }
+
+  if (!valid && val.length > 10) {
+    inp.classList.add('error');
+    errEl.classList.add('visible');
+  } else {
+    inp.classList.remove('error');
+    errEl.classList.remove('visible');
+  }
+
+  // Animate steps
+  if (valid) {
+    document.querySelectorAll('.step-item')[1]?.classList.add('active');
+  }
+}
+
+/* ── Submit ────────────────────────────────────────────────────────────── */
+function handleSubmit() {
+  const urlVal = document.getElementById('video_file').value.trim();
+  const valid  = isValidUrl(urlVal) && !!detectProvider(urlVal);
+
+  if (!valid) {
+    document.getElementById('video_file').classList.add('error');
+    document.getElementById('url-error').classList.add('visible');
+    toast(currentLang === 'ar' ? 'يرجى إدخال رابط صحيح.' : 'Please enter a valid URL.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn._orig = btn.innerHTML;
+  btn.innerHTML = `<span class="spinner"></span> ${currentLang === 'ar' ? 'جاري الرفع…' : 'Uploading…'}`;
+  btn.disabled = true;
+
+  document.getElementById('upload-form-element').submit();
+}
+
+/* ── Keyboard submit ───────────────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.activeElement.id === 'video_file') handleSubmit();
+});
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+});
+</script>
 </body>
 </html>
