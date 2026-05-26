@@ -1,219 +1,712 @@
 {% load static i18n projects_filters %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- 🔍 SEO -->
-  <title data-translate="page-title">Collaboration Rooms - Eduvia</title>
-  <meta name="description" data-translate="meta-desc" content="Explore collaboration rooms on Eduvia. Join or create rooms to work on exciting projects with peers.">
-  <meta name="keywords" data-translate="meta-keywords" content="collaboration rooms, Eduvia, teamwork, project collaboration, online learning">
-  <meta name="author" content="Eduvia">
+  <title data-translate="page-title">Collaboration Rooms — Eduvia</title>
+  <meta name="description" content="Explore collaboration rooms on Eduvia. Join or create rooms to work on exciting projects with peers.">
   <meta name="robots" content="index, follow, noarchive">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/projects/room_list/">
-
-  <!-- 🌍 Open Graph -->
-  <meta property="og:title" data-translate="og-title" content="Collaboration Rooms - Eduvia">
-  <meta property="og:description" data-translate="og-desc" content="Discover and join collaboration rooms on Eduvia to work on projects with peers and enhance your learning experience.">
+  <meta property="og:title" content="Collaboration Rooms - Eduvia">
   <meta property="og:image" content="https://i.postimg.cc/wM6L37Tx/room3.jpg">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/projects/room_list/">
   <meta property="og:type" content="website">
-
-  <!-- 🐦 Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" data-translate="twitter-title" content="Collaboration Rooms - Eduvia">
-  <meta name="twitter:description" data-translate="og-desc" content="Discover and join collaboration rooms on Eduvia to work on projects with peers and enhance your learning experience.">
-  <meta name="twitter:image" content="https://i.postimg.cc/wM6L37Tx/room3.jpg">
-
-  <!-- 🖼️ Favicon -->
   <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-  <!-- 🌐 Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🎨 Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'projects/room_list.css' %}">
-
-  <!-- 🖼️ Hero Background -->
   <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/wM6L37Tx/room3.jpg");
-    }
-  </style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (room_list)
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- 📊 Structured Data -->
-  <script type="application/ld+json" id="schema-markup">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://eduvia-ai.fly.dev/#organization",
-        "name": "Eduvia",
-        "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-        },
-        "sameAs": [
-          "https://www.facebook.com/share/18iRSctdxN/",
-          "https://x.com/Eduvia7",
-          "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-        ]
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://eduvia-ai.fly.dev/projects/room_list/#webpage",
-        "url": "https://eduvia-ai.fly.dev/projects/room_list/",
-        "name": "Collaboration Rooms - Eduvia",
-        "description": "Explore collaboration rooms on Eduvia. Join or create rooms to work on exciting projects with peers.",
-        "breadcrumb": {
-          "@id": "https://eduvia-ai.fly.dev/projects/room_list/#breadcrumb"
-        },
-        "inLanguage": "en"
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://eduvia-ai.fly.dev/projects/room_list/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Collaboration Rooms",
-            "item": "https://eduvia-ai.fly.dev/projects/room_list/"
-          }
-        ]
-      }
-    ]
-  }
-  </script>
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-page-title {
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* NAV DROPDOWN */
+.nav-dropdown { position: relative; }
+.nav-dropdown-menu {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); min-width: 180px; padding: 8px 0;
+  box-shadow: 0 16px 40px rgba(0,0,0,.4); z-index: 700;
+  animation: fadeIn .2s ease;
+}
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown-menu:hover { display: block; }
+.nav-dropdown-menu a, .nav-dropdown-menu span {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 16px; font-size: 13px; color: var(--text-p);
+  text-decoration: none; transition: var(--trans);
+  cursor: pointer;
+}
+.nav-dropdown-menu a:hover { background: var(--bg-hover); color: var(--accent); }
+.nav-dropdown-menu .sep { height: 1px; background: var(--border); margin: 6px 0; }
+.coins-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--bg-card); border: 1px solid rgba(251,191,36,.2);
+  border-radius: 99px; padding: 4px 10px 4px 8px;
+  font-size: 12px; color: var(--gold-400); font-weight: 600;
+}
+
+/* ═══ PAGE WRAPPER ═════════════════════════════════════════════════════ */
+.page-wrap {
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ═══ HERO BANNER ══════════════════════════════════════════════════════ */
+.hero-banner {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #0d0a1f 0%, #0a1628 50%, #080b14 100%);
+  padding: 64px 24px 48px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.hero-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139,92,246,.18), transparent 70%);
+  pointer-events: none;
+}
+.hero-banner::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--bg-base));
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 5px 14px; font-size: 11px;
+  font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--violet-400); margin-bottom: 16px;
+}
+.hero-h1 {
+  font-family: var(--font-display);
+  font-size: 40px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px;
+  position: relative;
+}
+.hero-h1 span {
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 15px; color: var(--text-muted); max-width: 520px;
+  margin: 0 auto 28px; line-height: 1.6;
+}
+.hero-stats {
+  display: flex; justify-content: center; gap: 28px; flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat-val {
+  font-family: var(--font-display); font-size: 26px; font-weight: 800;
+  color: var(--text-h); display: block;
+}
+.hero-stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; }
+
+/* ═══ MAIN CONTENT ═════════════════════════════════════════════════════ */
+.main-content { flex: 1; max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; width: 100%; }
+
+/* ── Toolbar ── */
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 28px; flex-wrap: wrap;
+}
+.toolbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.section-title {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700; color: var(--text-h); letter-spacing: -.3px;
+}
+.room-count {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 3px 10px;
+  font-size: 12px; color: var(--text-muted);
+}
+.create-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-size: 13px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer;
+  font-family: inherit; transition: var(--trans);
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+  position: relative; overflow: hidden;
+}
+.create-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.create-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+/* ── Alert messages ── */
+.alert-box {
+  padding: 14px 18px; border-radius: var(--radius-md);
+  font-size: 13px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid;
+}
+.alert-box.info    { background: rgba(139,92,246,.08); color: var(--violet-400); border-color: rgba(139,92,246,.2); }
+.alert-box.success { background: rgba(52,211,153,.08); color: var(--success); border-color: rgba(52,211,153,.25); }
+.alert-box.error   { background: rgba(251,113,133,.08); color: var(--danger); border-color: rgba(251,113,133,.2); }
+
+/* ── Room grid ── */
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+/* ── Room card ── */
+.room-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  transition: var(--trans); box-shadow: var(--glow);
+  animation: cardReveal .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+.room-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(139,92,246,.2);
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.room-card:nth-child(2) { animation-delay: .06s; }
+.room-card:nth-child(3) { animation-delay: .12s; }
+.room-card:nth-child(4) { animation-delay: .18s; }
+.room-card:nth-child(5) { animation-delay: .24s; }
+.room-card:nth-child(6) { animation-delay: .30s; }
+
+.room-card-header {
+  padding: 18px 20px 14px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.room-card-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--violet-400); flex-shrink: 0;
+}
+.room-card-title {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
+  line-height: 1.3; margin-bottom: 4px;
+}
+.room-card-project {
+  font-size: 12px; color: var(--accent); font-weight: 600;
+}
+
+.room-card-body { padding: 16px 20px; }
+.room-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.room-meta-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text-muted);
+}
+.room-meta-row i { width: 14px; text-align: center; color: var(--text-muted); font-size: 12px; }
+.room-meta-row strong { color: var(--text-p); }
+
+.member-pips { display: flex; align-items: center; gap: 4px; }
+.member-pip {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  border: 2px solid var(--bg-card);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 800; color: #fff;
+  margin-left: -6px;
+}
+.member-pip:first-child { margin-left: 0; }
+.member-count-lbl { font-size: 12px; color: var(--text-muted); margin-left: 6px; }
+
+.room-card-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+
+/* Buttons inside card */
+.card-btn {
+  flex: 1; padding: 10px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  transition: var(--trans); text-decoration: none; font-family: inherit;
+}
+.card-btn-primary {
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; box-shadow: 0 4px 16px rgba(139,92,246,.3);
+}
+.card-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(139,92,246,.4); }
+.card-btn-success {
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  color: #fff; box-shadow: 0 4px 16px rgba(52,211,153,.25);
+}
+.card-btn-success:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(52,211,153,.35); }
+.card-btn-disabled {
+  background: var(--bg-card-2); color: var(--text-muted);
+  border: 1px solid var(--border); cursor: not-allowed;
+}
+.card-btn-pending {
+  background: rgba(251,191,36,.08); color: var(--gold-400);
+  border: 1px solid rgba(251,191,36,.2); cursor: not-allowed;
+}
+.card-btn-rejected {
+  background: rgba(251,113,133,.08); color: var(--danger);
+  border: 1px solid rgba(251,113,133,.2); cursor: not-allowed;
+}
+.card-btn-login {
+  background: var(--bg-card-2); color: var(--text-muted);
+  border: 1px solid var(--border); font-size: 12px;
+}
+.card-btn-login:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center; padding: 80px 40px; color: var(--text-muted);
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+.empty-state i { font-size: 52px; display: block; margin-bottom: 16px; opacity: .2; }
+.empty-state h3 { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-h); margin-bottom: 8px; }
+.empty-state p { font-size: 14px; max-width: 360px; margin: 0 auto 22px; line-height: 1.6; }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* ═══ TOAST ════════════════════════════════════════════════════════════ */
+.toast-wrap { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast { padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto; display: flex; align-items: center; gap: 8px; min-width: 220px; }
+@keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger); border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12); color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+@keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+
+/* ═══ MOBILE ═══════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .hero-h1 { font-size: 28px; }
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-page-title { display: none; }
+  .main-content { padding: 24px 14px 60px; }
+  .rooms-grid { grid-template-columns: 1fr; }
+}
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Collaboration Rooms</h1>
-        <p data-translate="hero-desc">Join or create rooms to collaborate on exciting projects with your peers!</p>
-    </section>
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-page-title" data-i18n="collab_rooms">Collaboration Rooms</span>
 
-    <!-- Create Room Button -->
-    <div style="text-align: center; margin: 20px 0;">
-        <a href="{% url 'projects:create_room' %}" class="btn btn-primary" data-translate="create-room">Create New Room</a>
+  <div class="topbar-actions">
+    <!-- Coins -->
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-badge">
+      <i class="fas fa-coins"></i>
+      {{ user.courses_profile.coins|default:0 }}
+    </div>
+    {% endif %}
+
+    <!-- Theme toggle -->
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <!-- Lang toggle -->
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+
+    <!-- Nav menu -->
+    <div class="nav-dropdown">
+      <button class="ctrl-btn"><i class="fas fa-bars"></i></button>
+      <div class="nav-dropdown-menu">
+        <a href="/"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
+        <a href="/courses/"><i class="fas fa-book"></i> <span data-i18n="nav_courses">Courses</span></a>
+        <a href="/chatbot/"><i class="fas fa-robot"></i> <span data-i18n="nav_chatbot">Chatbot</span></a>
+        <a href="/competitions/"><i class="fas fa-trophy"></i> <span data-i18n="nav_competitions">Competitions</span></a>
+        <a href="/performance/dashboard/"><i class="fas fa-chart-line"></i> <span data-i18n="nav_performance">Performance</span></a>
+        <a href="/about/"><i class="fas fa-info-circle"></i> <span data-i18n="nav_about">About Us</span></a>
+        <a href="/contact_us/"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact Us</span></a>
+        <div class="sep"></div>
+        {% if user.is_authenticated %}
+          {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+            <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-chalkboard-teacher"></i> <span data-i18n="nav_dashboard">Dashboard</span></a>
+          {% endif %}
+          <a href="/accounts/profile/"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Profile</span></a>
+          <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> <span data-i18n="nav_logout">Logout</span></a>
+        {% else %}
+          <a href="/accounts/register/"><i class="fas fa-sign-in-alt"></i> <span data-i18n="nav_login">Login</span></a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ── HERO ──────────────────────────────────────────────────────────── -->
+  <section class="hero-banner">
+    <div class="hero-eyebrow">
+      <i class="fas fa-users"></i>
+      <span data-i18n="collab_platform">Collaboration Platform</span>
+    </div>
+    <h1 class="hero-h1"><span data-i18n="hero_title">Collaboration</span> Rooms</h1>
+    <p class="hero-sub" data-i18n="hero_sub">Join or create rooms to work on exciting projects alongside your peers and grow together.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-val">{{ rooms|length }}</span>
+        <span class="hero-stat-lbl" data-i18n="stat_rooms">Active Rooms</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MAIN ──────────────────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert-box {{ message.tags|default:'info' }}">
+        <i class="fas fa-info-circle"></i>
+        {{ message|safe }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h2 class="section-title" data-i18n="available_rooms">Available Rooms</h2>
+        <span class="room-count">{{ rooms|length }} <span data-i18n="rooms">rooms</span></span>
+      </div>
+      <a href="{% url 'projects:create_room' %}" class="create-btn">
+        <i class="fas fa-plus"></i>
+        <span data-i18n="create_room">Create New Room</span>
+      </a>
     </div>
 
-    <!-- Main Content -->
-    <main class="container">
-        <h2 class="text-center mb-4" data-translate="content-title">Available Collaboration Rooms</h2>
-        
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message|safe }}</div>
-                {% endfor %}
+    {% if rooms %}
+    <div class="rooms-grid">
+      {% for room in rooms %}
+      <article class="room-card">
+        <div class="room-card-header">
+          <div class="room-card-icon"><i class="fas fa-layer-group"></i></div>
+          <div>
+            <div class="room-card-title">{{ room.title }}</div>
+            <div class="room-card-project">
+              <i class="fas fa-folder-open" style="font-size:10px;"></i>
+              {{ room.project.title }}
             </div>
-        {% endif %}
-        
-        {% if rooms %}
-            <div class="rooms-container d-flex flex-wrap justify-content-center gap-3">
-                {% for room in rooms %}
-                    <article class="card room-card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ room.title }}</h5>
-                            <p class="card-text"><span data-translate="creator-label">Creator:</span> {{ room.creator.username }}</p>
-                            <p class="card-text"><span data-translate="project-label">Project:</span> {{ room.project.title }}</p>
-                            <p class="card-text"><span data-translate="members-label">Members:</span> {{ room.members.count }}</p>
-                            {% if request.user.is_authenticated %}
-                                {% if request.user == room.creator or request.user in room.members.all %}
-                                    <a href="{% url 'projects:room_detail' room.id room.title|custom_slugify %}" class="btn btn-primary" data-translate="view-room">View Room</a>
-                                {% else %}
-                                    {% with has_request=False %}
-                                        {% for jr in join_requests %}
-                                            {% if jr.room == room %}
-                                                {% if jr.status == 'pending' %}
-                                                    <button class="btn btn-secondary" disabled data-translate="pending-request">Your Request is Pending</button>
-                                                    {% with has_request=True %}
-                                                    {% endwith %}
-                                                {% elif jr.status == 'rejected' %}
-                                                    <button class="btn btn-secondary" disabled data-translate="rejected-request">Your Request was Rejected</button>
-                                                    {% with has_request=True %}
-                                                    {% endwith %}
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if not has_request %}
-                                            <a href="{% url 'projects:request_join_room' room.id room.title|custom_slugify %}" class="btn btn-success" data-translate="request-join">Request to Join</a>
-                                        {% endif %}
-                                    {% endwith %}
-                                {% endif %}
-                            {% else %}
-                                <p data-translate="login-to-join">Please log in to request to join.</p>
-                            {% endif %}
-                        </div>
-                    </article>
-                {% endfor %}
+          </div>
+        </div>
+
+        <div class="room-card-body">
+          <div class="room-meta">
+            <div class="room-meta-row">
+              <i class="fas fa-user-shield"></i>
+              <span data-i18n="creator">Creator</span>:
+              <strong>{{ room.creator.username }}</strong>
             </div>
-        {% else %}
-            <p class="no-rooms" data-translate="no-rooms">No collaboration rooms are available.</p>
-        {% endif %}
-    </main>
+            <div class="room-meta-row">
+              <i class="fas fa-users"></i>
+              <span data-i18n="members">Members</span>:
+              <div class="member-pips">
+                {% for m in room.members.all|slice:":4" %}
+                <div class="member-pip">{{ m.username|slice:":1"|upper }}</div>
+                {% endfor %}
+              </div>
+              <span class="member-count-lbl">{{ room.members.count }}</span>
+            </div>
+          </div>
+        </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+        <div class="room-card-footer">
+          {% if request.user.is_authenticated %}
+            {% if request.user == room.creator or request.user in room.members.all %}
+              <a href="{% url 'projects:room_detail' room.id room.title|custom_slugify %}"
+                 class="card-btn card-btn-primary">
+                <i class="fas fa-door-open"></i>
+                <span data-i18n="view_room">View Room</span>
+              </a>
+            {% else %}
+              {% with has_request=False %}
+                {% for jr in join_requests %}
+                  {% if jr.room == room %}
+                    {% if jr.status == 'pending' %}
+                      <button class="card-btn card-btn-pending" disabled>
+                        <i class="fas fa-clock"></i>
+                        <span data-i18n="pending">Request Pending</span>
+                      </button>
+                    {% elif jr.status == 'rejected' %}
+                      <button class="card-btn card-btn-rejected" disabled>
+                        <i class="fas fa-times-circle"></i>
+                        <span data-i18n="rejected">Request Rejected</span>
+                      </button>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+                {% if not has_request %}
+                  <a href="{% url 'projects:request_join_room' room.id room.title|custom_slugify %}"
+                     class="card-btn card-btn-success">
+                    <i class="fas fa-paper-plane"></i>
+                    <span data-i18n="request_join">Request to Join</span>
+                  </a>
+                {% endif %}
+              {% endwith %}
+            {% endif %}
+          {% else %}
+            <a href="/accounts/register/" class="card-btn card-btn-login">
+              <i class="fas fa-sign-in-alt"></i>
+              <span data-i18n="login_to_join">Login to Join</span>
+            </a>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'projects/room_list.js' %}"></script>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-layer-group"></i>
+      <h3 data-i18n="no_rooms_title">No Rooms Yet</h3>
+      <p data-i18n="no_rooms_desc">No collaboration rooms are available yet. Be the first to create one!</p>
+      <a href="{% url 'projects:create_room' %}" class="create-btn" style="display:inline-flex;">
+        <i class="fas fa-plus"></i>
+        <span data-i18n="create_first">Create the First Room</span>
+      </a>
+    </div>
+    {% endif %}
+
+  </main>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <i class="fas fa-graduation-cap" style="color:var(--accent);"></i>
+    <span data-i18n="footer_text">© 2025 Eduvia & creativitycode. All rights reserved.</span>
+  </footer>
+
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    collab_rooms:'Collaboration Rooms', collab_platform:'Collaboration Platform',
+    hero_title:'Collaboration', hero_sub:'Join or create rooms to work on exciting projects alongside your peers and grow together.',
+    stat_rooms:'Active Rooms', available_rooms:'Available Rooms', rooms:'rooms',
+    create_room:'Create New Room', creator:'Creator', members:'Members',
+    view_room:'View Room', pending:'Request Pending', rejected:'Request Rejected',
+    request_join:'Request to Join', login_to_join:'Login to Join',
+    no_rooms_title:'No Rooms Yet', no_rooms_desc:'No collaboration rooms are available yet. Be the first to create one!',
+    create_first:'Create the First Room',
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_about:'About Us', nav_contact:'Contact Us', nav_dashboard:'Dashboard',
+    nav_profile:'Profile', nav_logout:'Logout', nav_login:'Login',
+    footer_text:'© 2025 Eduvia & creativitycode. All rights reserved.',
+  },
+  ar: {
+    collab_rooms:'غرف التعاون', collab_platform:'منصة التعاون',
+    hero_title:'غرف', hero_sub:'انضم أو أنشئ غرفاً للعمل على مشاريع مثيرة مع زملائك وتطور معاً.',
+    stat_rooms:'الغرف النشطة', available_rooms:'الغرف المتاحة', rooms:'غرفة',
+    create_room:'إنشاء غرفة جديدة', creator:'المنشئ', members:'الأعضاء',
+    view_room:'عرض الغرفة', pending:'الطلب قيد الانتظار', rejected:'تم رفض الطلب',
+    request_join:'طلب الانضمام', login_to_join:'سجل دخول للانضمام',
+    no_rooms_title:'لا توجد غرف بعد', no_rooms_desc:'لا توجد غرف تعاون متاحة حتى الآن. كن الأول في الإنشاء!',
+    create_first:'إنشاء أول غرفة',
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'المساعد',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_about:'معنا', nav_contact:'تواصل', nav_dashboard:'لوحة التحكم',
+    nav_profile:'الملف الشخصي', nav_logout:'تسجيل خروج', nav_login:'تسجيل دخول',
+    footer_text:'© 2025 Eduvia وكود الإبداع. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ─────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+});
+</script>
 </body>
 </html>

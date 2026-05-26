@@ -1,286 +1,1253 @@
 {% load static i18n projects_filters %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- 🔍 SEO -->
-  <title data-translate="page-title">{{ room.title|default:"Room" }} - Eduvia</title>
-  <meta name="description" data-translate="meta-desc" content="Join {{ room.title|default:'Room' }} on Eduvia to collaborate on {{ room.project.title|default:'Project' }} with peers in real-time. View tasks, chat, and share files.">
-  <meta name="keywords" data-translate="meta-keywords" content="{{ room.title|default:'Room' }}, collaboration room, {{ room.project.title|default:'Project' }}, Eduvia, teamwork, project collaboration, chat, tasks">
-  <meta name="author" content="Eduvia">
+  <title data-i18n="page-title">{{ room.title|default:"Room" }} — Eduvia</title>
+  <meta name="description" content="Join {{ room.title|default:'Room' }} on Eduvia to collaborate on {{ room.project.title|default:'Project' }} with peers in real-time.">
   <meta name="robots" content="index, follow, noarchive">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/projects/room/{{ room.id }}/{{ room.title|custom_slugify }}">
-
-  <!-- 🌍 Open Graph -->
-  <meta property="og:title" data-translate="og-title" content="{{ room.title|default:'Room' }} - Eduvia">
-  <meta property="og:description" data-translate="og-desc" content="Collaborate in {{ room.title|default:'Room' }} on Eduvia. Work on {{ room.project.title|default:'Project' }}, share files, chat, and manage tasks with your team.">
+  <meta property="og:title" content="{{ room.title|default:'Room' }} - Eduvia">
   <meta property="og:image" content="https://i.postimg.cc/wM6L37Tx/room3.jpg">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/projects/room/{{ room.id }}/{{ room.title|custom_slugify }}">
   <meta property="og:type" content="website">
-
-  <!-- 🐦 Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" data-translate="twitter-title" content="{{ room.title|default:'Room' }} - Eduvia">
-  <meta name="twitter:description" data-translate="twitter-desc" content="Collaborate in {{ room.title|default:'Room' }} on Eduvia. Work on {{ room.project.title|default:'Project' }}, share files, chat, and manage tasks with your team.">
-  <meta name="twitter:image" content="https://i.postimg.cc/wM6L37Tx/room3.jpg">
-
-  <!-- 🖼️ Favicon -->
   <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-  <!-- 🌐 Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🎨 Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'projects/room_detail.css' %}">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- 🖼️ Hero Background -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/wM6L37Tx/room3.jpg");
-    }
-  </style>
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-  <!-- 📊 Structured Data -->
-  <script type="application/ld+json" id="schema-markup">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "{{ room.title|default:'Room' }} - Eduvia",
-    "description": "Join {{ room.title|default:'Room' }} on Eduvia to collaborate on {{ room.project.title|default:'Project' }} with peers in real-time. View tasks, chat, and share files.",
-    "url": "https://eduvia-ai.fly.dev/projects/room/{{ room.id }}/{{ room.title|custom_slugify }}",
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "{{ request.scheme|default:'https' }}://{{ request.get_host|default:'eduvia-ai.fly.dev' }}/home/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Collaboration Rooms",
-          "item": "{{ request.scheme|default:'https' }}://{{ request.get_host|default:'eduvia-ai.fly.dev' }}{% url 'projects:room_list' %}"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "{{ room.title|default:'Room' }}"
-        }
-      ]
-    }
-  }
-  </script>
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-breadcrumb {
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap; overflow: hidden;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb span { color: var(--text-h); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+
+.topbar-nav {
+  display: flex; align-items: center; gap: 4px;
+}
+.topbar-nav a {
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.topbar-nav a:hover { color: var(--text-h); background: var(--bg-card); }
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.coins-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid rgba(251,191,36,.2);
+  border-radius: 99px; padding: 5px 12px 5px 8px;
+  font-size: 12px; font-weight: 700; color: var(--gold-400);
+}
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+.tb-btn-danger { background: rgba(251,113,133,.1); color: var(--danger); border: 1px solid rgba(251,113,133,.2); }
+.tb-btn-danger:hover { background: rgba(251,113,133,.18); }
+
+.hamburger {
+  display: none; width: 36px; height: 36px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 16px; cursor: pointer;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.mobile-nav {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  z-index: 590; padding: 12px; flex-direction: column; gap: 4px;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--text-p); text-decoration: none; transition: var(--trans);
+}
+.mobile-nav a:hover { background: var(--bg-card); color: var(--text-h); }
+
+/* ═══ HERO ══════════════════════════════════════════════════════════════ */
+.hero {
+  margin-top: var(--topbar-h);
+  min-height: 240px;
+  background:
+    linear-gradient(to bottom, rgba(8,11,20,.5) 0%, rgba(8,11,20,.94) 100%),
+    url("https://i.postimg.cc/wM6L37Tx/room3.jpg") center/cover no-repeat;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 48px 24px 36px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(139,92,246,.15), transparent);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--sky-400);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; flex: 1; max-width: 30px; height: 1px; background: var(--sky-400); opacity: .4;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 36px); font-weight: 800;
+  color: var(--text-h); line-height: 1.2; letter-spacing: -.5px;
+  margin-bottom: 10px;
+}
+.hero-sub {
+  font-size: 14px; color: var(--text-p); max-width: 500px;
+  line-height: 1.6;
+}
+
+/* ═══ ALERTS ═══════════════════════════════════════════════════════════ */
+.alerts-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 24px 0; }
+.alert-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px; border-radius: var(--radius-md);
+  font-size: 13px; margin-bottom: 10px; border: 1px solid;
+}
+.alert-item.success { background: rgba(52,211,153,.08); border-color: rgba(52,211,153,.25); color: var(--success); }
+.alert-item.error   { background: rgba(251,113,133,.08); border-color: rgba(251,113,133,.2);  color: var(--danger); }
+.alert-item.warning { background: rgba(251,191,36,.08);  border-color: rgba(251,191,36,.2);   color: var(--gold-400); }
+.alert-item.info    { background: rgba(139,92,246,.08);  border-color: rgba(139,92,246,.2);   color: var(--violet-400); }
+.alert-close { margin-left: auto; background: none; border: none; color: inherit; cursor: pointer; opacity: .6; font-size: 16px; }
+
+/* ═══ LAYOUT ════════════════════════════════════════════════════════════ */
+.room-layout {
+  max-width: 1100px; margin: 0 auto;
+  padding: 36px 24px 80px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .room-layout { grid-template-columns: 1fr; }
+}
+
+/* ═══ MAIN COLUMN ═══════════════════════════════════════════════════════ */
+.main-col { display: flex; flex-direction: column; gap: 22px; }
+
+/* ── Section card ── */
+.section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  animation: cardReveal .45s cubic-bezier(.34,1.56,.64,1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-header {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.card-header-icon {
+  width: 38px; height: 38px; border-radius: var(--radius-md); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.icon-violet { background: var(--violet-glow); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.icon-sky    { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2); }
+.icon-emerald{ background: rgba(52,211,153,.1); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.2); }
+.icon-gold   { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+.icon-rose   { background: rgba(251,113,133,.08); color: var(--danger); border: 1px solid rgba(251,113,133,.18); }
+
+.card-header-info { flex: 1; }
+.card-header-title {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
+}
+.card-header-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.card-body-inner { padding: 22px; }
+
+/* ── Room info rows ── */
+.info-grid { display: flex; flex-direction: column; gap: 12px; }
+.info-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-radius: var(--radius-md);
+  background: var(--bg-card-2); border: 1px solid var(--border);
+}
+.info-row-icon {
+  width: 30px; height: 30px; border-radius: var(--radius-sm); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.info-row-content { flex: 1; min-width: 0; }
+.info-row-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); margin-bottom: 3px; }
+.info-row-value { font-size: 13px; color: var(--text-h); font-weight: 500; }
+
+/* Member chips */
+.member-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.member-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 99px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 12px; color: var(--text-p);
+}
+.m-avatar {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; color: #fff;
+}
+
+/* ── Chat ── */
+.chat-box {
+  max-height: 360px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 16px; padding-right: 4px;
+}
+.chat-msg {
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 12px 14px;
+}
+.chat-msg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.chat-avatar {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff;
+}
+.chat-username { font-size: 13px; font-weight: 600; color: var(--text-h); }
+.chat-time { font-size: 10px; color: var(--text-muted); margin-left: auto; }
+.chat-content { font-size: 13px; color: var(--text-p); line-height: 1.6; }
+
+.chat-input-wrap { position: relative; }
+.chat-textarea {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 12px 50px 12px 14px; font-size: 13px; font-family: inherit;
+  line-height: 1.6; resize: none; min-height: 80px; transition: var(--trans);
+}
+.chat-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.chat-textarea::placeholder { color: var(--text-muted); }
+.chat-send-btn {
+  position: absolute; bottom: 10px; right: 10px;
+  width: 34px; height: 34px; border-radius: var(--radius-sm);
+  background: var(--accent); border: none; color: #fff;
+  font-size: 13px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: var(--trans);
+}
+.chat-send-btn:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ── Files ── */
+.files-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.file-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: var(--radius-md);
+  background: var(--bg-card-2); border: 1px solid var(--border);
+}
+.file-icon {
+  width: 34px; height: 34px; border-radius: var(--radius-sm); flex-shrink: 0;
+  background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.file-info { flex: 1; min-width: 0; }
+.file-url {
+  font-size: 12px; font-family: var(--font-mono); color: var(--sky-400);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-decoration: none; display: block; transition: var(--trans);
+}
+.file-url:hover { color: var(--violet-400); }
+.file-by { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.url-input-wrap { display: flex; gap: 10px; }
+.field-inp {
+  flex: 1; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 10px 14px; font-size: 13px; font-family: inherit; transition: var(--trans);
+}
+.field-inp:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
+.field-inp::placeholder { color: var(--text-muted); }
+
+/* ── Submit btn ── */
+.submit-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 24px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; font-family: inherit; transition: var(--trans);
+  box-shadow: 0 4px 16px rgba(139,92,246,.3); flex-shrink: 0;
+}
+.submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(139,92,246,.4); }
+.submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* ── Task board ── */
+.task-board {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; margin-bottom: 18px;
+}
+@media (max-width: 640px) { .task-board { grid-template-columns: 1fr; } }
+
+.task-column {
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px; min-height: 140px;
+}
+.task-col-header {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px;
+  padding-bottom: 10px; margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 6px;
+}
+.col-dot { width: 7px; height: 7px; border-radius: 50%; }
+.col-dot-todo     { background: var(--text-muted); }
+.col-dot-progress { background: var(--sky-400); box-shadow: 0 0 8px rgba(56,189,248,.4); }
+.col-dot-done     { background: var(--success); box-shadow: 0 0 8px rgba(52,211,153,.4); }
+.col-label-todo     { color: var(--text-muted); }
+.col-label-progress { color: var(--sky-400); }
+.col-label-done     { color: var(--success); }
+
+.task-item {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 12px;
+  margin-bottom: 8px; transition: var(--trans);
+}
+.task-item:last-child { margin-bottom: 0; }
+.task-item:hover { border-color: var(--border-glow); }
+.task-item-title {
+  font-size: 12px; font-weight: 700; color: var(--text-h); margin-bottom: 5px;
+}
+.task-item-desc { font-size: 11px; color: var(--text-p); line-height: 1.5; margin-bottom: 7px; }
+.task-item-assignee {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; color: var(--text-muted);
+}
+.task-item-assignee i { font-size: 9px; }
+
+.no-tasks {
+  text-align: center; padding: 20px 10px;
+  font-size: 12px; color: var(--text-muted);
+}
+.no-tasks i { display: block; font-size: 22px; margin-bottom: 6px; opacity: .2; }
+
+/* Task form */
+.task-form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+@media (max-width: 640px) { .task-form-grid { grid-template-columns: 1fr; } }
+.field-row { display: flex; flex-direction: column; gap: 5px; }
+.field-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--text-muted);
+}
+.field-select {
+  background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 10px 14px; font-size: 13px; font-family: inherit;
+  transition: var(--trans); appearance: none; cursor: pointer;
+}
+.field-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
+
+/* ── Rating ── */
+.star-rating { display: flex; gap: 6px; }
+.star-btn {
+  font-size: 32px; background: none; border: none; cursor: pointer;
+  color: var(--bg-card-2); line-height: 1; transition: var(--trans);
+}
+.star-btn:hover, .star-btn.lit { color: var(--gold-400); transform: scale(1.2); text-shadow: 0 0 12px rgba(251,191,36,.5); }
+
+/* ═══ SIDEBAR COLUMN ════════════════════════════════════════════════════ */
+.side-col { display: flex; flex-direction: column; gap: 18px; }
+
+/* ── Room info card ── */
+.room-meta-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  animation: cardReveal .5s ease both;
+}
+.room-meta-top {
+  padding: 20px;
+  background: linear-gradient(135deg, #1a1040, #0d1120);
+  border-bottom: 1px solid rgba(139,92,246,.15);
+  position: relative; overflow: hidden;
+}
+[data-theme="light"] .room-meta-top {
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+}
+.room-meta-top::before {
+  content: ''; position: absolute; top: -30px; right: -30px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.15), transparent 70%);
+}
+.room-meta-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md); margin-bottom: 12px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--violet-400);
+}
+.room-meta-title {
+  font-family: var(--font-display); font-size: 17px; font-weight: 800;
+  color: var(--text-h); margin-bottom: 4px;
+}
+.room-meta-project { font-size: 12px; color: var(--text-muted); }
+.room-meta-project a { color: var(--accent); text-decoration: none; }
+.room-meta-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.meta-stat {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; border-radius: var(--radius-sm);
+  background: var(--bg-card-2); font-size: 12px;
+}
+.meta-stat-label { color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.meta-stat-label i { font-size: 11px; color: var(--accent); }
+.meta-stat-value { font-weight: 700; color: var(--text-h); }
+
+/* ── Join / Request card ── */
+.join-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 20px;
+  animation: cardReveal .6s ease both;
+}
+.join-card h4 {
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+  color: var(--text-h); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.join-card p { font-size: 13px; color: var(--text-p); line-height: 1.6; margin-bottom: 16px; }
+.btn-join {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: var(--radius-md); width: 100%;
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  color: #fff; font-family: var(--font-display); text-decoration: none;
+  transition: var(--trans); box-shadow: 0 4px 16px rgba(52,211,153,.25);
+}
+.btn-join:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(52,211,153,.35); }
+.status-badge {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: var(--radius-md); width: 100%;
+  font-size: 13px; font-weight: 700; border: 1px solid;
+}
+.status-pending  { background: rgba(251,191,36,.08); border-color: rgba(251,191,36,.2); color: var(--gold-400); }
+.status-rejected { background: rgba(251,113,133,.08); border-color: rgba(251,113,133,.2); color: var(--danger); }
+
+/* Manage requests btn */
+.btn-manage {
+  display: flex; align-items: center; gap: 8px;
+  padding: 11px 18px; border-radius: var(--radius-md); width: 100%;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  color: var(--text-p); text-decoration: none; transition: var(--trans);
+  justify-content: center;
+}
+.btn-manage:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Back btn ── */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-p); text-decoration: none; transition: var(--trans);
+  margin-top: 8px;
+}
+.back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ EMPTY STATE ════════════════════════════════════════════════════════ */
+.empty-mini {
+  text-align: center; padding: 22px;
+  font-size: 12px; color: var(--text-muted);
+}
+.empty-mini i { display: block; font-size: 24px; margin-bottom: 8px; opacity: .2; }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.footer {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  padding: 28px 24px; text-align: center;
+}
+.footer-inner { max-width: 960px; margin: 0 auto; }
+.footer-logo {
+  font-family: var(--font-display); font-size: 18px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 10px; display: inline-block;
+}
+.footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+.footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer-links a:hover { color: var(--accent); }
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+  animation: toastIn .3s ease;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+@media (max-width: 960px) {
+  .topbar-nav { display: none; }
+  .hamburger { display: flex; }
+  .topbar-breadcrumb { display: none; }
+}
+@media (max-width: 640px) {
+  .hero { min-height: 200px; padding: 36px 16px 28px; }
+  .room-layout { padding: 20px 14px 60px; }
+  .card-body-inner { padding: 16px; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+
+<!-- ═══ TOPBAR ══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-breadcrumb">
+    <a href="/projects/">Projects</a>
+    <i class="fas fa-chevron-right" style="font-size:9px;opacity:.5;"></i>
+    <a href="{% url 'projects:room_list' %}">Rooms</a>
+    <i class="fas fa-chevron-right" style="font-size:9px;opacity:.5;"></i>
+    <span>{{ room.title|default:"Room" }}</span>
+  </div>
+
+  <nav class="topbar-nav">
+    <a href="/">Home</a>
+    <a href="/courses/">Courses</a>
+    <a href="/chatbot/">Chatbot</a>
+    <a href="/competitions/">Competitions</a>
+    <a href="/performance/dashboard/">Performance</a>
+    <a href="/projects/">Projects</a>
+    <a href="/about/">About</a>
+    <a href="/contact_us/">Contact</a>
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated %}
+      {% if user.courses_profile %}
+        <div class="coins-chip">
+          <i class="fas fa-coins"></i>
+          <span>{{ user.courses_profile.coins|default:0 }}</span>
+        </div>
+      {% else %}
+        <div class="coins-chip">
+          <i class="fas fa-coins"></i>
+          <span>0</span>
+        </div>
+      {% endif %}
+      <a href="/accounts/profile/" class="ctrl-btn" title="Profile">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="/accounts/logout/" class="tb-btn tb-btn-ghost">Logout</a>
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-accent">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+      {% endif %}
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </a>
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <button class="hamburger" onclick="toggleMobileNav()" id="hamburger">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Home</a>
+  <a href="/courses/">Courses</a>
+  <a href="/chatbot/">Chatbot</a>
+  <a href="/competitions/">Competitions</a>
+  <a href="/projects/">Projects</a>
+  <a href="/about/">About</a>
+  <a href="/contact_us/">Contact</a>
+  {% if user.is_authenticated %}
+    <a href="/accounts/profile/">Profile</a>
+    <a href="/accounts/logout/">Logout</a>
+  {% else %}
+    <a href="/accounts/register/">Login / Register</a>
+  {% endif %}
+</div>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-eyebrow">Collaboration Room</div>
+  <h1>{{ room.title|default:"Room" }}</h1>
+  <p class="hero-sub">Collaborate on {{ room.project.title|default:"Project" }} with your team in real-time.</p>
+</section>
+
+<!-- ═══ ALERTS ════════════════════════════════════════════════════════════ -->
+{% if messages %}
+  <div class="alerts-wrap">
+    {% for message in messages %}
+      <div class="alert-item {{ message.tags }}">
+        <i class="fas fa-info-circle"></i>
+        {{ message }}
+        <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- ═══ ROOM LAYOUT ═══════════════════════════════════════════════════════ -->
+<div class="room-layout">
+
+  <!-- ── MAIN COLUMN ─────────────────────────────────────────────────── -->
+  <div class="main-col">
+
+    {% if is_member %}
+
+      <!-- Chat Section -->
+      <div class="section-card" style="--i:0">
+        <div class="card-header">
+          <div class="card-header-icon icon-sky"><i class="fas fa-comments"></i></div>
+          <div class="card-header-info">
+            <div class="card-header-title">Live Chat</div>
+            <div class="card-header-sub">Communicate with your team in real-time</div>
+          </div>
+          <span style="font-size:11px;color:var(--text-muted);">
+            {{ room.messages.count|default:0 }} messages
+          </span>
+        </div>
+        <div class="card-body-inner">
+          <div class="chat-box" id="chat-box">
+            {% for message in room.messages.all %}
+              <div class="chat-msg">
+                <div class="chat-msg-head">
+                  <div class="chat-avatar">{{ message.user.username|slice:":1"|upper }}</div>
+                  <span class="chat-username">{{ message.user.username|default:"Unknown" }}</span>
+                  <span class="chat-time">{{ message.timestamp|date:"M d, H:i"|default:"" }}</span>
+                </div>
+                <div class="chat-content">{{ message.content|default:"" }}</div>
+              </div>
+            {% empty %}
+              <div class="empty-mini">
+                <i class="fas fa-comment-slash"></i>
+                No messages yet. Start the conversation!
+              </div>
+            {% endfor %}
+          </div>
+          <form method="post">
+            {% csrf_token %}
+            <div class="chat-input-wrap">
+              {{ message_form.content }}
+              <button type="submit" name="message_submit" class="chat-send-btn" title="Send">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Task Board -->
+      <div class="section-card" style="--i:1">
+        <div class="card-header">
+          <div class="card-header-icon icon-violet"><i class="fas fa-tasks"></i></div>
+          <div class="card-header-info">
+            <div class="card-header-title">Task Board</div>
+            <div class="card-header-sub">Track progress across all tasks</div>
+          </div>
+          {% with total=todo_tasks|length|add:in_progress_tasks|length|add:done_tasks|length %}
+            <span style="font-size:11px;color:var(--text-muted);">{{ total }} tasks</span>
+          {% endwith %}
+        </div>
+        <div class="card-body-inner">
+          <div class="task-board">
+
+            <!-- To Do -->
+            <div class="task-column">
+              <div class="task-col-header">
+                <span class="col-dot col-dot-todo"></span>
+                <span class="col-label-todo">To Do</span>
+              </div>
+              {% for task in todo_tasks %}
+                <div class="task-item">
+                  <div class="task-item-title">{{ task.title|default:"No title" }}</div>
+                  <div class="task-item-desc">{{ task.description|truncatewords:15|default:"" }}</div>
+                  <div class="task-item-assignee">
+                    <i class="fas fa-user"></i>
+                    {{ task.assigned_to.username|default:"Unassigned" }}
+                  </div>
+                </div>
+              {% empty %}
+                <div class="no-tasks"><i class="fas fa-inbox"></i>No tasks</div>
+              {% endfor %}
+            </div>
+
+            <!-- In Progress -->
+            <div class="task-column">
+              <div class="task-col-header">
+                <span class="col-dot col-dot-progress"></span>
+                <span class="col-label-progress">In Progress</span>
+              </div>
+              {% for task in in_progress_tasks %}
+                <div class="task-item">
+                  <div class="task-item-title">{{ task.title|default:"No title" }}</div>
+                  <div class="task-item-desc">{{ task.description|truncatewords:15|default:"" }}</div>
+                  <div class="task-item-assignee">
+                    <i class="fas fa-user"></i>
+                    {{ task.assigned_to.username|default:"Unassigned" }}
+                  </div>
+                </div>
+              {% empty %}
+                <div class="no-tasks"><i class="fas fa-spinner"></i>No tasks</div>
+              {% endfor %}
+            </div>
+
+            <!-- Done -->
+            <div class="task-column">
+              <div class="task-col-header">
+                <span class="col-dot col-dot-done"></span>
+                <span class="col-label-done">Done</span>
+              </div>
+              {% for task in done_tasks %}
+                <div class="task-item">
+                  <div class="task-item-title">{{ task.title|default:"No title" }}</div>
+                  <div class="task-item-desc">{{ task.description|truncatewords:15|default:"" }}</div>
+                  <div class="task-item-assignee">
+                    <i class="fas fa-user"></i>
+                    {{ task.assigned_to.username|default:"Unassigned" }}
+                  </div>
+                </div>
+              {% empty %}
+                <div class="no-tasks"><i class="fas fa-check-circle"></i>No tasks</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Add Task Form -->
+          <form method="post">
+            {% csrf_token %}
+            <div style="background:var(--bg-card-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;">
+              <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:12px;">
+                <i class="fas fa-plus" style="color:var(--accent);margin-right:5px;"></i> Add Task
+              </div>
+              <div class="task-form-grid">
+                {{ task_form.as_p }}
+              </div>
+              <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+                <button type="submit" name="task_submit" class="submit-btn">
+                  <i class="fas fa-plus"></i> Add Task
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Files Section -->
+      <div class="section-card" style="--i:2">
+        <div class="card-header">
+          <div class="card-header-icon icon-gold"><i class="fas fa-paperclip"></i></div>
+          <div class="card-header-info">
+            <div class="card-header-title">Shared Files</div>
+            <div class="card-header-sub">Links and resources shared by the team</div>
+          </div>
+          <span style="font-size:11px;color:var(--text-muted);">{{ room.files.count|default:0 }} files</span>
+        </div>
+        <div class="card-body-inner">
+          <div class="files-list">
+            {% for file in room.files.all %}
+              <div class="file-item">
+                <div class="file-icon"><i class="fas fa-link"></i></div>
+                <div class="file-info">
+                  <a href="{{ file.file_url|default:'#' }}" target="_blank" class="file-url">
+                    {{ file.file_url|default:"No URL" }}
+                  </a>
+                  <div class="file-by">
+                    <i class="fas fa-user" style="font-size:10px;"></i>
+                    Shared by {{ file.uploaded_by.username|default:"Unknown" }}
+                  </div>
+                </div>
+                <a href="{{ file.file_url|default:'#' }}" target="_blank"
+                   class="ctrl-btn" title="Open" style="flex-shrink:0;">
+                  <i class="fas fa-external-link-alt"></i>
+                </a>
+              </div>
+            {% empty %}
+              <div class="empty-mini">
+                <i class="fas fa-folder-open"></i>
+                No files shared yet.
+              </div>
+            {% endfor %}
+          </div>
+
+          <form method="post">
+            {% csrf_token %}
+            <div class="url-input-wrap">
+              {{ file_form.file_url }}
+              <button type="submit" name="file_submit" class="submit-btn">
+                <i class="fas fa-share"></i> Share
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Rating Section -->
+      <div class="section-card" style="--i:3">
+        <div class="card-header">
+          <div class="card-header-icon icon-gold"><i class="fas fa-star"></i></div>
+          <div class="card-header-info">
+            <div class="card-header-title">Rate the Room</div>
+            <div class="card-header-sub">How would you rate your experience?</div>
+          </div>
+        </div>
+        <div class="card-body-inner">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0;">
+            <div class="star-rating" id="star-row">
+              {% for i in "12345" %}
+                <button class="star-btn" data-val="{{ i }}"
+                        onmouseenter="starHover({{ i }})" onmouseleave="starUnhover()"
+                        onclick="starClick({{ i }})">★</button>
+              {% endfor %}
+            </div>
+            <p style="font-size:12px;color:var(--text-muted);" id="star-label">Select a rating</p>
+            <button class="submit-btn" onclick="submitRating()" id="rate-btn" style="background:linear-gradient(135deg,var(--gold-400),#f59e0b);color:#1a0f00;" disabled>
+              <i class="fas fa-star"></i> Submit Rating
+            </button>
+          </div>
+        </div>
+      </div>
+
+    {% else %}
+      <!-- ── LIMITED VIEW FOR NON-MEMBERS ─────────────────────────── -->
+      <div class="section-card" style="--i:0">
+        <div class="card-header">
+          <div class="card-header-icon icon-violet"><i class="fas fa-eye"></i></div>
+          <div class="card-header-info">
+            <div class="card-header-title">Room Preview</div>
+            <div class="card-header-sub">You need to join this room to participate</div>
+          </div>
+        </div>
+        <div class="card-body-inner">
+          <div class="info-grid">
+            <div class="info-row">
+              <div class="info-row-icon icon-violet" style="background:var(--violet-glow);color:var(--violet-400);">
+                <i class="fas fa-heading"></i>
+              </div>
+              <div class="info-row-content">
+                <div class="info-row-label">Room Title</div>
+                <div class="info-row-value">{{ room.title|default:"Room" }}</div>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-row-icon" style="background:rgba(56,189,248,.1);color:var(--sky-400);">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div class="info-row-content">
+                <div class="info-row-label">Creator</div>
+                <div class="info-row-value">{{ room.creator.username|default:"Unknown" }}</div>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-row-icon" style="background:rgba(52,211,153,.1);color:var(--emerald-400);">
+                <i class="fas fa-code-branch"></i>
+              </div>
+              <div class="info-row-content">
+                <div class="info-row-label">Project</div>
+                <div class="info-row-value">{{ room.project.title|default:"Project" }}</div>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-row-icon" style="background:rgba(251,191,36,.1);color:var(--gold-400);">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="info-row-content">
+                <div class="info-row-label">Members</div>
+                <div class="info-row-value">{{ room.members.count|default:0 }} joined</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Locked content hint -->
+          <div style="margin-top:18px;padding:20px;background:var(--bg-card-2);border:1px dashed var(--border-glow);border-radius:var(--radius-lg);text-align:center;">
+            <i class="fas fa-lock" style="font-size:28px;color:var(--accent);opacity:.5;display:block;margin-bottom:10px;"></i>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">
+              Chat, tasks, and files are only visible to room members.
+            </p>
+            <p style="font-size:12px;color:var(--text-muted);">
+              Request to join to unlock full access.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+
+    <a href="{% url 'projects:room_list' %}" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Rooms
+    </a>
+
+  </div><!-- /main-col -->
+
+  <!-- ── SIDEBAR COLUMN ────────────────────────────────────────────── -->
+  <div class="side-col">
+
+    <!-- Room Meta Card -->
+    <div class="room-meta-card">
+      <div class="room-meta-top">
+        <div class="room-meta-icon"><i class="fas fa-door-open"></i></div>
+        <div class="room-meta-title">{{ room.title|default:"Room" }}</div>
+        <div class="room-meta-project">
+          Part of <a href="{% url 'projects:project_details' room.project.id room.project.slugified_title %}">{{ room.project.title|default:"Project" }}</a>
+        </div>
+      </div>
+      <div class="room-meta-body">
+        <div class="meta-stat">
+          <div class="meta-stat-label"><i class="fas fa-user-tie"></i> Creator</div>
+          <div class="meta-stat-value">{{ room.creator.username|default:"Unknown" }}</div>
+        </div>
+        <div class="meta-stat">
+          <div class="meta-stat-label"><i class="fas fa-users"></i> Members</div>
+          <div class="meta-stat-value">{{ room.members.count|default:0 }}</div>
+        </div>
+        <div class="meta-stat">
+          <div class="meta-stat-label"><i class="fas fa-comments"></i> Messages</div>
+          <div class="meta-stat-value">{{ room.messages.count|default:0 }}</div>
+        </div>
+        <div class="meta-stat">
+          <div class="meta-stat-label"><i class="fas fa-tasks"></i> Tasks</div>
+          {% with total=todo_tasks|length|add:in_progress_tasks|length|add:done_tasks|length %}
+            <div class="meta-stat-value">{{ total }}</div>
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+
+    {% if is_member %}
+      <!-- Members list -->
+      <div class="section-card">
+        <div class="card-header">
+          <div class="card-header-icon icon-emerald"><i class="fas fa-users"></i></div>
+          <div class="card-header-info">
+            <div class="card-header-title">Team Members</div>
+          </div>
+        </div>
+        <div class="card-body-inner">
+          <div class="member-chips">
+            {% for member in room.members.all %}
+              <div class="member-chip">
+                <div class="m-avatar">{{ member.username|slice:":1"|upper }}</div>
+                <span>{{ member.username|default:"Unknown" }}</span>
+              </div>
+            {% empty %}
+              <div class="empty-mini" style="width:100%;">
+                <i class="fas fa-user-slash"></i>
+                No members yet.
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Manage Requests (creator only) -->
+      {% if request.user == room.creator %}
+        <div class="join-card">
+          <h4><i class="fas fa-user-check" style="color:var(--accent);"></i> Manage Requests</h4>
+          <p>Review and manage join requests from other users who want to collaborate in this room.</p>
+          <a href="{% url 'projects:manage_join_requests' room.id room.title|custom_slugify %}" class="btn-manage">
+            <i class="fas fa-clipboard-list"></i> View Join Requests
+          </a>
+        </div>
+      {% endif %}
+
+    {% else %}
+      <!-- Join Request Card -->
+      <div class="join-card">
+        <h4>
+          {% if request.user.is_authenticated %}
+            <i class="fas fa-door-open" style="color:var(--accent);"></i> Join this Room
+          {% else %}
+            <i class="fas fa-lock" style="color:var(--accent);"></i> Members Only
+          {% endif %}
+        </h4>
+        <p>
+          {% if request.user.is_authenticated %}
+            Send a join request to the creator and start collaborating with the team.
+          {% else %}
+            Please log in to request access to this room and collaborate.
+          {% endif %}
+        </p>
+
+        {% if request.user.is_authenticated %}
+          {% if join_request %}
+            {% if join_request.status == 'pending' %}
+              <div class="status-badge status-pending">
+                <i class="fas fa-clock"></i> Request Pending…
+              </div>
+            {% elif join_request.status == 'rejected' %}
+              <div class="status-badge status-rejected">
+                <i class="fas fa-times-circle"></i> Request Rejected
+              </div>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>{{ room.title|default:"Room" }}</h1>
-        <p data-translate="hero-desc">Collaborate on {{ room.project.title|default:"Project" }} with your team in real-time.</p>
-    </section>
-
-    <!-- Main Content -->
-    <main class="container">
-        <h2 class="text-center mb-4">{{ room.title|default:"Room" }}</h2>
-        
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-        
-        {% if is_member %}
-            <!-- Room Content for Members and Creator -->
-            <section class="room-details">
-                <p><strong data-translate="creator-label">Creator:</strong> {{ room.creator.username|default:"Unknown" }}</p>
-                <p><strong data-translate="members-label">Members:</strong> 
-                    {% for member in room.members.all %}
-                        {{ member.username|default:"Unknown" }}{% if not forloop.last %}, {% endif %}
-                    {% empty %}
-                        <span data-translate="no-members">No members yet</span>
-                    {% endfor %}
-                </p>
-                
-                {% if request.user == room.creator %}
-                    <a href="{% url 'projects:manage_join_requests' room.id room.title|custom_slugify %}" class="btn btn-primary mb-3" data-translate="manage-requests">Manage Join Requests</a>
-                {% endif %}
-            </section>
-            
-            <!-- Chat Section -->
-            <section class="chat-section">
-                <h4 data-translate="chat-title">Chat</h4>
-                <div class="chat-box">
-                    {% for message in room.messages.all %}
-                        <p><strong>{{ message.user.username|default:"Unknown" }}:</strong> {{ message.content|default:"No content" }} <small>({{ message.timestamp|date:"Y-m-d H:i"|default:"Unknown time" }})</small></p>
-                    {% empty %}
-                        <p data-translate="no-messages">No messages yet.</p>
-                    {% endfor %}
-                </div>
-                <form method="post" class="submission-form">
-                    {% csrf_token %}
-                    {{ message_form.as_p }}
-                    <button type="submit" name="message_submit" class="btn btn-primary" data-translate="send-btn">Send</button>
-                </form>
-            </section>
-            
-            <!-- File URL Section -->
-            <section class="file-section">
-                <h4 data-translate="files-title">Files</h4>
-                <ul>
-                    {% for file in room.files.all %}
-                        <li><a href="{{ file.file_url|default:'#' }}" target="_blank">{{ file.file_url|default:"No URL" }}</a> (<span data-translate="shared-by">Shared by:</span> {{ file.uploaded_by.username|default:"Unknown" }})</li>
-                    {% empty %}
-                        <p data-translate="no-files">No files yet.</p>
-                    {% endfor %}
-                </ul>
-                <form method="post" class="submission-form">
-                    {% csrf_token %}
-                    {{ file_form.as_p }}
-                    <button type="submit" name="file_submit" class="btn btn-primary" data-translate="share-file">Share File URL</button>
-                </form>
-            </section>
-            
-            <!-- Task Board -->
-            <section class="task-section">
-                <h4 data-translate="tasks-title">Tasks</h4>
-                <div class="task-board">
-                    <div class="task-column">
-                        <h5 data-translate="todo-title">To Do</h5>
-                        {% for task in todo_tasks %}
-                            <div class="task-item">
-                                <strong>{{ task.title|default:"No title" }}</strong>
-                                <p>{{ task.description|truncatewords:20|default:"No description" }}</p>
-                                <p><span data-translate="assigned-to">Assigned to:</span> {{ task.assigned_to.username|default:"Not assigned" }}</p>
-                            </div>
-                        {% empty %}
-                            <p data-translate="no-tasks">No tasks.</p>
-                        {% endfor %}
-                    </div>
-                    <div class="task-column">
-                        <h5 data-translate="in-progress-title">In Progress</h5>
-                        {% for task in in_progress_tasks %}
-                            <div class="task-item">
-                                <strong>{{ task.title|default:"No title" }}</strong>
-                                <p>{{ task.description|truncatewords:20|default:"No description" }}</p>
-                                <p><span data-translate="assigned-to">Assigned to:</span> {{ task.assigned_to.username|default:"Not assigned" }}</p>
-                            </div>
-                        {% empty %}
-                            <p data-translate="no-tasks">No tasks.</p>
-                        {% endfor %}
-                    </div>
-                    <div class="task-column">
-                        <h5 data-translate="done-title">Done</h5>
-                        {% for task in done_tasks %}
-                            <div class="task-item">
-                                <strong>{{ task.title|default:"No title" }}</strong>
-                                <p>{{ task.description|truncatewords:20|default:"No description" }}</p>
-                                <p><span data-translate="assigned-to">Assigned to:</span> {{ task.assigned_to.username|default:"Not assigned" }}</p>
-                            </div>
-                        {% empty %}
-                            <p data-translate="no-tasks">No tasks.</p>
-                        {% endfor %}
-                    </div>
-                </div>
-                <form method="post" class="submission-form">
-                    {% csrf_token %}
-                    {{ task_form.as_p }}
-                    <button type="submit" name="task_submit" class="btn btn-primary" data-translate="add-task">Add Task</button>
-                </form>
-            </section>
-            
-            <!-- Star Rating -->
-            <section class="rating-section">
-                <h4 data-translate="rate-room">Rate the Room</h4>
-                <div class="star-rating">
-                    <i class="fas fa-star" data-rating="1"></i>
-                    <i class="fas fa-star" data-rating="2"></i>
-                    <i class="fas fa-star" data-rating="3"></i>
-                    <i class="fas fa-star" data-rating="4"></i>
-                    <i class="fas fa-star" data-rating="5"></i>
-                </div>
-            </section>
+          {% else %}
+            <a href="{% url 'projects:request_join_room' room.id %}" class="btn-join">
+              <i class="fas fa-paper-plane"></i> Request to Join
+            </a>
+          {% endif %}
         {% else %}
-            <!-- Limited View for Non-Members -->
-            <section class="room-details">
-                <p><strong data-translate="title-label">Title:</strong> {{ room.title|default:"Room" }}</p>
-                <p><strong data-translate="creator-label">Creator:</strong> {{ room.creator.username|default:"Unknown" }}</p>
-                <p><strong data-translate="project-label">Project:</strong> {{ room.project.title|default:"Project" }}</p>
-                <p><strong data-translate="num-members">Number of Members:</strong> {{ room.members.count|default:0 }}</p>
-                {% if request.user.is_authenticated %}
-                    {% if join_request %}
-                        {% if join_request.status == 'pending' %}
-                            <button class="btn btn-secondary" disabled data-translate="pending-request">Your Request is Pending</button>
-                        {% elif join_request.status == 'rejected' %}
-                            <button class="btn btn-secondary" disabled data-translate="rejected-request">Your Request was Rejected</button>
-                        {% endif %}
-                    {% else %}
-                        <a href="{% url 'projects:request_join_room' room.id %}" class="btn btn-success" data-translate="request-join">Request to Join</a>
-                    {% endif %}
-                {% else %}
-                    <p data-translate="login-to-join">Please log in to request to join this room.</p>
-                {% endif %}
-            </section>
+          <a href="/accounts/register/" class="btn-join" style="background:linear-gradient(135deg,var(--violet-500),var(--violet-600));box-shadow:0 4px 16px rgba(139,92,246,.25);">
+            <i class="fas fa-sign-in-alt"></i> Login to Join
+          </a>
         {% endif %}
-        
-        <a href="{% url 'projects:room_list' %}" class="btn btn-secondary mt-3" data-translate="back-to-rooms">Back to Room List</a>
-    </main>
+      </div>
+    {% endif %}
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+  </div><!-- /side-col -->
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'projects/room_detail.js' %}"></script>
+</div><!-- /room-layout -->
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Eduvia</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/courses/">Courses</a>
+      <a href="/projects/">Projects</a>
+      <a href="/competitions/">Competitions</a>
+      <a href="/about/">About</a>
+      <a href="/contact_us/">Contact</a>
+    </div>
+    <p class="footer-copy">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── Theme ── */
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('theme-icon').className = t === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', t);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Lang ── */
+function toggleLang() {
+  const cur = document.documentElement.getAttribute('lang') || 'en';
+  const next = cur === 'en' ? 'ar' : 'en';
+  document.documentElement.setAttribute('lang', next);
+  document.documentElement.setAttribute('dir', next === 'ar' ? 'rtl' : 'ltr');
+  localStorage.setItem('lang', next);
+}
+
+/* ── Mobile nav ── */
+function toggleMobileNav() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const btn = document.getElementById('hamburger');
+  if (nav && btn && !nav.contains(e.target) && !btn.contains(e.target)) {
+    nav.classList.remove('open');
+  }
+});
+
+/* ── Star rating ── */
+let selectedStar = 0;
+function starHover(v) { highlightStars(v); }
+function starUnhover() { highlightStars(selectedStar); }
+function starClick(v) {
+  selectedStar = v; highlightStars(v);
+  document.getElementById('star-label').textContent = v + ' ★ selected';
+  document.getElementById('rate-btn').disabled = false;
+}
+function highlightStars(v) {
+  document.querySelectorAll('.star-btn').forEach(b => {
+    b.classList.toggle('lit', parseInt(b.dataset.val) <= v);
+  });
+}
+function submitRating() {
+  if (!selectedStar) return;
+  toast('Rating submitted: ' + selectedStar + ' ★', 'success');
+  document.getElementById('rate-btn').disabled = true;
+}
+
+/* ── Chat scroll ── */
+const chatBox = document.getElementById('chat-box');
+if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+/* ── Alert close ── */
+document.querySelectorAll('.alert-close').forEach(btn => {
+  btn.addEventListener('click', () => btn.parentElement.remove());
+});
+
+/* ── Toast ── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  const lang = localStorage.getItem('lang') || 'en';
+  document.documentElement.setAttribute('lang', lang);
+  document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+});
+
+/* ── Style the Django form fields ── */
+document.querySelectorAll('input[type="text"], input[type="url"], textarea, select').forEach(el => {
+  if (!el.classList.contains('chat-textarea') && !el.closest('.chat-input-wrap')) {
+    el.classList.add('field-inp');
+    if (el.tagName === 'SELECT') el.classList.add('field-select');
+  }
+});
+/* Style the chat textarea from Django form */
+document.querySelectorAll('.chat-input-wrap textarea, #id_content').forEach(el => {
+  el.classList.add('chat-textarea');
+  el.rows = 2;
+  el.placeholder = 'Type your message…';
+});
+</script>
 </body>
 </html>

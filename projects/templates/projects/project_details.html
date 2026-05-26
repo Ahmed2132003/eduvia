@@ -1,237 +1,879 @@
 {% load static i18n widget_tweaks projects_filters %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 🔍 SEO -->
-  <title data-translate="page-title">Project Details - {{ project.title|default:'Project' }} - Eduvia</title>
-  <meta name="description" data-translate="meta-desc" content="View details of {{ project.title|default:'Project' }} on Eduvia. Explore tasks, submit solutions, and collaborate with the community.">
-  <meta name="keywords" data-translate="meta-keywords" content="{{ project.title|default:'Project' }}, Eduvia project, open source tasks, coding collaboration, project details, {{ project.get_category_display|default:'Category' }}">
+  <title>Project — {{ project.title|default:"Project" }} | Eduvia</title>
+  <meta name="description" content="View details of {{ project.title|default:'Project' }} on Eduvia. Explore tasks, submit solutions, and collaborate.">
   <meta name="author" content="Eduvia Team">
   <meta name="robots" content="index, follow, noarchive">
-  <link rel="canonical" href="{{ request.build_absolute_uri|default:'https://eduvia-ai.fly.dev/projects/project/'|add:project.id|add:'/'|add:project.title|custom_slugify }}">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-  <!-- 🌍 Open Graph -->
-  <meta property="og:title" data-translate="og-title" content="{{ project.title|default:'Project' }} - Eduvia">
-  <meta property="og:description" data-translate="og-desc" content="Explore {{ project.title|default:'Project' }} on Eduvia. Join tasks, submit solutions, and engage with the open-source community.">
+  <meta property="og:title" content="{{ project.title|default:'Project' }} — Eduvia">
   <meta property="og:image" content="https://i.postimg.cc/bNSkrcqt/project2.jpg">
-  <meta property="og:url" content="{{ request.build_absolute_uri|default:'https://eduvia-ai.fly.dev/projects/project/'|add:project.id|add:'/'|add:project.title|custom_slugify }}">
   <meta property="og:type" content="website">
-
-  <!-- 🐦 Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" data-translate="twitter-title" content="{{ project.title|default:'Project' }} - Eduvia">
-  <meta name="twitter:description" data-translate="twitter-desc" content="Explore {{ project.title|default:'Project' }} on Eduvia. Join tasks, submit solutions, and engage with the open-source community.">
-  <meta name="twitter:image" content="https://i.postimg.cc/bNSkrcqt/project2.jpg">
 
-  <!-- 🖼️ Favicon -->
   <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-  <!-- 🌐 Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🎨 Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'projects/project_detail.css' %}">
-
-  <!-- 🖼️ Hero Background -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/bNSkrcqt/project2.jpg");
-    }
-  </style>
-
-  <!-- 📊 Structured Data -->
-  <script type="application/ld+json" id="schema-markup">
+  <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Project Details - {{ project.title|default:'Project' }} - Eduvia",
-    "description": "View details of {{ project.title|default:'Project' }} on Eduvia. Explore tasks, submit solutions, and collaborate with the community.",
-    "url": "{{ request.build_absolute_uri|default:'https://eduvia-ai.fly.dev/projects/project/'|add:project.id|add:'/'|add:project.title|custom_slugify }}",
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "{{ request.scheme|default:'https' }}://{{ request.get_host|default:'eduvia-ai.fly.dev' }}/home/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Projects",
-          "item": "{{ request.scheme|default:'https' }}://{{ request.get_host|default:'eduvia-ai.fly.dev' }}{% url 'projects:project_list' %}"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "{{ project.title|default:'Project' }}"
-        }
-      ]
-    }
+    "name": "{{ project.title|default:'Project' }} — Eduvia",
+    "url": "{{ request.build_absolute_uri }}"
   }
   </script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (identical to lesson_view)
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted); flex: 1; overflow: hidden;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .bc-sep { color: var(--border); font-size: 11px; }
+.topbar-breadcrumb .bc-current {
+  color: var(--text-p); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); }
+
+.hamburger {
+  display: none; background: none; border: 1px solid var(--border);
+  color: var(--text-p); border-radius: var(--radius-sm);
+  width: 36px; height: 36px; cursor: pointer; font-size: 16px;
+  align-items: center; justify-content: center; transition: var(--trans);
+}
+.hamburger:hover { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 768px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } }
+
+.topbar-nav { display: flex; align-items: center; gap: 4px; }
+.topbar-nav a {
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans);
+}
+.topbar-nav a:hover { color: var(--text-h); background: var(--bg-card); }
+
+/* ═══ LAYOUT ════════════════════════════════════════════════════════════ */
+.page-layout {
+  display: flex;
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+}
+.main-col {
+  flex: 1; min-width: 0;
+  padding: 40px 32px 80px;
+  max-width: 960px; margin: 0 auto;
+}
+
+/* ═══ PROJECT HERO ══════════════════════════════════════════════════════ */
+.project-hero {
+  background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 36px 40px;
+  margin-bottom: 32px;
+  position: relative; overflow: hidden;
+  box-shadow: var(--glow);
+  animation: heroReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.project-hero::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.12), transparent 70%);
+  pointer-events: none;
+}
+.project-hero-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; letter-spacing: .4px;
+}
+.badge-active    { background: rgba(52,211,153,.1); color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+.badge-paused    { background: rgba(251,191,36,.1); color: var(--warning); border: 1px solid rgba(251,191,36,.2); }
+.badge-completed { background: rgba(139,92,246,.1); color: var(--violet-400); border: 1px solid rgba(139,92,246,.2); }
+.badge-category  { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2); }
+
+.project-hero-title {
+  font-family: var(--font-display);
+  font-size: 30px; font-weight: 800;
+  color: var(--text-h); letter-spacing: -.6px; margin-bottom: 10px;
+  line-height: 1.2;
+}
+.project-hero-desc {
+  font-size: 15px; color: var(--text-p); line-height: 1.7; margin-bottom: 20px;
+}
+.project-hero-meta {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  font-size: 13px; color: var(--text-muted);
+}
+.project-hero-meta a {
+  color: var(--sky-400); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.project-hero-meta a:hover { color: var(--accent); }
+.project-hero-meta span { display: flex; align-items: center; gap: 5px; }
+.project-hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+
+/* ═══ BUTTONS ════════════════════════════════════════════════════════════ */
+.btn-primary {
+  padding: 12px 28px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35); text-decoration: none;
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+.btn-ghost {
+  padding: 11px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  background: var(--bg-card); color: var(--text-p);
+  border: 1px solid var(--border); font-family: inherit;
+  display: inline-flex; align-items: center; gap: 7px;
+  text-decoration: none; transition: var(--trans);
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-success {
+  padding: 10px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--trans); text-decoration: none;
+  box-shadow: 0 4px 16px rgba(52,211,153,.25);
+}
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(52,211,153,.35); }
+
+.btn-info {
+  padding: 9px 18px; border-radius: var(--radius-md);
+  font-size: 12px; font-weight: 600; cursor: pointer; border: none;
+  background: rgba(56,189,248,.12); color: var(--sky-400);
+  border: 1px solid rgba(56,189,248,.2); font-family: inherit;
+  display: inline-flex; align-items: center; gap: 6px;
+  text-decoration: none; transition: var(--trans);
+}
+.btn-info:hover { background: rgba(56,189,248,.2); }
+
+.btn-danger-soft {
+  padding: 9px 18px; border-radius: var(--radius-md);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  background: rgba(251,113,133,.1); color: var(--danger);
+  border: 1px solid rgba(251,113,133,.2); font-family: inherit;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: var(--trans);
+}
+.btn-danger-soft:hover { background: rgba(251,113,133,.18); }
+
+/* ═══ SECTION HEADER ════════════════════════════════════════════════════ */
+.section-head {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+}
+.section-head-icon {
+  width: 34px; height: 34px; border-radius: var(--radius-sm);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--violet-400); flex-shrink: 0;
+}
+.section-head h2 {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700; color: var(--text-h);
+}
+.section-head .badge-count {
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 2px 9px; border-radius: 99px;
+  font-size: 11px; color: var(--text-muted); font-weight: 700;
+}
+.section-head .ml-auto { margin-left: auto; }
+
+/* ═══ TASKS GRID ════════════════════════════════════════════════════════ */
+.tasks-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+
+.task-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+  transition: var(--trans); animation: cardReveal .45s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow: var(--glow);
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.task-card:hover { border-color: var(--border-glow); }
+
+.task-card-head {
+  padding: 18px 22px 14px;
+  display: flex; align-items: flex-start; gap: 14px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+}
+.task-card-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--violet-400); flex-shrink: 0;
+}
+.task-card-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--text-h); margin-bottom: 4px;
+}
+.task-card-desc {
+  font-size: 13px; color: var(--text-p); line-height: 1.5;
+}
+
+/* Priority badge */
+.priority-badge {
+  margin-left: auto; flex-shrink: 0;
+  padding: 4px 10px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; letter-spacing: .3px;
+}
+.priority-high   { background: rgba(251,113,133,.1); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+.priority-medium { background: rgba(251,191,36,.1);  color: var(--warning); border: 1px solid rgba(251,191,36,.2); }
+.priority-low    { background: rgba(52,211,153,.1);  color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+
+.task-card-body { padding: 16px 22px; }
+.task-meta-row {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  font-size: 12px; color: var(--text-muted); margin-bottom: 14px;
+}
+.task-meta-row span { display: flex; align-items: center; gap: 5px; }
+.xp-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 99px;
+  background: rgba(139,92,246,.1); color: var(--violet-400);
+  border: 1px solid rgba(139,92,246,.2); font-size: 11px; font-weight: 700;
+}
+.coin-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 99px;
+  background: rgba(251,191,36,.1); color: var(--gold-400);
+  border: 1px solid rgba(251,191,36,.2); font-size: 11px; font-weight: 700;
+}
+.joined-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 99px;
+  background: rgba(52,211,153,.08); color: var(--success);
+  border: 1px solid rgba(52,211,153,.2); font-size: 12px; font-weight: 700;
+}
+.task-card-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+
+/* ═══ EMPTY STATE ════════════════════════════════════════════════════════ */
+.empty-state {
+  text-align: center; padding: 52px 24px;
+  background: var(--bg-card); border: 1px dashed var(--border);
+  border-radius: var(--radius-lg); color: var(--text-muted);
+  margin-bottom: 32px;
+}
+.empty-state i { font-size: 40px; display: block; margin-bottom: 12px; opacity: .2; }
+.empty-state p { font-size: 15px; }
+
+/* ═══ DIVIDER ════════════════════════════════════════════════════════════ */
+.divider { height: 1px; background: var(--border); margin: 36px 0; }
+
+/* ═══ COMMENTS ════════════════════════════════════════════════════════════ */
+.comment-compose {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px; margin-bottom: 22px;
+}
+.comment-compose textarea {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 13px 15px; font-size: 14px; font-family: inherit;
+  line-height: 1.6; resize: vertical; min-height: 90px;
+  transition: var(--trans);
+}
+.comment-compose textarea:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+}
+.comment-compose textarea::placeholder { color: var(--text-muted); }
+.comment-compose-footer {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 10px;
+}
+.char-count { font-size: 11px; color: var(--text-muted); }
+
+.comments-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.comment-item {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px;
+  animation: fadeIn .3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.comment-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.c-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.c-name { font-size: 13px; font-weight: 700; color: var(--text-h); }
+.c-date { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.c-text { font-size: 14px; color: var(--text-p); line-height: 1.65; }
+
+/* ═══ FIELD ══════════════════════════════════════════════════════════════ */
+.field-row { margin-bottom: 14px; }
+.field-row label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--text-muted);
+  display: block; margin-bottom: 6px;
+}
+.field-inp {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 12px 15px; font-size: 14px; font-family: inherit; transition: var(--trans);
+}
+.field-inp:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.field-inp::placeholder { color: var(--text-muted); }
+.field-error {
+  margin-top: 5px; font-size: 12px; color: var(--danger);
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.site-footer a { color: var(--accent); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+
+/* ═══ MOBILE NAV ══════════════════════════════════════════════════════════ */
+.mobile-nav { display: none; position: fixed; inset: 0; z-index: 700; }
+.mobile-nav.open { display: flex; }
+.mobile-nav-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
+.mobile-nav-panel {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 280px;
+  background: var(--bg-panel); border-left: 1px solid var(--border);
+  padding: 24px; display: flex; flex-direction: column; gap: 6px;
+  overflow-y: auto;
+}
+[lang="ar"] .mobile-nav-panel { right: auto; left: 0; border-left: none; border-right: 1px solid var(--border); }
+.mobile-nav-panel a, .mobile-nav-panel .nav-item {
+  padding: 11px 15px; border-radius: var(--radius-md);
+  color: var(--text-p); text-decoration: none; font-size: 14px;
+  font-weight: 500; display: flex; align-items: center; gap: 9px;
+  transition: var(--trans); border: 1px solid transparent;
+}
+.mobile-nav-panel a:hover { background: var(--bg-card); border-color: var(--border); color: var(--text-h); }
+.mobile-nav-close {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: 1px solid var(--border);
+  color: var(--text-muted); width: 32px; height: 32px;
+  border-radius: 50%; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.mobile-nav-close:hover { color: var(--danger); border-color: var(--danger); }
+.coins-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 99px;
+  background: rgba(251,191,36,.1); color: var(--gold-400);
+  border: 1px solid rgba(251,191,36,.2); font-size: 12px; font-weight: 700;
+}
+
+/* ═══ ALERT BAR ══════════════════════════════════════════════════════════ */
+.alert-bar {
+  padding: 12px 18px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 9px;
+}
+.alert-success { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.alert-error, .alert-danger { background: rgba(251,113,133,.07); color: var(--danger); border: 1px solid rgba(251,113,133,.2); }
+.alert-info { background: rgba(139,92,246,.08); color: var(--violet-400); border: 1px solid rgba(139,92,246,.2); }
+
+@media (max-width: 640px) {
+  .main-col { padding: 28px 16px 64px; }
+  .project-hero { padding: 22px 18px; }
+  .project-hero-title { font-size: 22px; }
+  .topbar { padding: 0 14px; gap: 8px; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>{{ project.title|default:"Project" }}</h1>
-        <p data-translate="hero-desc">Explore tasks and contribute to this open-source project!</p>
-        {% if project.id %}
-            <a href="{% url 'projects:project_list' %}" class="btn" data-translate="back-btn">Back to Projects</a>
-        {% else %}
-            <a href="/projects/" class="btn" data-translate="back-btn">Back to Projects</a>
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-breadcrumb">
+    <a href="{% url 'projects:project_list' %}">Projects</a>
+    <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
+    <span class="bc-current">{{ project.title|default:"Project"|truncatechars:30 }}</span>
+  </div>
+
+  <nav class="topbar-nav" id="desktop-nav">
+    <a href="/">Home</a>
+    <a href="/courses/">Courses</a>
+    <a href="/chatbot/">Chatbot</a>
+    <a href="/competitions/">Competitions</a>
+    <a href="/performance/dashboard/">Performance</a>
+    <a href="/about/">About</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}">Dashboard</a>
+      {% endif %}
+    {% endif %}
+  </nav>
+
+  <div class="topbar-actions">
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    {% if user.is_authenticated %}
+      {% if user.courses_profile %}
+        <span class="coins-pill">
+          <i class="fas fa-coins"></i> {{ user.courses_profile.coins|default:0 }}
+        </span>
+      {% endif %}
+      <a href="/accounts/profile/" class="tb-btn tb-btn-ghost"><i class="fas fa-user"></i></a>
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent"><i class="fas fa-sign-in-alt"></i> Login</a>
+    {% endif %}
+    <button class="hamburger" onclick="openMobileNav()"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
+
+<!-- ── MOBILE NAV ─────────────────────────────────────────────────────── -->
+<div class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+  <nav class="mobile-nav-panel">
+    <button class="mobile-nav-close" onclick="closeMobileNav()"><i class="fas fa-times"></i></button>
+    <a href="/"><i class="fas fa-home"></i> Home</a>
+    <a href="/courses/"><i class="fas fa-book"></i> Courses</a>
+    <a href="/chatbot/"><i class="fas fa-robot"></i> Chatbot</a>
+    <a href="/competitions/"><i class="fas fa-trophy"></i> Competitions</a>
+    <a href="/performance/dashboard/"><i class="fas fa-chart-line"></i> Performance</a>
+    <a href="/about/"><i class="fas fa-info-circle"></i> About Us</a>
+    <a href="/contact_us/"><i class="fas fa-envelope"></i> Contact Us</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/"><i class="fas fa-user-circle"></i> Profile</a>
+      <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      {% if user.courses_profile %}
+        <span class="coins-pill" style="margin-top:6px;">
+          <i class="fas fa-coins"></i> {{ user.courses_profile.coins|default:0 }} Coins
+        </span>
+      {% endif %}
+    {% else %}
+      <a href="/accounts/register/"><i class="fas fa-sign-in-alt"></i> Login / Register</a>
+    {% endif %}
+  </nav>
+</div>
+
+<!-- ── LAYOUT ──────────────────────────────────────────────────────────── -->
+<div class="page-layout">
+  <div class="main-col">
+
+    <!-- Django messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-bar alert-{{ message.tags|default:'info' }}">
+          <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- ── PROJECT HERO ────────────────────────────────────────────── -->
+    <div class="project-hero">
+      <div class="project-hero-badges">
+        <span class="badge badge-{{ project.status|default:'active' }}">
+          <i class="fas fa-circle" style="font-size:6px;"></i>
+          {{ project.get_status_display|default:"Active" }}
+        </span>
+        <span class="badge badge-category">
+          <i class="fas fa-tag"></i>
+          {{ project.get_category_display|default:"General" }}
+        </span>
+      </div>
+      <h1 class="project-hero-title">{{ project.title|default:"Project" }}</h1>
+      <p class="project-hero-desc">{{ project.description|default:"No description available." }}</p>
+      <div class="project-hero-meta">
+        {% if project.repository_url %}
+          <a href="{{ project.repository_url }}" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i> Repository
+          </a>
         {% endif %}
-    </section>
-
-    <!-- Content Container -->
-    <div class="content-container">
-        <h1>{{ project.title|default:"Project" }}</h1>
-        <p>{{ project.description|default:"No description available." }}</p>
-        <p><strong data-translate="repo-label">Repository:</strong> <a href="{{ project.repository_url|drive_id|default:'#' }}" target="_blank">{{ project.repository_url|default:"No repository URL" }}</a></p>
-        <p><strong data-translate="status-label">Status:</strong> {{ project.get_status_display|default:"Unknown" }}</p>
-        <p><strong data-translate="category-label">Category:</strong> {{ project.get_category_display|default:"Unknown" }}</p>
-
-        <h2 class="mt-5" data-translate="tasks-title">Tasks</h2>
-        {% for task in tasks %}
-            <div class="task-card card mb-3">
-                <div class="card-body">
-                    <h3 class="card-title">{{ task.title|default:"Task" }}</h3>
-                    <p class="card-text">{{ task.description|truncatewords:20|default:"No description available." }}</p>
-                    <p class="card-text"><strong data-translate="priority-label">Priority:</strong> {{ task.get_priority_display|default:"Unknown" }}</p>
-                    <p class="card-text"><strong data-translate="xp-label">XP Points:</strong> {{ task.xp_reward|default:0 }} | <strong data-translate="coins-label">Coins:</strong> {{ task.coins_reward|default:0 }}</p>
-                    <p class="card-text"><strong data-translate="due-date-label">Due Date:</strong> {% if task.due_date %}{{ task.due_date }}{% else %}<span data-translate="not-specified">Not specified</span>{% endif %}</p>
-                    {% if task.id and task.slugified_title %}
-                        <a href="{% url 'projects:task_submissions' task.id task.slugified_title %}" class="btn btn-info" data-translate="view-solutions">View Solutions</a>
-                    {% else %}
-                        <a href="/projects/" class="btn btn-info" data-translate="view-solutions">View Solutions</a>
-                    {% endif %}
-                    {% if user.courses_profile.role == 'student' %}
-                        {% if user not in task.assigned_to.all %}
-                            {% if task.id %}
-                                <form method="post" action="{% url 'projects:join_task' task.id %}" style="display: inline;" class="needs-validation" novalidate>
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary" data-translate="join-task">Join Task</button>
-                                </form>
-                            {% else %}
-                                <button type="button" class="btn btn-primary disabled" data-translate="join-task">Join Task</button>
-                            {% endif %}
-                        {% else %}
-                            <p class="text-success" data-translate="joined-task">You are joined to this task!</p>
-                            {% if task.id and task.slugified_title %}
-                                <a href="{% url 'projects:submit_task' task.id task.slugified_title %}" class="btn btn-success" data-translate="submit-solution">Submit Solution</a>
-                            {% else %}
-                                <a href="/projects/" class="btn btn-success" data-translate="submit-solution">Submit Solution</a>
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
-                </div>
-            </div>
-        {% empty %}
-            <p data-translate="no-tasks">No tasks available.</p>
-        {% endfor %}
-
-        {% if user.courses_profile.role == 'instructor' %}
-            {% if project.id %}
-                <a href="{% url 'projects:add_task' project.id project.title|custom_slugify %}" class="btn btn-primary mb-3" data-translate="add-task">Add Task</a>
-            {% else %}
-                <a href="/projects/" class="btn btn-primary mb-3 disabled" data-translate="add-task">Add Task</a>
-            {% endif %}
+        <span><i class="fas fa-tasks"></i> {{ tasks|length }} Task{{ tasks|length|pluralize }}</span>
+        <span><i class="fas fa-comments"></i> {{ comments|length }} Comment{{ comments|length|pluralize }}</span>
+      </div>
+      <div class="project-hero-actions">
+        <a href="{% url 'projects:project_list' %}" class="btn-ghost">
+          <i class="fas fa-arrow-left"></i> Back to Projects
+        </a>
+        {% if user.courses_profile.role == 'instructor' and project.id %}
+          <a href="{% url 'projects:add_task' project.id project.title|custom_slugify %}" class="btn-primary">
+            <i class="fas fa-plus"></i> Add Task
+          </a>
         {% endif %}
-
-        <h2 class="mt-5" data-translate="comments-title">Comments</h2>
-        {% for comment in comments %}
-            <div class="comment-card card mb-2">
-                <div class="card-body">
-                    <p><strong>{{ comment.user.username|default:"Anonymous" }}</strong>: {{ comment.content|default:"No content" }}</p>
-                    <p class="text-muted"><span data-translate="comment-date">Date:</span> {{ comment.created_at|default:"Unknown" }}</p>
-                </div>
-            </div>
-        {% empty %}
-            <p data-translate="no-comments">No comments yet.</p>
-        {% endfor %}
-
-        {% if user.is_authenticated %}
-            <h3 class="mt-4" data-translate="add-comment-title">Add a Comment</h3>
-            {% if project.id %}
-                <form method="post" action="{% url 'projects:add_project_comment' project.id project.title|custom_slugify %}" class="comment-form needs-validation" novalidate>
-                    {% csrf_token %}
-                    {{ form.content|add_class:"form-control" }}
-                    {% if form.content.errors %}
-                        <div class="invalid-feedback" style="display: block;">
-                            {% for error in form.content.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="invalid-feedback" data-translate="content-invalid">Please enter a comment.</div>
-                    {% endif %}
-                    <button type="submit" class="btn btn-primary mt-2" data-translate="submit-comment">Submit Comment</button>
-                </form>
-            {% else %}
-                <form method="post" action="/projects/" class="comment-form">
-                    {% csrf_token %}
-                    <textarea class="form-control" disabled placeholder="Project not available"></textarea>
-                    <button type="submit" class="btn btn-primary mt-2 disabled" data-translate="submit-comment">Submit Comment</button>
-                </form>
-            {% endif %}
-        {% endif %}
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+    <!-- ── TASKS ───────────────────────────────────────────────────── -->
+    <div class="section-head">
+      <div class="section-head-icon"><i class="fas fa-tasks"></i></div>
+      <h2>Tasks</h2>
+      <span class="badge-count">{{ tasks|length }}</span>
+    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'projects/project_detail.js' %}"></script>
+    {% if tasks %}
+      <div class="tasks-grid">
+        {% for task in tasks %}
+        <div class="task-card" style="animation-delay: {{ forloop.counter0 }}00ms">
+          <div class="task-card-head">
+            <div class="task-card-icon">
+              <i class="fas fa-code-branch"></i>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div class="task-card-title">{{ task.title|default:"Task" }}</div>
+              <div class="task-card-desc">{{ task.description|truncatewords:20|default:"No description available." }}</div>
+            </div>
+            <span class="priority-badge priority-{{ task.priority|default:'medium' }}">
+              <i class="fas {% if task.priority == 'high' %}fa-fire{% elif task.priority == 'low' %}fa-leaf{% else %}fa-minus{% endif %}"></i>
+              {{ task.get_priority_display|default:"Medium" }}
+            </span>
+          </div>
+          <div class="task-card-body">
+            <div class="task-meta-row">
+              <span class="xp-chip"><i class="fas fa-star"></i> {{ task.xp_reward|default:0 }} XP</span>
+              <span class="coin-chip"><i class="fas fa-coins"></i> {{ task.coins_reward|default:0 }} Coins</span>
+              {% if task.due_date %}
+                <span><i class="fas fa-calendar-alt"></i> Due: {{ task.due_date }}</span>
+              {% else %}
+                <span><i class="fas fa-calendar-alt"></i> No deadline</span>
+              {% endif %}
+              <span><i class="fas fa-users"></i> {{ task.assigned_to.count|default:0 }} joined</span>
+            </div>
+          </div>
+          <div class="task-card-footer">
+            {% if task.id and task.slugified_title %}
+              <a href="{% url 'projects:task_submissions' task.id task.slugified_title %}" class="btn-info">
+                <i class="fas fa-eye"></i> View Solutions
+              </a>
+            {% endif %}
+
+            {% if user.courses_profile.role == 'student' %}
+              {% if user not in task.assigned_to.all %}
+                {% if task.id %}
+                  <form method="post" action="{% url 'projects:join_task' task.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-primary">
+                      <i class="fas fa-user-plus"></i> Join Task
+                    </button>
+                  </form>
+                {% endif %}
+              {% else %}
+                <span class="joined-pill"><i class="fas fa-check-circle"></i> Joined</span>
+                {% if task.id and task.slugified_title %}
+                  <a href="{% url 'projects:submit_task' task.id task.slugified_title %}" class="btn-success">
+                    <i class="fas fa-upload"></i> Submit Solution
+                  </a>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="fas fa-box-open"></i>
+        <p>No tasks available yet.</p>
+      </div>
+    {% endif %}
+
+    <div class="divider"></div>
+
+    <!-- ── COMMENTS ───────────────────────────────────────────────── -->
+    <div class="section-head">
+      <div class="section-head-icon" style="background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.2);color:var(--sky-400);">
+        <i class="fas fa-comments"></i>
+      </div>
+      <h2>Discussion</h2>
+      <span class="badge-count">{{ comments|length }}</span>
+    </div>
+
+    {% if user.is_authenticated and project.id %}
+      <div class="comment-compose">
+        <form method="post" action="{% url 'projects:add_project_comment' project.id project.title|custom_slugify %}" id="comment-form">
+          {% csrf_token %}
+          <textarea
+            name="content"
+            id="comment-inp"
+            rows="3"
+            maxlength="2000"
+            placeholder="Share your thoughts or ask a question…"
+            oninput="document.getElementById('cchar-count').textContent = this.value.length + ' / 2000'"
+          >{% if form.content.value %}{{ form.content.value }}{% endif %}</textarea>
+          {% if form.content.errors %}
+            <div style="margin-top:6px;font-size:12px;color:var(--danger);">
+              {% for err in form.content.errors %}{{ err }}{% endfor %}
+            </div>
+          {% endif %}
+          <div class="comment-compose-footer">
+            <span class="char-count" id="cchar-count">0 / 2000</span>
+            <button type="submit" class="btn-primary" style="padding:9px 20px;font-size:13px;box-shadow:none;">
+              <i class="fas fa-paper-plane"></i> Post Comment
+            </button>
+          </div>
+        </form>
+      </div>
+    {% endif %}
+
+    {% if comments %}
+      <div class="comments-list">
+        {% for comment in comments %}
+        <div class="comment-item">
+          <div class="comment-head">
+            <div class="c-avatar">{{ comment.user.username|slice:":1"|upper }}</div>
+            <div>
+              <div class="c-name">{{ comment.user.get_full_name|default:comment.user.username }}</div>
+              <div class="c-date">{{ comment.created_at|date:"M d, Y — H:i"|default:"Unknown" }}</div>
+            </div>
+          </div>
+          <div class="c-text">{{ comment.content|default:"No content" }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state" style="padding:32px 24px;">
+        <i class="fas fa-comment-slash"></i>
+        <p>No comments yet. Be the first to share your thoughts!</p>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <p>© 2025 <a href="/">Eduvia</a> and creativitycode. All rights reserved.</p>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── Theme ── */
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('theme-icon').className = t === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', t);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Lang ── */
+let currentLang = localStorage.getItem('lang') || 'en';
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Mobile nav ── */
+function openMobileNav()  { document.getElementById('mobile-nav').classList.add('open'); }
+function closeMobileNav() { document.getElementById('mobile-nav').classList.remove('open'); }
+
+/* ── Toast ── */
+function toast(msg, type='info', dur=3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Form submit feedback ── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+
+  const form = document.getElementById('comment-form');
+  if (form) {
+    form.addEventListener('submit', e => {
+      const ta = document.getElementById('comment-inp');
+      if (!ta || !ta.value.trim()) {
+        e.preventDefault();
+        toast('Please write a comment first.', 'error');
+      }
+    });
+  }
+});
+</script>
 </body>
 </html>
