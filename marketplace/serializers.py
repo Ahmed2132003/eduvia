@@ -1,20 +1,10 @@
 from rest_framework import serializers
 
-from .models import CoursePayment, Enrollment
-
-
-class CheckoutPaymobSerializer(serializers.Serializer):
-    pass
+from .models import Enrollment
 
 
 class ActivateCodeSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=128)
-
-
-class WebhookSerializer(serializers.Serializer):
-    transaction_id = serializers.CharField(max_length=128)
-    hmac = serializers.CharField(max_length=255)
-    payload = serializers.JSONField()
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):
@@ -25,9 +15,3 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 
 class AccessStatusSerializer(serializers.Serializer):
     has_access = serializers.BooleanField()
-
-
-class CoursePaymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CoursePayment
-        fields = ["transaction_id", "payment_status", "amount", "provider"]

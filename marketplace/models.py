@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import hashlib
-import hmac
 import uuid
 from decimal import Decimal
 
@@ -19,7 +18,6 @@ class TimeStampedModel(models.Model):
 
 class Enrollment(TimeStampedModel):
     class Source(models.TextChoices):
-        PAYMOB = "paymob", "Paymob"
         ENROLLMENT_CODE = "enrollment_code", "Enrollment Code"
         ADMIN = "admin", "Admin"
 
@@ -70,37 +68,6 @@ class EnrollmentCode(TimeStampedModel):
         return hashlib.sha256(normalized).hexdigest()
 
 
-class CoursePayment(TimeStampedModel):
-    class Provider(models.TextChoices):
-        PAYMOB = "paymob", "Paymob"
-
-    class Status(models.TextChoices):
-        PENDING = "pending", "Pending"
-        PAID = "paid", "Paid"
-        FAILED = "failed", "Failed"
-
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-        related_name="course_payments",
-    )
-    course = models.ForeignKey(
-        "courses.Course",
-        on_delete=models.PROTECT,
-        related_name="course_payments",
-    )
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
-    provider = models.CharField(
-        max_length=16, choices=Provider.choices, default=Provider.PAYMOB
-    )
-    transaction_id = models.CharField(max_length=128, unique=True)
-    payment_status = models.CharField(
-        max_length=16, choices=Status.choices, default=Status.PENDING
-    )
-    verified = models.BooleanField(default=False)
-    paid_at = models.DateTimeField(null=True, blank=True)
-
-
 class InstructorWallet(TimeStampedModel):
     instructor = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -121,13 +88,6 @@ class WalletTransaction(TimeStampedModel):
         InstructorWallet, on_delete=models.PROTECT, related_name="transactions"
     )
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    payment = models.ForeignKey(
-        CoursePayment,
-        on_delete=models.PROTECT,
-        related_name="wallet_transactions",
-        null=True,
-        blank=True,
-    )
     reference = models.CharField(max_length=128)
     tx_type = models.CharField(
         max_length=16,
@@ -136,20 +96,8 @@ class WalletTransaction(TimeStampedModel):
     )
 
 
-class RevenueShare(TimeStampedModel):
-    payment = models.OneToOneField(
-        CoursePayment,
-        on_delete=models.PROTECT,
-        related_name="revenue_share",
-        null=True,
-    )
-    instructor_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    platform_amount = models.DecimalField(max_digits=12, decimal_places=2)
-
-
-# ── NEW: WithdrawalRequest ─────────────────────────────────────────────────────
 class WithdrawalRequest(TimeStampedModel):
-    """Instructor withdrawal request — safe addition, no existing tables touched."""
+    """Instructor withdrawal request."""
 
     class Status(models.TextChoices):
         PENDING = "pending", "Pending"
@@ -177,7 +125,6 @@ class WithdrawalRequest(TimeStampedModel):
         return f"Withdrawal #{self.pk} — {self.amount} EGP ({self.status})"
 
 
-# ── AuditLog (unchanged) ───────────────────────────────────────────────────────
 class AuditLog(TimeStampedModel):
     actor = models.ForeignKey(
         settings.AUTH_USER_MODEL,

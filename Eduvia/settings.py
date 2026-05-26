@@ -10,9 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-hfxyoz#%!ei3v1zfmj5km20vkx$$tvm$)7$0r_79h2k+wbuki^')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)  # True مؤقتًا للتطوير
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-# إعدادات المضيفين المسموح بهم
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
@@ -27,12 +26,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://eduvia-ai.fly.dev',
     'https://75727303c9c8.ngrok-free.app',
 ]
-# settings.py
-PAYMOB_API_KEY = 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRBMk5UWTVPQ3dpYm1GdFpTSTZJbWx1YVhScFlXd2lmUS4tSmszLXpWN2U0VWJSWlJXbUoxTDVnZEl3LVRQVjhsTVEzWGYyWk1XbnlyM0cwdXNSdGNKSnlUbHRzeGhsVFdRSU5sZTh5bW5IcjFqaGlfSlNoY0FEQQ=='  
-PAYMOB_MERCHANT_ID = '1065698' 
-PAYMOB_INTEGRATION_ID = '5225414'  
-PAYMOB_API_BASE_URL = 'https://accept.paymob.com/api'
-PAYMOB_IFRAME_ID = '945991'  
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,30 +52,16 @@ INSTALLED_APPS = [
     'marketplace.apps.MarketplaceConfig',
 ]
 
-# إعدادات ASGI لـ Channels
 ASGI_APPLICATION = 'Eduvia.asgi.application'
 
-# إعدادات Channels (معطلة مؤقتًا)
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [config('REDIS_URL', default='redis://localhost:6379')],
-#         },
-#     },
-# }
-
-# إعدادات Celery
 CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379')
 CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-# رابط تسجيل الدخول
 LOGIN_URL = '/accounts/login/'
 
-# إعدادات Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -94,11 +74,9 @@ MIDDLEWARE = [
     'marketplace.middleware.StudentAccessMiddleware',
 ]
 
-# إعدادات URL
 ROOT_URLCONF = 'Eduvia.urls'
 AUTH_USER_MODEL = 'accounts.User'
 
-# إعدادات اللغة والتدويل
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 USE_L10N = True
@@ -110,7 +88,6 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-# إعدادات القوالب
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -128,10 +105,8 @@ TEMPLATES = [
     },
 ]
 
-# إعدادات WSGI
 WSGI_APPLICATION = 'Eduvia.wsgi.application'
 
-# إعدادات قاعدة البيانات
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -139,58 +114,37 @@ DATABASES = {
     }
 }
 
-# إعدادات التحقق من كلمة المرور
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# إعدادات المنطقة الزمنية
 TIME_ZONE = 'Africa/Cairo'
 USE_TZ = True
 
-# إعدادات الملفات الثابتة
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# إعدادات ملفات الوسائط
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/data/media'
 
-# إعدادات CSRF وSession
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
-    'https://*.fly.dev',
-    'https://eduvia-ai.fly.dev',
-]
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-# إعدادات HTTPS للإنتاج
+
 SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
 SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=0, cast=int)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# إعدادات مفتاح Gemini API
 GEMINI_API_KEY = config('GEMINI_API_KEY', default=None)
 
-# إعدادات البريد الإلكتروني
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -205,7 +159,6 @@ if hasattr(sys.stdout, 'reconfigure'):
 if hasattr(sys.stderr, 'reconfigure'):
     sys.stderr.reconfigure(encoding='utf-8', errors='backslashreplace')
 
-# إعدادات السجل (Logging)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

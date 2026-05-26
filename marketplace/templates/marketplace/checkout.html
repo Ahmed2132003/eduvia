@@ -10,9 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ═══════════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — "Obsidian Academy" (shared with lesson_view)
-   ═══════════════════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -77,7 +74,6 @@
 }
 
 html { scroll-behavior: smooth; }
-
 body {
   font-family: var(--font-body);
   background: var(--bg-base);
@@ -95,7 +91,7 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-/* ═══ TOPBAR ═══════════════════════════════════════════════════════════ */
+/* TOPBAR */
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 600;
   height: var(--topbar-h);
@@ -127,9 +123,7 @@ body {
 }
 .topbar-nav a:hover { color: var(--text-p); background: var(--bg-card); }
 .topbar-nav a.active { color: var(--accent); }
-
 .topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
-
 .ctrl-btn {
   width: 36px; height: 36px; border-radius: 50%;
   border: 1px solid var(--border); background: var(--bg-card);
@@ -138,7 +132,6 @@ body {
   cursor: pointer; transition: var(--trans);
 }
 .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
-
 .coins-pill {
   display: flex; align-items: center; gap: 6px;
   background: var(--bg-card); border: 1px solid var(--border);
@@ -146,26 +139,14 @@ body {
   font-size: 13px; font-weight: 600; color: var(--gold-400);
 }
 
-.tb-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 600; cursor: pointer;
-  border: none; text-decoration: none; transition: var(--trans);
-  font-family: inherit;
-}
-.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
-.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-.tb-btn-accent { background: var(--accent); color: #fff; }
-.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
-
-/* ═══ PAGE LAYOUT ══════════════════════════════════════════════════════ */
+/* PAGE LAYOUT */
 .page-wrap {
   padding-top: var(--topbar-h);
   min-height: 100vh;
   display: flex; flex-direction: column;
 }
 
-/* ═══ HERO STRIP ═══════════════════════════════════════════════════════ */
+/* HERO */
 .page-hero {
   background: var(--bg-panel);
   border-bottom: 1px solid var(--border);
@@ -193,18 +174,16 @@ body {
   color: var(--text-h); letter-spacing: -1px; line-height: 1.15;
   margin-bottom: 10px;
 }
-.page-hero p {
-  font-size: 15px; color: var(--text-muted); max-width: 500px; margin: 0 auto;
-}
+.page-hero p { font-size: 15px; color: var(--text-muted); max-width: 500px; margin: 0 auto; }
 
-/* ═══ MAIN CONTENT ═════════════════════════════════════════════════════ */
+/* MAIN */
 .page-main {
   flex: 1;
   max-width: 1100px; margin: 0 auto; width: 100%;
   padding: 40px 24px 80px;
 }
 
-/* ═══ CHECKOUT GRID ════════════════════════════════════════════════════ */
+/* CHECKOUT GRID */
 .checkout-grid {
   display: grid;
   grid-template-columns: 1fr 380px;
@@ -214,7 +193,7 @@ body {
   .checkout-grid { grid-template-columns: 1fr; }
 }
 
-/* ═══ COURSE SUMMARY CARD ══════════════════════════════════════════════ */
+/* COURSE SUMMARY CARD */
 .course-summary-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -229,7 +208,6 @@ body {
   position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: linear-gradient(90deg, var(--violet-500), var(--gold-400));
 }
-
 .cs-badge {
   display: inline-flex; align-items: center; gap: 6px;
   background: var(--violet-glow); border: 1px solid var(--border-glow);
@@ -238,19 +216,16 @@ body {
   text-transform: uppercase; letter-spacing: .6px;
   margin-bottom: 18px;
 }
-
 .course-summary-card h2 {
   font-family: var(--font-display);
   font-size: 26px; font-weight: 800;
   color: var(--text-h); line-height: 1.2; letter-spacing: -.5px;
   margin-bottom: 12px;
 }
-
 .course-summary-card .course-desc {
   font-size: 14px; color: var(--text-p);
   line-height: 1.75; margin-bottom: 24px;
 }
-
 .price-display {
   display: flex; align-items: flex-end; gap: 6px;
   margin: 24px 0;
@@ -262,19 +237,9 @@ body {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   line-height: 1;
 }
-.price-currency {
-  font-size: 20px; font-weight: 600; color: var(--text-muted);
-  padding-bottom: 8px;
-}
-
-.feature-list {
-  display: flex; flex-direction: column; gap: 10px;
-  margin-top: 20px;
-}
-.feature-item {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 14px; color: var(--text-p);
-}
+.price-currency { font-size: 20px; font-weight: 600; color: var(--text-muted); padding-bottom: 8px; }
+.feature-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.feature-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-p); }
 .feature-item i {
   width: 32px; height: 32px; border-radius: var(--radius-sm);
   display: flex; align-items: center; justify-content: center;
@@ -285,7 +250,7 @@ body {
 .feat-gold i { background: rgba(251,191,36,.08); color: var(--gold-400); }
 .feat-sky i { background: rgba(56,189,248,.1); color: var(--sky-400); }
 
-/* ═══ PAYMENT PANEL ════════════════════════════════════════════════════ */
+/* ENROLLMENT CODE PANEL */
 .payment-panel {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -294,7 +259,6 @@ body {
   box-shadow: var(--glow);
   animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) .1s both;
 }
-
 .payment-panel-head {
   padding: 22px 24px;
   background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
@@ -312,79 +276,46 @@ body {
   font-size: 16px; font-weight: 700; color: var(--text-h);
 }
 .payment-panel-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
 .payment-panel-body { padding: 24px; }
 
-/* Pay button */
-.pay-btn {
-  width: 100%;
-  padding: 15px 28px; border-radius: var(--radius-md);
-  font-size: 15px; font-weight: 700; cursor: pointer; border: none;
-  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
-  color: #fff; font-family: inherit;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  transition: var(--trans); position: relative; overflow: hidden;
-  box-shadow: 0 4px 24px rgba(139,92,246,.38);
-}
-.pay-btn::before {
-  content: '';position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,.12), transparent);
-}
-.pay-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(139,92,246,.5); }
-.pay-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-/* Divider */
-.panel-divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 22px 0;
-}
-.panel-divider::before, .panel-divider::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
-}
-.panel-divider span {
-  font-size: 11px; font-weight: 700; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: .6px; white-space: nowrap;
-}
-
-/* Activation code */
+/* Code section */
 .code-section h4 {
   font-family: var(--font-display);
-  font-size: 14px; font-weight: 700; color: var(--text-h);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
   display: flex; align-items: center; gap: 8px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
-
 .code-input-row { display: flex; gap: 8px; }
-
 .field-inp {
   flex: 1; background: var(--bg-base); border: 1.5px solid var(--border);
   border-radius: var(--radius-md); color: var(--text-p);
-  padding: 11px 14px; font-size: 14px; font-family: inherit;
+  padding: 12px 14px; font-size: 14px; font-family: inherit;
   transition: var(--trans);
 }
 .field-inp:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
 .field-inp::placeholder { color: var(--text-muted); }
 
 .activate-btn {
-  padding: 11px 18px; border-radius: var(--radius-md);
-  background: var(--bg-card-2); border: 1px solid var(--border);
-  color: var(--text-p); font-size: 13px; font-weight: 700;
+  padding: 12px 20px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  border: none; color: #fff;
+  font-size: 13px; font-weight: 700;
   cursor: pointer; font-family: inherit; transition: var(--trans);
   white-space: nowrap; display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 16px rgba(139,92,246,.3);
 }
-.activate-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+.activate-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(139,92,246,.4); }
 
-/* Secure strip */
-.secure-strip {
-  margin-top: 20px; padding: 12px 14px;
-  background: var(--bg-base); border: 1px solid var(--border);
+.code-hint {
+  margin-top: 14px; padding: 12px 14px;
+  background: rgba(251,191,36,.06); border: 1px solid rgba(251,191,36,.18);
   border-radius: var(--radius-md);
-  display: flex; align-items: center; gap: 8px;
   font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: flex-start; gap: 8px; line-height: 1.6;
 }
-.secure-strip i { color: var(--success); font-size: 14px; }
+.code-hint i { color: var(--gold-400); font-size: 14px; margin-top: 1px; flex-shrink: 0; }
 
-/* ═══ MULTIPLE COURSES GRID ════════════════════════════════════════════ */
+/* COURSES GRID */
 .courses-section-header {
   display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
 }
@@ -392,13 +323,11 @@ body {
   font-family: var(--font-display);
   font-size: 22px; font-weight: 800; color: var(--text-h);
 }
-
 .courses-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
-
 .course-grid-card {
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: var(--radius-xl); overflow: hidden;
@@ -413,7 +342,6 @@ body {
   opacity: 0; transition: var(--trans);
 }
 .course-grid-card:hover::before { opacity: 1; }
-
 .cgc-body { padding: 24px; }
 .cgc-title {
   font-family: var(--font-display);
@@ -429,19 +357,26 @@ body {
   margin-bottom: 16px;
 }
 .cgc-price span { font-size: 14px; color: var(--text-muted); }
-
-.enroll-btn {
-  width: 100%; padding: 11px 20px; border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
-  color: #fff; font-size: 13px; font-weight: 700;
-  border: none; cursor: pointer; font-family: inherit;
-  display: flex; align-items: center; justify-content: center; gap: 7px;
-  text-decoration: none; transition: var(--trans);
-  box-shadow: 0 4px 16px rgba(139,92,246,.3);
+.cgc-code-row { display: flex; gap: 8px; }
+.cgc-inp {
+  flex: 1; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 10px 12px; font-size: 13px; font-family: inherit;
+  transition: var(--trans);
 }
-.enroll-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(139,92,246,.4); }
+.cgc-inp:focus { outline: none; border-color: var(--accent); }
+.cgc-inp::placeholder { color: var(--text-muted); }
+.cgc-activate-btn {
+  padding: 10px 16px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  border: none; color: #fff;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: var(--trans);
+  white-space: nowrap; display: flex; align-items: center; gap: 5px;
+  box-shadow: 0 3px 12px rgba(139,92,246,.3);
+}
+.cgc-activate-btn:hover { transform: translateY(-1px); }
 
-/* stagger */
 .course-grid-card:nth-child(1) { animation-delay: .0s; }
 .course-grid-card:nth-child(2) { animation-delay: .07s; }
 .course-grid-card:nth-child(3) { animation-delay: .14s; }
@@ -449,7 +384,7 @@ body {
 .course-grid-card:nth-child(5) { animation-delay: .28s; }
 .course-grid-card:nth-child(6) { animation-delay: .35s; }
 
-/* ═══ EMPTY STATE ══════════════════════════════════════════════════════ */
+/* EMPTY STATE */
 .empty-state {
   text-align: center; padding: 60px 24px;
   background: var(--bg-card); border: 1px solid var(--border);
@@ -464,9 +399,9 @@ body {
 }
 @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .empty-state h3 { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-h); margin-bottom: 8px; }
-.empty-state p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+.empty-state p { font-size: 14px; color: var(--text-muted); }
 
-/* ═══ TOAST ════════════════════════════════════════════════════════════ */
+/* TOAST */
 .toast-wrap {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
   z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
@@ -481,15 +416,7 @@ body {
 .toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
 .toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
 
-/* ═══ SPINNER ══════════════════════════════════════════════════════════ */
-.spinner {
-  width: 14px; height: 14px; border: 2px solid transparent;
-  border-top-color: currentColor; border-radius: 50%;
-  animation: spin .7s linear infinite; display: inline-block;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ═══ FOOTER ═══════════════════════════════════════════════════════════ */
+/* FOOTER */
 .site-footer {
   background: var(--bg-panel);
   border-top: 1px solid var(--border);
@@ -507,20 +434,15 @@ body {
   display: flex; justify-content: center; gap: 20px;
   flex-wrap: wrap; margin-bottom: 16px;
 }
-.footer-links a {
-  font-size: 13px; color: var(--text-muted); text-decoration: none;
-  transition: var(--trans);
-}
+.footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: var(--trans); }
 .footer-links a:hover { color: var(--accent); }
 .footer-copy { font-size: 12px; color: var(--text-muted); }
 
-/* ═══ ANIMATIONS ═══════════════════════════════════════════════════════ */
 @keyframes cardReveal {
   from { opacity: 0; transform: translateY(24px) scale(.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ═══ MOBILE ════════════════════════════════════════════════════════════ */
 .mobile-nav-toggle { display: none; }
 @media (max-width: 768px) {
   .topbar-nav { display: none; }
@@ -533,11 +455,10 @@ body {
 </head>
 <body>
 
-<!-- ═══ TOPBAR ═══════════════════════════════════════════════════════════ -->
+<!-- TOPBAR -->
 <header class="topbar">
   <a href="/" class="topbar-logo">Eduvia</a>
   <div class="topbar-sep"></div>
-
   <nav class="topbar-nav">
     <a href="/">Home</a>
     <a href="/courses/">Courses</a>
@@ -556,7 +477,6 @@ body {
       <a href="/accounts/register/">Login</a>
     {% endif %}
   </nav>
-
   <div class="topbar-actions">
     {% if user.is_authenticated and user.courses_profile %}
     <div class="coins-pill">
@@ -573,27 +493,24 @@ body {
   </div>
 </header>
 
-<!-- ═══ PAGE WRAP ════════════════════════════════════════════════════════ -->
 <div class="page-wrap">
 
-  <!-- Hero -->
   <section class="page-hero">
     <div class="page-hero-eyebrow">
-      <i class="fas fa-lock"></i>
-      <span data-i18n="secure_checkout">Secure Checkout</span>
+      <i class="fas fa-key"></i>
+      <span data-i18n="enroll_heading">Course Enrollment</span>
     </div>
-    <h1 data-i18n="checkout_title">Course Checkout</h1>
-    <p data-i18n="checkout_sub">Secure your learning journey today.</p>
+    <h1 data-i18n="checkout_title">Activate Your Course</h1>
+    <p data-i18n="checkout_sub">Use your enrollment code to access the course instantly.</p>
   </section>
 
-  <!-- Main -->
   <main class="page-main">
 
     {% if course %}
-    <!-- ══ Single Course Checkout ══ -->
+    <!-- Single Course -->
     <div class="checkout-grid">
 
-      <!-- Left: Course Summary -->
+      <!-- Course Info -->
       <div class="course-summary-card">
         <div class="cs-badge">
           <i class="fas fa-graduation-cap"></i>
@@ -629,35 +546,17 @@ body {
         </div>
       </div>
 
-      <!-- Right: Payment Panel -->
+      <!-- Activation Code Panel -->
       <div class="payment-panel">
         <div class="payment-panel-head">
-          <div class="payment-panel-icon"><i class="fas fa-credit-card"></i></div>
+          <div class="payment-panel-icon"><i class="fas fa-key"></i></div>
           <div>
-            <div class="payment-panel-title" data-i18n="payment_options">Payment Options</div>
-            <div class="payment-panel-sub" data-i18n="choose_method">Choose your preferred method</div>
+            <div class="payment-panel-title" data-i18n="activation_title">Enrollment Code</div>
+            <div class="payment-panel-sub" data-i18n="activation_sub">Enter your code to get instant access</div>
           </div>
         </div>
 
         <div class="payment-panel-body">
-          <!-- Pay with card -->
-          <button class="pay-btn" id="pay-btn" onclick="proceedPaymob({{ course.id }})">
-            <i class="fas fa-lock"></i>
-            <span data-i18n="proceed_payment">Proceed to Payment</span>
-          </button>
-
-          <!-- Secure badge -->
-          <div class="secure-strip">
-            <i class="fas fa-shield-alt"></i>
-            <span data-i18n="secure_encrypted">256-bit SSL encrypted · Your data is safe</span>
-          </div>
-
-          <!-- Divider -->
-          <div class="panel-divider">
-            <span data-i18n="or_activate">or activate with code</span>
-          </div>
-
-          <!-- Enrollment Code -->
           <div class="code-section">
             <h4>
               <i class="fas fa-key" style="color:var(--gold-400);"></i>
@@ -671,15 +570,18 @@ body {
                 <span data-i18n="activate">Activate</span>
               </button>
             </div>
+            <div class="code-hint">
+              <i class="fas fa-info-circle"></i>
+              <span data-i18n="code_hint">Contact your instructor or administrator to get an enrollment code for this course.</span>
+            </div>
           </div>
         </div>
       </div>
 
     </div>
-    {# /checkout-grid #}
 
     {% else %}
-    <!-- ══ Multiple Courses Listing ══ -->
+    <!-- Multiple Courses -->
     <div class="courses-section-header">
       <i class="fas fa-book-open" style="color:var(--accent);font-size:22px;"></i>
       <h2 data-i18n="available_courses">Available Courses</h2>
@@ -693,10 +595,14 @@ body {
           <div class="cgc-title">{{ c.title }}</div>
           <div class="cgc-desc">{{ c.description|truncatewords:20 }}</div>
           <div class="cgc-price">{{ c.price }} <span>EGP</span></div>
-          <a href="/api/marketplace/checkout/?course_id={{ c.id }}" class="enroll-btn">
-            <i class="fas fa-play-circle"></i>
-            <span data-i18n="enroll_now">Enroll Now</span>
-          </a>
+          <div class="cgc-code-row">
+            <input class="cgc-inp" type="text" id="code-{{ c.id }}"
+                   placeholder="Enrollment code…" maxlength="64">
+            <button class="cgc-activate-btn" onclick="activateCode({{ c.id }}, 'code-{{ c.id }}')">
+              <i class="fas fa-bolt"></i>
+              <span data-i18n="activate">Activate</span>
+            </button>
+          </div>
         </div>
       </div>
       {% endfor %}
@@ -713,7 +619,6 @@ body {
 
   </main>
 
-  <!-- Footer -->
   <footer class="site-footer">
     <span class="footer-logo">Eduvia</span>
     <div class="footer-links">
@@ -726,41 +631,46 @@ body {
     <p class="footer-copy" data-i18n="footer_copy">© 2025 Eduvia and creativitycode. All rights reserved.</p>
   </footer>
 
-</div><!-- /page-wrap -->
+</div>
 
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
-/* ── i18n ─────────────────────────────────────────────────────────── */
 const I18N = {
   en: {
-    secure_checkout:'Secure Checkout', checkout_title:'Course Checkout',
-    checkout_sub:'Secure your learning journey today.',
-    course_enrollment:'Course Enrollment', proceed_payment:'Proceed to Payment',
-    secure_encrypted:'256-bit SSL encrypted · Your data is safe',
-    or_activate:'or activate with code',
-    enroll_code_title:'Activation Code', activate:'Activate',
+    enroll_heading:'Course Enrollment',
+    checkout_title:'Activate Your Course',
+    checkout_sub:'Use your enrollment code to access the course instantly.',
+    course_enrollment:'Course Enrollment',
+    activation_title:'Enrollment Code',
+    activation_sub:'Enter your code to get instant access',
+    enroll_code_title:'Activation Code',
+    activate:'Activate',
+    code_hint:'Contact your instructor or administrator to get an enrollment code for this course.',
     lifetime_access:'Lifetime access to course materials',
-    cert_access:'Certificate of completion', hd_video:'HD video lessons',
-    mobile_access:'Access on any device', payment_options:'Payment Options',
-    choose_method:'Choose your preferred method',
-    available_courses:'Available Courses', enroll_now:'Enroll Now',
+    cert_access:'Certificate of completion',
+    hd_video:'HD video lessons',
+    mobile_access:'Access on any device',
+    available_courses:'Available Courses',
     no_courses_title:'No Courses Available',
     no_courses_sub:'No courses available at the moment. Check back soon!',
     footer_copy:'© 2025 Eduvia and creativitycode. All rights reserved.',
   },
   ar: {
-    secure_checkout:'دفع آمن', checkout_title:'إتمام الشراء',
-    checkout_sub:'ابدأ رحلة تعلمك اليوم.',
-    course_enrollment:'تسجيل في الكورس', proceed_payment:'المتابعة للدفع',
-    secure_encrypted:'مشفر بـ 256-bit SSL · بياناتك في أمان',
-    or_activate:'أو فعّل بكود',
-    enroll_code_title:'كود التفعيل', activate:'تفعيل',
+    enroll_heading:'التسجيل في الكورس',
+    checkout_title:'فعّل كورسك',
+    checkout_sub:'استخدم كود التسجيل للوصول الفوري للكورس.',
+    course_enrollment:'تسجيل في الكورس',
+    activation_title:'كود التسجيل',
+    activation_sub:'أدخل الكود للوصول الفوري',
+    enroll_code_title:'كود التفعيل',
+    activate:'تفعيل',
+    code_hint:'تواصل مع المحاضر أو الإدارة للحصول على كود التسجيل.',
     lifetime_access:'وصول مدى الحياة للمحتوى',
-    cert_access:'شهادة إتمام', hd_video:'فيديوهات HD',
-    mobile_access:'الوصول من أي جهاز', payment_options:'طرق الدفع',
-    choose_method:'اختر طريقة الدفع المناسبة',
-    available_courses:'الكورسات المتاحة', enroll_now:'سجّل الآن',
+    cert_access:'شهادة إتمام',
+    hd_video:'فيديوهات HD',
+    mobile_access:'الوصول من أي جهاز',
+    available_courses:'الكورسات المتاحة',
     no_courses_title:'لا توجد كورسات متاحة',
     no_courses_sub:'لا توجد كورسات حالياً. تحقق لاحقاً!',
     footer_copy:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
@@ -781,7 +691,6 @@ function applyLang(lang) {
 }
 function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
 
-/* ── Theme ───────────────────────────────────────────────────────── */
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
@@ -791,7 +700,6 @@ function toggleTheme() {
   applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 }
 
-/* ── Toast ───────────────────────────────────────────────────────── */
 function toast(msg, type = 'info', dur = 3200) {
   const wrap = document.getElementById('toast-wrap');
   const el = document.createElement('div');
@@ -799,32 +707,21 @@ function toast(msg, type = 'info', dur = 3200) {
   const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
   el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
   wrap.appendChild(el);
-  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(() => el.remove(), 350); }, dur);
+  setTimeout(() => {
+    el.style.opacity = '0'; el.style.transition = 'opacity .3s';
+    setTimeout(() => el.remove(), 350);
+  }, dur);
 }
 
-/* ── API ─────────────────────────────────────────────────────────── */
 function csrfToken() { return '{{ csrf_token }}'; }
 
-/* ── Paymob ─────────────────────────────────────────────────────── */
-async function proceedPaymob(courseId) {
-  const btn = document.getElementById('pay-btn');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Processing…'; }
-  try {
-    const r = await fetch(`/api/marketplace/courses/${courseId}/checkout/paymob/`, {
-      method: 'POST',
-      headers: { 'X-CSRFToken': csrfToken() }
-    });
-    const data = await r.json();
-    if (r.ok && data.redirect_url) { window.location.href = data.redirect_url; return; }
-    toast(data.detail || 'Failed to start payment.', 'error');
-  } catch (e) { toast('Network error. Please try again.', 'error'); }
-  if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Payment'; }
-}
-
-/* ── Activate Code ───────────────────────────────────────────────── */
-async function activateCode(courseId) {
-  const code = document.getElementById('enroll-code').value.trim();
-  if (!code) { toast(currentLang === 'ar' ? 'أدخل الكود أولاً.' : 'Please enter an enrollment code.', 'error'); return; }
+async function activateCode(courseId, inputId = 'enroll-code') {
+  const input = document.getElementById(inputId);
+  const code = input ? input.value.trim() : '';
+  if (!code) {
+    toast(currentLang === 'ar' ? 'أدخل الكود أولاً.' : 'Please enter an enrollment code.', 'error');
+    return;
+  }
   try {
     const r = await fetch(`/api/marketplace/courses/${courseId}/activate-code/`, {
       method: 'POST',
@@ -837,11 +734,12 @@ async function activateCode(courseId) {
       return;
     }
     const err = await r.json();
-    toast(err.detail || 'Invalid code.', 'error');
-  } catch (e) { toast('Network error.', 'error'); }
+    toast(err.detail || (currentLang === 'ar' ? 'كود غير صحيح.' : 'Invalid code.'), 'error');
+  } catch (e) {
+    toast(currentLang === 'ar' ? 'خطأ في الاتصال.' : 'Network error.', 'error');
+  }
 }
 
-/* ── Init ────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('theme') || 'dark');
   applyLang(localStorage.getItem('lang') || 'en');

@@ -1,247 +1,865 @@
 {% load static i18n widget_tweaks projects_filters %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- 🔍 SEO -->
-  <title data-translate="page-title">Add New Task for Project: {{ project.title|default:"Project" }} - Eduvia</title>
-  <meta name="description" content="Add a new task for project '{{ project.title|default:"Project" }}' on Eduvia. Specify task details, rewards, and assign students.">
-  <meta name="keywords" content="{{ project.title|default:"Project" }}, Eduvia, add task, project management, open source collaboration, task creation">
+  <title data-translate="page-title">Add New Task — {{ project.title|default:"Project" }} | Eduvia</title>
+  <meta name="description" content="Add a new task for project '{{ project.title|default:"Project" }}' on Eduvia.">
+  <meta name="keywords" content="{{ project.title|default:"Project" }}, Eduvia, add task, project management">
   <meta name="author" content="Eduvia">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eduvia-ai.fly.dev/projects/project/add/">
 
   <!-- 🌍 Open Graph -->
   <meta property="og:title" content="Add New Task for {{ project.title|default:"Project" }} - Eduvia">
-  <meta property="og:description" content="Add a new task for '{{ project.title|default:"Project" }}' on Eduvia. Specify task details, rewards, and assign students.">
+  <meta property="og:description" content="Add a new task for '{{ project.title|default:"Project" }}' on Eduvia.">
   <meta property="og:image" content="https://i.postimg.cc/BQVwF0Wc/projects6.jpg">
   <meta property="og:url" content="https://eduvia-ai.fly.dev/projects/project/add/">
   <meta property="og:type" content="website">
-
-  <!-- 🐦 Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Add New Task for {{ project.title|default:"Project" }} - Eduvia">
-  <meta name="twitter:description" content="Add a new task for '{{ project.title|default:"Project" }}' on Eduvia. Specify task details, rewards, and assign students.">
-  <meta name="twitter:image" content="https://i.postimg.cc/BQVwF0Wc/projects6.jpg">
 
   <!-- 🖼️ Favicon -->
   <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
   <!-- 🌐 Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 🎨 Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'projects/add_task.css' %}">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (same as lesson_view)
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- 🖼️ Hero Background -->
-  <style>
-    :root {
-      --hero-bg-image: url("https://i.postimg.cc/BQVwF0Wc/projects6.jpg");
-    }
-  </style>
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-  <!-- 📊 Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://eduvia-ai.fly.dev/#organization",
-        "name": "Eduvia",
-        "url": "https://eduvia-ai.fly.dev",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-        },
-        "sameAs": [
-          "https://www.facebook.com/share/18iRSctdxN/",
-          "https://x.com/Eduvia7",
-          "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-        ]
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://eduvia-ai.fly.dev/projects/project/add/#webpage",
-        "url": "https://eduvia-ai.fly.dev/projects/project/add/",
-        "name": "Add New Task for {{ project.title|default:"Project" }} - Eduvia",
-        "description": "Add a new task for project '{{ project.title|default:"Project" }}' on Eduvia. Specify task details, rewards, and assign students.",
-        "breadcrumb": {
-          "@id": "https://eduvia-ai.fly.dev/projects/project/add/#breadcrumb"
-        },
-        "inLanguage": "en"
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://eduvia-ai.fly.dev/projects/project/add/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Eduvia",
-            "item": "https://eduvia-ai.fly.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Projects",
-            "item": "https://eduvia-ai.fly.dev/projects/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Add New Task",
-            "item": "https://eduvia-ai.fly.dev/projects/project/add/"
-          }
-        ]
-      }
-    ]
-  }
-  </script>
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+  display: flex;
+  flex-direction: column;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  overflow: hidden; white-space: nowrap;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .bc-sep { color: var(--text-muted); opacity: .4; font-size: 10px; }
+.topbar-breadcrumb .bc-current { color: var(--text-p); overflow: hidden; text-overflow: ellipsis; }
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ── Mobile nav ── */
+.mobile-menu-btn {
+  display: none; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 16px;
+  align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); flex-shrink: 0;
+}
+.mobile-menu-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.nav-dropdown {
+  position: fixed; top: var(--topbar-h); right: 0; left: 0;
+  background: rgba(8,11,20,.97); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 0;
+  padding: 8px 0; z-index: 599;
+  transform: translateY(-100%); opacity: 0; pointer-events: none;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="light"] .nav-dropdown { background: rgba(255,255,255,.97); }
+.nav-dropdown.open { transform: translateY(0); opacity: 1; pointer-events: all; }
+.nav-dropdown a {
+  padding: 12px 24px; font-size: 14px; font-weight: 500;
+  color: var(--text-p); text-decoration: none;
+  border-bottom: 1px solid var(--border); transition: var(--trans);
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-dropdown a:hover { background: var(--bg-card); color: var(--accent); }
+.nav-dropdown .coins-display-mobile {
+  padding: 12px 24px; font-size: 14px; color: var(--gold-400);
+  display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border);
+}
+
+/* Desktop nav links */
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-links a {
+  padding: 6px 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.nav-links a:hover { color: var(--text-p); background: var(--bg-card); }
+.coins-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 4px 10px; font-size: 12px;
+  color: var(--gold-400); font-weight: 600;
+}
+
+/* ═══ MAIN LAYOUT ════════════════════════════════════════════════════════ */
+.page-wrap {
+  flex: 1; padding-top: var(--topbar-h);
+  display: flex; flex-direction: column;
+}
+
+/* ═══ HERO STRIP ═════════════════════════════════════════════════════════ */
+.hero-strip {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 28px;
+  position: relative; overflow: hidden;
+}
+.hero-strip::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.12), transparent 70%);
+  pointer-events: none;
+}
+.hero-strip::after {
+  content: '\f0ae'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+  position: absolute; bottom: -20px; right: 24px;
+  font-size: 110px; color: rgba(139,92,246,.04); pointer-events: none;
+}
+.hero-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 4px 12px; font-size: 11px;
+  font-weight: 700; letter-spacing: .4px; color: var(--violet-400);
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800; color: var(--text-h);
+  line-height: 1.2; letter-spacing: -.5px; margin-bottom: 8px;
+}
+.hero-title span { color: var(--accent); }
+.hero-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ═══ FORM AREA ══════════════════════════════════════════════════════════ */
+.form-area {
+  flex: 1; background: var(--bg-panel); padding: 40px 28px 80px;
+}
+.form-inner { max-width: 820px; margin: 0 auto; }
+
+/* ── Section heading ── */
+.form-section-title {
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .8px;
+  display: flex; align-items: center; gap: 8px;
+  margin: 28px 0 16px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+.form-section-title:first-child { margin-top: 0; }
+
+/* ── Alert ── */
+.alert {
+  border-radius: var(--radius-md); padding: 14px 18px;
+  font-size: 14px; margin-bottom: 20px;
+  display: flex; align-items: flex-start; gap: 10px;
+  animation: fadeIn .3s ease;
+}
+.alert-info    { background: rgba(56,189,248,.08); color: var(--sky-400); border: 1px solid rgba(56,189,248,.2); }
+.alert-danger  { background: rgba(251,113,133,.08); color: var(--danger); border: 1px solid rgba(251,113,133,.2); }
+.alert-success { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.alert ul { margin: 0; padding-left: 18px; }
+.alert ul li { margin-top: 4px; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Card wrapper for form ── */
+.form-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 32px;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Field group ── */
+.field-group {
+  margin-bottom: 20px;
+}
+.field-group label {
+  display: block; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: .5px; margin-bottom: 7px;
+}
+.field-group label .req { color: var(--danger); margin-left: 2px; }
+
+/* ── Input styles ── */
+.field-inp,
+.field-select,
+.field-textarea,
+input[type="text"].form-control,
+input[type="url"].form-control,
+input[type="number"].form-control,
+input[type="date"].form-control,
+input[type="datetime-local"].form-control,
+select.form-control,
+textarea.form-control {
+  width: 100%; background: var(--bg-base);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-p); padding: 12px 14px;
+  font-size: 14px; font-family: var(--font-body);
+  transition: var(--trans); outline: none;
+  -webkit-appearance: none; appearance: none;
+}
+.field-inp:focus,
+.field-select:focus,
+.field-textarea:focus,
+input[type="text"].form-control:focus,
+input[type="url"].form-control:focus,
+input[type="number"].form-control:focus,
+input[type="date"].form-control:focus,
+input[type="datetime-local"].form-control:focus,
+select.form-control:focus,
+textarea.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+  color: var(--text-h);
+}
+.field-inp::placeholder,
+.field-textarea::placeholder,
+input.form-control::placeholder,
+textarea.form-control::placeholder { color: var(--text-muted); }
+
+select.form-control,
+.field-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6585' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  padding-right: 36px; cursor: pointer;
+}
+select.form-control option, .field-select option { background: var(--bg-card); color: var(--text-p); }
+
+textarea.form-control, .field-textarea { resize: vertical; min-height: 120px; line-height: 1.65; }
+
+[data-theme="light"] .field-inp,
+[data-theme="light"] .field-select,
+[data-theme="light"] .field-textarea,
+[data-theme="light"] input.form-control,
+[data-theme="light"] select.form-control,
+[data-theme="light"] textarea.form-control {
+  background: #fff; color: var(--text-p);
+}
+[data-theme="light"] select.form-control option { background: #fff; }
+
+/* ── Multi-select ── */
+select[multiple].form-control {
+  background-image: none; padding-right: 14px;
+  min-height: 120px; cursor: pointer;
+}
+select[multiple].form-control option { padding: 8px 10px; border-radius: 4px; margin: 1px 0; }
+select[multiple].form-control option:checked { background: var(--violet-glow); color: var(--violet-400); }
+
+/* ── Field help text ── */
+.field-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+.field-error { font-size: 12px; color: var(--danger); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+
+/* ── Row layout for 2-col fields ── */
+.field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 640px) { .field-row-2 { grid-template-columns: 1fr; } }
+
+/* ── Priority indicator ── */
+.priority-select-wrap { position: relative; }
+.priority-dot {
+  position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+  width: 8px; height: 8px; border-radius: 50%; pointer-events: none;
+}
+.priority-dot.high   { background: var(--danger); }
+.priority-dot.medium { background: var(--warning); }
+.priority-dot.low    { background: var(--success); }
+
+/* ── Reward cards ── */
+.reward-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+@media (max-width: 580px) { .reward-grid { grid-template-columns: 1fr; } }
+
+.reward-card {
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px;
+  transition: var(--trans);
+}
+.reward-card:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
+.reward-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.reward-icon {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.reward-icon.xp   { background: rgba(139,92,246,.12); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.reward-icon.coin { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+.reward-label { font-size: 12px; font-weight: 700; color: var(--text-h); text-transform: uppercase; letter-spacing: .4px; }
+.reward-card input { border-radius: var(--radius-sm); }
+
+/* ── Submit row ── */
+.submit-row {
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  padding-top: 24px; border-top: 1px solid var(--border); margin-top: 8px;
+}
+
+.btn-primary-action {
+  padding: 13px 32px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: var(--font-display); letter-spacing: -.2px;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.btn-primary-action::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.btn-primary-action:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+.btn-secondary-action {
+  padding: 13px 24px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  background: var(--bg-card-2); color: var(--text-p);
+  border: 1px solid var(--border); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); font-family: inherit;
+}
+.btn-secondary-action:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--bg-panel); border-top: 1px solid var(--border);
+  padding: 24px 28px; text-align: center;
+}
+.footer-inner { max-width: 820px; margin: 0 auto; }
+.footer-logo {
+  font-family: var(--font-display); font-size: 18px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 8px; display: inline-block;
+}
+.footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 12px; }
+.footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer-links a:hover { color: var(--accent); }
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-copy a { color: var(--accent); text-decoration: none; }
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ MOBILE ════════════════════════════════════════════════════════════ */
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .coins-pill { display: none; }
+  .mobile-menu-btn { display: flex; }
+}
+@media (max-width: 640px) {
+  .form-area { padding: 24px 14px 60px; }
+  .form-card { padding: 20px 16px; }
+  .hero-strip { padding: 24px 14px; }
+  .hero-title { font-size: 22px; }
+  .topbar { padding: 0 14px; gap: 8px; }
+  .topbar-breadcrumb { display: none; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins|default:0 }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Add New Task for Project: {{ project.title|default:"Project" }}</h1>
-        <p data-translate="hero-desc">Create a new task for the project '{{ project.title|default:"Project" }}'.</p>
-        <a href="{% url 'projects:project_details' project.id project.title|custom_slugify|default:"project" %}" class="btn" data-translate="back-btn">Back to Project Details</a>
-    </section>
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <nav class="topbar-breadcrumb">
+    <a href="/projects/"><i class="fas fa-folder-open" style="font-size:11px;"></i> Projects</a>
+    <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
+    <a href="{% url 'projects:project_details' project.id project.title|custom_slugify|default:'project' %}">{{ project.title|default:"Project"|truncatechars:22 }}</a>
+    <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
+    <span class="bc-current">Add Task</span>
+  </nav>
 
-    <!-- Content Container -->
-    <div class="content-container">
-        <h1 data-translate="content-title">Add New Task for Project: {{ project.title|default:"Project" }}</h1>
+  <!-- Desktop nav links -->
+  <nav class="nav-links">
+    <a href="/">Home</a>
+    <a href="/courses/">Courses</a>
+    <a href="/chatbot/">Chatbot</a>
+    <a href="/competitions/">Competitions</a>
+    <a href="/performance/dashboard/">Performance</a>
+    <a href="/about/">About</a>
+    <a href="/contact_us/">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/">Profile</a>
+      <a href="/accounts/logout/">Logout</a>
+    {% else %}
+      <a href="/accounts/register/">Login</a>
+    {% endif %}
+  </nav>
 
-        {% if messages %}
-            <div class="alert alert-info" role="alert">
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            </div>
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-pill">
+      <i class="fas fa-coins"></i>
+      {{ user.courses_profile.coins|default:0 }}
+    </div>
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobile-menu-btn">
+      <i class="fas fa-bars" id="hamburger-icon"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile dropdown nav -->
+<nav class="nav-dropdown" id="nav-dropdown">
+  <a href="/"><i class="fas fa-home"></i> Home</a>
+  <a href="/courses/"><i class="fas fa-book"></i> Courses</a>
+  <a href="/chatbot/"><i class="fas fa-robot"></i> Chatbot</a>
+  <a href="/competitions/"><i class="fas fa-trophy"></i> Competitions</a>
+  <a href="/performance/dashboard/"><i class="fas fa-chart-line"></i> Performance</a>
+  <a href="/about/"><i class="fas fa-info-circle"></i> About</a>
+  <a href="/contact_us/"><i class="fas fa-envelope"></i> Contact</a>
+  {% if user.is_authenticated %}
+    {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    {% endif %}
+    <a href="/accounts/profile/"><i class="fas fa-user"></i> Profile</a>
+    <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    {% if user.courses_profile %}
+    <div class="coins-display-mobile">
+      <i class="fas fa-coins"></i>
+      Coins: {{ user.courses_profile.coins|default:0 }}
+    </div>
+    {% endif %}
+  {% else %}
+    <a href="/accounts/register/"><i class="fas fa-sign-in-alt"></i> Login</a>
+  {% endif %}
+</nav>
+
+<!-- ── PAGE WRAP ────────────────────────────────────────────────────────── -->
+<div class="page-wrap">
+
+  <!-- ── HERO STRIP ────────────────────────────────────────────────────── -->
+  <section class="hero-strip">
+    <div class="hero-inner">
+      <div class="hero-badge"><i class="fas fa-tasks"></i> Task Management</div>
+      <h1 class="hero-title">
+        Add Task to <span>{{ project.title|default:"Project"|truncatechars:30 }}</span>
+      </h1>
+      <p class="hero-sub">Create a new task with rewards, priority, and student assignments.</p>
+      <div class="hero-actions">
+        <a href="{% url 'projects:project_details' project.id project.title|custom_slugify|default:'project' %}"
+           class="tb-btn tb-btn-ghost">
+          <i class="fas fa-arrow-left"></i> Back to Project
+        </a>
+        <a href="/projects/" class="tb-btn tb-btn-ghost">
+          <i class="fas fa-folder-open"></i> All Projects
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FORM AREA ──────────────────────────────────────────────────────── -->
+  <div class="form-area">
+    <div class="form-inner">
+
+      {% if messages %}
+      <div class="alert alert-info" role="alert">
+        <i class="fas fa-info-circle" style="margin-top:2px;flex-shrink:0;"></i>
+        <div>{% for message in messages %}{{ message }}{% endfor %}</div>
+      </div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" class="task-form" novalidate>
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+          <i class="fas fa-exclamation-circle" style="margin-top:2px;flex-shrink:0;"></i>
+          <ul>
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <li><strong>{{ field }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data" class="task-form needs-validation" novalidate>
-            {% csrf_token %}
+        <div class="form-card">
 
-            <!-- Display form errors if any -->
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                    <ul>
-                        {% for field, errors in form.errors.items %}
-                            {% for error in errors %}
-                                <li>{{ field }}: {{ error }}</li>
-                            {% endfor %}
-                        {% endfor %}
-                    </ul>
-                </div>
+          <!-- ── Basic Info ── -->
+          <div class="form-section-title">
+            <i class="fas fa-pencil-alt"></i> Task Details
+          </div>
+
+          <div class="field-group">
+            <label for="{{ form.title.id_for_label }}">
+              Task Title <span class="req">*</span>
+            </label>
+            {{ form.title|add_class:"form-control"|attr:"placeholder:e.g. Implement user authentication" }}
+            {% if form.title.errors %}
+              <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ form.title.errors|join:", " }}</div>
             {% endif %}
+          </div>
 
-            <!-- Form fields -->
-            <div class="mb-3">
-                <label for="{{ form.title.id_for_label }}" class="form-label" data-translate="title-label">Task Title</label>
-                {{ form.title|add_class:"form-control" }}
-                <div class="invalid-feedback" data-translate="title-invalid">Please enter a title for the task.</div>
-            </div>
+          <div class="field-group">
+            <label for="{{ form.description.id_for_label }}">
+              Description <span class="req">*</span>
+            </label>
+            {{ form.description|add_class:"form-control"|attr:"placeholder:Describe what needs to be done, acceptance criteria, and any relevant notes…" }}
+            {% if form.description.errors %}
+              <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ form.description.errors|join:", " }}</div>
+            {% endif %}
+          </div>
 
-            <div class="mb-3">
-                <label for="{{ form.description.id_for_label }}" class="form-label" data-translate="desc-label">Description</label>
-                {{ form.description|add_class:"form-control" }}
-                <div class="invalid-feedback" data-translate="desc-invalid">Please enter a description for the task.</div>
+          <div class="field-row-2">
+            <div class="field-group">
+              <label for="{{ form.issue_url.id_for_label }}">
+                Issue Link <span style="color:var(--text-muted);font-weight:400;">(optional)</span>
+              </label>
+              {{ form.issue_url|add_class:"form-control"|attr:"placeholder:https://github.com/…/issues/1" }}
+              {% if form.issue_url.errors %}
+                <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ form.issue_url.errors|join:", " }}</div>
+              {% endif %}
             </div>
+            <div class="field-group">
+              <label for="{{ form.due_date.id_for_label }}">
+                Due Date <span style="color:var(--text-muted);font-weight:400;">(optional)</span>
+              </label>
+              {{ form.due_date|add_class:"form-control" }}
+              {% if form.due_date.errors %}
+                <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ form.due_date.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
 
-            <div class="mb-3">
-                <label for="{{ form.issue_url.id_for_label }}" class="form-label" data-translate="issue-label">Issue Link (Optional)</label>
-                {{ form.issue_url|add_class:"form-control" }}
-            </div>
+          <!-- ── Priority ── -->
+          <div class="form-section-title" style="margin-top:24px;">
+            <i class="fas fa-flag"></i> Priority & Rewards
+          </div>
 
-            <div class="mb-3">
-                <label for="{{ form.priority.id_for_label }}" class="form-label" data-translate="priority-label">Priority</label>
-                {{ form.priority|add_class:"form-control" }}
+          <div class="field-group">
+            <label for="{{ form.priority.id_for_label }}">Priority Level</label>
+            <div class="priority-select-wrap">
+              {{ form.priority|add_class:"form-control"|attr:"id:priority-select" }}
+              <div class="priority-dot" id="priority-dot"></div>
             </div>
+            {% if form.priority.errors %}
+              <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ form.priority.errors|join:", " }}</div>
+            {% endif %}
+          </div>
 
-            <div class="mb-3">
-                <label for="{{ form.xp_reward.id_for_label }}" class="form-label" data-translate="xp-label">Experience Points (XP)</label>
-                {{ form.xp_reward|add_class:"form-control" }}
-                <div class="invalid-feedback" data-translate="xp-invalid">Please enter a valid value for experience points.</div>
+          <!-- Reward cards -->
+          <div class="reward-grid">
+            <div class="reward-card">
+              <div class="reward-card-header">
+                <div class="reward-icon xp"><i class="fas fa-star"></i></div>
+                <div class="reward-label">XP Reward</div>
+              </div>
+              {{ form.xp_reward|add_class:"form-control"|attr:"placeholder:100" }}
+              {% if form.xp_reward.errors %}
+                <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ form.xp_reward.errors|join:", " }}</div>
+              {% endif %}
+              <div class="field-hint"><i class="fas fa-info-circle"></i> Experience points awarded on completion</div>
             </div>
+            <div class="reward-card">
+              <div class="reward-card-header">
+                <div class="reward-icon coin"><i class="fas fa-coins"></i></div>
+                <div class="reward-label">Coins Reward</div>
+              </div>
+              {{ form.coins_reward|add_class:"form-control"|attr:"placeholder:50" }}
+              {% if form.coins_reward.errors %}
+                <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ form.coins_reward.errors|join:", " }}</div>
+              {% endif %}
+              <div class="field-hint"><i class="fas fa-info-circle"></i> Virtual coins awarded on completion</div>
+            </div>
+          </div>
 
-            <div class="mb-3">
-                <label for="{{ form.coins_reward.id_for_label }}" class="form-label" data-translate="coins-label">Coins</label>
-                {{ form.coins_reward|add_class:"form-control" }}
-                <div class="invalid-feedback" data-translate="coins-invalid">Please enter a valid value for coins.</div>
-            </div>
+          <!-- ── Assignment ── -->
+          <div class="form-section-title" style="margin-top:24px;">
+            <i class="fas fa-users"></i> Student Assignment
+          </div>
 
-            <div class="mb-3">
-                <label for="{{ form.due_date.id_for_label }}" class="form-label" data-translate="due-date-label">Due Date (Optional)</label>
-                {{ form.due_date|add_class:"form-control" }}
+          <div class="field-group">
+            <label for="{{ form.assigned_to.id_for_label }}">
+              Assign to Students <span style="color:var(--text-muted);font-weight:400;">(optional)</span>
+            </label>
+            {{ form.assigned_to|add_class:"form-control" }}
+            {% if form.assigned_to.errors %}
+              <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ form.assigned_to.errors|join:", " }}</div>
+            {% endif %}
+            <div class="field-hint">
+              <i class="fas fa-info-circle"></i>
+              Hold Ctrl / Cmd to select multiple students. Leave empty to make it open to all.
             </div>
+          </div>
 
-            <div class="mb-3">
-                <label for="{{ form.assigned_to.id_for_label }}" class="form-label" data-translate="assign-label">Assign to Students (Optional)</label>
-                {{ form.assigned_to|add_class:"form-control" }}
-                <small class="form-text text-muted" data-translate="assign-hint">Select the students you want to assign the task to.</small>
-            </div>
+          <!-- ── Submit ── -->
+          <div class="submit-row">
+            <button type="submit" class="btn-primary-action">
+              <i class="fas fa-plus-circle"></i> Add Task
+            </button>
+            <a href="{% url 'projects:project_details' project.id project.title|custom_slugify|default:'project' %}"
+               class="btn-secondary-action">
+              <i class="fas fa-times"></i> Cancel
+            </a>
+          </div>
 
-            <!-- Submit and Cancel buttons -->
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary" data-translate="submit-btn">Add Task</button>
-                <a href="{% url 'projects:project_details' project.id project.title|custom_slugify|default:"project" %}" class="btn btn-secondary" data-translate="cancel-btn">Cancel</a>
-            </div>
-        </form>
+        </div>{# /form-card #}
+      </form>
     </div>
+  </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        8<p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+</div>{# /page-wrap #}
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'projects/add_task.js' %}"></script>
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Eduvia</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/courses/">Courses</a>
+      <a href="/projects/">Projects</a>
+      <a href="/competitions/">Competitions</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact_us/">Contact</a>
+    </div>
+    <p class="footer-copy">© 2025 Eduvia & <a href="#">creativitycode</a>. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── Theme ──────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Lang ───────────────────────────────────────────────────────────── */
+let currentLang = localStorage.getItem('lang') || 'en';
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'ar' : 'en';
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', currentLang);
+  root.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+  localStorage.setItem('lang', currentLang);
+}
+
+/* ── Mobile menu ────────────────────────────────────────────────────── */
+function toggleMobileMenu() {
+  const dropdown = document.getElementById('nav-dropdown');
+  const icon = document.getElementById('hamburger-icon');
+  const open = dropdown.classList.toggle('open');
+  icon.className = open ? 'fas fa-times' : 'fas fa-bars';
+}
+document.addEventListener('click', e => {
+  const dd = document.getElementById('nav-dropdown');
+  const btn = document.getElementById('mobile-menu-btn');
+  if (dd && btn && !dd.contains(e.target) && !btn.contains(e.target)) {
+    dd.classList.remove('open');
+    document.getElementById('hamburger-icon').className = 'fas fa-bars';
+  }
+});
+
+/* ── Priority dot ───────────────────────────────────────────────────── */
+function updatePriorityDot() {
+  const sel = document.getElementById('priority-select');
+  const dot = document.getElementById('priority-dot');
+  if (!sel || !dot) return;
+  const val = (sel.value || '').toLowerCase();
+  dot.className = 'priority-dot';
+  if (val.includes('high')) dot.classList.add('high');
+  else if (val.includes('medium') || val.includes('med')) dot.classList.add('medium');
+  else if (val.includes('low')) dot.classList.add('low');
+}
+const pSel = document.getElementById('priority-select');
+if (pSel) { pSel.addEventListener('change', updatePriorityDot); updatePriorityDot(); }
+
+/* ── Toast ──────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(() => el.remove(), 350); }, dur);
+}
+
+/* ── Form validation feedback ───────────────────────────────────────── */
+document.querySelector('.task-form')?.addEventListener('submit', function(e) {
+  const title = this.querySelector('[name="title"]');
+  const desc  = this.querySelector('[name="description"]');
+  let valid = true;
+  [title, desc].forEach(f => {
+    if (f && !f.value.trim()) {
+      f.style.borderColor = 'var(--danger)';
+      f.style.boxShadow = '0 0 0 3px rgba(251,113,133,.12)';
+      valid = false;
+    } else if (f) {
+      f.style.borderColor = '';
+      f.style.boxShadow = '';
+    }
+  });
+  if (!valid) {
+    e.preventDefault();
+    toast('Please fill in all required fields.', 'error');
+  }
+});
+
+/* ── Init ───────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  if (localStorage.getItem('lang') === 'ar') toggleLang();
+});
+</script>
 </body>
 </html>
