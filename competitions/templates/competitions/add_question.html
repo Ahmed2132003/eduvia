@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static competition_filters competition_tags i18n %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,10 +32,7 @@
 
     <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
-    <link rel="stylesheet" href="{% static 'competitions/add_question.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- 📊 Structured Data -->
     <script type="application/ld+json">
@@ -62,127 +59,898 @@
                 "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/add_question/#webpage",
                 "url": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/add_question/",
                 "name": "Add Question | Eduvia",
-                "description": "Add new questions to educational competitions on the Eduvia platform to create engaging and interactive learning challenges for students!",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/add_question/#breadcrumb"
-                },
+                "description": "Add new questions to educational competitions on the Eduvia platform.",
                 "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/add_question/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Competitions",
-                        "item": "https://eduvia-ai.fly.dev/competitions/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "{{ competition.title }}",
-                        "item": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 4,
-                        "name": "Add Question",
-                        "item": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/add_question/"
-                    }
-                ]
             }
         ]
     }
     </script>
+
+    <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       DESIGN SYSTEM — "Obsidian Academy" (matches lesson_view.html)
+       ═══════════════════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:     #080b14;
+      --bg-panel:    #0d1120;
+      --bg-card:     #131929;
+      --bg-card-2:   #1a2236;
+      --bg-hover:    #1e2840;
+      --border:      rgba(120,130,180,.12);
+      --border-glow: rgba(139,92,246,.25);
+
+      --violet-400:  #a78bfa;
+      --violet-500:  #8b5cf6;
+      --violet-600:  #7c3aed;
+      --violet-glow: rgba(139,92,246,.18);
+      --gold-400:    #fbbf24;
+      --gold-300:    #fcd34d;
+      --emerald-400: #34d399;
+      --emerald-500: #10b981;
+      --rose-400:    #fb7185;
+      --sky-400:     #38bdf8;
+      --sky-500:     #0ea5e9;
+
+      --text-h:      #f1f5ff;
+      --text-p:      #94a3c4;
+      --text-muted:  #5a6585;
+
+      --accent:      var(--violet-500);
+      --accent-d:    var(--violet-600);
+      --success:     var(--emerald-400);
+      --warning:     var(--gold-400);
+      --danger:      var(--rose-400);
+      --info:        var(--sky-400);
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  18px;
+      --radius-xl:  24px;
+      --topbar-h:   62px;
+      --trans:      all .22s cubic-bezier(.4,0,.2,1);
+      --glow:       0 0 40px rgba(139,92,246,.15);
+
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --font-arabic:  'Cairo', sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg-base:     #f4f6fc;
+      --bg-panel:    #ffffff;
+      --bg-card:     #f8faff;
+      --bg-card-2:   #eef2fc;
+      --bg-hover:    #e8ecf8;
+      --border:      rgba(100,110,160,.14);
+      --border-glow: rgba(139,92,246,.3);
+      --text-h:      #0f172a;
+      --text-p:      #374365;
+      --text-muted:  #8896b3;
+      --violet-glow: rgba(139,92,246,.1);
+      --glow:        0 0 40px rgba(139,92,246,.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-base);
+      color: var(--text-p);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background .35s, color .35s;
+    }
+
+    [lang="ar"] body,
+    [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+    [lang="ar"] { direction: rtl; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+      height: var(--topbar-h);
+      background: rgba(8,11,20,.88);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 24px; gap: 16px;
+    }
+    [data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+    .topbar-logo {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 800;
+      background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px; flex-shrink: 0;
+      text-decoration: none;
+    }
+    .topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+    .topbar-course {
+      font-size: 13px; color: var(--text-muted);
+      flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    .ctrl-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-p); font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: var(--trans);
+    }
+    .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+    .tb-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: none; text-decoration: none; transition: var(--trans);
+      font-family: inherit;
+    }
+    .tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+    .tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .tb-btn-accent { background: var(--accent); color: #fff; }
+    .tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+    /* Hamburger / Nav links */
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .nav-link {
+      font-size: 13px; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; padding: 6px 10px; border-radius: var(--radius-sm);
+      transition: var(--trans); white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+    .nav-link.active { color: var(--accent); }
+
+    .coins-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 99px; padding: 4px 12px 4px 8px;
+      font-size: 12px; font-weight: 700; color: var(--text-h);
+    }
+    .coins-pill i { color: var(--gold-400); font-size: 13px; }
+
+    .hamburger {
+      display: none; background: none; border: none;
+      color: var(--text-p); font-size: 20px; cursor: pointer;
+      padding: 6px; border-radius: var(--radius-sm);
+      transition: var(--trans);
+    }
+    .hamburger:hover { color: var(--accent); background: var(--bg-card); }
+
+    /* Mobile nav drawer */
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none; flex-direction: column; align-items: flex-start;
+        position: fixed; top: var(--topbar-h); left: 0; right: 0;
+        background: var(--bg-panel); border-bottom: 1px solid var(--border);
+        padding: 16px 24px; gap: 4px; z-index: 599;
+        box-shadow: 0 8px 30px rgba(0,0,0,.3);
+      }
+      .nav-links.open { display: flex; }
+      .nav-link { width: 100%; padding: 10px 12px; font-size: 15px; }
+      .hamburger { display: flex; }
+      .topbar-course { display: none; }
+    }
+
+    /* ═══ PAGE WRAPPER ══════════════════════════════════════════════════════ */
+    .page-wrap {
+      padding-top: var(--topbar-h);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ═══ HERO ══════════════════════════════════════════════════════════════ */
+    .hero {
+      background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card-2) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 120%, rgba(139,92,246,.18), transparent);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--violet-glow); border: 1px solid var(--border-glow);
+      border-radius: 99px; padding: 5px 14px;
+      font-size: 11px; font-weight: 700; letter-spacing: .8px;
+      text-transform: uppercase; color: var(--violet-400);
+      margin-bottom: 16px;
+      animation: fadeSlideDown .6s ease both;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 36px; font-weight: 800;
+      color: var(--text-h); letter-spacing: -1px;
+      margin-bottom: 10px;
+      animation: fadeSlideDown .7s .1s ease both;
+    }
+    .hero-subtitle {
+      font-size: 15px; color: var(--text-muted);
+      max-width: 520px; margin: 0 auto;
+      line-height: 1.65;
+      animation: fadeSlideDown .7s .2s ease both;
+    }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══ MAIN CONTENT ══════════════════════════════════════════════════════ */
+    .content-wrap {
+      flex: 1;
+      background: var(--bg-panel);
+      padding: 40px 24px 80px;
+    }
+    .content-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* ═══ MESSAGES ══════════════════════════════════════════════════════════ */
+    .messages { margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
+    .msg {
+      padding: 13px 18px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .msg.success { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+    .msg.error   { background: rgba(251,113,133,.08); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+    .msg.info    { background: rgba(139,92,246,.08);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.2); }
+
+    /* ═══ FORM CARD ══════════════════════════════════════════════════════════ */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--glow);
+      animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(24px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .form-card-header {
+      padding: 22px 28px;
+      background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .form-card-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      background: var(--violet-glow); color: var(--violet-400);
+      border: 1px solid var(--border-glow); flex-shrink: 0;
+    }
+    .form-card-title {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 700; color: var(--text-h);
+    }
+    .form-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    .form-card-body { padding: 28px; }
+
+    /* ═══ FIELDS ════════════════════════════════════════════════════════════ */
+    .field-group { display: flex; flex-direction: column; gap: 20px; }
+
+    .field {
+      display: flex; flex-direction: column; gap: 7px;
+    }
+    .field-label {
+      font-size: 12px; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .field-label i { font-size: 11px; color: var(--accent); }
+    .field-required { color: var(--danger); font-size: 13px; }
+
+    .field-inp,
+    .field-select {
+      width: 100%;
+      background: var(--bg-base); border: 1.5px solid var(--border);
+      border-radius: var(--radius-md); color: var(--text-p);
+      padding: 13px 16px; font-size: 14px; font-family: inherit;
+      line-height: 1.5; transition: var(--trans);
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .field-inp::placeholder { color: var(--text-muted); }
+    .field-inp:focus,
+    .field-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+      color: var(--text-h);
+    }
+    .field-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6585' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px; cursor: pointer;
+    }
+    [lang="ar"] .field-select { background-position: left 14px center; padding-right: 16px; padding-left: 40px; }
+
+    .field-hint {
+      font-size: 12px; color: var(--text-muted);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .field-hint i { font-size: 11px; }
+
+    /* Number field row */
+    .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 500px) { .field-row-2 { grid-template-columns: 1fr; } }
+
+    /* Type selector cards */
+    .type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .type-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px; border-radius: var(--radius-md);
+      border: 1.5px solid var(--border); background: var(--bg-card-2);
+      cursor: pointer; transition: var(--trans); user-select: none;
+    }
+    .type-card:hover { border-color: var(--accent); background: var(--violet-glow); }
+    .type-card.selected {
+      border-color: var(--accent); background: var(--violet-glow);
+      box-shadow: 0 0 0 3px rgba(139,92,246,.15);
+    }
+    .type-card input[type="radio"] { display: none; }
+    .type-card-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+      background: var(--bg-card); border: 1px solid var(--border);
+      transition: var(--trans);
+    }
+    .type-card.selected .type-card-icon {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+    }
+    .type-card-label { font-size: 14px; font-weight: 600; color: var(--text-p); }
+    .type-card.selected .type-card-label { color: var(--text-h); }
+    .type-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Points badge */
+    .points-preview {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2);
+      border-radius: 99px; padding: 4px 12px;
+      font-size: 12px; font-weight: 700; color: var(--gold-400);
+    }
+
+    /* ═══ FORM FOOTER ════════════════════════════════════════════════════════ */
+    .form-card-footer {
+      padding: 20px 28px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+
+    .submit-btn {
+      padding: 13px 32px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+      background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+      color: #fff; font-family: inherit;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: var(--trans); position: relative; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(139,92,246,.35);
+    }
+    .submit-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+      border-radius: inherit;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+    .back-btn {
+      padding: 13px 24px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-p); font-family: inherit;
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; transition: var(--trans);
+    }
+    .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+    .footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 12px; color: var(--text-muted);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* ═══ SPINNER ════════════════════════════════════════════════════════════ */
+    .spinner {
+      width: 14px; height: 14px; border: 2px solid transparent;
+      border-top-color: currentColor; border-radius: 50%;
+      animation: spin .7s linear infinite; display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+    .toast-wrap {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+    }
+    .toast {
+      padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+      display: flex; align-items: center; gap: 8px; min-width: 220px;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+    .toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+    .toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+    @media (max-width: 640px) {
+      .hero-title { font-size: 26px; }
+      .form-card-body { padding: 20px 18px; }
+      .form-card-footer { padding: 16px 18px; }
+      .content-wrap { padding: 24px 14px 60px; }
+    }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
+
+    <!-- ═══ TOPBAR ═══════════════════════════════════════════════════════════ -->
+    <header class="topbar">
+        <a href="/" class="topbar-logo">Eduvia</a>
+        <div class="topbar-sep"></div>
+        <span class="topbar-course" data-i18n="competition-label">Competition: {{ competition.title }}</span>
+
+        <div class="topbar-actions">
+            <!-- Nav links (desktop) -->
+            <nav class="nav-links" id="nav-links">
+                <a href="/" class="nav-link" data-i18n="nav-home">Home</a>
+                <a href="/courses/" class="nav-link" data-i18n="nav-courses">Courses</a>
+                <a href="/chatbot/" class="nav-link" data-i18n="nav-chatbot">Chatbot</a>
+                <a href="/competitions/" class="nav-link active" data-i18n="nav-competitions">Competitions</a>
+                <a href="/performance/dashboard/" class="nav-link" data-i18n="nav-performance">Performance</a>
+                <a href="/about/" class="nav-link" data-i18n="nav-about">About</a>
+                <a href="/contact_us/" class="nav-link" data-i18n="nav-contact">Contact</a>
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                        <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link" data-i18n="nav-dashboard">Dashboard</a>
+                    {% endif %}
+                    <a href="/accounts/profile/" class="nav-link" data-i18n="nav-profile">Profile</a>
+                    <a href="/accounts/logout/" class="nav-link" data-i18n="nav-logout">Logout</a>
+                    {% if user.courses_profile %}
+                        <div class="coins-pill">
+                            <i class="fas fa-coins"></i>
+                            <span>{{ user.courses_profile.coins }}</span>
+                        </div>
+                    {% else %}
+                        <div class="coins-pill">
+                            <i class="fas fa-coins"></i>
+                            <span>0</span>
+                        </div>
+                    {% endif %}
                 {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
+                    <a href="/accounts/register/" class="tb-btn tb-btn-accent" data-i18n="nav-login">Login</a>
                 {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
+            </nav>
+
+            <!-- Theme toggle -->
+            <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+            <!-- Language toggle -->
+            <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
                 <i class="fas fa-globe"></i>
-            </div>
-        </nav>
+            </button>
+            <!-- Hamburger -->
+            <button class="hamburger" id="hamburger" onclick="toggleNav()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Add Question to {{ competition.title }}</h1>
-        <p data-translate="hero-desc">Create engaging questions to challenge students and enhance their learning experience!</p>
-    </section>
+    <div class="page-wrap">
 
-    <!-- Content Section -->
-    <section class="content-container">
-        <h1 data-translate="content-title">Add Question to {{ competition.title }}</h1>
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <p class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</p>
-                {% endfor %}
+        <!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
+        <section class="hero">
+            <div class="hero-eyebrow">
+                <i class="fas fa-plus-circle"></i>
+                <span data-i18n="hero-eyebrow">Add Question</span>
             </div>
-        {% endif %}
-        <form method="post" class="add-question-form">
-            {% csrf_token %}
-            <label data-translate="label-question-text">Question Text: <input type="text" name="text" required></label>
-            <label data-translate="label-question-type">Question Type:
-                <select name="question_type" required>
-                    <option value="MCQ" data-translate="option-mcq">Multiple Choice</option>
-                    <option value="TEXT" data-translate="option-text">Text Answer</option>
-                </select>
-            </label>
-            <label data-translate="label-choices">Choices (comma-separated, for MCQ): <input type="text" name="choices"></label>
-            <label data-translate="label-correct-answer">Correct Answer: <input type="text" name="correct_answer" required></label>
-            <label data-translate="label-points">Points: <input type="number" name="points" min="0" value="10" required></label>
-            <label data-translate="label-coins">Coins: <input type="number" name="coins" min="0" value="10" required></label>
-            <button type="submit" data-translate="button-add-question">Add Question</button>
-            <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-link" data-translate="button-back">Back to Competition</a>
-        </form>
-    </section>
+            <h1 class="hero-title" data-i18n="hero-title">Add Question to {{ competition.title }}</h1>
+            <p class="hero-subtitle" data-i18n="hero-desc">Create engaging questions to challenge students and enhance their learning experience!</p>
+        </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+        <!-- ═══ CONTENT ═══════════════════════════════════════════════════════ -->
+        <div class="content-wrap">
+            <div class="content-inner">
 
-    <script src="{% static 'competitions/add_question.js' %}"></script>
+                <!-- Messages -->
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="msg {% if message.tags %}{{ message.tags }}{% endif %}">
+                        <i class="fas {% if 'success' in message.tags %}fa-check-circle{% elif 'error' in message.tags %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Form Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <div class="form-card-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div>
+                            <div class="form-card-title" data-i18n="form-title">New Question</div>
+                            <div class="form-card-sub" data-i18n="form-sub">Fill in the details below to add a question</div>
+                        </div>
+                    </div>
+
+                    <form method="post" class="add-question-form" id="add-question-form">
+                        {% csrf_token %}
+
+                        <div class="form-card-body">
+                            <div class="field-group">
+
+                                <!-- Question Text -->
+                                <div class="field">
+                                    <label class="field-label" for="q-text">
+                                        <i class="fas fa-pen"></i>
+                                        <span data-i18n="label-question-text">Question Text</span>
+                                        <span class="field-required">*</span>
+                                    </label>
+                                    <input
+                                        class="field-inp"
+                                        type="text"
+                                        id="q-text"
+                                        name="text"
+                                        required
+                                        placeholder="Enter the question text here…"
+                                        data-i18n-placeholder="placeholder-question"
+                                    >
+                                </div>
+
+                                <!-- Question Type -->
+                                <div class="field">
+                                    <label class="field-label">
+                                        <i class="fas fa-list-ul"></i>
+                                        <span data-i18n="label-question-type">Question Type</span>
+                                        <span class="field-required">*</span>
+                                    </label>
+                                    <div class="type-selector">
+                                        <label class="type-card selected" id="type-mcq-card">
+                                            <input type="radio" name="question_type" value="MCQ" checked onchange="selectType('MCQ')">
+                                            <div class="type-card-icon">
+                                                <i class="fas fa-check-square"></i>
+                                            </div>
+                                            <div>
+                                                <div class="type-card-label" data-i18n="option-mcq">Multiple Choice</div>
+                                                <div class="type-card-sub" data-i18n="option-mcq-sub">Provide answer options</div>
+                                            </div>
+                                        </label>
+                                        <label class="type-card" id="type-text-card">
+                                            <input type="radio" name="question_type" value="TEXT" onchange="selectType('TEXT')">
+                                            <div class="type-card-icon">
+                                                <i class="fas fa-keyboard"></i>
+                                            </div>
+                                            <div>
+                                                <div class="type-card-label" data-i18n="option-text">Text Answer</div>
+                                                <div class="type-card-sub" data-i18n="option-text-sub">Free-form response</div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Choices (MCQ only) -->
+                                <div class="field" id="choices-field">
+                                    <label class="field-label" for="q-choices">
+                                        <i class="fas fa-list"></i>
+                                        <span data-i18n="label-choices">Choices</span>
+                                    </label>
+                                    <input
+                                        class="field-inp"
+                                        type="text"
+                                        id="q-choices"
+                                        name="choices"
+                                        placeholder="Option A, Option B, Option C, Option D"
+                                        data-i18n-placeholder="placeholder-choices"
+                                    >
+                                    <span class="field-hint">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span data-i18n="hint-choices">Separate choices with commas</span>
+                                    </span>
+                                </div>
+
+                                <!-- Correct Answer -->
+                                <div class="field">
+                                    <label class="field-label" for="q-answer">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span data-i18n="label-correct-answer">Correct Answer</span>
+                                        <span class="field-required">*</span>
+                                    </label>
+                                    <input
+                                        class="field-inp"
+                                        type="text"
+                                        id="q-answer"
+                                        name="correct_answer"
+                                        required
+                                        placeholder="Enter the correct answer…"
+                                        data-i18n-placeholder="placeholder-answer"
+                                    >
+                                    <span class="field-hint">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span data-i18n="hint-answer">For MCQ, must match one of the choices exactly</span>
+                                    </span>
+                                </div>
+
+                                <!-- Points & Coins -->
+                                <div class="field-row-2">
+                                    <div class="field">
+                                        <label class="field-label" for="q-points">
+                                            <i class="fas fa-trophy"></i>
+                                            <span data-i18n="label-points">Points</span>
+                                            <span class="field-required">*</span>
+                                        </label>
+                                        <input
+                                            class="field-inp"
+                                            type="number"
+                                            id="q-points"
+                                            name="points"
+                                            min="0"
+                                            value="10"
+                                            required
+                                            oninput="updatePreview()"
+                                        >
+                                    </div>
+                                    <div class="field">
+                                        <label class="field-label" for="q-coins">
+                                            <i class="fas fa-coins"></i>
+                                            <span data-i18n="label-coins">Coins</span>
+                                            <span class="field-required">*</span>
+                                        </label>
+                                        <input
+                                            class="field-inp"
+                                            type="number"
+                                            id="q-coins"
+                                            name="coins"
+                                            min="0"
+                                            value="10"
+                                            required
+                                            oninput="updatePreview()"
+                                        >
+                                    </div>
+                                </div>
+
+                                <!-- Reward Preview -->
+                                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                                    <div class="points-preview">
+                                        <i class="fas fa-trophy"></i>
+                                        <span id="preview-points">10</span>
+                                        <span data-i18n="pts">pts</span>
+                                    </div>
+                                    <div class="points-preview" style="background:rgba(251,191,36,.08);color:var(--gold-400);border-color:rgba(251,191,36,.2);">
+                                        <i class="fas fa-coins"></i>
+                                        <span id="preview-coins">10</span>
+                                        <span data-i18n="coins">coins</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-card-footer">
+                            <button type="submit" class="submit-btn" id="submit-btn">
+                                <i class="fas fa-plus-circle"></i>
+                                <span data-i18n="button-add-question">Add Question</span>
+                            </button>
+                            <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-btn">
+                                <i class="fas fa-arrow-left"></i>
+                                <span data-i18n="button-back">Back to Competition</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
+        <footer class="footer">
+            <p data-i18n="footer-text">© 2025 <a href="/">Eduvia</a> and creativitycode. All rights reserved.</p>
+        </footer>
+
+    </div><!-- /page-wrap -->
+
+    <div class="toast-wrap" id="toast-wrap"></div>
+
+    <script>
+    /* ── i18n ────────────────────────────────────────────────────────────── */
+    const I18N = {
+      en: {
+        "add-question-title": "Add Question | Eduvia",
+        "competition-label": "Competition: ",
+        "hero-eyebrow": "Add Question",
+        "hero-title": "Add Question",
+        "hero-desc": "Create engaging questions to challenge students and enhance their learning experience!",
+        "form-title": "New Question",
+        "form-sub": "Fill in the details below to add a question",
+        "label-question-text": "Question Text",
+        "label-question-type": "Question Type",
+        "option-mcq": "Multiple Choice",
+        "option-mcq-sub": "Provide answer options",
+        "option-text": "Text Answer",
+        "option-text-sub": "Free-form response",
+        "label-choices": "Choices",
+        "hint-choices": "Separate choices with commas",
+        "label-correct-answer": "Correct Answer",
+        "hint-answer": "For MCQ, must match one of the choices exactly",
+        "label-points": "Points",
+        "label-coins": "Coins",
+        "pts": "pts",
+        "coins": "coins",
+        "button-add-question": "Add Question",
+        "button-back": "Back to Competition",
+        "placeholder-question": "Enter the question text here…",
+        "placeholder-choices": "Option A, Option B, Option C, Option D",
+        "placeholder-answer": "Enter the correct answer…",
+        "nav-home": "Home",
+        "nav-courses": "Courses",
+        "nav-chatbot": "Chatbot",
+        "nav-competitions": "Competitions",
+        "nav-performance": "Performance",
+        "nav-about": "About",
+        "nav-contact": "Contact",
+        "nav-dashboard": "Dashboard",
+        "nav-profile": "Profile",
+        "nav-logout": "Logout",
+        "nav-login": "Login",
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
+      },
+      ar: {
+        "add-question-title": "إضافة سؤال | إدوفيا",
+        "competition-label": "المسابقة: ",
+        "hero-eyebrow": "إضافة سؤال",
+        "hero-title": "إضافة سؤال",
+        "hero-desc": "أنشئ أسئلة جذابة لتحدي الطلاب وتعزيز تجربتهم التعليمية!",
+        "form-title": "سؤال جديد",
+        "form-sub": "املأ التفاصيل أدناه لإضافة سؤال",
+        "label-question-text": "نص السؤال",
+        "label-question-type": "نوع السؤال",
+        "option-mcq": "اختيار من متعدد",
+        "option-mcq-sub": "قدم خيارات للإجابة",
+        "option-text": "إجابة نصية",
+        "option-text-sub": "إجابة حرة",
+        "label-choices": "الخيارات",
+        "hint-choices": "افصل الخيارات بفواصل",
+        "label-correct-answer": "الإجابة الصحيحة",
+        "hint-answer": "للاختيار من متعدد، يجب أن تطابق أحد الخيارات تماماً",
+        "label-points": "النقاط",
+        "label-coins": "الكوينز",
+        "pts": "نقطة",
+        "coins": "كوين",
+        "button-add-question": "إضافة السؤال",
+        "button-back": "العودة إلى المسابقة",
+        "placeholder-question": "أدخل نص السؤال هنا…",
+        "placeholder-choices": "الخيار أ، الخيار ب، الخيار ج، الخيار د",
+        "placeholder-answer": "أدخل الإجابة الصحيحة…",
+        "nav-home": "الرئيسية",
+        "nav-courses": "الدورات",
+        "nav-chatbot": "الدردشة الآلية",
+        "nav-competitions": "المسابقات",
+        "nav-performance": "الأداء",
+        "nav-about": "معلومات عنا",
+        "nav-contact": "تواصل معنا",
+        "nav-dashboard": "لوحة التحكم",
+        "nav-profile": "الملف الشخصي",
+        "nav-logout": "تسجيل الخروج",
+        "nav-login": "تسجيل الدخول",
+        "footer-text": "© 2025 إدوفيا وكريتيفيتي كود. جميع الحقوق محفوظة."
+      }
+    };
+
+    let currentLang = localStorage.getItem('lang') || 'en';
+
+    function applyLang(lang) {
+      currentLang = lang;
+      const root = document.getElementById('html-root');
+      root.setAttribute('lang', lang);
+      root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (I18N[lang] && I18N[lang][key]) el.placeholder = I18N[lang][key];
+      });
+      if (I18N[lang]["add-question-title"]) document.title = I18N[lang]["add-question-title"];
+      localStorage.setItem('lang', lang);
+    }
+    function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+    /* ── Theme ─────────────────────────────────────────────────────────── */
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('theme', theme);
+    }
+    function toggleTheme() {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    }
+
+    /* ── Nav ───────────────────────────────────────────────────────────── */
+    function toggleNav() {
+      document.getElementById('nav-links').classList.toggle('open');
+    }
+    document.addEventListener('click', e => {
+      const nav = document.getElementById('nav-links');
+      const btn = document.getElementById('hamburger');
+      if (nav && btn && !nav.contains(e.target) && !btn.contains(e.target)) {
+        nav.classList.remove('open');
+      }
+    });
+
+    /* ── Type selector ─────────────────────────────────────────────────── */
+    function selectType(type) {
+      document.getElementById('type-mcq-card').classList.toggle('selected', type === 'MCQ');
+      document.getElementById('type-text-card').classList.toggle('selected', type === 'TEXT');
+      const choicesField = document.getElementById('choices-field');
+      choicesField.style.display = type === 'MCQ' ? 'flex' : 'none';
+    }
+
+    /* ── Reward preview ────────────────────────────────────────────────── */
+    function updatePreview() {
+      const pts  = document.getElementById('q-points')?.value || 0;
+      const coins = document.getElementById('q-coins')?.value  || 0;
+      document.getElementById('preview-points').textContent = pts;
+      document.getElementById('preview-coins').textContent  = coins;
+    }
+
+    /* ── Form submit loading ───────────────────────────────────────────── */
+    document.getElementById('add-question-form')?.addEventListener('submit', function() {
+      const btn = document.getElementById('submit-btn');
+      if (btn) {
+        btn._orig = btn.innerHTML;
+        btn.innerHTML = `<span class="spinner"></span> <span>${currentLang === 'ar' ? 'جاري الإضافة...' : 'Adding...'}</span>`;
+        btn.disabled = true;
+      }
+    });
+
+    /* ── Toast ─────────────────────────────────────────────────────────── */
+    function toast(msg, type = 'info', dur = 3200) {
+      const wrap = document.getElementById('toast-wrap');
+      const el = document.createElement('div');
+      el.className = `toast toast-${type}`;
+      const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+      el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+      wrap.appendChild(el);
+      setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+    }
+
+    /* ── Init ──────────────────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+      applyTheme(localStorage.getItem('theme') || 'dark');
+      applyLang(localStorage.getItem('lang') || 'en');
+    });
+    </script>
 </body>
 </html>

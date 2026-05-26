@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static competition_filters %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +12,6 @@
     <meta name="author" content="Eduvia Team">
     <meta name="robots" content="index, follow">
     <meta http-equiv="content-language" content="ar, en">
-    <meta name="description" lang="en" data-translate="edit-competition-meta-desc-en" content="Edit educational competitions on the Eduvia platform to customize learning challenges and enhance the student learning experience!">
-    <meta name="keywords" lang="en" data-translate="edit-competition-meta-keywords-en" content="edit competitions, educational competitions, Eduvia platform, interactive learning, learning challenges, customize competitions">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
     <!-- 🌍 Open Graph -->
@@ -34,10 +32,7 @@
 
     <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
-    <link rel="stylesheet" href="{% static 'competitions/edit_competition.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- 📊 Structured Data -->
     <script type="application/ld+json">
@@ -83,6 +78,12 @@
                     {
                         "@type": "ListItem",
                         "position": 2,
+                        "name": "Competitions",
+                        "item": "https://eduvia-ai.fly.dev/competitions/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
                         "name": "Edit Competition",
                         "item": "https://eduvia-ai.fly.dev/competitions/edit_competition/"
                     }
@@ -91,79 +92,814 @@
         ]
     }
     </script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (identical to lesson_view)
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body,
+[lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ══ TOPBAR ══════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0;
+  text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+
+/* Breadcrumb trail */
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text-muted); flex: 1;
+  overflow: hidden; white-space: nowrap;
+}
+.topbar-breadcrumb a {
+  color: var(--text-muted); text-decoration: none; transition: var(--trans);
+}
+.topbar-breadcrumb a:hover { color: var(--violet-400); }
+.topbar-breadcrumb .bc-sep { color: var(--text-muted); opacity: .4; }
+.topbar-breadcrumb .bc-current { color: var(--text-p); font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
+
+.topbar-nav {
+  display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+}
+.topbar-nav a {
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.topbar-nav a:hover { color: var(--text-h); background: var(--bg-card); }
+.topbar-nav a.active { color: var(--accent); background: var(--violet-glow); }
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-danger { background: rgba(251,113,133,.1); color: var(--danger); border: 1px solid rgba(251,113,133,.2); }
+.tb-btn-danger:hover { background: rgba(251,113,133,.18); }
+
+.coins-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 12px 5px 8px;
+  font-size: 12px; color: var(--warning); font-weight: 600; flex-shrink: 0;
+}
+.coins-pill i { font-size: 13px; }
+
+/* Hamburger */
+.hamburger-btn {
+  display: none; width: 36px; height: 36px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 16px; cursor: pointer;
+  align-items: center; justify-content: center; transition: var(--trans);
+}
+.hamburger-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Mobile nav */
+.mobile-nav {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  z-index: 590; padding: 12px 16px; flex-direction: column; gap: 4px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--text-muted); text-decoration: none;
+  transition: var(--trans);
+}
+.mobile-nav a:hover { background: var(--bg-card); color: var(--text-h); }
+.mobile-nav a.active { color: var(--accent); background: var(--violet-glow); }
+
+/* ══ PAGE LAYOUT ══════════════════════════════════════════════════════════ */
+.page-wrap {
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ══ HERO ═════════════════════════════════════════════════════════════════ */
+.hero {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 24px 40px;
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 300px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(251,191,36,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '\f044';
+  font-family: 'Font Awesome 6 Free'; font-weight: 900;
+  position: absolute; right: 5%; bottom: -20px;
+  font-size: 140px; color: rgba(251,191,36,.04);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2);
+  border-radius: 99px; padding: 5px 14px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  text-transform: uppercase; color: var(--gold-400);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.5vw, 38px); font-weight: 800;
+  color: var(--text-h); letter-spacing: -.8px; line-height: 1.2;
+  margin-bottom: 10px;
+}
+.hero h1 .competition-name {
+  background: linear-gradient(135deg, var(--gold-400), var(--violet-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 15px; color: var(--text-muted); max-width: 480px; margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* ══ CONTENT ══════════════════════════════════════════════════════════════ */
+.content-wrap {
+  flex: 1; display: flex; justify-content: center; align-items: flex-start;
+  padding: 40px 24px 80px;
+}
+.form-card {
+  width: 100%; max-width: 720px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.form-card-header {
+  padding: 22px 28px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.form-card-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+  background: rgba(251,191,36,.08); color: var(--gold-400);
+  border: 1px solid rgba(251,191,36,.2);
+}
+.form-card-header-info { flex: 1; }
+.form-card-title {
+  font-family: var(--font-display);
+  font-size: 17px; font-weight: 700; color: var(--text-h);
+}
+.form-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Competition name pill */
+.competition-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 8px;
+  background: var(--bg-base); border: 1px solid var(--border);
+  border-radius: 99px; padding: 4px 12px;
+  font-size: 11px; color: var(--text-muted);
+}
+.competition-pill strong { color: var(--gold-400); font-weight: 600; }
+
+/* ── Messages ── */
+.messages-box { padding: 0 28px; padding-top: 20px; }
+.message-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: var(--radius-md);
+  font-size: 13px; margin-bottom: 8px;
+  animation: cardReveal .3s ease both;
+}
+.message-item.success { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+.message-item.error   { background: rgba(251,113,133,.08); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+.message-item.warning { background: rgba(251,191,36,.08);  color: var(--warning); border: 1px solid rgba(251,191,36,.2); }
+.message-item.info    { background: rgba(139,92,246,.08);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.2); }
+.message-item i { flex-shrink: 0; }
+
+.form-card-body { padding: 28px; }
+
+/* ── Form fields ── */
+.edit-competition-form p { margin-bottom: 20px; }
+
+.edit-competition-form label {
+  display: block; font-size: 12px; font-weight: 600;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px;
+  margin-bottom: 7px;
+}
+
+.edit-competition-form input[type="text"],
+.edit-competition-form input[type="number"],
+.edit-competition-form input[type="date"],
+.edit-competition-form input[type="datetime-local"],
+.edit-competition-form input[type="email"],
+.edit-competition-form input[type="url"],
+.edit-competition-form select,
+.edit-competition-form textarea {
+  width: 100%;
+  background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 12px 15px; font-size: 14px;
+  font-family: var(--font-body); transition: var(--trans);
+  outline: none; appearance: none;
+}
+.edit-competition-form input:focus,
+.edit-competition-form select:focus,
+.edit-competition-form textarea:focus {
+  border-color: var(--gold-400);
+  box-shadow: 0 0 0 3px rgba(251,191,36,.1);
+  color: var(--text-h);
+}
+.edit-competition-form input::placeholder,
+.edit-competition-form textarea::placeholder { color: var(--text-muted); }
+
+.edit-competition-form select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6585' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+[lang="ar"] .edit-competition-form select {
+  background-position: left 14px center;
+  padding-right: 15px; padding-left: 36px;
+}
+
+.edit-competition-form textarea { resize: vertical; min-height: 110px; line-height: 1.65; }
+
+.edit-competition-form .helptext {
+  display: block; font-size: 11px; color: var(--text-muted);
+  margin-top: 5px; line-height: 1.5;
+}
+
+.edit-competition-form .errorlist { list-style: none; margin-top: 5px; }
+.edit-competition-form .errorlist li {
+  font-size: 11px; color: var(--danger); display: flex; align-items: center; gap: 4px;
+}
+.edit-competition-form .errorlist li::before {
+  content: '\f06a'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 10px;
+}
+
+/* ── Footer ── */
+.form-card-footer {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card-2);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+
+/* Save button — gold accent for edit context */
+.save-btn {
+  padding: 13px 36px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--gold-400), #f59e0b);
+  color: #1a0f00; font-family: var(--font-body);
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(251,191,36,.3);
+}
+.save-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.2), transparent);
+}
+.save-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(251,191,36,.4); }
+.save-btn:active { transform: translateY(0); }
+
+.back-link {
+  padding: 13px 20px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 600; color: var(--text-muted);
+  background: var(--bg-card); border: 1px solid var(--border);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  transition: var(--trans);
+}
+.back-link:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Danger zone */
+.danger-zone-toggle {
+  margin-left: auto;
+  padding: 10px 16px; border-radius: var(--radius-md);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  background: rgba(251,113,133,.08); color: var(--danger);
+  border: 1px solid rgba(251,113,133,.2);
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: var(--trans);
+}
+[lang="ar"] .danger-zone-toggle { margin-left: 0; margin-right: auto; }
+.danger-zone-toggle:hover { background: rgba(251,113,133,.14); }
+
+/* ── Danger zone panel ── */
+.danger-zone {
+  margin: 0 28px 28px;
+  background: rgba(251,113,133,.05); border: 1px solid rgba(251,113,133,.18);
+  border-radius: var(--radius-md); padding: 20px;
+  display: none; animation: cardReveal .3s ease both;
+}
+.danger-zone.visible { display: block; }
+.danger-zone-title {
+  font-size: 13px; font-weight: 700; color: var(--danger);
+  display: flex; align-items: center; gap: 7px; margin-bottom: 8px;
+}
+.danger-zone p {
+  font-size: 13px; color: var(--text-muted); line-height: 1.55; margin-bottom: 14px;
+}
+.danger-zone-btn {
+  padding: 10px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  background: rgba(251,113,133,.1); color: var(--danger);
+  border: 1px solid rgba(251,113,133,.25);
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--trans); font-family: inherit;
+}
+.danger-zone-btn:hover { background: var(--danger); color: #fff; }
+
+/* ══ SPINNER ══════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══ TOAST ════════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ══ FOOTER ═══════════════════════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+}
+.footer a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer a:hover { color: var(--violet-400); }
+.footer-logo {
+  font-family: var(--font-display); font-size: 15px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* ══ RESPONSIVE ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .topbar-nav { display: none; }
+  .hamburger-btn { display: flex; }
+  .topbar { padding: 0 14px; gap: 10px; }
+  .hero { padding: 36px 16px 30px; }
+  .content-wrap { padding: 24px 16px 60px; }
+  .form-card-body { padding: 20px; }
+  .form-card-footer { padding: 16px 20px; gap: 8px; }
+  .form-card-header { padding: 18px 20px; }
+  .messages-box { padding: 0 20px; padding-top: 16px; }
+  .danger-zone { margin: 0 20px 20px; }
+  .danger-zone-toggle { margin-left: 0; width: 100%; justify-content: center; }
+  [lang="ar"] .danger-zone-toggle { margin-right: 0; }
+  .save-btn, .back-link { flex: 1; justify-content: center; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
+<!-- ══ TOPBAR ══════════════════════════════════════════════════════════════ -->
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+
+    <!-- Breadcrumb -->
+    <div class="topbar-breadcrumb">
+        <a href="/competitions/" data-i18n="bc-competitions">Competitions</a>
+        <span class="bc-sep">›</span>
+        <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}">{{ competition.title|truncatechars:20 }}</a>
+        <span class="bc-sep">›</span>
+        <span class="bc-current" data-i18n="bc-edit">Edit</span>
+    </div>
+
+    <nav class="topbar-nav">
+        <a href="/" data-i18n="nav-home">Home</a>
+        <a href="/courses/" data-i18n="nav-courses">Courses</a>
+        <a href="/chatbot/" data-i18n="nav-chatbot">Chatbot</a>
+        <a href="/competitions/" class="active" data-i18n="nav-competitions">Competitions</a>
+        <a href="/performance/dashboard/" data-i18n="nav-performance">Performance</a>
+        <a href="/about/" data-i18n="nav-about">About</a>
+        <a href="/contact_us/" data-i18n="nav-contact">Contact</a>
+
+        {% if user.is_authenticated %}
+            {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="nav-dashboard">Dashboard</a>
+            {% endif %}
+            <a href="/accounts/profile/" data-i18n="nav-profile">Profile</a>
+            <a href="/accounts/logout/" data-i18n="nav-logout">Logout</a>
+        {% else %}
+            <a href="/accounts/register/" data-i18n="nav-login">Login</a>
+        {% endif %}
+    </nav>
+
+    <div class="topbar-actions">
+        {% if user.is_authenticated and user.courses_profile %}
+        <div class="coins-pill">
+            <i class="fas fa-coins"></i>
+            <span>{{ user.courses_profile.coins }}</span>
+        </div>
+        {% endif %}
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" id="lang-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+        <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileNav()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</header>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobile-nav">
+    <a href="/" data-i18n="nav-home">Home</a>
+    <a href="/courses/" data-i18n="nav-courses">Courses</a>
+    <a href="/chatbot/" data-i18n="nav-chatbot">Chatbot</a>
+    <a href="/competitions/" class="active" data-i18n="nav-competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="nav-performance">Performance</a>
+    <a href="/about/" data-i18n="nav-about">About Us</a>
+    <a href="/contact_us/" data-i18n="nav-contact">Contact Us</a>
+    {% if user.is_authenticated %}
+        {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+            <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="nav-dashboard">Dashboard</a>
+        {% endif %}
+        <a href="/accounts/profile/" data-i18n="nav-profile">Profile</a>
+        <a href="/accounts/logout/" data-i18n="nav-logout">Logout</a>
+    {% else %}
+        <a href="/accounts/register/" data-i18n="nav-login">Login</a>
+    {% endif %}
+</div>
+
+<div class="page-wrap">
+
+    <!-- ══ HERO ════════════════════════════════════════════════════════════ -->
     <section class="hero">
-        <h1 data-translate="hero-title">Edit {{ competition.title }}</h1>
-        <p data-translate="hero-desc">Customize your competition to create an engaging learning experience for students!</p>
+        <div class="hero-badge">
+            <i class="fas fa-pen-to-square"></i>
+            <span data-i18n="hero-badge">Editing</span>
+        </div>
+        <h1>
+            <span data-i18n="hero-title-pre">Edit</span>
+            <span class="competition-name"> {{ competition.title }}</span>
+        </h1>
+        <p data-i18n="hero-desc">Customize your competition to create an engaging learning experience for students!</p>
     </section>
 
-    <!-- Content Section -->
-    <section class="content-container">
-        <h1 data-translate="content-title">Edit {{ competition.title }}</h1>
-        {% if messages %}
-            <div class="messages">
+    <!-- ══ CONTENT ══════════════════════════════════════════════════════════ -->
+    <div class="content-wrap">
+        <div class="form-card">
+
+            <!-- Header -->
+            <div class="form-card-header">
+                <div class="form-card-icon">
+                    <i class="fas fa-sliders-h"></i>
+                </div>
+                <div class="form-card-header-info">
+                    <div class="form-card-title" data-i18n="form-title">Edit Competition Details</div>
+                    <div class="form-card-sub" data-i18n="form-sub">Update the fields below and save your changes</div>
+                    <div class="competition-pill">
+                        <i class="fas fa-trophy" style="color:var(--gold-400);font-size:10px;"></i>
+                        <strong>{{ competition.title }}</strong>
+                        <span data-i18n="pill-id">ID: #{{ competition.id }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Django messages -->
+            {% if messages %}
+            <div class="messages-box">
                 {% for message in messages %}
-                    <p class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</p>
+                <div class="message-item {% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">
+                    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
                 {% endfor %}
             </div>
-        {% endif %}
-        <form method="post" class="edit-competition-form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" data-translate="save-button">Save Changes</button>
-            <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-link" data-translate="back-link">Back to Competition</a>
-        </form>
-    </section>
+            {% endif %}
 
-    <!-- Footer -->
+            <!-- Form body -->
+            <div class="form-card-body">
+                <form method="post" class="edit-competition-form" id="edit-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </form>
+            </div>
+
+            <!-- Footer actions -->
+            <div class="form-card-footer">
+                <button type="submit" form="edit-form" class="save-btn" id="save-btn" onclick="handleSave(event)">
+                    <i class="fas fa-floppy-disk"></i>
+                    <span data-i18n="save-button">Save Changes</span>
+                </button>
+                <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-link">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-i18n="back-link">Back to Competition</span>
+                </a>
+                <button class="danger-zone-toggle" onclick="toggleDangerZone()" type="button">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <span data-i18n="danger-btn">Danger Zone</span>
+                </button>
+            </div>
+
+            <!-- Danger zone -->
+            <div class="danger-zone" id="danger-zone">
+                <div class="danger-zone-title">
+                    <i class="fas fa-radiation"></i>
+                    <span data-i18n="danger-title">Danger Zone</span>
+                </div>
+                <p data-i18n="danger-desc">Deleting this competition is permanent and cannot be undone. All associated data, participants, and results will be removed.</p>
+                <button class="danger-zone-btn" type="button" onclick="confirmDelete()">
+                    <i class="fas fa-trash-alt"></i>
+                    <span data-i18n="danger-delete">Delete Competition</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══ FOOTER ════════════════════════════════════════════════════════════ -->
     <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+        <span class="footer-logo">Eduvia</span>
+        <span>·</span>
+        <span data-i18n="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</span>
+        <span>·</span>
+        <a href="/about/" data-i18n="footer-about">About</a>
+        <a href="/contact_us/" data-i18n="footer-contact">Contact</a>
     </footer>
 
-    <script src="{% static 'competitions/edit_competition.js' %}"></script>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ──────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    'bc-competitions': 'Competitions', 'bc-edit': 'Edit',
+    'hero-badge': 'Editing',
+    'hero-title-pre': 'Edit',
+    'hero-desc': 'Customize your competition to create an engaging learning experience for students!',
+    'form-title': 'Edit Competition Details',
+    'form-sub': 'Update the fields below and save your changes',
+    'pill-id': 'ID: #{{ competition.id }}',
+    'save-button': 'Save Changes',
+    'back-link': 'Back to Competition',
+    'danger-btn': 'Danger Zone',
+    'danger-title': 'Danger Zone',
+    'danger-desc': 'Deleting this competition is permanent and cannot be undone. All associated data, participants, and results will be removed.',
+    'danger-delete': 'Delete Competition',
+    'footer-text': '© 2025 Eduvia and creativitycode. All rights reserved.',
+    'footer-about': 'About', 'footer-contact': 'Contact', 'footer-subscribe': 'Subscribe',
+    'nav-home': 'Home', 'nav-courses': 'Courses', 'nav-chatbot': 'Chatbot',
+    'nav-competitions': 'Competitions', 'nav-performance': 'Performance',
+    'nav-about': 'About', 'nav-contact': 'Contact', 'nav-subscribe': 'Subscribe',
+    'nav-dashboard': 'Dashboard', 'nav-profile': 'Profile',
+    'nav-logout': 'Logout', 'nav-login': 'Login',
+  },
+  ar: {
+    'bc-competitions': 'المسابقات', 'bc-edit': 'تعديل',
+    'hero-badge': 'تعديل',
+    'hero-title-pre': 'تعديل',
+    'hero-desc': 'خصّص مسابقتك لخلق تجربة تعليمية مشوّقة للطلاب!',
+    'form-title': 'تعديل تفاصيل المسابقة',
+    'form-sub': 'حدّث الحقول أدناه واحفظ التغييرات',
+    'pill-id': 'رقم: #{{ competition.id }}',
+    'save-button': 'حفظ التغييرات',
+    'back-link': 'العودة للمسابقة',
+    'danger-btn': 'منطقة الخطر',
+    'danger-title': 'منطقة الخطر',
+    'danger-desc': 'حذف هذه المسابقة نهائي ولا يمكن التراجع عنه. ستُحذف جميع البيانات والمشاركين والنتائج.',
+    'danger-delete': 'حذف المسابقة',
+    'footer-text': '© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+    'footer-about': 'من نحن', 'footer-contact': 'تواصل', 'footer-subscribe': 'اشتراك',
+    'nav-home': 'الرئيسية', 'nav-courses': 'الكورسات', 'nav-chatbot': 'المساعد',
+    'nav-competitions': 'المسابقات', 'nav-performance': 'الأداء',
+    'nav-about': 'من نحن', 'nav-contact': 'تواصل', 'nav-subscribe': 'اشتراك',
+    'nav-dashboard': 'لوحة التحكم', 'nav-profile': 'الملف الشخصي',
+    'nav-logout': 'تسجيل الخروج', 'nav-login': 'تسجيل الدخول',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile nav ────────────────────────────────────────────────────────── */
+function toggleMobileNav() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const btn = document.getElementById('hamburger-btn');
+  if (nav && btn && !nav.contains(e.target) && !btn.contains(e.target)) {
+    nav.classList.remove('open');
+  }
+});
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0'; el.style.transition = 'opacity .3s';
+    setTimeout(() => el.remove(), 350);
+  }, dur);
+}
+
+/* ── Save handler ──────────────────────────────────────────────────────── */
+function handleSave(e) {
+  const btn = document.getElementById('save-btn');
+  btn._orig = btn.innerHTML;
+  btn.innerHTML = `<span class="spinner"></span> ${currentLang === 'ar' ? 'جارٍ الحفظ...' : 'Saving...'}`;
+  btn.disabled = true;
+  setTimeout(() => { btn.innerHTML = btn._orig; btn.disabled = false; }, 8000);
+}
+
+/* ── Danger zone ───────────────────────────────────────────────────────── */
+function toggleDangerZone() {
+  document.getElementById('danger-zone').classList.toggle('visible');
+}
+
+function confirmDelete() {
+  const msg = currentLang === 'ar'
+    ? 'هل أنت متأكد من حذف هذه المسابقة؟ هذا الإجراء لا يمكن التراجع عنه.'
+    : 'Are you sure you want to delete this competition? This action cannot be undone.';
+  if (confirm(msg)) {
+    toast(currentLang === 'ar' ? 'جارٍ الحذف...' : 'Deleting…', 'error');
+    // Add delete URL/form submission here as needed
+    // e.g. window.location.href = '/competitions/{{ competition.id }}/delete/';
+  }
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+
+  {% if messages %}
+    {% for message in messages %}
+      toast("{{ message|escapejs }}", "{% if message.tags %}{{ message.tags|lower }}{% else %}info{% endif %}");
+    {% endfor %}
+  {% endif %}
+});
+</script>
 </body>
 </html>

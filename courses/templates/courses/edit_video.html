@@ -615,7 +615,7 @@ body {
     <a href="{% url 'courses:instructor_dashboard' %}">Dashboard</a>
     <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
     {% if course %}
-      <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|slugify|default:'default-title' %}">{{ course.title|truncatechars:30 }}</a>
+      <a href="{% url 'courses:course_videos' course_id=course.id course_slug=course.title|slugify|default:'default-title' %}">{{ course.title|truncatechars:30 }}</a>      
       <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
     {% endif %}
     <span class="bc-current">Edit Video</span>
@@ -633,7 +633,7 @@ body {
         <span data-i18n="dashboard">Dashboard</span>
       </a>
       {% if course %}
-        <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|slugify|default:'default-title' %}" class="tb-btn tb-btn-accent">
+        <a href="{% url 'courses:course_videos' course_id=course.id course_slug=course.title|slugify|default:'default-title' %}" class="tb-btn tb-btn-accent">            
           <i class="fas fa-arrow-left"></i>
           <span data-i18n="back_videos">Back to Videos</span>
         </a>
@@ -700,7 +700,7 @@ body {
                 </button>
 
                 {% if course %}
-                  <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|slugify|default:'default-title' %}" class="btn-cancel">
+                  <a href="{% url 'courses:course_videos' course_id=course.id course_slug=course.title|slugify|default:'default-title' %}" class="btn-cancel">                    
                     <i class="fas fa-times"></i>
                     <span data-i18n="cancel_btn">Cancel</span>
                   </a>
@@ -762,8 +762,8 @@ body {
               <span data-i18n="link_dashboard">Instructor Dashboard</span>
             </a>
             {% if course %}
-            <a href="{% url 'courses:course_videos' course_id=course.id course_title=course.title|slugify|default:'default-title' %}" class="tb-btn tb-btn-ghost" style="width:100%;justify-content:flex-start;margin-bottom:8px;font-size:12px;">
-              <i class="fas fa-video" style="color:var(--sky-400);width:16px;"></i>
+            <a href="{% url 'courses:course_videos' course_id=course.id course_slug=course.title|slugify|default:'default-title' %}" class="tb-btn tb-btn-ghost" style="width:100%;justify-content:flex-start;margin-bottom:8px;font-size:12px;">                
+              <i class="fas fa-video" style="color:var(--sky-400);width:16px;"></i>,
               <span data-i18n="link_videos">Course Videos</span>
             </a>
             {% endif %}

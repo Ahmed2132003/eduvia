@@ -1,224 +1,1030 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- SEO -->
-    <title data-translate="find-mentor-title">Find a Mentor - Eduvia</title>
-    <meta name="description" content="Find mentors and mentorship groups on Eduvia's Mentorship System.">
-    <meta name="keywords" content="find mentor, mentorship groups, Eduvia, mentorship">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/find_mentor/">
+<!-- SEO -->
+<title data-i18n-title="page_title">Find a Mentor — Eduvia</title>
+<meta name="description" content="Find mentors and mentorship groups on Eduvia's Mentorship System.">
+<meta name="keywords" content="find mentor, mentorship groups, Eduvia, mentorship">
+<meta name="author" content="Eduvia">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/find_mentor/">
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Find a Mentor - Eduvia">
-    <meta property="og:description" content="Find mentors and mentorship groups on Eduvia's Mentorship System.">
-    <meta property="og:image" content="https://i.postimg.cc/R0sfQXVC/mentor2.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/find_mentor/">
-    <meta property="og:type" content="website">
+<!-- Open Graph -->
+<meta property="og:title" content="Find a Mentor - Eduvia">
+<meta property="og:description" content="Find mentors and mentorship groups on Eduvia's Mentorship System.">
+<meta property="og:image" content="https://i.postimg.cc/R0sfQXVC/mentor2.jpg">
+<meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/find_mentor/">
+<meta property="og:type" content="website">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Find a Mentor - Eduvia">
-    <meta name="twitter:description" content="Find mentors and mentorship groups on Eduvia's Mentorship System.">
-    <meta name="twitter:image" content="https://i.postimg.cc/R0sfQXVC/mentor2.jpg">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Find a Mentor - Eduvia">
+<meta name="twitter:description" content="Find mentors and mentorship groups on Eduvia's Mentorship System.">
+<meta name="twitter:image" content="https://i.postimg.cc/R0sfQXVC/mentor2.jpg">
 
-    <!-- Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<!-- Favicon -->
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-    <!-- Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Fonts & Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'mentorship/find_mentor.css' %}">
-
-    <!-- Hero Background -->
-    <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/R0sfQXVC/mentor2.jpg");
-        }
-    </style>
-
-    <!-- Structured Data -->
-    <script type="application/ld+json">
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/find_mentor/#webpage",
-                "url": "https://eduvia-ai.fly.dev/mentorship/find_mentor/",
-                "name": "Find a Mentor - Eduvia",
-                "description": "Find mentors and mentorship groups on Eduvia's Mentorship System.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/mentorship/find_mentor/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/find_mentor/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Mentorship",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "Find a Mentor",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/find_mentor/"
-                    }
-                ]
-            }
-        ]
+      "@type": "Organization",
+      "@id": "https://eduvia-ai.fly.dev/#organization",
+      "name": "Eduvia",
+      "url": "https://eduvia-ai.fly.dev",
+      "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" },
+      "sameAs": [
+        "https://www.facebook.com/share/18iRSctdxN/",
+        "https://x.com/Eduvia7",
+        "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://eduvia-ai.fly.dev/mentorship/find_mentor/#webpage",
+      "url": "https://eduvia-ai.fly.dev/mentorship/find_mentor/",
+      "name": "Find a Mentor - Eduvia",
+      "description": "Find mentors and mentorship groups on Eduvia's Mentorship System.",
+      "breadcrumb": { "@id": "https://eduvia-ai.fly.dev/mentorship/find_mentor/#breadcrumb" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://eduvia-ai.fly.dev/mentorship/find_mentor/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Eduvia",      "item": "https://eduvia-ai.fly.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Mentorship",  "item": "https://eduvia-ai.fly.dev/mentorship/" },
+        { "@type": "ListItem", "position": 3, "name": "Find Mentor", "item": "https://eduvia-ai.fly.dev/mentorship/find_mentor/" }
+      ]
     }
-    </script>
+  ]
+}
+</script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"  (shared with lesson_view)
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  white-space: nowrap; overflow: hidden;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .bc-sep { color: var(--text-muted); opacity: .4; }
+.topbar-breadcrumb .bc-current { color: var(--text-p); }
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.coins-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 99px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 12px; font-weight: 600; color: var(--gold-400);
+}
+
+/* ═══ PAGE WRAPPER ══════════════════════════════════════════════════════ */
+.page-wrapper { padding-top: var(--topbar-h); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ═══ HERO ══════════════════════════════════════════════════════════════ */
+.page-hero {
+  position: relative;
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 52px 24px 44px;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 65% 50%, rgba(139,92,246,.12), transparent 60%);
+  pointer-events: none;
+}
+.page-hero::after {
+  content: '\f508';
+  font-family: 'Font Awesome 6 Free'; font-weight: 900;
+  position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+  font-size: 130px; color: rgba(139,92,246,.055);
+  pointer-events: none;
+}
+.page-hero-inner { max-width: 1080px; margin: 0 auto; position: relative; }
+.page-hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 4px 12px;
+  font-size: 11px; font-weight: 700; color: var(--violet-400);
+  letter-spacing: .5px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: 36px; font-weight: 800; color: var(--text-h);
+  line-height: 1.15; letter-spacing: -.6px; margin-bottom: 10px;
+}
+.page-hero p { font-size: 15px; color: var(--text-muted); max-width: 520px; margin-bottom: 0; }
+
+/* ── Search Bar in Hero ── */
+.hero-search {
+  display: flex; gap: 0; margin-top: 24px; max-width: 440px;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden; transition: var(--trans);
+}
+.hero-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.hero-search input {
+  flex: 1; background: transparent; border: none; outline: none;
+  padding: 12px 16px; font-size: 14px; color: var(--text-p); font-family: inherit;
+}
+.hero-search input::placeholder { color: var(--text-muted); }
+.hero-search-btn {
+  background: var(--accent); border: none; color: #fff;
+  padding: 0 18px; cursor: pointer; font-size: 14px; transition: var(--trans);
+}
+.hero-search-btn:hover { background: var(--accent-d); }
+
+/* ── Stats Row ── */
+.stats-row {
+  display: flex; gap: 24px; flex-wrap: wrap;
+  margin-top: 24px;
+}
+.stat-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px; border-radius: 99px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 13px; color: var(--text-muted);
+}
+.stat-pill strong { color: var(--text-h); font-weight: 700; }
+.stat-pill i { font-size: 12px; }
+.stat-pill.violet i { color: var(--violet-400); }
+.stat-pill.gold   i { color: var(--gold-400); }
+.stat-pill.green  i { color: var(--success); }
+
+/* ═══ MAIN CONTENT ══════════════════════════════════════════════════════ */
+.main-content {
+  flex: 1;
+  max-width: 1080px; width: 100%;
+  margin: 0 auto; padding: 40px 24px 80px;
+}
+
+/* ═══ MESSAGES ══════════════════════════════════════════════════════════ */
+.messages-wrap { margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
+.msg-alert {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 500;
+  animation: cardReveal .4s ease both;
+}
+.msg-alert.success { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25); color: var(--success); }
+.msg-alert.error,
+.msg-alert.danger  { background: rgba(251,113,133,.07); border: 1px solid rgba(251,113,133,.2); color: var(--danger); }
+.msg-alert.warning { background: rgba(251,191,36,.07);  border: 1px solid rgba(251,191,36,.2);  color: var(--warning); }
+.msg-alert.info    { background: rgba(56,189,248,.07);  border: 1px solid rgba(56,189,248,.2);  color: var(--info); }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ═══ SECTION HEADER ════════════════════════════════════════════════════ */
+.section-heading {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+}
+.section-heading-left { display: flex; align-items: center; gap: 12px; }
+.section-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.section-icon.violet { background: var(--violet-glow); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.section-icon.gold   { background: rgba(251,191,36,.08); color: var(--gold-400); border: 1px solid rgba(251,191,36,.2); }
+.section-icon.green  { background: rgba(52,211,153,.08); color: var(--success);  border: 1px solid rgba(52,211,153,.2); }
+.section-icon.rose   { background: rgba(251,113,133,.08); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 800; color: var(--text-h);
+}
+.section-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.section-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 99px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+}
+
+/* ═══ MENTOR GRID ════════════════════════════════════════════════════════ */
+.mentor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px; margin-bottom: 48px;
+}
+.mentor-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 24px;
+  display: flex; flex-direction: column; gap: 14px;
+  transition: var(--trans);
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+  position: relative; overflow: hidden;
+}
+.mentor-card::before {
+  content: ''; position: absolute; top: -30px; right: -30px;
+  width: 100px; height: 100px; border-radius: 50%;
+  background: radial-gradient(circle, var(--violet-glow), transparent 70%);
+  pointer-events: none;
+}
+.mentor-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(139,92,246,.2);
+}
+.mentor-card:nth-child(2) { animation-delay: .06s; }
+.mentor-card:nth-child(3) { animation-delay: .12s; }
+.mentor-card:nth-child(4) { animation-delay: .18s; }
+
+.mentor-avatar-wrap { display: flex; align-items: flex-start; justify-content: space-between; }
+.mentor-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: #fff; flex-shrink: 0;
+  border: 2px solid var(--border-glow);
+}
+.mentor-verified-badge {
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.2);
+  color: var(--success); border-radius: 99px; padding: 4px 9px;
+  font-size: 10px; font-weight: 700;
+}
+
+.mentor-name { font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--text-h); }
+.mentor-email { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; word-break: break-all; }
+.mentor-email i { color: var(--sky-400); flex-shrink: 0; }
+
+.mentor-card-footer { margin-top: auto; }
+.request-btn {
+  display: inline-flex; align-items: center; gap: 7px; width: 100%;
+  justify-content: center; padding: 11px 18px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; text-decoration: none; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit; cursor: pointer; transition: var(--trans);
+  box-shadow: 0 4px 16px rgba(139,92,246,.3); position: relative; overflow: hidden;
+}
+.request-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.request-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,92,246,.45); }
+
+/* ═══ GROUP GRID ═════════════════════════════════════════════════════════ */
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px; margin-bottom: 48px;
+}
+.group-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  transition: var(--trans); box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+  display: flex; flex-direction: column;
+}
+.group-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(139,92,246,.2);
+}
+.group-card:nth-child(2) { animation-delay: .06s; }
+.group-card:nth-child(3) { animation-delay: .12s; }
+.group-card:nth-child(4) { animation-delay: .18s; }
+
+/* Top accent bar */
+.group-card-accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--violet-500), var(--gold-400));
+}
+.group-card-accent.green { background: linear-gradient(90deg, var(--emerald-500), var(--emerald-400)); }
+.group-card-accent.rose  { background: linear-gradient(90deg, #dc2626, var(--rose-400)); }
+
+.group-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+.group-type-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 99px; font-size: 10px; font-weight: 700;
+}
+.group-type-badge.public  { background: rgba(52,211,153,.1);  color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+.group-type-badge.private { background: rgba(251,113,133,.1); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+
+.group-name {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 800; color: var(--text-h);
+}
+.group-desc {
+  font-size: 13px; color: var(--text-muted);
+  line-height: 1.6; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.group-admin {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text-muted); margin-top: auto;
+}
+.group-admin-avatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+
+.group-card-footer { padding: 14px 20px; border-top: 1px solid var(--border); }
+.join-btn {
+  display: inline-flex; align-items: center; gap: 7px; width: 100%;
+  justify-content: center; padding: 10px 18px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; text-decoration: none; border: none;
+  font-family: inherit; cursor: pointer; transition: var(--trans); position: relative; overflow: hidden;
+}
+.join-btn.primary {
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  color: #fff; box-shadow: 0 4px 16px rgba(52,211,153,.25);
+}
+.join-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(52,211,153,.4); }
+.join-btn.secondary {
+  background: var(--bg-card-2); border: 1.5px solid var(--border);
+  color: var(--text-p);
+}
+.join-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+.join-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+
+/* ═══ EMPTY STATE ════════════════════════════════════════════════════════ */
+.empty-state {
+  text-align: center; padding: 48px; color: var(--text-muted); font-size: 14px;
+  background: var(--bg-card); border: 1px dashed var(--border);
+  border-radius: var(--radius-xl); animation: cardReveal .4s ease both;
+}
+.empty-state i { font-size: 40px; display: block; margin-bottom: 12px; opacity: .2; }
+.empty-state p { margin-top: 4px; }
+
+/* ═══ ACTION BAR ═════════════════════════════════════════════════════════ */
+.action-bar {
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  margin-top: 8px; padding-top: 24px; border-top: 1px solid var(--border);
+}
+.nav-btn {
+  padding: 10px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; border: 1px solid var(--border);
+  color: var(--text-muted); background: var(--bg-card);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--trans); cursor: pointer; font-family: inherit;
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-btn.primary:hover { background: var(--accent-d); }
+.nav-btn.success {
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  color: #fff; border-color: transparent;
+  box-shadow: 0 4px 16px rgba(52,211,153,.25);
+}
+.nav-btn.success:hover { box-shadow: 0 6px 24px rgba(52,211,153,.4); transform: translateY(-1px); }
+
+/* ═══ SPINNER ════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ FOOTER ═════════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  padding: 28px 24px;
+  text-align: center;
+}
+.footer-inner {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.footer-logo {
+  font-family: var(--font-display); font-size: 18px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.footer-links a {
+  color: var(--text-muted); text-decoration: none; font-size: 12px; transition: var(--trans);
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-socials { display: flex; gap: 10px; }
+.social-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; transition: var(--trans);
+}
+.social-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+.footer-copy { color: var(--text-muted); font-size: 11px; }
+
+/* ═══ MOBILE ════════════════════════════════════════════════════════════ */
+.hamburger {
+  display: none; background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-p); border-radius: var(--radius-sm);
+  width: 36px; height: 36px; font-size: 16px; cursor: pointer;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.mobile-menu {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; z-index: 500;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  padding: 16px; flex-direction: column; gap: 8px;
+  animation: fadeDown .25s ease;
+}
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.mobile-menu.open { display: flex; }
+.mob-link {
+  padding: 11px 16px; border-radius: var(--radius-sm);
+  color: var(--text-p); text-decoration: none; font-size: 14px; font-weight: 500;
+  transition: var(--trans); display: flex; align-items: center; gap: 8px;
+}
+.mob-link:hover { background: var(--bg-card); color: var(--accent); }
+.mob-link.active-link { background: var(--violet-glow); color: var(--accent); }
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .topbar-nav { display: none; }
+  .topbar-breadcrumb { display: none; }
+  .main-content { padding: 28px 14px 60px; }
+  .page-hero { padding: 38px 14px 32px; }
+  .page-hero h1 { font-size: 26px; }
+  .mentor-grid,
+  .group-grid { grid-template-columns: 1fr; }
+  .stats-row { gap: 10px; }
+  .action-bar { flex-direction: column; }
+  .action-bar .nav-btn { width: 100%; justify-content: center; }
+  .hero-search { max-width: 100%; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Find a Mentor</h1>
-        <p data-translate="hero-desc">Connect with mentors and join mentorship groups to enhance your learning journey</p>
-    </section>
+<!-- ═══ TOPBAR ═══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+    <a href="/mentorship/"><span data-i18n="mentorship">Mentorship</span></a>
+    <span class="bc-sep">/</span>
+    <span class="bc-current" data-i18n="find_mentor">Find a Mentor</span>
+  </nav>
+  <div class="topbar-actions topbar-nav">
+    <a href="/" class="tb-btn tb-btn-ghost"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a>
+    <a href="/courses/" class="tb-btn tb-btn-ghost"><i class="fas fa-graduation-cap"></i> <span data-i18n="courses">Courses</span></a>
+    <a href="/chatbot/" class="tb-btn tb-btn-ghost"><i class="fas fa-robot"></i> <span data-i18n="chatbot">Chatbot</span></a>
+    <a href="/competitions/" class="tb-btn tb-btn-ghost"><i class="fas fa-trophy"></i> <span data-i18n="competitions">Competitions</span></a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-ghost">
+          <i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard">Dashboard</span>
+        </a>
+      {% endif %}
+      {% if user.courses_profile %}
+        <div class="coins-badge"><i class="fas fa-coins"></i> {{ user.courses_profile.coins }}</div>
+      {% endif %}
+      <a href="/accounts/profile/" class="tb-btn tb-btn-ghost"><i class="fas fa-user-circle"></i> <span data-i18n="profile">Profile</span></a>
+      <a href="/accounts/logout/" class="tb-btn tb-btn-ghost"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></a>
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span></a>
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon"></i></button>
+    <button class="ctrl-btn" onclick="toggleLang()"><i class="fas fa-globe"></i></button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()" id="hamburger-btn" aria-label="Menu">
+    <i class="fas fa-bars"></i>
+  </button>
+</header>
+
+<!-- Mobile Menu -->
+<nav class="mobile-menu" id="mobile-menu">
+  <a href="/" class="mob-link"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a>
+  <a href="/courses/" class="mob-link"><i class="fas fa-graduation-cap"></i> <span data-i18n="courses">Courses</span></a>
+  <a href="/chatbot/" class="mob-link"><i class="fas fa-robot"></i> <span data-i18n="chatbot">Chatbot</span></a>
+  <a href="/competitions/" class="mob-link"><i class="fas fa-trophy"></i> <span data-i18n="competitions">Competitions</span></a>
+  <a href="/about/" class="mob-link"><i class="fas fa-info-circle"></i> <span data-i18n="about">About Us</span></a>
+  <a href="/contact_us/" class="mob-link"><i class="fas fa-envelope"></i> <span data-i18n="contact">Contact Us</span></a>
+  {% if user.is_authenticated %}
+    <a href="/accounts/profile/" class="mob-link"><i class="fas fa-user-circle"></i> <span data-i18n="profile">Profile</span></a>
+    <a href="/accounts/logout/" class="mob-link"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></a>
+  {% else %}
+    <a href="/accounts/register/" class="mob-link active-link"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span></a>
+  {% endif %}
+  <div style="display:flex;gap:10px;padding:4px 0;">
+    <button class="ctrl-btn" onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon-mob"></i></button>
+    <button class="ctrl-btn" onclick="toggleLang()"><i class="fas fa-globe"></i></button>
+  </div>
+</nav>
+
+<!-- ═══ PAGE WRAPPER ═════════════════════════════════════════════════════ -->
+<div class="page-wrapper">
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-hero-badge"><i class="fas fa-compass"></i> <span data-i18n="mentorship_system">Mentorship System</span></div>
+      <h1 data-i18n="hero_title">Find a Mentor</h1>
+      <p data-i18n="hero_desc">Connect with mentors and join mentorship groups to enhance your learning journey</p>
+
+      <!-- Search Bar -->
+      <div class="hero-search" id="search-wrap">
+        <input type="text" id="search-inp" placeholder="Search mentors or groups…"
+               data-i18n-placeholder="search_placeholder"
+               oninput="filterCards(this.value)">
+        <button class="hero-search-btn"><i class="fas fa-search"></i></button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-pill violet">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <span><strong id="mentors-count">{{ mentors|length }}</strong> <span data-i18n="stat_mentors">Mentors</span></span>
+        </div>
+        <div class="stat-pill gold">
+          <i class="fas fa-lock-open"></i>
+          <span><strong id="public-count">{{ public_groups|length }}</strong> <span data-i18n="stat_public">Public Groups</span></span>
+        </div>
+        <div class="stat-pill green">
+          <i class="fas fa-lock"></i>
+          <span><strong id="private-count">{{ private_groups|length }}</strong> <span data-i18n="stat_private">Private Groups</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="main-content">
 
     <!-- Messages -->
     {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} fadeIn">{{ message }}</div>
-            {% endfor %}
-        </div>
+    <div class="messages-wrap">
+      {% for message in messages %}
+      <div class="msg-alert {{ message.tags }}">
+        <i class="fas {% if 'success' in message.tags %}fa-check-circle{% elif 'error' in message.tags or 'danger' in message.tags %}fa-exclamation-circle{% elif 'warning' in message.tags %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i>
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
     {% endif %}
 
-    <!-- Mentors Container -->
-    <div class="mentors-container">
-        <h2 data-translate="mentors-heading">Available Mentors</h2>
-        {% for mentor in mentors %}
-            <div class="mentor-card">
-                <p><strong>{{ mentor.username }}</strong></p>
-                <p data-translate="mentor-email">Email: {{ mentor.email }}</p>
-                <a href="{% url 'mentorship:request_mentorship' mentor_id=mentor.id %}" data-translate="request-mentorship">Request Mentorship</a>
-            </div>
-        {% empty %}
-            <p class="text-center" data-translate="no-mentors">No mentors available at the moment.</p>
-        {% endfor %}
+    <!-- ── MENTORS ──────────────────────────────────────────────────── -->
+    <div class="section-heading">
+      <div class="section-heading-left">
+        <div class="section-icon violet"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div>
+          <div class="section-title" data-i18n="mentors_heading">Available Mentors</div>
+          <div class="section-sub" data-i18n="mentors_sub">Request one-on-one mentorship from an expert</div>
+        </div>
+      </div>
+      <div class="section-badge"><i class="fas fa-users"></i> {{ mentors|length }}</div>
     </div>
 
-    <!-- Public Groups Container -->
-    <div class="groups-container">
-        <h2 data-translate="public-groups-heading">Public Groups</h2>
-        {% for group in public_groups %}
-            <div class="group-card">
-                <p><strong>{{ group.name|default:"Unnamed Group" }}</strong></p>
-                <p data-translate="group-description">Description: {{ group.description|truncatewords:20|default:"No description available" }}</p>
-                <p data-translate="group-admin">Admin: {{ group.admin.username }}</p>
-                <a href="{% url 'mentorship:group_detail' group_id=group.id %}" class="join-btn" data-translate="join-group">Join Group</a>
-            </div>
-        {% empty %}
-            <p class="text-center" data-translate="no-public-groups">No public groups available at the moment.</p>
-        {% endfor %}
+    <div class="mentor-grid" id="mentors-grid">
+      {% for mentor in mentors %}
+      <div class="mentor-card" data-name="{{ mentor.username|lower }}" data-email="{{ mentor.email|lower }}">
+        <div class="mentor-avatar-wrap">
+          <div class="mentor-avatar">{{ mentor.username|slice:":1"|upper }}</div>
+          <div class="mentor-verified-badge"><i class="fas fa-check-circle"></i> <span data-i18n="verified">Verified</span></div>
+        </div>
+        <div>
+          <div class="mentor-name">{{ mentor.username }}</div>
+          <div class="mentor-email"><i class="fas fa-envelope"></i> {{ mentor.email }}</div>
+        </div>
+        <div class="mentor-card-footer">
+          <a href="{% url 'mentorship:request_mentorship' mentor_id=mentor.id %}" class="request-btn">
+            <i class="fas fa-handshake"></i>
+            <span data-i18n="request_mentorship">Request Mentorship</span>
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <i class="fas fa-user-slash"></i>
+        <strong data-i18n="no_mentors">No mentors available at the moment.</strong>
+        <p data-i18n="no_mentors_sub">Check back soon or create your own group.</p>
+      </div>
+      {% endfor %}
     </div>
 
-    <!-- Private Groups Container -->
-    <div class="groups-container">
-        <h2 data-translate="private-groups-heading">Private Groups</h2>
-        {% for group in private_groups %}
-            <div class="group-card">
-                <p><strong>{{ group.name|default:"Unnamed Group" }}</strong></p>
-                <p data-translate="group-description">Description: {{ group.description|truncatewords:20|default:"No description available" }}</p>
-                <p data-translate="group-admin">Admin: {{ group.admin.username }}</p>
-                <a href="{% url 'mentorship:request_join_group' group_id=group.id %}" class="join-btn" data-translate="request-join">Request to Join</a>
-            </div>
-        {% empty %}
-            <p class="text-center" data-translate="no-private-groups">No private groups available at the moment.</p>
-        {% endfor %}
+    <!-- ── PUBLIC GROUPS ────────────────────────────────────────────── -->
+    <div class="section-heading">
+      <div class="section-heading-left">
+        <div class="section-icon gold"><i class="fas fa-lock-open"></i></div>
+        <div>
+          <div class="section-title" data-i18n="public_groups_heading">Public Groups</div>
+          <div class="section-sub" data-i18n="public_groups_sub">Open groups — join instantly</div>
+        </div>
+      </div>
+      <div class="section-badge"><i class="fas fa-users"></i> {{ public_groups|length }}</div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="back-to-dashboard">Back to Dashboard</a>
-        <a href="{% url 'mentorship:create_group' %}" class="btn" data-translate="create-group">Create Group</a>
+    <div class="group-grid" id="public-groups-grid">
+      {% for group in public_groups %}
+      <div class="group-card" data-name="{{ group.name|lower|default:'' }}" data-desc="{{ group.description|lower|default:'' }}">
+        <div class="group-card-accent green"></div>
+        <div class="group-card-body">
+          <div>
+            <span class="group-type-badge public"><i class="fas fa-lock-open"></i> <span data-i18n="public">Public</span></span>
+          </div>
+          <div class="group-name">{{ group.name|default:"Unnamed Group" }}</div>
+          {% if group.description %}
+          <div class="group-desc">{{ group.description|truncatewords:20 }}</div>
+          {% endif %}
+          <div class="group-admin">
+            <div class="group-admin-avatar">{{ group.admin.username|slice:":1"|upper }}</div>
+            <span data-i18n="by">by</span> <strong style="color:var(--text-p);">{{ group.admin.username }}</strong>
+          </div>
+        </div>
+        <div class="group-card-footer">
+          <a href="{% url 'mentorship:group_detail' group_id=group.id %}" class="join-btn primary">
+            <i class="fas fa-sign-in-alt"></i>
+            <span data-i18n="join_group">Join Group</span>
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <i class="fas fa-folder-open"></i>
+        <strong data-i18n="no_public_groups">No public groups available at the moment.</strong>
+      </div>
+      {% endfor %}
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+    <!-- ── PRIVATE GROUPS ───────────────────────────────────────────── -->
+    <div class="section-heading">
+      <div class="section-heading-left">
+        <div class="section-icon rose"><i class="fas fa-lock"></i></div>
+        <div>
+          <div class="section-title" data-i18n="private_groups_heading">Private Groups</div>
+          <div class="section-sub" data-i18n="private_groups_sub">Request to join — admin approval required</div>
+        </div>
+      </div>
+      <div class="section-badge"><i class="fas fa-users"></i> {{ private_groups|length }}</div>
+    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'mentorship/find_mentor.js' %}"></script>
+    <div class="group-grid" id="private-groups-grid">
+      {% for group in private_groups %}
+      <div class="group-card" data-name="{{ group.name|lower|default:'' }}" data-desc="{{ group.description|lower|default:'' }}">
+        <div class="group-card-accent rose"></div>
+        <div class="group-card-body">
+          <div>
+            <span class="group-type-badge private"><i class="fas fa-lock"></i> <span data-i18n="private">Private</span></span>
+          </div>
+          <div class="group-name">{{ group.name|default:"Unnamed Group" }}</div>
+          {% if group.description %}
+          <div class="group-desc">{{ group.description|truncatewords:20 }}</div>
+          {% endif %}
+          <div class="group-admin">
+            <div class="group-admin-avatar">{{ group.admin.username|slice:":1"|upper }}</div>
+            <span data-i18n="by">by</span> <strong style="color:var(--text-p);">{{ group.admin.username }}</strong>
+          </div>
+        </div>
+        <div class="group-card-footer">
+          <a href="{% url 'mentorship:request_join_group' group_id=group.id %}" class="join-btn secondary">
+            <i class="fas fa-paper-plane"></i>
+            <span data-i18n="request_join">Request to Join</span>
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <i class="fas fa-folder-open"></i>
+        <strong data-i18n="no_private_groups">No private groups available at the moment.</strong>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- ── ACTION BAR ─────────────────────────────────────────────── -->
+    <div class="action-bar">
+      <a href="{% url 'mentorship:mentor_dashboard' %}" class="nav-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span data-i18n="back_to_dashboard">Back to Dashboard</span>
+      </a>
+      <a href="{% url 'mentorship:create_group' %}" class="nav-btn success">
+        <i class="fas fa-plus-circle"></i>
+        <span data-i18n="create_group">Create Group</span>
+      </a>
+    </div>
+
+  </div>{# /main-content #}
+
+  <!-- ═══ FOOTER ═══════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">Eduvia</div>
+      <nav class="footer-links">
+        <a href="/" data-i18n="home">Home</a>
+        <a href="/courses/" data-i18n="courses">Courses</a>
+        <a href="/chatbot/" data-i18n="chatbot">Chatbot</a>
+        <a href="/about/" data-i18n="about">About Us</a>
+        <a href="/contact_us/" data-i18n="contact">Contact Us</a>
+      </nav>
+      <div class="footer-socials">
+        <a href="https://www.facebook.com/share/18iRSctdxN/" class="social-btn" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://x.com/Eduvia7" class="social-btn" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" class="social-btn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <p class="footer-copy" data-i18n="footer_text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+    </div>
+  </footer>
+
+</div>{# /page-wrapper #}
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    mentorship:'Mentorship', find_mentor:'Find a Mentor',
+    home:'Home', courses:'Courses', chatbot:'Chatbot',
+    competitions:'Competitions', about:'About Us', contact:'Contact Us',
+    profile:'Profile', logout:'Logout', login:'Login', dashboard:'Dashboard',
+    mentorship_system:'Mentorship System',
+    hero_title:'Find a Mentor',
+    hero_desc:'Connect with mentors and join mentorship groups to enhance your learning journey',
+    search_placeholder:'Search mentors or groups…',
+    stat_mentors:'Mentors', stat_public:'Public Groups', stat_private:'Private Groups',
+    mentors_heading:'Available Mentors', mentors_sub:'Request one-on-one mentorship from an expert',
+    verified:'Verified', request_mentorship:'Request Mentorship',
+    no_mentors:'No mentors available at the moment.', no_mentors_sub:'Check back soon or create your own group.',
+    public_groups_heading:'Public Groups', public_groups_sub:'Open groups — join instantly',
+    public:'Public', join_group:'Join Group',
+    no_public_groups:'No public groups available at the moment.',
+    private_groups_heading:'Private Groups', private_groups_sub:'Request to join — admin approval required',
+    private:'Private', request_join:'Request to Join',
+    no_private_groups:'No private groups available at the moment.',
+    by:'by', back_to_dashboard:'Back to Dashboard', create_group:'Create Group',
+    footer_text:'© 2025 Eduvia and creativitycode. All rights reserved.',
+  },
+  ar: {
+    mentorship:'الإرشاد', find_mentor:'إيجاد مرشد',
+    home:'الرئيسية', courses:'الكورسات', chatbot:'المساعد الذكي',
+    competitions:'المسابقات', about:'من نحن', contact:'اتصل بنا',
+    profile:'الملف الشخصي', logout:'تسجيل الخروج', login:'تسجيل الدخول', dashboard:'لوحة التحكم',
+    mentorship_system:'نظام الإرشاد',
+    hero_title:'إيجاد مرشد',
+    hero_desc:'تواصل مع المرشدين وانضم إلى مجموعات الإرشاد لتعزيز رحلتك التعليمية',
+    search_placeholder:'ابحث عن مرشد أو مجموعة…',
+    stat_mentors:'مرشد', stat_public:'مجموعات عامة', stat_private:'مجموعات خاصة',
+    mentors_heading:'المرشدون المتاحون', mentors_sub:'اطلب إرشادًا فرديًا من خبير',
+    verified:'موثّق', request_mentorship:'طلب الإرشاد',
+    no_mentors:'لا يوجد مرشدون متاحون حاليًا.', no_mentors_sub:'تحقق لاحقًا أو أنشئ مجموعتك.',
+    public_groups_heading:'المجموعات العامة', public_groups_sub:'مجموعات مفتوحة — انضم فورًا',
+    public:'عامة', join_group:'الانضمام',
+    no_public_groups:'لا توجد مجموعات عامة حاليًا.',
+    private_groups_heading:'المجموعات الخاصة', private_groups_sub:'اطلب الانضمام — يحتاج موافقة المسؤول',
+    private:'خاصة', request_join:'طلب الانضمام',
+    no_private_groups:'لا توجد مجموعات خاصة حاليًا.',
+    by:'بواسطة', back_to_dashboard:'العودة للوحة التحكم', create_group:'إنشاء مجموعة',
+    footer_text:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  const searchInp = document.getElementById('search-inp');
+  if (searchInp && I18N[lang].search_placeholder) searchInp.placeholder = I18N[lang].search_placeholder;
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const icon = document.getElementById('theme-icon');
+  const iconMob = document.getElementById('theme-icon-mob');
+  const cls = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  if (icon) icon.className = cls;
+  if (iconMob) iconMob.className = cls;
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile Menu ─────────────────────────────────────────────────────── */
+function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
+document.addEventListener('click', e => {
+  const mm = document.getElementById('mobile-menu');
+  const hb = document.getElementById('hamburger-btn');
+  if (mm && hb && !mm.contains(e.target) && !hb.contains(e.target)) mm.classList.remove('open');
+});
+
+/* ── Live Search Filter ──────────────────────────────────────────────── */
+function filterCards(query) {
+  const q = (query || '').toLowerCase().trim();
+  // Mentors
+  document.querySelectorAll('#mentors-grid .mentor-card').forEach(card => {
+    const match = !q
+      || (card.dataset.name || '').includes(q)
+      || (card.dataset.email || '').includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+  // Public groups
+  document.querySelectorAll('#public-groups-grid .group-card').forEach(card => {
+    const match = !q
+      || (card.dataset.name || '').includes(q)
+      || (card.dataset.desc || '').includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+  // Private groups
+  document.querySelectorAll('#private-groups-grid .group-card').forEach(card => {
+    const match = !q
+      || (card.dataset.name || '').includes(q)
+      || (card.dataset.desc || '').includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+}
+
+/* ── Toast ────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ─────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  document.querySelectorAll('.msg-alert').forEach(el => {
+    const type = el.classList.contains('success') ? 'success'
+               : (el.classList.contains('error') || el.classList.contains('danger')) ? 'error' : 'info';
+    toast(el.textContent.trim(), type);
+  });
+});
+</script>
 </body>
 </html>

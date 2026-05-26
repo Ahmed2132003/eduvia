@@ -1,652 +1,807 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
-    <title data-translate="rate-mentor-title">Rate Mentor - Eduvia</title>
-    <meta name="description" content="Rate your mentor in Eduvia's Mentorship System.">
-    <meta name="keywords" content="rate mentor, Eduvia, mentorship">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/">
+<!-- 🔍 SEO -->
+<title data-i18n="page_title">Rate Mentor — Eduvia</title>
+<meta name="description" content="Rate your mentor in Eduvia's Mentorship System.">
+<meta name="keywords" content="rate mentor, Eduvia, mentorship">
+<meta name="author" content="Eduvia">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/">
 
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Rate Mentor - Eduvia">
-    <meta property="og:description" content="Rate your mentor in Eduvia's Mentorship System.">
-    <meta property="og:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/">
-    <meta property="og:type" content="website">
+<!-- 🌍 Open Graph -->
+<meta property="og:title" content="Rate Mentor - Eduvia">
+<meta property="og:description" content="Rate your mentor in Eduvia's Mentorship System.">
+<meta property="og:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
+<meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/">
+<meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Rate Mentor - Eduvia">
-    <meta name="twitter:description" content="Rate your mentor in Eduvia's Mentorship System.">
-    <meta name="twitter:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rate Mentor - Eduvia">
+<meta name="twitter:description" content="Rate your mentor in Eduvia's Mentorship System.">
+<meta name="twitter:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
 
-    <!-- 🖼️ Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<!-- 🖼️ Favicon -->
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-    <!-- 🌐 Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<!-- Fonts & Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🎨 Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'mentorship/rate_mentor.css' %}">
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/#webpage",
-                "url": "https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/",
-                "name": "Rate Mentor - Eduvia",
-                "description": "Rate your mentor in Eduvia's Mentorship System.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Mentorship",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "Rate Mentor",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
-    <style>
-        :root {
-            /* Light Mode Colors */
-            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
-            --text-color: #333;
-            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
-            --header-text: #ffffff;
-            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
-            --card-text: #00a8cc;
-            --card-secondary-text: #444;
-            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
-            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
-            --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
-            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
-            --footer-text: #333;
-            --border-color: #ddd;
-            --alert-success-bg: #d4edda;
-            --alert-success-text: #155724;
-            --alert-info-bg: #cce5ff;
-            --alert-info-text: #004085;
+<!-- 📊 Structured Data -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Organization",
+            "@id": "https://eduvia-ai.fly.dev/#organization",
+            "name": "Eduvia",
+            "url": "https://eduvia-ai.fly.dev",
+            "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" }
+        },
+        {
+            "@type": "WebPage",
+            "url": "https://eduvia-ai.fly.dev/mentorship/rate_mentor/{{ mentorship.id }}/",
+            "name": "Rate Mentor - Eduvia"
         }
+    ]
+}
+</script>
 
-        /* Dark Mode Colors */
-        body.dark-mode {
-            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
-            --text-color: #e0e0e0;
-            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
-            --header-text: #e0e0e0;
-            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            --card-text: #3498db;
-            --card-secondary-text: #b0b0b0;
-            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
-            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            --footer-text: #e0e0e0;
-            --border-color: #555;
-            --alert-success-bg: #2ecc71;
-            --alert-success-text: #ffffff;
-            --alert-info-bg: #3498db;
-            --alert-info-text: #ffffff;
-        }
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            margin: 0;
-            font-family: 'Cairo', sans-serif;
-            background: var(--background-gradient);
-            color: var(--text-color);
-            transition: background 0.3s ease, color 0.3s ease;
-        }
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-        html[dir="rtl"] body {
-            text-align: right;
-        }
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
 
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: var(--header-bg);
-            color: var(--header-text);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            animation: slideDown 0.8s ease-out forwards;
-        }
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
 
-        @keyframes slideDown {
-            0% { transform: translateY(-100%); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
 
-        .header a {
-            color: var(--header-text);
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 18px;
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease;
-        }
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
 
-        .header a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: var(--header-text);
-            left: 0;
-            bottom: -5px;
-            transition: width 0.3s ease;
-        }
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
 
-        html[dir="rtl"] .header a::after {
-            left: unset;
-            right: 0;
-        }
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
 
-        .header a:hover::after { width: 100%; }
-        .header a:hover { color: #f0f8ff; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
 
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            transition: transform 0.3s ease;
-        }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-        .logo:hover { transform: scale(1.05); }
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
 
-        .menu {
-            display: flex;
-            align-items: center;
-        }
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0;
+  text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-page {
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-nav {
+  display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+  flex-wrap: nowrap;
+}
 
-        html[dir="rtl"] .menu {
-            flex-direction: row-reverse;
-        }
+.nav-link {
+  padding: 7px 13px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans);
+  white-space: nowrap;
+}
+.nav-link:hover { color: var(--text-p); background: var(--bg-card); }
+.nav-link.active { color: var(--accent); }
 
-        .coins-display {
-            margin-left: 10px;
-            font-weight: bold;
-            color: var(--header-text);
-            background: var(--header-bg);
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+.coins-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 4px 12px;
+  font-size: 12px; font-weight: 700; color: var(--warning);
+}
+.coins-pill i { animation: spin 3s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-        html[dir="rtl"] .coins-display {
-            margin-left: 0;
-            margin-right: 10px;
-        }
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); flex-shrink: 0;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
 
-        .coins-icon {
-            font-size: 16px;
-            color: #ffd700;
-            animation: spin 2s linear infinite;
-        }
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit; flex-shrink: 0;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+/* Hamburger */
+.hamburger {
+  display: none; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 15px; cursor: pointer;
+  align-items: center; justify-content: center; transition: var(--trans);
+  flex-shrink: 0;
+}
+.hamburger:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* Dark Mode Toggle */
-        .dark-mode-toggle, .language-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            margin: 0 10px;
-        }
+/* Mobile nav dropdown */
+.mobile-nav {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  padding: 12px 20px; z-index: 590; flex-direction: column; gap: 4px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav .nav-link { font-size: 14px; padding: 10px 14px; }
+.mobile-nav .coins-pill { width: fit-content; margin: 4px 14px; }
 
-        .dark-mode-toggle i, .language-toggle i {
-            font-size: 20px;
-            color: var(--header-text);
-            transition: color 0.3s ease;
-        }
+/* ═══ MAIN LAYOUT ═══════════════════════════════════════════════════════ */
+.page-wrapper {
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
 
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: var(--header-text);
-            cursor: pointer;
-        }
+/* ═══ BREADCRUMB ════════════════════════════════════════════════════════ */
+.breadcrumb-bar {
+  padding: 12px 24px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-muted);
+}
+.breadcrumb-bar a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.breadcrumb-bar a:hover { color: var(--accent); }
+.breadcrumb-bar i { font-size: 9px; }
 
-        @media (max-width: 768px) {
-            .menu {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: var(--header-bg);
-                padding: 20px 0;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
+/* ═══ HERO BAND ══════════════════════════════════════════════════════════ */
+.page-hero {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 24px 36px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.page-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% -20%, rgba(139,92,246,.12), transparent);
+  pointer-events: none;
+}
+.page-hero-icon {
+  width: 64px; height: 64px; border-radius: var(--radius-lg);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: var(--gold-400);
+  margin: 0 auto 16px; position: relative;
+  box-shadow: var(--glow);
+}
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -.5px; margin-bottom: 6px;
+}
+.page-hero p { font-size: 14px; color: var(--text-muted); }
 
-            html[dir="rtl"] .menu {
-                flex-direction: column;
-                left: unset;
-                right: 0;
-            }
+/* ═══ CONTENT ════════════════════════════════════════════════════════════ */
+.content-area {
+  flex: 1;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 40px 24px 80px;
+  background: var(--bg-panel);
+}
 
-            .menu.active { display: flex; }
-            .menu a, .menu .coins-display { margin: 10px 0; font-size: 20px; }
-            .hamburger { display: block; }
-            .coins-display { display: flex; justify-content: center; }
-        }
+/* ═══ MESSAGES ═══════════════════════════════════════════════════════════ */
+.messages-stack {
+  max-width: 600px; width: 100%; margin: 0 auto 0;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 16px 24px 0;
+  background: var(--bg-panel);
+}
+.alert-msg {
+  padding: 12px 16px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+  animation: slideIn .3s ease;
+}
+@keyframes slideIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+.alert-success { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.alert-info    { background: rgba(139,92,246,.08); color: var(--violet-400); border: 1px solid rgba(139,92,246,.22); }
+.alert-error   { background: rgba(251,113,133,.06); color: var(--danger); border: 1px solid rgba(251,113,133,.2); }
 
-        /* Rating Section */
-        .rating-container {
-            width: 90%;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            animation: formSlideIn 1s ease-out forwards;
-            opacity: 0;
-            background: var(--card-bg);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transition: background 0.3s ease;
-        }
+/* ═══ RATING CARD ════════════════════════════════════════════════════════ */
+.rating-card {
+  width: 100%; max-width: 560px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity:0; transform:translateY(24px) scale(.97); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
 
-        @keyframes formSlideIn {
-            0% { transform: translateY(50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
+/* Card header */
+.rc-header {
+  padding: 24px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.rc-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: #fff; flex-shrink: 0;
+  border: 2px solid var(--border-glow);
+}
+.rc-mentor-info { flex: 1; }
+.rc-mentor-name {
+  font-family: var(--font-display);
+  font-size: 17px; font-weight: 700; color: var(--text-h); margin-bottom: 3px;
+}
+.rc-mentor-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.rc-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 99px; font-size: 10px; font-weight: 700;
+  background: rgba(139,92,246,.1); color: var(--violet-400); border: 1px solid rgba(139,92,246,.2);
+}
 
-        .rating-container h2 {
-            color: var(--card-text);
-            font-size: 28px;
-            margin-bottom: 20px;
-            text-align: center;
-            transition: color 0.3s ease;
-        }
+/* Card body */
+.rc-body { padding: 28px; }
 
-        .mentor-info {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+/* Star rating interactive */
+.star-section { text-align: center; margin-bottom: 28px; }
+.star-section-label {
+  font-size: 13px; color: var(--text-muted); margin-bottom: 14px;
+  font-weight: 500;
+}
+.star-row-big {
+  display: flex; justify-content: center; gap: 8px; margin-bottom: 10px;
+}
+.star-btn-big {
+  font-size: 42px; background: none; border: none; cursor: pointer;
+  color: var(--bg-card-2); line-height: 1; transition: var(--trans);
+  filter: drop-shadow(0 0 0 transparent);
+}
+.star-btn-big:hover, .star-btn-big.lit {
+  color: var(--gold-400);
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 8px rgba(251,191,36,.5));
+}
+.star-label-display {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700;
+  color: var(--text-muted); min-height: 22px;
+  transition: var(--trans);
+}
+.star-label-display.active { color: var(--gold-400); }
 
-        .mentor-info p {
-            margin: 5px 0;
-            color: var(--card-secondary-text);
-            font-size: 16px;
-            transition: color 0.3s ease;
-        }
+/* Form fields */
+.field-group { margin-bottom: 18px; }
+.field-label {
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .6px;
+  display: block; margin-bottom: 7px;
+}
+.field-select, .field-textarea {
+  width: 100%; background: var(--bg-base);
+  border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  color: var(--text-p); padding: 12px 14px;
+  font-size: 14px; font-family: inherit; transition: var(--trans);
+}
+.field-select:focus, .field-textarea:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+}
+.field-select option { background: var(--bg-card); }
+.field-textarea { resize: vertical; min-height: 110px; line-height: 1.65; }
+.field-textarea::placeholder { color: var(--text-muted); }
+.char-hint { text-align: right; font-size: 11px; color: var(--text-muted); margin-top: 5px; }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+/* Submit button */
+.rc-footer {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+}
+.submit-btn {
+  padding: 13px 36px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--gold-400), #f59e0b);
+  color: #1a0f00; font-family: var(--font-display);
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(251,191,36,.3);
+}
+.submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.25), transparent);
+  border-radius: inherit;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(251,191,36,.4); }
+.submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.submit-hint { font-size: 12px; color: var(--text-muted); }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--card-text);
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
+/* Spinner */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spinA .7s linear infinite; display: inline-block;
+}
+@keyframes spinA { to { transform: rotate(360deg); } }
 
-        .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
+/* ═══ FOOTER ═════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 28px 24px;
+}
+.footer-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-links a {
+  font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans);
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-muted); display: flex; align-items: center;
+  justify-content: center; font-size: 13px; text-decoration: none;
+  transition: var(--trans);
+}
+.footer-social a:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
 
-        .form-group textarea {
-            resize: vertical;
-            height: 100px;
-        }
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger); border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12); color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
 
-        .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--btn-bg);
-            outline: none;
-        }
-
-        .btn {
-            background: var(--btn-bg);
-            color: white;
-            padding: 10px 25px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 16px;
-            box-shadow: var(--btn-shadow);
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background: var(--btn-bg-hover);
-            transform: scale(1.1);
-        }
-
-        /* Messages */
-        .messages {
-            max-width: 600px;
-            margin: 20px auto;
-        }
-
-        .alert {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .alert-success {
-            background-color: var(--alert-success-bg);
-            color: var(--alert-success-text);
-        }
-
-        .alert-info {
-            background-color: var(--alert-info-bg);
-            color: var(--alert-info-text);
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--footer-bg);
-            text-align: center;
-            padding: 10px 0;
-            font-size: 14px;
-            color: var(--footer-text);
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-    </style>
+/* ═══ RESPONSIVE ═════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .topbar-nav { display: none; }
+  .hamburger { display: flex; }
+  .topbar-page { display: none; }
+  .page-hero h1 { font-size: 22px; }
+  .rc-body { padding: 20px; }
+  .rc-footer { padding: 16px 20px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-links { justify-content: center; }
+  .footer-social { justify-content: center; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Messages -->
-    <div class="messages">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{% if message.tags == 'success' %}success{% else %}info{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+<!-- ══ TOPBAR ═══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-page" data-i18n="page_title">Rate Mentor</span>
+
+  <nav class="topbar-nav">
+    <a href="/" class="nav-link" data-i18n="nav_home">Home</a>
+    <a href="/courses/" class="nav-link" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" class="nav-link" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" class="nav-link" data-i18n="nav_competitions">Competitions</a>
+    <a href="/performance/dashboard/" class="nav-link" data-i18n="nav_performance">Performance</a>
+    <a href="{% url 'skills_market:services_list' %}" class="nav-link" data-i18n="nav_skills">Skills Market</a>
+    <a href="/about/" class="nav-link" data-i18n="nav_about">About</a>
+    <a href="/contact_us/" class="nav-link" data-i18n="nav_contact">Contact</a>
+
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link" data-i18n="nav_dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" class="nav-link" data-i18n="nav_profile">Profile</a>
+      <a href="/accounts/logout/" class="nav-link" data-i18n="nav_logout">Logout</a>
+      {% if user.courses_profile %}
+        <span class="coins-pill">
+          <i class="fas fa-coins"></i>
+          <span>{{ user.courses_profile.coins }}</span>
+        </span>
+      {% else %}
+        <span class="coins-pill"><i class="fas fa-coins"></i> 0</span>
+      {% endif %}
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent" data-i18n="nav_login">Login</a>
+    {% endif %}
+  </nav>
+
+  <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+    <i class="fas fa-moon" id="theme-icon"></i>
+  </button>
+  <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+    <i class="fas fa-globe"></i>
+  </button>
+  <button class="hamburger" onclick="toggleMobileNav()">
+    <i class="fas fa-bars"></i>
+  </button>
+</header>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/" class="nav-link" data-i18n="nav_home">Home</a>
+  <a href="/courses/" class="nav-link" data-i18n="nav_courses">Courses</a>
+  <a href="/chatbot/" class="nav-link" data-i18n="nav_chatbot">Chatbot</a>
+  <a href="/competitions/" class="nav-link" data-i18n="nav_competitions">Competitions</a>
+  <a href="/performance/dashboard/" class="nav-link" data-i18n="nav_performance">Performance</a>
+  <a href="{% url 'skills_market:services_list' %}" class="nav-link" data-i18n="nav_skills">Skills Market</a>
+  <a href="/about/" class="nav-link" data-i18n="nav_about">About</a>
+  <a href="/contact_us/" class="nav-link" data-i18n="nav_contact">Contact</a>
+  {% if user.is_authenticated %}
+    <a href="/accounts/profile/" class="nav-link" data-i18n="nav_profile">Profile</a>
+    <a href="/accounts/logout/" class="nav-link" data-i18n="nav_logout">Logout</a>
+    {% if user.courses_profile %}
+      <span class="coins-pill"><i class="fas fa-coins"></i> {{ user.courses_profile.coins }}</span>
+    {% endif %}
+  {% else %}
+    <a href="/accounts/register/" class="nav-link" data-i18n="nav_login">Login</a>
+  {% endif %}
+</div>
+
+<div class="page-wrapper">
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="messages-stack">
+    {% for message in messages %}
+    <div class="alert-msg alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %}">
+      <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+      {{ message }}
     </div>
+    {% endfor %}
+  </div>
+  {% endif %}
 
-    <!-- Rating Section -->
-    <div class="rating-container">
-        <h2 data-translate="rate-mentor-heading">Rate Your Mentor</h2>
-        <div class="mentor-info">
-            <p><strong data-translate="mentor-label">Mentor:</strong> {{ mentorship.mentor.username }}</p>
-            <p><strong data-translate="started-label">Started:</strong> {{ mentorship.created_at|date:"F d, Y H:i" }}</p>
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="page-hero-icon"><i class="fas fa-star"></i></div>
+    <h1 data-i18n="page_heading">Rate Your Mentor</h1>
+    <p data-i18n="page_sub">Share your experience and help others find great mentors</p>
+  </div>
+
+  <!-- Content -->
+  <div class="content-area">
+    <div class="rating-card">
+
+      <!-- Card Header — Mentor Info -->
+      <div class="rc-header">
+        <div class="rc-avatar">{{ mentorship.mentor.username|slice:":1"|upper }}</div>
+        <div class="rc-mentor-info">
+          <div class="rc-mentor-name">{{ mentorship.mentor.get_full_name|default:mentorship.mentor.username }}</div>
+          <div class="rc-mentor-meta">
+            <span class="rc-badge"><i class="fas fa-chalkboard-teacher"></i> <span data-i18n="mentor_badge">Mentor</span></span>
+            <span><i class="fas fa-calendar-alt"></i> <span data-i18n="since_label">Since</span> {{ mentorship.created_at|date:"M d, Y" }}</span>
+          </div>
         </div>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_rating" data-translate="rating-label">Rating (1-5):</label>
-                {{ form.rating }}
-            </div>
-            <div class="form-group">
-                <label for="id_comment" data-translate="comment-label">Comment (Optional):</label>
-                {{ form.comment }}
-            </div>
-            <div class="text-center">
-                <button type="submit" class="btn" data-translate="submit-btn">Submit Rating</button>
-            </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="rc-body">
+
+        <!-- Visual Star Row -->
+        <div class="star-section">
+          <div class="star-section-label" data-i18n="tap_to_rate">Tap a star to rate</div>
+          <div class="star-row-big" id="star-row-visual">
+            <button class="star-btn-big" data-val="1" onmouseenter="hoverStar(1)" onmouseleave="unhoverStar()" onclick="clickStar(1)">★</button>
+            <button class="star-btn-big" data-val="2" onmouseenter="hoverStar(2)" onmouseleave="unhoverStar()" onclick="clickStar(2)">★</button>
+            <button class="star-btn-big" data-val="3" onmouseenter="hoverStar(3)" onmouseleave="unhoverStar()" onclick="clickStar(3)">★</button>
+            <button class="star-btn-big" data-val="4" onmouseenter="hoverStar(4)" onmouseleave="unhoverStar()" onclick="clickStar(4)">★</button>
+            <button class="star-btn-big" data-val="5" onmouseenter="hoverStar(5)" onmouseleave="unhoverStar()" onclick="clickStar(5)">★</button>
+          </div>
+          <div class="star-label-display" id="star-label"></div>
+        </div>
+
+        <form method="post" id="rate-form">
+          {% csrf_token %}
+
+          <!-- Rating select (hidden, synced with visual stars) -->
+          <div class="field-group" style="display:none;">
+            {{ form.rating }}
+          </div>
+
+          <!-- Visible rating select fallback -->
+          <div class="field-group">
+            <label class="field-label" for="id_rating" data-i18n="rating_label">Rating (1–5)</label>
+            <select class="field-select" name="rating" id="id_rating" onchange="syncSelectToStars(this.value)">
+              <option value="">— <span data-i18n="select_rating">Select a rating</span> —</option>
+              <option value="1">1 ★ — Poor</option>
+              <option value="2">2 ★★ — Fair</option>
+              <option value="3">3 ★★★ — Good</option>
+              <option value="4">4 ★★★★ — Very Good</option>
+              <option value="5">5 ★★★★★ — Excellent</option>
+            </select>
+          </div>
+
+          <!-- Comment -->
+          <div class="field-group">
+            <label class="field-label" for="id_comment" data-i18n="comment_label">Comment <span style="opacity:.5;font-weight:400;text-transform:none;">(optional)</span></label>
+            <textarea class="field-textarea" name="comment" id="id_comment" rows="4" maxlength="1000"
+              placeholder="Share your experience with this mentor…"
+              oninput="document.getElementById('char-count').textContent = this.value.length + ' / 1000'"></textarea>
+            <div class="char-hint" id="char-count">0 / 1000</div>
+          </div>
+
+          <!-- Footer -->
+          <div class="rc-footer" style="padding: 0; border: none; margin-top: 4px;">
+            <span class="submit-hint"><i class="fas fa-shield-alt"></i> <span data-i18n="rating_hint">Your feedback helps others</span></span>
+            <button type="submit" class="submit-btn" id="submit-btn">
+              <i class="fas fa-paper-plane"></i>
+              <span data-i18n="submit_btn">Submit Rating</span>
+            </button>
+          </div>
+
         </form>
+      </div>
+
     </div>
+  </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+  <!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-logo">Eduvia</span>
+      <div class="footer-links">
+        <a href="/" data-i18n="nav_home">Home</a>
+        <a href="/courses/" data-i18n="nav_courses">Courses</a>
+        <a href="/about/" data-i18n="nav_about">About</a>
+        <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+        <a href="/mentorship/" data-i18n="nav_mentorship">Mentorship</a>
+      </div>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://x.com/Eduvia7" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span class="footer-copy" data-i18n="footer_copy">© 2025 Eduvia & creativitycode. All rights reserved.</span>
+    </div>
+  </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Translation object
-        const translations = {
-            en: {
-                "rate-mentor-title": "Rate Mentor - Eduvia",
-                "rate-mentor-meta-desc": "Rate your mentor in Eduvia's Mentorship System.",
-                "rate-mentor-meta-keywords": "rate mentor, Eduvia, mentorship",
-                "rate-mentor-og-title": "Rate Mentor - Eduvia",
-                "rate-mentor-og-desc": "Rate your mentor in Eduvia's Mentorship System.",
-                "rate-mentor-heading": "Rate Your Mentor",
-                "mentor-label": "Mentor:",
-                "started-label": "Started:",
-                "rating-label": "Rating (1-5):",
-                "comment-label": "Comment (Optional):",
-                "submit-btn": "Submit Rating",
-                "nav-home": "Home",
-                "nav-courses": "Courses",
-                "nav-chatbot": "Chatbot",
-                "nav-competitions": "Competitions",
-                "nav-performance": "Performance",
-                "nav-skills-market": "Skills Market",
-                "nav-about": "About Us",
-                "nav-contact": "Contact Us",
-                "nav-dashboard": "Dashboard",
-                "nav-profile": "Profile",
-                "nav-logout": "Logout",
-                "nav-coins": "Coins:",
-                "nav-login": "Login",
-                "footer-text": "© 2025 Eduvia. All rights reserved."
-            },
-            ar: {
-                "rate-mentor-title": "تقييم المشرف - إدوفيا",
-                "rate-mentor-meta-desc": "قيّم مشرفك في نظام الإرشاد بمنصة إدوفيا.",
-                "rate-mentor-meta-keywords": "تقييم المشرف, إدوفيا, الإرشاد",
-                "rate-mentor-og-title": "تقييم المشرف - إدوفيا",
-                "rate-mentor-og-desc": "قيّم مشرفك في نظام الإرشاد بمنصة إدوفيا.",
-                "rate-mentor-heading": "تقييم مشرفك",
-                "mentor-label": "المشرف:",
-                "started-label": "بدأ في:",
-                "rating-label": "التقييم (1-5):",
-                "comment-label": "تعليق (اختياري):",
-                "submit-btn": "تقديم التقييم",
-                "nav-home": "الرئيسية",
-                "nav-courses": "الدورات",
-                "nav-chatbot": "الدردشة الآلية",
-                "nav-competitions": "المسابقات",
-                "nav-performance": "الأداء",
-                "nav-skills-market": "سوق المهارات",
-                "nav-about": "معلومات عنا",
-                "nav-contact": "تواصل معنا",
-                "nav-dashboard": "لوحة التحكم",
-                "nav-profile": "الملف الشخصي",
-                "nav-logout": "تسجيل الخروج",
-                "nav-coins": "النقاط:",
-                "nav-login": "تسجيل الدخول",
-                "footer-text": "© 2025 إدوفيا. جميع الحقوق محفوظة."
-            }
-        };
+</div><!-- /page-wrapper -->
 
-        function toggleMenu() {
-            const menu = document.querySelector('.menu');
-            menu.classList.toggle('active');
-        }
+<div class="toast-wrap" id="toast-wrap"></div>
 
-        // Dark Mode Toggle
-        function toggleDarkMode() {
-            const body = document.body;
-            const toggleIcon = document.querySelector('.dark-mode-toggle i');
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                toggleIcon.classList.remove('fa-moon');
-                toggleIcon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                toggleIcon.classList.remove('fa-sun');
-                toggleIcon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
-        }
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    page_title:'Rate Mentor — Eduvia', page_heading:'Rate Your Mentor',
+    page_sub:'Share your experience and help others find great mentors',
+    mentor_badge:'Mentor', since_label:'Since', tap_to_rate:'Tap a star to rate',
+    rating_label:'Rating (1–5)', comment_label:'Comment', select_rating:'Select a rating',
+    submit_btn:'Submit Rating', rating_hint:'Your feedback helps others',
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_skills:'Skills Market', nav_about:'About', nav_contact:'Contact',
+    nav_dashboard:'Dashboard', nav_profile:'Profile', nav_logout:'Logout',
+    nav_login:'Login', nav_mentorship:'Mentorship',
+    footer_copy:'© 2025 Eduvia & creativitycode. All rights reserved.',
+    stars:['','Poor','Fair','Good','Very Good','Excellent'],
+  },
+  ar: {
+    page_title:'تقييم المشرف — إدوفيا', page_heading:'قيّم مشرفك',
+    page_sub:'شارك تجربتك وساعد الآخرين في إيجاد مشرفين رائعين',
+    mentor_badge:'مشرف', since_label:'منذ', tap_to_rate:'اضغط على نجمة للتقييم',
+    rating_label:'التقييم (1–5)', comment_label:'تعليق', select_rating:'اختر تقييمك',
+    submit_btn:'إرسال التقييم', rating_hint:'رأيك يساعد الآخرين',
+    nav_home:'الرئيسية', nav_courses:'الدورات', nav_chatbot:'الدردشة',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_skills:'سوق المهارات', nav_about:'عنّا', nav_contact:'تواصل',
+    nav_dashboard:'لوحة التحكم', nav_profile:'الملف الشخصي', nav_logout:'خروج',
+    nav_login:'تسجيل الدخول', nav_mentorship:'الإرشاد',
+    footer_copy:'© 2025 إدوفيا. جميع الحقوق محفوظة.',
+    stars:['','ضعيف','مقبول','جيد','جيد جداً','ممتاز'],
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
 
-        // Language Toggle
-        function toggleLanguage() {
-            const htmlRoot = document.getElementById('html-root');
-            const currentLang = htmlRoot.getAttribute('lang');
-            const newLang = currentLang === 'en' ? 'ar' : 'en';
-            
-            // Update lang and direction
-            htmlRoot.setAttribute('lang', newLang);
-            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-            
-            // Update all translatable elements
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                let text = translations[newLang][key];
-                if (element.tagName.toLowerCase() === 'meta') {
-                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        element.setAttribute('content', text);
-                    } else if (element.getAttribute('property')?.startsWith('og:')) {
-                        element.setAttribute('content', text);
-                    }
-                } else {
-                    element.textContent = text;
-                }
-            });
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (I18N[lang][k]) el.textContent = I18N[lang][k];
+  });
+  document.title = I18N[lang].page_title;
+  localStorage.setItem('lang', lang);
+  if (selectedStar) updateStarLabel(selectedStar);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
 
-            // Update the title
-            document.title = translations[newLang]["rate-mentor-title"];
+/* ── Theme ───────────────────────────────────────────────────────────── */
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('theme-icon').className = t === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', t);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
 
-            localStorage.setItem('language', newLang);
-        }
+/* ── Mobile nav ──────────────────────────────────────────────────────── */
+function toggleMobileNav() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const hbg = document.querySelector('.hamburger');
+  if (nav && hbg && !nav.contains(e.target) && !hbg.contains(e.target)) nav.classList.remove('open');
+});
 
-        // Apply saved theme and language on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Apply Dark Mode
-            const savedTheme = localStorage.getItem('theme');
-            const toggleIcon = document.querySelector('.dark-mode-toggle i');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                toggleIcon.classList.remove('fa-moon');
-                toggleIcon.classList.add('fa-sun');
-            }
+/* ── Toast ───────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
 
-            // Apply Language
-            const savedLang = localStorage.getItem('language') || 'en';
-            const htmlRoot = document.getElementById('html-root');
-            htmlRoot.setAttribute('lang', savedLang);
-            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+/* ── Stars ───────────────────────────────────────────────────────────── */
+let selectedStar = 0;
+const starLabels = { en:['','Poor','Fair','Good','Very Good','Excellent'], ar:['','ضعيف','مقبول','جيد','جيد جداً','ممتاز'] };
 
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                let text = translations[savedLang][key];
-                if (element.tagName.toLowerCase() === 'meta') {
-                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        element.setAttribute('content', text);
-                    } else if (element.getAttribute('property')?.startsWith('og:')) {
-                        element.setAttribute('content', text);
-                    }
-                } else {
-                    element.textContent = text;
-                }
-            });
+function lightStars(val) {
+  document.querySelectorAll('.star-btn-big').forEach(b => b.classList.toggle('lit', +b.dataset.val <= val));
+}
+function hoverStar(v)  { lightStars(v); updateStarLabel(v); }
+function unhoverStar() { lightStars(selectedStar); updateStarLabel(selectedStar); }
+function clickStar(v) {
+  selectedStar = v;
+  lightStars(v);
+  updateStarLabel(v);
+  const sel = document.getElementById('id_rating');
+  if (sel) sel.value = v;
+}
+function updateStarLabel(v) {
+  const lbl = document.getElementById('star-label');
+  const labels = starLabels[currentLang];
+  if (!lbl) return;
+  if (v > 0) { lbl.textContent = `${'★'.repeat(v)} ${labels[v]}`; lbl.classList.add('active'); }
+  else { lbl.textContent = ''; lbl.classList.remove('active'); }
+}
+function syncSelectToStars(v) { clickStar(+v); }
 
-            // Set the title on page load
-            document.title = translations[savedLang]["rate-mentor-title"];
-        });
-    </script>
+/* ── Form submit ─────────────────────────────────────────────────────── */
+document.getElementById('rate-form').addEventListener('submit', function(e) {
+  const rating = document.getElementById('id_rating').value;
+  if (!rating) {
+    e.preventDefault();
+    toast(currentLang === 'ar' ? 'يرجى اختيار تقييم.' : 'Please select a rating first.', 'error');
+    return;
+  }
+  const btn = document.getElementById('submit-btn');
+  btn.innerHTML = `<span class="spinner"></span>`;
+  btn.disabled = true;
+});
+
+/* ── Init ────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+});
+</script>
 </body>
 </html>

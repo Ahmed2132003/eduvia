@@ -1,7 +1,6 @@
 {% load static competition_filters %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,10 +32,7 @@
 
     <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
-    <link rel="stylesheet" href="{% static 'competitions/answer_question.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- 📊 Structured Data -->
     <script type="application/ld+json">
@@ -63,743 +59,874 @@
                 "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/#webpage",
                 "url": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/",
                 "name": "Answer Question | Eduvia",
-                "description": "Answer questions in educational competitions on the Eduvia platform to test your knowledge and earn XP and coins!",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Competitions",
-                        "item": "https://eduvia-ai.fly.dev/competitions/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "{{ competition.title }}",
-                        "item": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 4,
-                        "name": "Answer Question",
-                        "item": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/question/{{ question.id }}/"
-                    }
-                ]
+                "description": "Answer questions in educational competitions on the Eduvia platform to test your knowledge and earn XP and coins!"
             }
         ]
     }
     </script>
+
     <style>
-        :root {
-            /* Light Mode Colors */
-            --background-gradient: linear-gradient(to right, #fef9f9, rgb(180, 224, 241));
-            --text-color: #333;
-            --header-bg: linear-gradient(90deg, #00a8cc, #d8f4ff);
-            --header-text: #ffffff;
-            --hero-bg: linear-gradient(135deg, rgba(0, 169, 204, 0.5), rgba(0, 201, 167, 0.4)), url('{% static "images/comp6.jpg" %}') no-repeat center center/cover;
-            --hero-text: #ffffff;
-            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
-            --card-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
-            --card-text: #00a8cc;
-            --card-secondary-text: #444;
-            --btn-bg: linear-gradient(90deg, #00c9a7, #12d3cf);
-            --btn-bg-hover: linear-gradient(90deg, #00b49c, #0ec7c3);
-            --btn-shadow: 0 6px 15px rgba(0, 201, 167, 0.5);
-            --footer-bg: linear-gradient(145deg, #fdfcfe, #d8f4ff);
-            --footer-text: #333;
-            --input-border: #ccc;
-            --message-success-bg: #00c9a7;
-            --message-error-bg: #ff4d4d;
-            --timer-color: #ff4d4d;
-        }
+    /* ═══════════════════════════════════════════════════════════════════════
+       DESIGN SYSTEM — "Obsidian Academy" (matches lesson_view.html)
+       ═══════════════════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Dark Mode Colors */
-        body.dark-mode {
-            --background-gradient: linear-gradient(to right, #1a1a1a, #2c3e50);
-            --text-color: #e0e0e0;
-            --header-bg: linear-gradient(90deg, #2c3e50, #34495e);
-            --header-text: #e0e0e0;
-            --hero-bg: linear-gradient(135deg, rgba(44, 62, 80, 0.5), rgba(52, 73, 94, 0.4)), url('{% static "images/comp6.jpg" %}') no-repeat center center/cover;
-            --hero-text: #e0e0e0;
-            --hero-text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
-            --card-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            --card-text: #3498db;
-            --card-secondary-text: #b0b0b0;
-            --btn-bg: linear-gradient(90deg, #3498db, #2980b9);
-            --btn-bg-hover: linear-gradient(90deg, #2980b9, #1f618d);
-            --btn-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-            --footer-bg: linear-gradient(145deg, #2c2c2c, #3a3a3a);
-            --footer-text: #e0e0e0;
-            --input-border: #444;
-            --message-success-bg: #3498db;
-            --message-error-bg: #e74c3c;
-            --timer-color: #e74c3c;
-        }
+    :root {
+      --bg-base:     #080b14;
+      --bg-panel:    #0d1120;
+      --bg-card:     #131929;
+      --bg-card-2:   #1a2236;
+      --bg-hover:    #1e2840;
+      --border:      rgba(120,130,180,.12);
+      --border-glow: rgba(139,92,246,.25);
 
-        body {
-            margin: 0;
-            font-family: 'Cairo', sans-serif;
-            background: var(--background-gradient);
-            color: var(--text-color);
-            transition: background 0.3s ease, color 0.3s ease;
-        }
+      --violet-400:  #a78bfa;
+      --violet-500:  #8b5cf6;
+      --violet-600:  #7c3aed;
+      --violet-glow: rgba(139,92,246,.18);
+      --gold-400:    #fbbf24;
+      --gold-300:    #fcd34d;
+      --emerald-400: #34d399;
+      --emerald-500: #10b981;
+      --rose-400:    #fb7185;
+      --sky-400:     #38bdf8;
+      --sky-500:     #0ea5e9;
 
-        html[dir="rtl"] body {
-            text-align: right;
-        }
+      --text-h:      #f1f5ff;
+      --text-p:      #94a3c4;
+      --text-muted:  #5a6585;
 
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: var(--header-bg);
-            color: var(--header-text);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            animation: slideDown 0.8s ease-out forwards;
-        }
+      --accent:      var(--violet-500);
+      --accent-d:    var(--violet-600);
+      --success:     var(--emerald-400);
+      --warning:     var(--gold-400);
+      --danger:      var(--rose-400);
+      --info:        var(--sky-400);
 
-        @keyframes slideDown {
-            0% { transform: translateY(-100%); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  18px;
+      --radius-xl:  24px;
+      --topbar-h:   62px;
+      --trans:      all .22s cubic-bezier(.4,0,.2,1);
+      --glow:       0 0 40px rgba(139,92,246,.15);
 
-        .header a {
-            color: var(--header-text);
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 18px;
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease;
-        }
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --font-arabic:  'Cairo', sans-serif;
+    }
 
-        .header a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: var(--header-text);
-            left: 0;
-            bottom: -5px;
-            transition: width 0.3s ease;
-        }
+    [data-theme="light"] {
+      --bg-base:     #f4f6fc;
+      --bg-panel:    #ffffff;
+      --bg-card:     #f8faff;
+      --bg-card-2:   #eef2fc;
+      --bg-hover:    #e8ecf8;
+      --border:      rgba(100,110,160,.14);
+      --border-glow: rgba(139,92,246,.3);
+      --text-h:      #0f172a;
+      --text-p:      #374365;
+      --text-muted:  #8896b3;
+      --violet-glow: rgba(139,92,246,.1);
+      --glow:        0 0 40px rgba(139,92,246,.08);
+    }
 
-        html[dir="rtl"] .header a::after {
-            left: unset;
-            right: 0;
-        }
+    html { scroll-behavior: smooth; }
 
-        .header a:hover::after { width: 100%; }
-        .header a:hover { color: #f0f8ff; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-base);
+      color: var(--text-p);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background .35s, color .35s;
+    }
 
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            transition: transform 0.3s ease;
-        }
+    [lang="ar"] body,
+    [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+    [lang="ar"] { direction: rtl; }
 
-        .logo:hover { transform: scale(1.05); }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-        .menu {
-            display: flex;
-            align-items: center;
-        }
+    /* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+      height: var(--topbar-h);
+      background: rgba(8,11,20,.88);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 24px; gap: 16px;
+    }
+    [data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
 
-        html[dir="rtl"] .menu {
-            flex-direction: row-reverse;
-        }
+    .topbar-logo {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 800;
+      background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px; flex-shrink: 0;
+      text-decoration: none;
+    }
+    .topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+    .topbar-course {
+      font-size: 13px; color: var(--text-muted);
+      flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-        .coins-display {
-            margin-left: 10px;
-            font-weight: bold;
-            color: var(--header-text);
-            background: var(--header-bg);
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+    .ctrl-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-p); font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: var(--trans);
+    }
+    .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
 
-        html[dir="rtl"] .coins-display {
-            margin-left: 0;
-            margin-right: 10px;
-        }
+    .tb-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: none; text-decoration: none; transition: var(--trans);
+      font-family: inherit;
+    }
+    .tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+    .tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .tb-btn-accent { background: var(--accent); color: #fff; }
+    .tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
 
-        .coins-icon {
-            font-size: 16px;
-            color: #ffd700;
-            animation: spin 2s linear infinite;
-        }
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .nav-link {
+      font-size: 13px; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; padding: 6px 10px; border-radius: var(--radius-sm);
+      transition: var(--trans); white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+    .nav-link.active { color: var(--accent); }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .coins-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 99px; padding: 4px 12px 4px 8px;
+      font-size: 12px; font-weight: 700; color: var(--text-h);
+    }
+    .coins-pill i { color: var(--gold-400); font-size: 13px; animation: spin 2s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Dark Mode Toggle */
-        .dark-mode-toggle, .language-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            margin: 0 10px;
-        }
+    .hamburger {
+      display: none; background: none; border: none;
+      color: var(--text-p); font-size: 20px; cursor: pointer;
+      padding: 6px; border-radius: var(--radius-sm);
+      transition: var(--trans);
+    }
+    .hamburger:hover { color: var(--accent); background: var(--bg-card); }
 
-        .dark-mode-toggle i, .language-toggle i {
-            font-size: 20px;
-            color: var(--header-text);
-            transition: color 0.3s ease;
-        }
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none; flex-direction: column; align-items: flex-start;
+        position: fixed; top: var(--topbar-h); left: 0; right: 0;
+        background: var(--bg-panel); border-bottom: 1px solid var(--border);
+        padding: 16px 24px; gap: 4px; z-index: 599;
+        box-shadow: 0 8px 30px rgba(0,0,0,.3);
+      }
+      .nav-links.open { display: flex; }
+      .nav-link { width: 100%; padding: 10px 12px; font-size: 15px; }
+      .hamburger { display: flex; }
+      .topbar-course { display: none; }
+    }
 
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: var(--header-text);
-            cursor: pointer;
-        }
+    /* ═══ PAGE WRAPPER ══════════════════════════════════════════════════════ */
+    .page-wrap {
+      padding-top: var(--topbar-h);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
 
-        @media (max-width: 768px) {
-            .menu {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: var(--header-bg);
-                padding: 20px 0;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
+    /* ═══ HERO ══════════════════════════════════════════════════════════════ */
+    .hero {
+      background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card-2) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 120%, rgba(251,191,36,.12), transparent);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.2);
+      border-radius: 99px; padding: 5px 14px;
+      font-size: 11px; font-weight: 700; letter-spacing: .8px;
+      text-transform: uppercase; color: var(--gold-400);
+      margin-bottom: 16px;
+      animation: fadeSlideDown .6s ease both;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 32px; font-weight: 800;
+      color: var(--text-h); letter-spacing: -1px;
+      margin-bottom: 10px;
+      animation: fadeSlideDown .7s .1s ease both;
+    }
+    .hero-subtitle {
+      font-size: 15px; color: var(--text-muted);
+      max-width: 520px; margin: 0 auto;
+      line-height: 1.65;
+      animation: fadeSlideDown .7s .2s ease both;
+    }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-            html[dir="rtl"] .menu {
-                flex-direction: column;
-                left: unset;
-                right: 0;
-            }
+    /* ═══ TIMER BAR ══════════════════════════════════════════════════════════ */
+    .timer-bar {
+      background: var(--bg-card-2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+    }
+    .timer-wrap {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 99px; padding: 8px 20px;
+    }
+    .timer-icon { font-size: 14px; color: var(--text-muted); }
+    .timer-label { font-size: 13px; color: var(--text-muted); }
+    .timer-value {
+      font-family: var(--font-mono);
+      font-size: 20px; font-weight: 700;
+      color: var(--success);
+      min-width: 38px; text-align: center;
+      transition: color .3s;
+    }
+    .timer-value.warning { color: var(--warning); }
+    .timer-value.danger  { color: var(--danger);  }
+    .timer-unit { font-size: 11px; color: var(--text-muted); }
 
-            .menu.active { display: flex; }
-            .menu a { margin: 10px 0; font-size: 20px; }
-            .hamburger { display: block; }
-            .coins-display { margin: 10px 0; justify-content: center; }
-        }
+    /* Progress ring for timer */
+    .timer-ring { position: relative; width: 40px; height: 40px; flex-shrink: 0; }
+    .timer-ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+    .timer-ring circle { fill: none; stroke-width: 3; stroke-linecap: round; }
+    .timer-ring .tr-track { stroke: var(--border); }
+    .timer-ring .tr-fill  { stroke: var(--success); transition: stroke-dashoffset .9s linear, stroke .5s; }
 
-        /* Hero Section */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 50vh;
-            background: var(--hero-bg);
-            color: var(--hero-text);
-            text-align: center;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-        }
+    /* ═══ MAIN CONTENT ══════════════════════════════════════════════════════ */
+    .content-wrap {
+      flex: 1;
+      background: var(--bg-panel);
+      padding: 40px 24px 80px;
+    }
+    .content-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
-            z-index: -1;
-            animation: pulse 6s infinite ease-in-out;
-        }
+    /* ═══ MESSAGES ══════════════════════════════════════════════════════════ */
+    .messages { margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
+    .msg {
+      padding: 13px 18px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .msg.success { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+    .msg.error   { background: rgba(251,113,133,.08); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+    .msg.info    { background: rgba(139,92,246,.08);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.2); }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.2); opacity: 0.3; }
-            100% { transform: scale(1); opacity: 0.7; }
-        }
+    /* ═══ QUESTION CARD ══════════════════════════════════════════════════════ */
+    .question-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--glow);
+      animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(24px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-        .hero h1 {
-            font-size: 48px;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: var(--hero-text-shadow);
-            animation: slideInFromTop 1s ease-out forwards;
-            letter-spacing: 2px;
-        }
+    /* Card header */
+    .question-card-header {
+      padding: 22px 28px;
+      background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .q-header-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+      background: rgba(251,191,36,.1); color: var(--gold-400);
+      border: 1px solid rgba(251,191,36,.2);
+    }
+    .q-header-info { flex: 1; }
+    .q-header-type {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--gold-400); margin-bottom: 6px;
+    }
+    .q-header-text {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 700; color: var(--text-h);
+      line-height: 1.4;
+    }
+    .q-reward-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .reward-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 11px; border-radius: 99px;
+      font-size: 11px; font-weight: 700;
+    }
+    .reward-badge.points { background: rgba(139,92,246,.1); color: var(--violet-400); border: 1px solid rgba(139,92,246,.2); }
+    .reward-badge.coins  { background: rgba(251,191,36,.1);  color: var(--gold-400);   border: 1px solid rgba(251,191,36,.2); }
 
-        .hero p {
-            font-size: 24px;
-            font-weight: 400;
-            margin: 20px 0 30px;
-            max-width: 800px;
-            line-height: 1.6;
-            text-shadow: var(--hero-text-shadow);
-            animation: fadeIn 1.2s ease-out 0.3s forwards;
-            opacity: 0;
-        }
+    /* Card body */
+    .question-card-body { padding: 28px; }
 
-        @keyframes slideInFromTop {
-            0% { transform: translateY(-50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
+    /* ── MCQ Options ── */
+    .mcq-options { display: flex; flex-direction: column; gap: 10px; }
+    .mcq-option {
+      display: flex; align-items: center; gap: 14px;
+      padding: 15px 18px; border-radius: var(--radius-md);
+      border: 1.5px solid var(--border);
+      background: var(--bg-card-2); cursor: pointer;
+      transition: var(--trans); user-select: none;
+      position: relative; overflow: hidden;
+    }
+    .mcq-option::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--violet-glow); opacity: 0; transition: opacity .2s;
+      border-radius: inherit;
+    }
+    .mcq-option:hover { border-color: var(--accent); }
+    .mcq-option:hover::before { opacity: 1; }
+    .mcq-option.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(139,92,246,.15);
+    }
+    .mcq-option.selected::before { opacity: 1; }
+    .mcq-option input[type="radio"] { display: none; }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+    .option-key {
+      width: 32px; height: 32px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0;
+      border: 1.5px solid var(--border); background: var(--bg-card);
+      color: var(--text-muted); transition: var(--trans);
+      position: relative; z-index: 1;
+    }
+    .mcq-option.selected .option-key {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+    }
+    .mcq-option-label {
+      font-size: 14px; color: var(--text-p); flex: 1; line-height: 1.5;
+      position: relative; z-index: 1; transition: color .2s;
+    }
+    .mcq-option.selected .mcq-option-label,
+    .mcq-option:hover    .mcq-option-label { color: var(--text-h); }
 
-        /* Content Container */
-        .content-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+    .option-check {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 1.5px solid var(--border); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--trans); position: relative; z-index: 1;
+    }
+    .mcq-option.selected .option-check { background: var(--accent); border-color: var(--accent); }
+    .mcq-option.selected .option-check::after {
+      content: ''; width: 8px; height: 8px; border-radius: 50%; background: #fff;
+    }
 
-        .content-container h1 {
-            font-size: 36px;
-            color: var(--card-text);
-            text-align: center;
-            margin-bottom: 20px;
-            animation: slideInFromTop 1s ease-out;
-            transition: color 0.3s ease;
-        }
+    /* ── Text answer ── */
+    .text-answer-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .answer-label {
+      font-size: 12px; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .answer-label i { font-size: 11px; color: var(--accent); }
+    .answer-inp {
+      width: 100%;
+      background: var(--bg-base); border: 1.5px solid var(--border);
+      border-radius: var(--radius-md); color: var(--text-p);
+      padding: 14px 16px; font-size: 14px; font-family: inherit;
+      line-height: 1.5; transition: var(--trans); outline: none;
+    }
+    .answer-inp::placeholder { color: var(--text-muted); }
+    .answer-inp:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+      color: var(--text-h);
+    }
 
-        .content-container p {
-            font-size: 16px;
-            color: var(--card-secondary-text);
-            margin: 10px 0;
-            transition: color 0.3s ease;
-        }
+    /* No choices state */
+    .no-choices {
+      text-align: center; padding: 32px;
+      color: var(--text-muted); font-size: 14px;
+    }
+    .no-choices i { font-size: 32px; display: block; margin-bottom: 10px; opacity: .25; }
 
-        /* Timer Styling */
-        #timer {
-            color: var(--timer-color);
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
+    /* ═══ CARD FOOTER ════════════════════════════════════════════════════════ */
+    .question-card-footer {
+      padding: 20px 28px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
 
-        /* Form Styling */
-        .answer-form {
-            background: var(--card-bg);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            text-align: left;
-            transition: background 0.3s ease;
-        }
+    .submit-btn {
+      padding: 13px 32px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+      background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+      color: #fff; font-family: inherit;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: var(--trans); position: relative; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(139,92,246,.35);
+    }
+    .submit-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+      border-radius: inherit;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+    .submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-        .answer-form label {
-            font-size: 16px;
-            color: var(--text-color);
-            display: block;
-            margin: 10px 0;
-            transition: color 0.3s ease;
-        }
+    .back-btn {
+      padding: 13px 24px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-p); font-family: inherit;
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; transition: var(--trans);
+    }
+    .back-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        .answer-form input[type="radio"] {
-            margin-right: 10px;
-        }
+    /* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+    .footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 12px; color: var(--text-muted);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
 
-        html[dir="rtl"] .answer-form input[type="radio"] {
-            margin-right: 0;
-            margin-left: 10px;
-        }
+    /* ═══ SPINNER & TOAST ════════════════════════════════════════════════════ */
+    .spinner {
+      width: 14px; height: 14px; border: 2px solid transparent;
+      border-top-color: currentColor; border-radius: 50%;
+      animation: spin-anim .7s linear infinite; display: inline-block;
+    }
+    @keyframes spin-anim { to { transform: rotate(360deg); } }
 
-        .answer-form input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--input-border);
-            border-radius: 5px;
-            font-size: 16px;
-            font-family: 'Cairo', sans-serif;
-            box-sizing: border-box;
-            background: var(--card-bg);
-            color: var(--text-color);
-            transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
-        }
+    .toast-wrap {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+    }
+    .toast {
+      padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+      display: flex; align-items: center; gap: 8px; min-width: 220px;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+    .toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+    .toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
 
-        .answer-form input[type="text"]:focus {
-            border-color: var(--card-text);
-            outline: none;
-        }
-
-        .answer-form button {
-            background: var(--btn-bg);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 50px;
-            box-shadow: var(--btn-shadow);
-            cursor: pointer;
-            transition: all 0.4s ease;
-            display: block;
-            margin: 20px auto 0;
-        }
-
-        .answer-form button:hover {
-            background: var(--btn-bg-hover);
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: var(--btn-shadow);
-        }
-
-        /* Back Link */
-        .back-link {
-            display: block;
-            margin: 20px auto;
-            text-align: center;
-            background: var(--btn-bg);
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 50px;
-            box-shadow: var(--btn-shadow);
-            transition: all 0.4s ease;
-            width: fit-content;
-        }
-
-        .back-link:hover {
-            background: var(--btn-bg-hover);
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: var(--btn-shadow);
-        }
-
-        /* Messages Styling */
-        .messages {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .messages p {
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            display: inline-block;
-            color: white;
-        }
-
-        .messages .success {
-            background: var(--message-success-bg);
-        }
-
-        .messages .error {
-            background: var(--message-error-bg);
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--footer-bg);
-            text-align: center;
-            padding: 10px 0;
-            font-size: 14px;
-            color: var(--footer-text);
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .hero h1 { font-size: 36px; }
-            .hero p { font-size: 20px; }
-            .content-container h1 { font-size: 30px; }
-        }
-
-        @media (max-width: 600px) {
-            .hero h1 { font-size: 28px; }
-            .hero p { font-size: 16px; }
-            .content-container h1 { font-size: 24px; }
-        }
+    /* ═══ RESPONSIVE ════════════════════════════════════════════════════════ */
+    @media (max-width: 640px) {
+      .hero-title { font-size: 24px; }
+      .question-card-body  { padding: 18px 16px; }
+      .question-card-footer { padding: 16px; }
+      .question-card-header { padding: 18px 16px; }
+      .content-wrap { padding: 24px 14px 60px; }
+      .q-header-text { font-size: 16px; }
+    }
     </style>
-
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coin
-s">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
+
+    <!-- ═══ TOPBAR ═══════════════════════════════════════════════════════════ -->
+    <header class="topbar">
+        <a href="/" class="topbar-logo">Eduvia</a>
+        <div class="topbar-sep"></div>
+        <span class="topbar-course">{{ competition.title }}</span>
+
+        <div class="topbar-actions">
+            <nav class="nav-links" id="nav-links">
+                <a href="/" class="nav-link" data-i18n="nav-home">Home</a>
+                <a href="/courses/" class="nav-link" data-i18n="nav-courses">Courses</a>
+                <a href="/chatbot/" class="nav-link" data-i18n="nav-chatbot">Chatbot</a>
+                <a href="/competitions/" class="nav-link active" data-i18n="nav-competitions">Competitions</a>
+                <a href="/performance/dashboard/" class="nav-link" data-i18n="nav-performance">Performance</a>
+                <a href="/about/" class="nav-link" data-i18n="nav-about">About</a>
+                <a href="/contact_us/" class="nav-link" data-i18n="nav-contact">Contact</a>
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+                        <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link" data-i18n="nav-dashboard">Dashboard</a>
+                    {% endif %}
+                    <a href="/accounts/profile/" class="nav-link" data-i18n="nav-profile">Profile</a>
+                    <a href="/accounts/logout/" class="nav-link" data-i18n="nav-logout">Logout</a>
+                    {% if user.courses_profile %}
+                        <div class="coins-pill">
+                            <i class="fas fa-coins"></i>
+                            <span>{{ user.courses_profile.coins }}</span>
+                        </div>
+                    {% else %}
+                        <div class="coins-pill">
+                            <i class="fas fa-coins"></i>
+                            <span>0</span>
+                        </div>
+                    {% endif %}
                 {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
+                    <a href="/accounts/register/" class="tb-btn tb-btn-accent" data-i18n="nav-login">Login</a>
                 {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
+            </nav>
+
+            <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+            <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
                 <i class="fas fa-globe"></i>
-            </div>
-        </nav>
+            </button>
+            <button class="hamburger" id="hamburger" onclick="toggleNav()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Answer Question</h1>
-        <p data-translate="hero-desc">Test your knowledge and earn rewards in this competition!</p>
-    </section>
+    <div class="page-wrap">
 
-    <!-- Content Section -->
-    <section class="content-container">
-        <h1>{{ question.text }}</h1>
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <p class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</p>
-                {% endfor %}
+        <!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
+        <section class="hero">
+            <div class="hero-eyebrow">
+                <i class="fas fa-bolt"></i>
+                <span data-i18n="hero-eyebrow">Live Challenge</span>
             </div>
-        {% endif %}
-        <p data-translate="time-remaining">Time remaining: <span id="timer">{{ competition.question_time_limit }}</span> <span data-translate="seconds">seconds</span></p>
-        <form method="post" id="answer_form" class="answer-form">
-            {% csrf_token %}
-            {% if question.question_type == 'MCQ' %}
-                {% for choice in choices %}
-                    <label><input type="radio" name="answer" value="{{ choice|escape }}" required> {{ choice|escape }}</label><br>
-                {% empty %}
-                    <p data-translate="no-choices">No choices available for this question.</p>
-                {% endfor %}
-            {% else %}
-                <label data-translate="label-answer">Answer: <input type="text" name="answer" required></label><br>
-            {% endif %}
-            <button type="submit" data-translate="button-submit">Submit Answer</button>
-        </form>
-        <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-link" data-translate="back-link">Back to Competition</a>
-    </section>
+            <h1 class="hero-title" data-i18n="hero-title">Answer Question</h1>
+            <p class="hero-subtitle" data-i18n="hero-desc">Test your knowledge and earn rewards in this competition!</p>
+        </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+        <!-- ═══ TIMER BAR ════════════════════════════════════════════════════ -->
+        <div class="timer-bar">
+            <div class="timer-wrap">
+                <!-- Ring timer -->
+                <div class="timer-ring" id="timer-ring">
+                    <svg viewBox="0 0 40 40">
+                        <circle class="tr-track" cx="20" cy="20" r="16"/>
+                        <circle class="tr-fill" id="tr-fill" cx="20" cy="20" r="16"
+                                stroke-dasharray="100.53" stroke-dashoffset="0"/>
+                    </svg>
+                </div>
+                <i class="timer-icon fas fa-hourglass-half"></i>
+                <span class="timer-label" data-i18n="time-remaining">Time remaining</span>
+                <span class="timer-value" id="timer">{{ competition.question_time_limit }}</span>
+                <span class="timer-unit" data-i18n="seconds">sec</span>
+            </div>
+        </div>
+
+        <!-- ═══ CONTENT ═══════════════════════════════════════════════════════ -->
+        <div class="content-wrap">
+            <div class="content-inner">
+
+                <!-- Messages -->
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="msg {% if message.tags %}{{ message.tags }}{% endif %}">
+                        <i class="fas {% if 'success' in message.tags %}fa-check-circle{% elif 'error' in message.tags %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Question Card -->
+                <div class="question-card">
+
+                    <!-- Header -->
+                    <div class="question-card-header">
+                        <div class="q-header-icon">
+                            <i class="fas fa-question"></i>
+                        </div>
+                        <div class="q-header-info">
+                            <div class="q-header-type">
+                                {% if question.question_type == 'MCQ' %}
+                                    <i class="fas fa-check-square"></i>
+                                    <span data-i18n="type-mcq">Multiple Choice Question</span>
+                                {% else %}
+                                    <i class="fas fa-keyboard"></i>
+                                    <span data-i18n="type-text">Text Answer Question</span>
+                                {% endif %}
+                            </div>
+                            <div class="q-header-text">{{ question.text }}</div>
+                            <div class="q-reward-badges">
+                                {% if question.points %}
+                                <span class="reward-badge points">
+                                    <i class="fas fa-trophy"></i> {{ question.points }} <span data-i18n="pts">pts</span>
+                                </span>
+                                {% endif %}
+                                {% if question.coins %}
+                                <span class="reward-badge coins">
+                                    <i class="fas fa-coins"></i> {{ question.coins }} <span data-i18n="coins">coins</span>
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Body -->
+                    <form method="post" id="answer_form">
+                        {% csrf_token %}
+
+                        <div class="question-card-body">
+                            {% if question.question_type == 'MCQ' %}
+                                <div class="mcq-options" id="mcq-options">
+                                    {% for choice in choices %}
+                                    <label class="mcq-option" onclick="selectOption(this)">
+                                        <input type="radio" name="answer" value="{{ choice|escape }}" required>
+                                        <div class="option-key">{{ forloop.counter|stringformat:"c"|upper }}</div>
+                                        <span class="mcq-option-label">{{ choice|escape }}</span>
+                                        <div class="option-check"></div>
+                                    </label>
+                                    {% empty %}
+                                    <div class="no-choices">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span data-i18n="no-choices">No choices available for this question.</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-answer-wrap">
+                                    <div class="answer-label">
+                                        <i class="fas fa-pen"></i>
+                                        <span data-i18n="label-answer">Your Answer</span>
+                                    </div>
+                                    <input
+                                        class="answer-inp"
+                                        type="text"
+                                        name="answer"
+                                        required
+                                        placeholder="Type your answer here…"
+                                        autocomplete="off"
+                                        data-i18n-placeholder="placeholder-answer"
+                                        id="text-answer-inp"
+                                    >
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="question-card-footer">
+                            <button type="submit" class="submit-btn" id="submit-btn">
+                                <i class="fas fa-paper-plane"></i>
+                                <span data-i18n="button-submit">Submit Answer</span>
+                            </button>
+                            <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="back-btn">
+                                <i class="fas fa-arrow-left"></i>
+                                <span data-i18n="back-link">Back to Competition</span>
+                            </a>
+                        </div>
+                    </form>
+
+                </div><!-- /question-card -->
+
+            </div>
+        </div>
+
+        <!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
+        <footer class="footer">
+            <p data-i18n="footer-text">© 2025 <a href="/">Eduvia</a> and creativitycode. All rights reserved.</p>
+        </footer>
+
+    </div><!-- /page-wrap -->
+
+    <div class="toast-wrap" id="toast-wrap"></div>
 
     <script>
-        // Translation object
-        const translations = {
-            en: {
-                "answer-question-title": "Answer Question | Eduvia",
-                "answer-question-meta-desc": "Answer questions in educational competitions on the Eduvia platform to test your knowledge and earn XP and coins!",
-                "answer-question-meta-keywords": "answer questions, educational competitions, Eduvia platform, interactive learning, learning challenges, XP, coins",
-                "answer-question-og-title": "Answer Question | Eduvia",
-                "answer-question-og-desc": "Answer questions in educational competitions on the Eduvia platform to test your knowledge and earn XP and coins!",
-                "hero-title": "Answer Question",
-                "hero-desc": "Test your knowledge and earn rewards in this competition!",
-                "time-remaining": "Time remaining:",
-                "seconds": "seconds",
-                "no-choices": "No choices available for this question.",
-                "label-answer": "Answer:",
-                "button-submit": "Submit Answer",
-                "back-link": "Back to Competition",
-                "nav-home": "Home",
-                "nav-courses": "Courses",
-                "nav-chatbot": "Chatbot",
-                "nav-competitions": "Competitions",
-                "nav-performance": "Performance",
-                "nav-about": "About Us",
-                "nav-contact": "Contact Us",
-                "nav-dashboard": "Dashboard",
-                "nav-profile": "Profile",
-                "nav-logout": "Logout",
-                "nav-coins": "Coins:",
-                "nav-login": "Login",
-                "footer-text": "© 2025 Eduvia. All rights reserved."
-            },
-            ar: {
-                "answer-question-title": "الإجابة على سؤال | إدوفيا",
-                "answer-question-meta-desc": "أجب على أسئلة المسابقات التعليمية على منصة إدوفيا لتختبر معرفتك واكسب نقاط XP وكوينز!",
-                "answer-question-meta-keywords": "الإجابة على الأسئلة, مسابقات تعليمية, منصة إدوفيا, تعليم تفاعلي, تحديات تعليمية, XP, كوينز",
-                "answer-question-og-title": "الإجابة على سؤال | إدوفيا",
-                "answer-question-og-desc": "أجب على أسئلة المسابقات التعليمية على منصة إدوفيا لتختبر معرفتك واكسب نقاط XP وكوينز!",
-                "hero-title": "الإجابة على سؤال",
-                "hero-desc": "اختبر معرفتك واكسب مكافآت في هذه المسابقة!",
-                "time-remaining": "الوقت المتبقي:",
-                "seconds": "ثوانٍ",
-                "no-choices": "لا توجد خيارات متاحة لهذا السؤال.",
-                "label-answer": "الإجابة:",
-                "button-submit": "إرسال الإجابة",
-                "back-link": "العودة إلى المسابقة",
-                "nav-home": "الرئيسية",
-                "nav-courses": "الدورات",
-                "nav-chatbot": "الدردشة الآلية",
-                "nav-competitions": "المسابقات",
-                "nav-performance": "الأداء",
-                "nav-about": "معلومات عنا",
-                "nav-contact": "تواصل معنا",
-                "nav-dashboard": "لوحة التحكم",
-                "nav-profile": "الملف الشخصي",
-                "nav-logout": "تسجيل الخروج",
-                "nav-coins": "النقاط:",
-                "nav-login": "تسجيل الدخول",
-                "footer-text": "© 2025 إدوفيا و كريتيفيتي كود . جميع الحقوق محفوظة."
-            }
-        };
+    /* ── i18n ────────────────────────────────────────────────────────────── */
+    const I18N = {
+      en: {
+        "answer-question-title": "Answer Question | Eduvia",
+        "hero-eyebrow": "Live Challenge",
+        "hero-title": "Answer Question",
+        "hero-desc": "Test your knowledge and earn rewards in this competition!",
+        "time-remaining": "Time remaining",
+        "seconds": "sec",
+        "type-mcq": "Multiple Choice Question",
+        "type-text": "Text Answer Question",
+        "pts": "pts",
+        "coins": "coins",
+        "label-answer": "Your Answer",
+        "placeholder-answer": "Type your answer here…",
+        "button-submit": "Submit Answer",
+        "back-link": "Back to Competition",
+        "no-choices": "No choices available for this question.",
+        "nav-home": "Home",
+        "nav-courses": "Courses",
+        "nav-chatbot": "Chatbot",
+        "nav-competitions": "Competitions",
+        "nav-performance": "Performance",
+        "nav-about": "About",
+        "nav-contact": "Contact",
+        "nav-dashboard": "Dashboard",
+        "nav-profile": "Profile",
+        "nav-logout": "Logout",
+        "nav-login": "Login",
+        "footer-text": "© 2025 Eduvia and creativitycode. All rights reserved."
+      },
+      ar: {
+        "answer-question-title": "الإجابة على سؤال | إدوفيا",
+        "hero-eyebrow": "تحدٍّ مباشر",
+        "hero-title": "الإجابة على سؤال",
+        "hero-desc": "اختبر معرفتك واكسب مكافآت في هذه المسابقة!",
+        "time-remaining": "الوقت المتبقي",
+        "seconds": "ث",
+        "type-mcq": "سؤال اختيار من متعدد",
+        "type-text": "سؤال بإجابة نصية",
+        "pts": "نقطة",
+        "coins": "كوين",
+        "label-answer": "إجابتك",
+        "placeholder-answer": "اكتب إجابتك هنا…",
+        "button-submit": "إرسال الإجابة",
+        "back-link": "العودة إلى المسابقة",
+        "no-choices": "لا توجد خيارات لهذا السؤال.",
+        "nav-home": "الرئيسية",
+        "nav-courses": "الدورات",
+        "nav-chatbot": "الدردشة الآلية",
+        "nav-competitions": "المسابقات",
+        "nav-performance": "الأداء",
+        "nav-about": "معلومات عنا",
+        "nav-contact": "تواصل معنا",
+        "nav-dashboard": "لوحة التحكم",
+        "nav-profile": "الملف الشخصي",
+        "nav-logout": "تسجيل الخروج",
+        "nav-login": "تسجيل الدخول",
+        "footer-text": "© 2025 إدوفيا وكريتيفيتي كود. جميع الحقوق محفوظة."
+      }
+    };
 
-        function toggleMenu() {
-            const menu = document.querySelector('.menu');
-            menu.classList.toggle('active');
-        }
+    let currentLang = localStorage.getItem('lang') || 'en';
 
-        // Dark Mode Toggle
-        function toggleDarkMode() {
-            const body = document.body;
-            const toggleIcon = document.querySelector('.dark-mode-toggle i');
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                toggleIcon.classList.remove('fa-moon');
-                toggleIcon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                toggleIcon.classList.remove('fa-sun');
-                toggleIcon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
-            }
-        }
+    function applyLang(lang) {
+      currentLang = lang;
+      const root = document.getElementById('html-root');
+      root.setAttribute('lang', lang);
+      root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (I18N[lang] && I18N[lang][key]) el.placeholder = I18N[lang][key];
+      });
+      if (I18N[lang]["answer-question-title"]) document.title = I18N[lang]["answer-question-title"];
+      localStorage.setItem('lang', lang);
+    }
+    function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
 
-        // Language Toggle
-        function toggleLanguage() {
-            const htmlRoot = document.getElementById('html-root');
-            const currentLang = htmlRoot.getAttribute('lang');
-            const newLang = currentLang === 'en' ? 'ar' : 'en';
-            
-            // Update lang and direction
-            htmlRoot.setAttribute('lang', newLang);
-            htmlRoot.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-            
-            // Update all translatable elements
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                const text = translations[newLang][key];
-                if (element.tagName.toLowerCase() === 'meta') {
-                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        element.setAttribute('content', text);
-                    } else if (element.getAttribute('property')?.startsWith('og:')) {
-                        element.setAttribute('content', text);
-                    }
-                } else if (element.tagName.toLowerCase() === 'label') {
-                    const input = element.querySelector('input');
-                    element.childNodes[0].textContent = text + " ";
-                    if (input) input.parentNode.insertBefore(element.childNodes[0], input);
-                } else {
-                    element.textContent = text;
-                }
-            });
+    /* ── Theme ─────────────────────────────────────────────────────────── */
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('theme', theme);
+    }
+    function toggleTheme() {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    }
 
-            // Update the time remaining text dynamically
-            const timerValue = document.getElementById('timer').textContent;
-            const timeRemainingElement = document.querySelector('[data-translate="time-remaining"]');
-            timeRemainingElement.childNodes[0].textContent = translations[newLang]["time-remaining"] + " ";
-            timeRemainingElement.appendChild(document.getElementById('timer'));
-            timeRemainingElement.appendChild(document.createTextNode(" "));
-            timeRemainingElement.appendChild(document.querySelector('[data-translate="seconds"]'));
+    /* ── Nav ───────────────────────────────────────────────────────────── */
+    function toggleNav() {
+      document.getElementById('nav-links').classList.toggle('open');
+    }
+    document.addEventListener('click', e => {
+      const nav = document.getElementById('nav-links');
+      const btn = document.getElementById('hamburger');
+      if (nav && btn && !nav.contains(e.target) && !btn.contains(e.target)) {
+        nav.classList.remove('open');
+      }
+    });
 
-            // Update the title
-            document.title = translations[newLang]["answer-question-title"];
+    /* ── MCQ option select ──────────────────────────────────────────────── */
+    function selectOption(label) {
+      document.querySelectorAll('.mcq-option').forEach(o => o.classList.remove('selected'));
+      label.classList.add('selected');
+      label.querySelector('input[type="radio"]').checked = true;
+    }
 
-            localStorage.setItem('language', newLang);
-        }
+    /* ── Timer ──────────────────────────────────────────────────────────── */
+    const TOTAL_TIME  = {{ competition.question_time_limit }};
+    let   timeLeft    = TOTAL_TIME;
+    const timerEl     = document.getElementById('timer');
+    const trFill      = document.getElementById('tr-fill');
+    const form        = document.getElementById('answer_form');
+    const CIRCUMFERENCE = 100.53; // 2π×16
 
-        // Apply saved theme and language on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Apply Dark Mode
-            const savedTheme = localStorage.getItem('theme');
-            const toggleIcon = document.querySelector('.dark-mode-toggle i');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                toggleIcon.classList.remove('fa-moon');
-                toggleIcon.classList.add('fa-sun');
-            }
+    function updateTimerVisuals(t) {
+      timerEl.textContent = t;
+      // Ring
+      const progress = t / TOTAL_TIME;
+      trFill.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+      // Color coding
+      timerEl.className = 'timer-value';
+      if (t <= 10) {
+        timerEl.classList.add('danger');
+        trFill.style.stroke = 'var(--danger)';
+      } else if (t <= 20) {
+        timerEl.classList.add('warning');
+        trFill.style.stroke = 'var(--warning)';
+      } else {
+        trFill.style.stroke = 'var(--success)';
+      }
+    }
 
-            // Apply Language
-            const savedLang = localStorage.getItem('language') || 'en';
-            const htmlRoot = document.getElementById('html-root');
-            htmlRoot.setAttribute('lang', savedLang);
-            htmlRoot.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+    const timerInterval = setInterval(() => {
+      timeLeft--;
+      updateTimerVisuals(timeLeft);
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        form.submit();
+      }
+    }, 1000);
 
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                const text = translations[savedLang][key];
-                if (element.tagName.toLowerCase() === 'meta') {
-                    if (element.getAttribute('name') === 'description' || element.getAttribute('name') === 'keywords') {
-                        element.setAttribute('content', text);
-                    } else if (element.getAttribute('property')?.startsWith('og:')) {
-                        element.setAttribute('content', text);
-                    }
-                } else if (element.tagName.toLowerCase() === 'label') {
-                    const input = element.querySelector('input');
-                    element.childNodes[0].textContent = text + " ";
-                    if (input) input.parentNode.insertBefore(element.childNodes[0], input);
-                } else {
-                    element.textContent = text;
-                }
-            });
+    /* ── Form submit ─────────────────────────────────────────────────────── */
+    form.addEventListener('submit', function() {
+      clearInterval(timerInterval);
+      const btn = document.getElementById('submit-btn');
+      if (btn) {
+        btn.innerHTML = `<span class="spinner"></span> <span>${currentLang === 'ar' ? 'جاري الإرسال...' : 'Submitting...'}</span>`;
+        btn.disabled = true;
+      }
+    });
 
-            // Update the time remaining text on page load
-            const timerValue = document.getElementById('timer').textContent;
-            const timeRemainingElement = document.querySelector('[data-translate="time-remaining"]');
-            timeRemainingElement.childNodes[0].textContent = translations[savedLang]["time-remaining"] + " ";
-            timeRemainingElement.appendChild(document.getElementById('timer'));
-            timeRemainingElement.appendChild(document.createTextNode(" "));
-            timeRemainingElement.appendChild(document.querySelector('[data-translate="seconds"]'));
+    /* ── Toast ─────────────────────────────────────────────────────────── */
+    function toast(msg, type = 'info', dur = 3200) {
+      const wrap = document.getElementById('toast-wrap');
+      const el = document.createElement('div');
+      el.className = `toast toast-${type}`;
+      const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+      el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+      wrap.appendChild(el);
+      setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+    }
 
-            document.title = translations[savedLang]["answer-question-title"];
-        });
-
-        let timeLeft = {{ competition.question_time_limit }};
-        const timerElement = document.getElementById('timer');
-        const form = document.getElementById('answer_form');
-        
-        const timer = setInterval(() => {
-            timeLeft--;
-            timerElement.textContent = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                form.submit();  // Auto-submit when time is up
-            }
-        }, 1000);
+    /* ── Init ──────────────────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+      applyTheme(localStorage.getItem('theme') || 'dark');
+      applyLang(localStorage.getItem('lang') || 'en');
+      updateTimerVisuals(timeLeft);
+    });
     </script>
 </body>
 </html>

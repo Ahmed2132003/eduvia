@@ -1,202 +1,823 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="page_title">Create Group — Eduvia</title>
+<meta name="description" content="Create a mentorship group in Eduvia's Mentorship System.">
 
-    <!-- 🔍 SEO -->
-    <title data-translate="page-title">Create Group - Eduvia</title>
-    <meta name="description" content="Create a mentorship group in Eduvia's Mentorship System.">
-    <meta name="keywords" content="create group, Eduvia, mentorship">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/create_group/">
+<!-- SEO -->
+<meta name="keywords" content="create group, Eduvia, mentorship">
+<meta name="author" content="Eduvia">
+<link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/create_group/">
 
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Create Group - Eduvia">
-    <meta property="og:description" content="Create a mentorship group in Eduvia's Mentorship System.">
-    <meta property="og:image" content="https://i.postimg.cc/zfmFHdBs/mentor3.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/create_group/">
-    <meta property="og:type" content="website">
+<!-- OG -->
+<meta property="og:title" content="Create Group - Eduvia">
+<meta property="og:description" content="Create a mentorship group in Eduvia's Mentorship System.">
+<meta property="og:image" content="https://i.postimg.cc/zfmFHdBs/mentor3.jpg">
+<meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/create_group/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Create Group - Eduvia">
-    <meta name="twitter:description" content="Create a mentorship group to connect with others in Eduvia's Mentorship System.">
-    <meta name="twitter:image" content="https://i.postimg.cc/zfmFHdBs/mentor3.jpg">
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🖼️ Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://eduvia-ai.fly.dev/#organization", "name": "Eduvia", "url": "https://eduvia-ai.fly.dev", "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" } },
+    { "@type": "WebPage", "@id": "https://eduvia-ai.fly.dev/mentorship/create_group/#webpage", "url": "https://eduvia-ai.fly.dev/mentorship/create_group/", "name": "Create Group - Eduvia" }
+  ]
+}
+</script>
 
-    <!-- 🌐 Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <!-- 🎨 Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'mentorship/create_group.css' %}">
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-    <!-- 🖼️ Hero Background -->
-    <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/zfmFHdBs/mentor3.jpg");
-        }
-    </style>
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
 
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/create_group/#webpage",
-                "url": "https://eduvia-ai.fly.dev/mentorship/create_group/",
-                "name": "Create Group - Eduvia",
-                "description": "Create a mentorship group in Eduvia's Mentorship System.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/mentorship/create_group/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/create_group/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Mentorship",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "Create Group",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/create_group/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-page-label {
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-nav {
+  display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+}
+.topbar-nav a {
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.topbar-nav a:hover { color: var(--text-h); background: var(--bg-card); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.coins-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2);
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700; color: var(--gold-400);
+}
+
+/* ═══ HERO ══════════════════════════════════════════════════════════════ */
+.hero {
+  padding-top: var(--topbar-h);
+  background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -60px; right: -80px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.12), transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: ''; position: absolute; bottom: -40px; left: 5%;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(52,211,153,.06), transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 760px; margin: 0 auto;
+  padding: 36px 28px 32px; position: relative; z-index: 1;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 5px 14px; font-size: 11px; font-weight: 700;
+  color: var(--violet-400); letter-spacing: .5px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -.5px; line-height: 1.2; margin-bottom: 8px;
+}
+.hero-sub { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-muted); margin-bottom: 16px;
+}
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb i { font-size: 9px; }
+
+/* ═══ MAIN ════════════════════════════════════════════════════════════════ */
+.page-wrap {
+  max-width: 760px; margin: 0 auto;
+  padding: 36px 28px 80px;
+}
+
+/* ═══ ALERTS ═════════════════════════════════════════════════════════════ */
+.alert-strip {
+  border-radius: var(--radius-md); padding: 12px 16px;
+  font-size: 13px; display: flex; align-items: center; gap: 8px;
+  margin-bottom: 20px;
+}
+.alert-strip.warning { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2); color: var(--gold-400); }
+.alert-strip.info    { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.2); color: var(--sky-400); }
+
+/* ═══ FORM CARD ═══════════════════════════════════════════════════════════ */
+.form-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.form-card-header {
+  padding: 22px 26px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.form-card-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md);
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--violet-400); flex-shrink: 0;
+}
+.form-card-title {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 800; color: var(--text-h);
+  margin-bottom: 3px;
+}
+.form-card-sub { font-size: 13px; color: var(--text-muted); }
+
+.form-card-body { padding: 28px 26px; }
+
+/* ── Field ── */
+.field-group { margin-bottom: 22px; }
+.field-label {
+  display: block; font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-muted); margin-bottom: 8px;
+}
+.field-label .field-required { color: var(--danger); margin-left: 3px; }
+.field-input {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-h);
+  padding: 13px 16px; font-size: 14px; font-family: inherit;
+  transition: var(--trans);
+}
+.field-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.field-input::placeholder { color: var(--text-muted); }
+textarea.field-input { resize: vertical; min-height: 110px; line-height: 1.65; }
+
+/* ── Textarea char count ── */
+.field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+.char-count { font-size: 11px; color: var(--text-muted); }
+.field-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+/* ── Toggle ── */
+.toggle-field {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px 18px; cursor: pointer;
+  transition: var(--trans);
+}
+.toggle-field:hover { border-color: var(--border-glow); background: var(--bg-hover); }
+.toggle-field input[type="checkbox"] { display: none; }
+.toggle-switch {
+  width: 44px; height: 24px; border-radius: 99px;
+  background: var(--bg-base); border: 1.5px solid var(--border);
+  position: relative; flex-shrink: 0; transition: var(--trans); margin-top: 1px;
+}
+.toggle-switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--text-muted); transition: var(--trans);
+}
+.toggle-field.checked .toggle-switch {
+  background: var(--accent); border-color: var(--accent);
+}
+.toggle-field.checked .toggle-switch::after {
+  transform: translateX(20px); background: #fff;
+}
+.toggle-info { flex: 1; }
+.toggle-title { font-size: 14px; font-weight: 600; color: var(--text-h); margin-bottom: 3px; }
+.toggle-sub   { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── Privacy info card ── */
+.privacy-info {
+  background: rgba(52,211,153,.06); border: 1px solid rgba(52,211,153,.18);
+  border-radius: var(--radius-md); padding: 14px 16px;
+  display: flex; gap: 12px; align-items: flex-start; margin-top: 14px;
+  display: none;
+}
+.privacy-info.visible { display: flex; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+.privacy-info i { color: var(--success); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.privacy-info p { font-size: 13px; color: var(--text-p); line-height: 1.55; }
+
+/* ── Divider ── */
+.form-divider {
+  height: 1px; background: var(--border); margin: 8px 0 22px;
+}
+
+/* ── Submit area ── */
+.form-actions {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 20px 26px; border-top: 1px solid var(--border);
+  background: var(--bg-card-2);
+}
+.submit-btn {
+  padding: 13px 36px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 9px;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+.back-btn {
+  padding: 13px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  background: var(--bg-card); color: var(--text-muted);
+  border: 1px solid var(--border); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--trans); font-family: inherit;
+}
+.back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ TIPS SIDEBAR CARD ══════════════════════════════════════════════════ */
+.tips-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px;
+  margin-top: 24px;
+  animation: cardReveal .5s .1s cubic-bezier(.34,1.56,.64,1) both;
+}
+.tips-title {
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 700; color: var(--text-h);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
+}
+.tips-title i { color: var(--gold-400); }
+.tip-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 12px; font-size: 13px; color: var(--text-muted);
+}
+.tip-item:last-child { margin-bottom: 0; }
+.tip-dot {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 800; color: var(--accent); flex-shrink: 0; margin-top: 1px;
+}
+
+/* ═══ TOAST ═══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ SPINNER ════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.footer {
+  background: var(--bg-panel); border-top: 1px solid var(--border);
+  padding: 22px 28px; text-align: center;
+  color: var(--text-muted); font-size: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* ═══ MOBILE ═════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .topbar-nav { display: none; }
+  .topbar { padding: 0 14px; }
+  .hero-title { font-size: 24px; }
+  .hero-inner, .page-wrap { padding-left: 16px; padding-right: 16px; }
+  .form-card-header, .form-card-body, .form-actions { padding-left: 18px; padding-right: 18px; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Create a Group</h1>
-        <p data-translate="hero-desc">Create a mentorship group to connect with others in Eduvia</p>
-    </section>
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-page-label">
+    <i class="fas fa-users-cog" style="margin-right:5px;color:var(--accent)"></i>
+    <span data-i18n="create_group">Create Group</span>
+  </span>
 
-    <!-- Messages -->
-    <div class="messages">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'warning' %}alert-warning{% endif %}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+  <nav class="topbar-nav">
+    <a href="/" data-i18n="home">Home</a>
+    <a href="/courses/" data-i18n="courses">Courses</a>
+    <a href="/chatbot/" data-i18n="chatbot">Chatbot</a>
+    <a href="/competitions/" data-i18n="competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="performance">Performance</a>
+    <a href="/skills_market/" data-i18n="skills_market">Skills Market</a>
+    <a href="/about/" data-i18n="about">About</a>
+    <a href="/contact_us/" data-i18n="contact">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" data-i18n="profile">Profile</a>
+      <a href="/accounts/logout/" data-i18n="logout">Logout</a>
+    {% else %}
+      <a href="/accounts/register/" data-i18n="login">Login</a>
+    {% endif %}
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated %}
+      {% if user.courses_profile %}
+      <div class="coins-badge">
+        <i class="fas fa-coins"></i>
+        <span>{{ user.courses_profile.coins }}</span>
+      </div>
+      {% else %}
+      <div class="coins-badge"><i class="fas fa-coins"></i> <span>0</span></div>
+      {% endif %}
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ── HERO ───────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="/" data-i18n="home">Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <a href="{% url 'mentorship:mentor_dashboard' %}" data-i18n="mentorship">Mentorship</a>
+      <i class="fas fa-chevron-right"></i>
+      <span data-i18n="create_group">Create Group</span>
+    </div>
+    <div class="hero-badge"><i class="fas fa-users-cog"></i> <span data-i18n="mentorship_label">Mentorship</span></div>
+    <h1 class="hero-title" data-i18n="hero_title">Create a Group</h1>
+    <p class="hero-sub" data-i18n="hero_sub">Build a learning community and connect with others in Eduvia.</p>
+  </div>
+</section>
+
+<!-- ── MAIN ────────────────────────────────────────────────────────────── -->
+<main class="page-wrap">
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert-strip {% if message.tags == 'warning' %}warning{% else %}info{% endif %}">
+    <i class="fas {% if message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i>
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <!-- Form Card -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="form-card-icon"><i class="fas fa-users-cog"></i></div>
+      <div>
+        <div class="form-card-title" data-i18n="form_title">New Mentorship Group</div>
+        <div class="form-card-sub" data-i18n="form_sub">Fill in the details below to create your group</div>
+      </div>
     </div>
 
-    <!-- Form Container -->
-    <div class="form-container">
-        <h2 data-translate="form-heading">Create a New Group</h2>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="{{ form.name.id_for_label }}" data-translate="group-name-label">Group Name</label>
-                {{ form.name }}
+    <div class="form-card-body">
+      <form method="post" id="create-group-form">
+        {% csrf_token %}
+
+        <!-- Group Name -->
+        <div class="field-group">
+          <label class="field-label" for="{{ form.name.id_for_label }}">
+            <i class="fas fa-tag" style="margin-right:4px;color:var(--accent)"></i>
+            <span data-i18n="group_name_label">Group Name</span>
+            <span class="field-required">*</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            id="{{ form.name.id_for_label }}"
+            class="field-input"
+            placeholder="e.g. Python Beginners, Web Dev Masters…"
+            data-i18n-placeholder="name_placeholder"
+            maxlength="150"
+            required
+            oninput="document.getElementById('name-char').textContent = this.value.length + ' / 150'"
+            {% if form.name.value %}value="{{ form.name.value }}"{% endif %}>
+          <div class="field-footer">
+            <span class="field-hint" data-i18n="name_hint">Choose a clear, descriptive name for your group.</span>
+            <span class="char-count" id="name-char">0 / 150</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="field-group">
+          <label class="field-label" for="{{ form.description.id_for_label }}">
+            <i class="fas fa-align-left" style="margin-right:4px;color:var(--accent)"></i>
+            <span data-i18n="desc_label">Description</span>
+          </label>
+          <textarea
+            name="description"
+            id="{{ form.description.id_for_label }}"
+            class="field-input"
+            rows="5"
+            maxlength="1000"
+            placeholder="Describe the group's purpose, topics covered, and who it's for…"
+            data-i18n-placeholder="desc_placeholder"
+            oninput="document.getElementById('desc-char').textContent = this.value.length + ' / 1000'"
+          >{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+          <div class="field-footer">
+            <span class="field-hint" data-i18n="desc_hint">Help people understand what this group is about.</span>
+            <span class="char-count" id="desc-char">0 / 1000</span>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <!-- Public toggle -->
+        <div class="field-group" style="margin-bottom:0;">
+          <label class="field-label">
+            <i class="fas fa-lock-open" style="margin-right:4px;color:var(--accent)"></i>
+            <span data-i18n="visibility_label">Visibility</span>
+          </label>
+          <label class="toggle-field" id="toggle-field" onclick="togglePublic()">
+            <input type="checkbox" name="is_public" id="{{ form.is_public.id_for_label }}"
+              {% if form.is_public.value %}checked{% endif %}>
+            <div class="toggle-switch" id="toggle-switch"></div>
+            <div class="toggle-info">
+              <div class="toggle-title" data-i18n="toggle_title">Make this group public</div>
+              <div class="toggle-sub" data-i18n="toggle_sub">When enabled, this group will be visible and joinable by all Eduvia users.</div>
             </div>
-            <div class="form-group">
-                <label for="{{ form.description.id_for_label }}" data-translate="description-label">Description</label>
-                {{ form.description }}
-            </div>
-            <div class="form-group">
-                <label for="{{ form.is_public.id_for_label }}">
-                    {{ form.is_public }}
-                    <span data-translate="is-public-label">Make this group public (visible to everyone)</span>
-                </label>
-            </div>
-            <button type="submit" data-translate="create-button">Create Group</button>
-        </form>
+          </label>
+
+          <!-- Public info -->
+          <div class="privacy-info" id="privacy-info">
+            <i class="fas fa-check-circle"></i>
+            <p data-i18n="public_info">This group will appear in the public groups listing and anyone can request to join.</p>
+          </div>
+
+          <!-- Private info -->
+          <div class="privacy-info" id="private-info" style="background:rgba(251,113,133,.06);border-color:rgba(251,113,133,.18);display:none;">
+            <i class="fas fa-lock" style="color:var(--danger)"></i>
+            <p data-i18n="private_info">This group will be private. Only people you invite can join.</p>
+          </div>
+        </div>
+
+      </form>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="back-to-dashboard">Back to Dashboard</a>
+    <div class="form-actions">
+      <button type="submit" form="create-group-form" class="submit-btn" id="submit-btn" onclick="handleSubmit()">
+        <i class="fas fa-users-cog"></i>
+        <span data-i18n="create_btn">Create Group</span>
+      </button>
+      <a href="{% url 'mentorship:mentor_dashboard' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span data-i18n="back_btn">Back to Dashboard</span>
+      </a>
     </div>
+  </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+  <!-- Tips -->
+  <div class="tips-card">
+    <div class="tips-title"><i class="fas fa-lightbulb"></i> <span data-i18n="tips_title">Tips for a great group</span></div>
+    <div class="tip-item">
+      <div class="tip-dot">1</div>
+      <span data-i18n="tip1">Use a specific, descriptive name so members know exactly what the group covers.</span>
+    </div>
+    <div class="tip-item">
+      <div class="tip-dot">2</div>
+      <span data-i18n="tip2">Write a clear description outlining topics, goals, and what kind of members you're looking for.</span>
+    </div>
+    <div class="tip-item">
+      <div class="tip-dot">3</div>
+      <span data-i18n="tip3">Public groups grow faster. Consider going public to attract passionate learners.</span>
+    </div>
+    <div class="tip-item">
+      <div class="tip-dot">4</div>
+      <span data-i18n="tip4">You can always edit group details or change visibility after creation.</span>
+    </div>
+  </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'mentorship/create_group.js' %}"></script>
+</main>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <i class="fas fa-graduation-cap" style="color:var(--accent)"></i>
+  <span data-i18n="footer_text">© 2025 Eduvia and creativitycode. All rights reserved.</span>
+  <span>·</span>
+  <a href="/about/" data-i18n="about">About</a>
+  <span>·</span>
+  <a href="/contact_us/" data-i18n="contact">Contact</a>
+</footer>
+
+<script>
+/* ── i18n ──────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    page_title:'Create Group — Eduvia', create_group:'Create Group',
+    home:'Home', courses:'Courses', chatbot:'Chatbot',
+    competitions:'Competitions', performance:'Performance',
+    skills_market:'Skills Market', about:'About', contact:'Contact',
+    dashboard:'Dashboard', profile:'Profile', logout:'Logout', login:'Login',
+    mentorship:'Mentorship', mentorship_label:'Mentorship',
+    hero_title:'Create a Group',
+    hero_sub:'Build a learning community and connect with others in Eduvia.',
+    form_title:'New Mentorship Group',
+    form_sub:'Fill in the details below to create your group',
+    group_name_label:'Group Name',
+    name_placeholder:'e.g. Python Beginners, Web Dev Masters…',
+    name_hint:'Choose a clear, descriptive name for your group.',
+    desc_label:'Description',
+    desc_placeholder:'Describe the group\'s purpose, topics covered, and who it\'s for…',
+    desc_hint:'Help people understand what this group is about.',
+    visibility_label:'Visibility',
+    toggle_title:'Make this group public',
+    toggle_sub:'When enabled, this group will be visible and joinable by all Eduvia users.',
+    public_info:'This group will appear in the public groups listing and anyone can request to join.',
+    private_info:'This group will be private. Only people you invite can join.',
+    create_btn:'Create Group', back_btn:'Back to Dashboard',
+    tips_title:'Tips for a great group',
+    tip1:'Use a specific, descriptive name so members know exactly what the group covers.',
+    tip2:'Write a clear description outlining topics, goals, and what kind of members you\'re looking for.',
+    tip3:'Public groups grow faster. Consider going public to attract passionate learners.',
+    tip4:'You can always edit group details or change visibility after creation.',
+    footer_text:'© 2025 Eduvia and creativitycode. All rights reserved.',
+  },
+  ar: {
+    page_title:'إنشاء مجموعة — Eduvia', create_group:'إنشاء مجموعة',
+    home:'الرئيسية', courses:'الكورسات', chatbot:'الدردشة الذكية',
+    competitions:'المسابقات', performance:'الأداء',
+    skills_market:'سوق المهارات', about:'من نحن', contact:'تواصل معنا',
+    dashboard:'لوحة التحكم', profile:'الملف الشخصي', logout:'تسجيل خروج', login:'تسجيل الدخول',
+    mentorship:'الإرشاد', mentorship_label:'الإرشاد',
+    hero_title:'إنشاء مجموعة',
+    hero_sub:'ابنِ مجتمعاً تعليمياً وتواصل مع الآخرين في Eduvia.',
+    form_title:'مجموعة إرشاد جديدة',
+    form_sub:'أدخل التفاصيل أدناه لإنشاء مجموعتك',
+    group_name_label:'اسم المجموعة',
+    name_placeholder:'مثلاً: مبتدئو Python، محترفو تطوير الويب…',
+    name_hint:'اختر اسماً واضحاً وصفياً للمجموعة.',
+    desc_label:'الوصف',
+    desc_placeholder:'صف غرض المجموعة والمواضيع المغطاة وما نوع الأعضاء الذين تبحث عنهم…',
+    desc_hint:'ساعد الناس على فهم ما تدور حوله هذه المجموعة.',
+    visibility_label:'مستوى الرؤية',
+    toggle_title:'اجعل هذه المجموعة عامة',
+    toggle_sub:'عند التفعيل، ستكون هذه المجموعة مرئية ويمكن الانضمام إليها لجميع مستخدمي Eduvia.',
+    public_info:'ستظهر هذه المجموعة في قائمة المجموعات العامة ويمكن لأي شخص طلب الانضمام.',
+    private_info:'ستكون هذه المجموعة خاصة. لا يمكن الانضمام إليها إلا للأشخاص الذين تدعوهم.',
+    create_btn:'إنشاء المجموعة', back_btn:'العودة للوحة التحكم',
+    tips_title:'نصائح لمجموعة رائعة',
+    tip1:'استخدم اسماً محدداً ووصفياً حتى يعرف الأعضاء ما تغطيه المجموعة بالضبط.',
+    tip2:'اكتب وصفاً واضحاً يوضح المواضيع والأهداف ونوع الأعضاء الذين تبحث عنهم.',
+    tip3:'المجموعات العامة تنمو بشكل أسرع. فكر في جعلها عامة لاستقطاب المتعلمين المتحمسين.',
+    tip4:'يمكنك دائماً تعديل تفاصيل المجموعة أو تغيير مستوى الرؤية بعد الإنشاء.',
+    footer_text:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (I18N[lang]?.[key]) el.placeholder = I18N[lang][key];
+  });
+  document.title = I18N[lang].page_title || document.title;
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Public toggle ─────────────────────────────────────────────────────── */
+function togglePublic() {
+  const chk = document.getElementById('{{ form.is_public.id_for_label }}');
+  const tf = document.getElementById('toggle-field');
+  const pubInfo = document.getElementById('privacy-info');
+  const prvInfo = document.getElementById('private-info');
+
+  // Toggle will happen via the label/checkbox normally
+  setTimeout(() => {
+    const isChecked = chk.checked;
+    tf.classList.toggle('checked', isChecked);
+    pubInfo.classList.toggle('visible', isChecked);
+    prvInfo.style.display = isChecked ? 'none' : 'flex';
+    if (!isChecked) prvInfo.classList.add('visible');
+  }, 10);
+}
+
+/* ── Submit ─────────────────────────────────────────────────────────────── */
+function handleSubmit() {
+  const name = document.querySelector('[name="name"]')?.value.trim();
+  if (!name) {
+    toast(currentLang === 'ar' ? 'يرجى إدخال اسم المجموعة.' : 'Please enter a group name.', 'error');
+    return false;
+  }
+  const btn = document.getElementById('submit-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> ${currentLang === 'ar' ? 'جاري الإنشاء…' : 'Creating…'}`; }
+}
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+
+  // Init toggle state
+  const chk = document.getElementById('{{ form.is_public.id_for_label }}');
+  const tf  = document.getElementById('toggle-field');
+  const pubInfo = document.getElementById('privacy-info');
+  if (chk && chk.checked) {
+    tf?.classList.add('checked');
+    pubInfo?.classList.add('visible');
+  }
+
+  // Char counters for pre-filled values
+  const nameInp = document.querySelector('[name="name"]');
+  const descTA  = document.querySelector('[name="description"]');
+  if (nameInp) document.getElementById('name-char').textContent = nameInp.value.length + ' / 150';
+  if (descTA)  document.getElementById('desc-char').textContent  = descTA.value.length  + ' / 1000';
+});
+</script>
 </body>
 </html>

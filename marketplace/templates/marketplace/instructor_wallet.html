@@ -1,422 +1,833 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="title">Instructor Wallet — Eduvia</title>
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'marketplace/marketplace.css' %}">
-    <style>
-        :root { --hero-bg-image: url("https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg"); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor Wallet — Eduvia</title>
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        /* ── Stats Grid ── */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 22px;
-            margin-bottom: 40px;
-        }
-        @media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr; } }
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .stat-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 28px 24px;
-            box-shadow: 0 10px 28px rgba(0,0,0,0.1);
-            position: relative; overflow: hidden;
-            transition: transform 0.35s ease, box-shadow 0.35s ease;
-            animation: fadeInUp 0.6s ease both;
-        }
-        .stat-card:nth-child(1) { animation-delay: 0s; }
-        .stat-card:nth-child(2) { animation-delay: 0.1s; }
-        .stat-card:nth-child(3) { animation-delay: 0.2s; }
-        .stat-card:hover { transform: translateY(-7px); box-shadow: 0 18px 40px rgba(0,0,0,0.17); }
-        .stat-card::before {
-            content: ''; position: absolute; top: -28px; right: -28px;
-            width: 90px; height: 90px; border-radius: 50%;
-            background: var(--stat-color, rgba(0,201,167,0.1));
-        }
-        .stat-card .stat-icon {
-            width: 48px; height: 48px; border-radius: 13px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: white;
-            background: var(--stat-gradient, var(--btn-bg));
-            margin-bottom: 14px;
-        }
-        .stat-card .stat-label {
-            font-size: 12px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.5px; color: var(--card-secondary-text); margin-bottom: 6px;
-        }
-        .stat-card .stat-value {
-            font-size: 32px; font-weight: 700;
-            background: var(--stat-gradient, var(--btn-bg));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .stat-card .stat-currency { font-size: 16px; font-weight: 500; }
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-        .stat-card.balance  { --stat-gradient: linear-gradient(135deg,#00c9a7,#12d3cf); --stat-color: rgba(0,201,167,0.1); }
-        .stat-card.withdrawn{ --stat-gradient: linear-gradient(135deg,#3498db,#2980b9); --stat-color: rgba(52,152,219,0.1); }
-        .stat-card.courses  { --stat-gradient: linear-gradient(135deg,#9b59b6,#8e44ad); --stat-color: rgba(155,89,182,0.1); }
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
 
-        /* ── Section Header ── */
-        .section-header {
-            display: flex; align-items: center; gap: 12px;
-            font-size: 21px; font-weight: 700; color: var(--card-text);
-            margin-bottom: 18px;
-        }
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
 
-        /* ── Course Stats Table ── */
-        .data-table-wrap {
-            background: var(--card-bg);
-            border-radius: 18px;
-            box-shadow: 0 10px 28px rgba(0,0,0,0.09);
-            overflow: hidden;
-            margin-bottom: 40px;
-            animation: fadeInUp 0.6s ease 0.2s both;
-        }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table thead { background: var(--btn-bg); }
-        .data-table thead th {
-            color: white; font-size: 13px; font-weight: 600;
-            padding: 14px 20px; text-align: left;
-            text-transform: uppercase; letter-spacing: 0.4px;
-        }
-        html[dir="rtl"] .data-table thead th { text-align: right; }
-        .data-table tbody tr {
-            border-bottom: 1px solid var(--glass-border);
-            transition: background 0.2s;
-        }
-        .data-table tbody tr:last-child { border-bottom: none; }
-        .data-table tbody tr:hover { background: rgba(0,201,167,0.04); }
-        .data-table td { padding: 14px 20px; font-size: 14px; color: var(--text-color); }
-        .data-table td strong { color: var(--card-text); }
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
 
-        .amount-text {
-            font-weight: 700;
-            background: var(--btn-bg);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
 
-        .table-empty { text-align: center; padding: 48px 20px; color: var(--card-secondary-text); }
-        .table-empty i { font-size: 40px; opacity: 0.25; display: block; margin-bottom: 12px; }
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
 
-        /* ── Withdrawal Form ── */
-        .withdrawal-section {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 32px 36px;
-            box-shadow: 0 10px 28px rgba(0,0,0,0.09);
-            margin-bottom: 40px;
-            animation: fadeInUp 0.6s ease 0.3s both;
-        }
-        .withdrawal-section h3 {
-            font-size: 20px; font-weight: 700;
-            color: var(--card-text); margin-bottom: 6px;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .withdrawal-section .subtitle {
-            font-size: 14px; color: var(--card-secondary-text); margin-bottom: 24px;
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 14px; align-items: end;
-        }
-        @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
-        .form-group label {
-            display: block; font-size: 13px; font-weight: 600;
-            color: var(--card-secondary-text); margin-bottom: 7px; text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-        .form-group .required-star { color: #e74c3c; margin-left: 3px; }
-        .form-group .form-input { background: var(--card-bg); }
-        .submit-btn {
-            background: var(--btn-bg); color: white;
-            border: none; border-radius: 50px;
-            padding: 13px 32px; font-size: 15px; font-weight: 700;
-            cursor: pointer; font-family: 'Cairo', sans-serif;
-            box-shadow: var(--btn-shadow);
-            transition: all 0.3s ease; white-space: nowrap;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .submit-btn:hover { background: var(--btn-bg-hover); transform: translateY(-3px); }
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
 
-        /* balance hint */
-        .balance-hint {
-            font-size: 13px; color: var(--card-secondary-text);
-            margin-top: 6px; display: flex; align-items: center; gap: 6px;
-        }
-        .balance-hint span { color: var(--accent); font-weight: 700; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
 
-        /* ── Withdrawal History ── */
-        .wr-badge {
-            display: inline-block; padding: 3px 12px;
-            border-radius: 50px; font-size: 12px; font-weight: 700;
-        }
-        .wr-badge.pending  { background: rgba(243,156,18,0.12); color: #f39c12; }
-        .wr-badge.approved { background: rgba(39,174,96,0.12); color: #27ae60; }
-        .wr-badge.rejected { background: rgba(231,76,60,0.12); color: #e74c3c; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-        /* ── Animate on scroll ── */
-        .animate-on-scroll { opacity:0; transform:translateY(24px); transition:opacity .6s ease,transform .6s ease; }
-        .animate-on-scroll.visible { opacity:1; transform:translateY(0); }
-    </style>
+/* ══ TOPBAR ══════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-nav {
+  display: flex; align-items: center; gap: 4px; flex: 1; flex-wrap: nowrap; overflow: hidden;
+}
+.topbar-nav a {
+  font-size: 13px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; padding: 6px 10px; border-radius: var(--radius-sm);
+  transition: var(--trans); white-space: nowrap;
+}
+.topbar-nav a:hover { color: var(--text-p); background: var(--bg-card); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
+[lang="ar"] .topbar-actions { margin-left: 0; margin-right: auto; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans); font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.coins-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2);
+  color: var(--gold-400); border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700;
+}
+.hamburger {
+  display: none; background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-p); width: 36px; height: 36px; border-radius: 50%;
+  align-items: center; justify-content: center; cursor: pointer;
+  font-size: 16px; transition: var(--trans);
+}
+.hamburger:hover { border-color: var(--accent); color: var(--accent); }
+
+.mobile-nav {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  padding: 16px; flex-direction: column; gap: 4px; z-index: 599;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-size: 14px; color: var(--text-p); text-decoration: none;
+  padding: 10px 14px; border-radius: var(--radius-md);
+  transition: var(--trans); display: flex; align-items: center; gap: 8px;
+}
+.mobile-nav a:hover { background: var(--bg-card); color: var(--accent); }
+
+/* ══ PAGE ════════════════════════════════════════════════════════════════ */
+.page-wrap {
+  padding-top: calc(var(--topbar-h) + 40px);
+  padding-bottom: 80px;
+  max-width: 1180px; margin: 0 auto;
+  padding-left: 24px; padding-right: 24px;
+}
+
+/* ══ HERO STRIP ══════════════════════════════════════════════════════════ */
+.page-hero {
+  margin-bottom: 40px;
+  animation: heroReveal .5s ease both;
+}
+@keyframes heroReveal {
+  from { opacity:0; transform:translateY(-16px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.page-hero-eyebrow {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--gold-400); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.page-hero-eyebrow::before {
+  content: ''; width: 20px; height: 2px; background: var(--gold-400); border-radius: 99px;
+}
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: 34px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -1px; line-height: 1.15; margin-bottom: 10px;
+}
+.page-hero p { font-size: 15px; color: var(--text-muted); }
+
+/* ══ ALERTS ══════════════════════════════════════════════════════════════ */
+.alert {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 600; margin-bottom: 24px;
+}
+.alert-success { background: rgba(52,211,153,.08); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.alert-error   { background: rgba(251,113,133,.08); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+
+/* ══ STATS GRID ══════════════════════════════════════════════════════════ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; margin-bottom: 40px;
+}
+@media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr; } }
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 26px 22px;
+  position: relative; overflow: hidden;
+  transition: var(--trans);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow: var(--glow);
+}
+@keyframes cardReveal {
+  from { opacity:0; transform:translateY(22px) scale(.97); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+.stat-card:nth-child(1) { animation-delay: 0s; }
+.stat-card:nth-child(2) { animation-delay: .1s; }
+.stat-card:nth-child(3) { animation-delay: .2s; }
+.stat-card:hover { transform: translateY(-6px); border-color: var(--border-glow); }
+
+/* glow blob */
+.stat-card::before {
+  content: ''; position: absolute; top: -30px; right: -30px;
+  width: 100px; height: 100px; border-radius: 50%;
+  background: var(--stat-blob, rgba(139,92,246,.08));
+  pointer-events: none;
+}
+
+.stat-card.balance  { --stat-blob: rgba(52,211,153,.1); }
+.stat-card.withdrawn{ --stat-blob: rgba(56,189,248,.1); }
+.stat-card.courses  { --stat-blob: rgba(251,191,36,.1); }
+
+.stat-icon {
+  width: 46px; height: 46px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 14px; flex-shrink: 0;
+}
+.stat-card.balance  .stat-icon { background: rgba(52,211,153,.1);  color: var(--emerald-400); border: 1px solid rgba(52,211,153,.2); }
+.stat-card.withdrawn .stat-icon { background: rgba(56,189,248,.1); color: var(--sky-400);     border: 1px solid rgba(56,189,248,.2); }
+.stat-card.courses  .stat-icon { background: rgba(251,191,36,.1);  color: var(--gold-400);    border: 1px solid rgba(251,191,36,.2); }
+
+.stat-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--text-muted); margin-bottom: 8px;
+}
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 30px; font-weight: 800; color: var(--text-h); line-height: 1;
+}
+.stat-card.balance  .stat-value { color: var(--emerald-400); }
+.stat-card.withdrawn .stat-value { color: var(--sky-400); }
+.stat-card.courses  .stat-value { color: var(--gold-400); }
+.stat-currency { font-size: 14px; font-weight: 500; opacity: .7; }
+
+/* ══ SECTION HEADER ══════════════════════════════════════════════════════ */
+.section-hdr {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700; color: var(--text-h);
+  margin-bottom: 16px;
+}
+.section-hdr i { color: var(--accent); }
+
+/* ══ DATA TABLE ══════════════════════════════════════════════════════════ */
+.table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: 40px;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) .15s both;
+}
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table thead {
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+}
+.data-table thead th {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--text-muted);
+  padding: 14px 20px; text-align: left;
+}
+[lang="ar"] .data-table thead th { text-align: right; }
+.data-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: var(--trans);
+}
+.data-table tbody tr:last-child { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--bg-hover); }
+.data-table td { padding: 14px 20px; font-size: 14px; color: var(--text-p); }
+.data-table td strong { color: var(--text-h); font-weight: 600; }
+
+.amount-text { font-weight: 700; color: var(--success); font-family: var(--font-mono); font-size: 13px; }
+
+.table-empty { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+.table-empty i { font-size: 36px; opacity: .2; display: block; margin-bottom: 12px; }
+
+/* Status badges */
+.wr-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 11px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; letter-spacing: .3px;
+}
+.wr-badge.pending  { background: rgba(251,191,36,.1);  color: var(--gold-400);    border: 1px solid rgba(251,191,36,.2); }
+.wr-badge.approved { background: rgba(52,211,153,.1);  color: var(--success);     border: 1px solid rgba(52,211,153,.2); }
+.wr-badge.rejected { background: rgba(251,113,133,.1); color: var(--danger);      border: 1px solid rgba(251,113,133,.2); }
+
+/* Student count pill */
+.student-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(139,92,246,.1); border: 1px solid var(--border-glow);
+  color: var(--violet-400); padding: 2px 10px; border-radius: 99px;
+  font-size: 12px; font-weight: 700;
+}
+
+/* Code style */
+.code-tag {
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--bg-base); border: 1px solid var(--border);
+  padding: 2px 8px; border-radius: var(--radius-sm); color: var(--violet-400);
+}
+
+/* ══ WITHDRAWAL FORM ══════════════════════════════════════════════════════ */
+.withdrawal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 30px 32px;
+  margin-bottom: 40px;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) .2s both;
+  box-shadow: var(--glow);
+}
+.withdrawal-card h3 {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700; color: var(--text-h);
+  margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+}
+.withdrawal-card h3 i { color: var(--accent); }
+.withdrawal-card .subtitle {
+  font-size: 13px; color: var(--text-muted); margin-bottom: 24px;
+  padding-bottom: 20px; border-bottom: 1px solid var(--border);
+}
+
+.form-row {
+  display: grid; grid-template-columns: 1fr 1fr auto;
+  gap: 16px; align-items: end;
+}
+@media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label {
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .5px;
+  display: flex; align-items: center; gap: 4px;
+}
+.required-star { color: var(--danger); }
+.form-inp {
+  background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 11px 14px; font-size: 14px; font-family: inherit;
+  transition: var(--trans);
+}
+.form-inp:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.form-inp::placeholder { color: var(--text-muted); }
+
+.balance-hint {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 5px; margin-top: 4px;
+}
+.balance-hint span { color: var(--success); font-weight: 700; }
+
+.submit-btn {
+  padding: 12px 28px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-size: 14px; font-weight: 700; border: none;
+  cursor: pointer; font-family: inherit; transition: var(--trans);
+  display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35); white-space: nowrap;
+  position: relative; overflow: hidden;
+}
+.submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+/* ══ FOOTER ══════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 24px; text-align: center;
+  color: var(--text-muted); font-size: 12px;
+}
+.site-footer a { color: var(--accent); text-decoration: none; }
+
+/* ══ TOAST ════════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+.toast-success{background:rgba(52,211,153,.15);color:var(--success);border:1px solid rgba(52,211,153,.3);}
+.toast-error  {background:rgba(251,113,133,.12);color:var(--danger); border:1px solid rgba(251,113,133,.25);}
+.toast-info   {background:rgba(139,92,246,.12); color:var(--violet-400);border:1px solid rgba(139,92,246,.25);}
+
+/* ══ ANIMATE ON SCROLL ════════════════════════════════════════════════════ */
+.aos { opacity:0; transform:translateY(24px); transition:opacity .55s ease,transform .55s ease; }
+.aos.visible { opacity:1; transform:translateY(0); }
+
+/* ══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+@media (max-width: 820px) {
+  .topbar-nav { display: none; }
+  .hamburger { display: flex; }
+  .page-hero h1 { font-size: 26px; }
+  .withdrawal-card { padding: 20px; }
+}
+@media (max-width: 480px) {
+  .page-wrap { padding-left: 14px; padding-right: 14px; }
+  .data-table thead th, .data-table td { padding: 10px 12px; font-size: 13px; }
+}
+</style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="logo" data-translate="title">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
-            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
-        </nav>
-    </header>
-
-    <!-- Hero -->
-    <section class="hero">
-        <h1 data-translate="wa-hero-title"><i class="fas fa-wallet" style="margin-right:12px;"></i>Instructor Wallet</h1>
-        <p data-translate="wa-hero-sub">Manage your earnings, course revenue, and withdrawal requests.</p>
-    </section>
-
-    <!-- Main -->
-    <main class="page-content">
-
-        <!-- Flash messages -->
-        {% if withdrawal_success %}
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i> {{ withdrawal_success }}
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <nav class="topbar-nav">
+    <a href="/" data-i18n="nav_home">Home</a>
+    <a href="/courses/" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" data-i18n="nav_competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
+    <a href="/about/" data-i18n="nav_about">About</a>
+    <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+  </nav>
+  <div class="topbar-actions">
+    {% if user.is_authenticated %}
+      {% if user.courses_profile %}
+        <div class="coins-pill">
+          <i class="fas fa-coins"></i>
+          <span>{{ user.courses_profile.coins }}</span>
         </div>
-        {% endif %}
-        {% if withdrawal_error %}
-        <div class="alert alert-error">
-            <i class="fas fa-exclamation-circle"></i> {{ withdrawal_error }}
+      {% endif %}
+      <a href="{% url 'courses:instructor_dashboard' %}" class="ctrl-btn" title="Dashboard">
+        <i class="fas fa-th-large"></i>
+      </a>
+      <a href="{% url 'marketplace_my_courses' %}" class="tb-btn tb-btn-ghost">
+        <i class="fas fa-book"></i> <span data-i18n="my_courses">My Courses</span>
+      </a>
+      <a href="/accounts/logout/" class="tb-btn tb-btn-ghost" data-i18n="nav_logout">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </a>
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <button class="hamburger" onclick="toggleMobileNav()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/" data-i18n="nav_home"><i class="fas fa-home"></i> Home</a>
+  <a href="/courses/"><i class="fas fa-book"></i> Courses</a>
+  <a href="/chatbot/"><i class="fas fa-robot"></i> Chatbot</a>
+  <a href="/competitions/"><i class="fas fa-trophy"></i> Competitions</a>
+  <a href="/performance/dashboard/"><i class="fas fa-chart-line"></i> Performance</a>
+  <a href="/about/"><i class="fas fa-info-circle"></i> About</a>
+  <a href="/contact_us/"><i class="fas fa-envelope"></i> Contact</a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  {% endif %}
+</div>
+
+<!-- ── PAGE ────────────────────────────────────────────────────────────── -->
+<div class="page-wrap">
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="page-hero-eyebrow">
+      <i class="fas fa-wallet"></i> Instructor Tools
+    </div>
+    <h1 data-i18n="page_title">Instructor Wallet</h1>
+    <p data-i18n="page_sub">Manage your earnings, course revenue, and withdrawal requests.</p>
+  </div>
+
+  <!-- Alerts -->
+  {% if withdrawal_success %}
+  <div class="alert alert-success">
+    <i class="fas fa-check-circle"></i> {{ withdrawal_success }}
+  </div>
+  {% endif %}
+  {% if withdrawal_error %}
+  <div class="alert alert-error">
+    <i class="fas fa-exclamation-circle"></i> {{ withdrawal_error }}
+  </div>
+  {% endif %}
+
+  <!-- ── Stats ── -->
+  <div class="stats-grid">
+    <div class="stat-card balance">
+      <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+      <div class="stat-label" data-i18n="available_balance">Available Balance</div>
+      <div class="stat-value">{{ wallet.balance|floatformat:2 }} <span class="stat-currency">EGP</span></div>
+    </div>
+    <div class="stat-card withdrawn">
+      <div class="stat-icon"><i class="fas fa-arrow-circle-up"></i></div>
+      <div class="stat-label" data-i18n="total_withdrawn">Total Withdrawn</div>
+      <div class="stat-value">{{ total_withdrawn|floatformat:2 }} <span class="stat-currency">EGP</span></div>
+    </div>
+    <div class="stat-card courses">
+      <div class="stat-icon"><i class="fas fa-book"></i></div>
+      <div class="stat-label" data-i18n="total_courses">Total Courses</div>
+      <div class="stat-value">{{ course_stats|length }}</div>
+    </div>
+  </div>
+
+  <!-- ── Course Revenue ── -->
+  <div class="aos">
+    <div class="section-hdr">
+      <i class="fas fa-chart-bar"></i>
+      <span data-i18n="course_revenue">Course Revenue Breakdown</span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th data-i18n="th_course">Course</th>
+            <th data-i18n="th_price">Price</th>
+            <th data-i18n="th_students">Students</th>
+            <th data-i18n="th_total_rev">Total Revenue</th>
+            <th data-i18n="th_share">Your Share (70%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in course_stats %}
+          <tr>
+            <td><strong>{{ item.course.title }}</strong></td>
+            <td>{{ item.course.price|floatformat:2 }} EGP</td>
+            <td><span class="student-pill"><i class="fas fa-users"></i> {{ item.student_count }}</span></td>
+            <td>{{ item.revenue|floatformat:2 }} EGP</td>
+            <td><span class="amount-text">{{ item.instructor_share|floatformat:2 }} EGP</span></td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="table-empty">
+              <i class="fas fa-book-open"></i>
+              <span data-i18n="no_courses_msg">No courses found. Start creating courses to see revenue.</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Withdrawal Request Form ── -->
+  <div class="withdrawal-card">
+    <h3><i class="fas fa-paper-plane"></i> <span data-i18n="request_withdrawal">Request Withdrawal</span></h3>
+    <p class="subtitle" data-i18n="withdrawal_sub">Submit a withdrawal request. All requests are reviewed within 1–3 business days.</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group">
+          <label><span data-i18n="amount_label">Amount (EGP)</span> <span class="required-star">*</span></label>
+          <input type="number" name="amount" min="1" step="0.01"
+                 max="{{ wallet.balance }}" class="form-inp"
+                 placeholder="e.g. 500.00" required>
+          <div class="balance-hint">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="available">Available</span>:
+            <span>{{ wallet.balance|floatformat:2 }} EGP</span>
+          </div>
         </div>
-        {% endif %}
-
-        <!-- ── Stats ── -->
-        <div class="stats-grid">
-            <div class="stat-card balance">
-                <div class="stat-icon"><i class="fas fa-wallet"></i></div>
-                <div class="stat-label" data-translate="wa-available">Available Balance</div>
-                <div class="stat-value">{{ wallet.balance|floatformat:2 }} <span class="stat-currency">EGP</span></div>
-            </div>
-            <div class="stat-card withdrawn">
-                <div class="stat-icon"><i class="fas fa-arrow-circle-up"></i></div>
-                <div class="stat-label" data-translate="wa-withdrawn">Total Withdrawn</div>
-                <div class="stat-value">{{ total_withdrawn|floatformat:2 }} <span class="stat-currency">EGP</span></div>
-            </div>
-            <div class="stat-card courses">
-                <div class="stat-icon"><i class="fas fa-book"></i></div>
-                <div class="stat-label">Total Courses</div>
-                <div class="stat-value">{{ course_stats|length }}</div>
-            </div>
+        <div class="form-group">
+          <label><span data-i18n="code_label">Withdrawal Code</span> <span class="required-star">*</span></label>
+          <input type="text" name="withdrawal_code" class="form-inp"
+                 placeholder="Enter your withdrawal code" required>
         </div>
-
-        <!-- ── Per-Course Revenue ── -->
-        <div class="animate-on-scroll">
-            <div class="section-header">
-                <i class="fas fa-chart-bar" style="color:var(--accent);"></i>
-                Course Revenue Breakdown
-            </div>
-            <div class="data-table-wrap">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Course</th>
-                            <th>Price</th>
-                            <th>Students</th>
-                            <th>Total Revenue</th>
-                            <th>Your Share (70%)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in course_stats %}
-                        <tr>
-                            <td><strong>{{ item.course.title }}</strong></td>
-                            <td>{{ item.course.price|floatformat:2 }} EGP</td>
-                            <td>
-                                <span style="background:rgba(0,201,167,0.1);color:var(--accent);padding:2px 10px;border-radius:50px;font-weight:600;font-size:13px;">
-                                    {{ item.student_count }}
-                                </span>
-                            </td>
-                            <td>{{ item.revenue|floatformat:2 }} EGP</td>
-                            <td><span class="amount-text">{{ item.instructor_share|floatformat:2 }} EGP</span></td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="table-empty">
-                                <i class="fas fa-book-open"></i>
-                                No courses found. Start creating courses to see revenue.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="form-group" style="justify-content:flex-end;">
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-paper-plane"></i> <span data-i18n="submit">Submit</span>
+          </button>
         </div>
+      </div>
+    </form>
+  </div>
 
-        <!-- ── Withdrawal Request Form ── -->
-        <div class="withdrawal-section animate-on-scroll">
-            <h3><i class="fas fa-paper-plane" style="color:var(--accent);"></i> Request Withdrawal</h3>
-            <p class="subtitle">Submit a withdrawal request. All requests are reviewed within 1–3 business days.</p>
+  <!-- ── Withdrawal History ── -->
+  <div class="aos">
+    <div class="section-hdr">
+      <i class="fas fa-history"></i>
+      <span data-i18n="withdrawal_history">Withdrawal History</span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th data-i18n="th_date">Date</th>
+            <th data-i18n="th_amount">Amount</th>
+            <th data-i18n="th_code">Code</th>
+            <th data-i18n="th_status">Status</th>
+            <th data-i18n="th_note">Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for wr in withdrawal_requests %}
+          <tr>
+            <td>{{ wr.created_at|date:"M d, Y" }}</td>
+            <td><span class="amount-text">{{ wr.amount|floatformat:2 }} EGP</span></td>
+            <td><span class="code-tag">{{ wr.withdrawal_code|slice:":12" }}…</span></td>
+            <td>
+              <span class="wr-badge {{ wr.status }}">
+                {% if wr.status == 'pending' %}<i class="fas fa-clock"></i>
+                {% elif wr.status == 'approved' %}<i class="fas fa-check"></i>
+                {% else %}<i class="fas fa-times"></i>{% endif %}
+                {{ wr.get_status_display }}
+              </span>
+            </td>
+            <td style="font-size:13px;color:var(--text-muted);">{{ wr.note|default:"—" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="table-empty">
+              <i class="fas fa-inbox"></i>
+              <span data-i18n="no_wr">No withdrawal requests yet.</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Amount (EGP) <span class="required-star">*</span></label>
-                        <input type="number" name="amount" min="1" step="0.01"
-                               max="{{ wallet.balance }}"
-                               class="form-input" placeholder="e.g. 500.00" required />
-                        <div class="balance-hint">
-                            <i class="fas fa-info-circle"></i>
-                            Available: <span>{{ wallet.balance|floatformat:2 }} EGP</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Withdrawal Code <span class="required-star">*</span></label>
-                        <input type="text" name="withdrawal_code" class="form-input"
-                               placeholder="Enter your withdrawal code" required />
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="submit-btn">
-                            <i class="fas fa-paper-plane"></i> Submit
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
+  <!-- ── Recent Transactions ── -->
+  <div class="aos">
+    <div class="section-hdr">
+      <i class="fas fa-receipt"></i>
+      <span data-i18n="recent_tx">Recent Transactions</span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th data-i18n="th_date">Date</th>
+            <th data-i18n="th_course">Course</th>
+            <th data-i18n="th_type">Type</th>
+            <th data-i18n="th_amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tx in transactions %}
+          <tr>
+            <td>{{ tx.created_at|date:"M d, Y" }}</td>
+            <td>
+              <strong>
+                {% if tx.payment and tx.payment.course %}
+                  {{ tx.payment.course.title }}
+                {% else %}—{% endif %}
+              </strong>
+            </td>
+            <td>
+              <span class="student-pill" style="background:rgba(56,189,248,.1);color:var(--sky-400);border-color:rgba(56,189,248,.2);">
+                {{ tx.get_tx_type_display|default:"Earning" }}
+              </span>
+            </td>
+            <td><span class="amount-text">{{ tx.amount|floatformat:2 }} EGP</span></td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="table-empty">
+              <i class="fas fa-inbox"></i>
+              <span data-i18n="no_tx">No transactions yet.</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-        <!-- ── Withdrawal History ── -->
-        <div class="animate-on-scroll">
-            <div class="section-header">
-                <i class="fas fa-history" style="color:var(--accent);"></i>
-                Withdrawal History
-            </div>
-            <div class="data-table-wrap">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Amount</th>
-                            <th>Code</th>
-                            <th>Status</th>
-                            <th>Note</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for wr in withdrawal_requests %}
-                        <tr>
-                            <td>{{ wr.created_at|date:"M d, Y" }}</td>
-                            <td><span class="amount-text">{{ wr.amount|floatformat:2 }} EGP</span></td>
-                            <td>
-                                <code style="font-size:12px;background:rgba(0,201,167,0.08);padding:2px 8px;border-radius:6px;">
-                                    {{ wr.withdrawal_code|slice:":12" }}…
-                                </code>
-                            </td>
-                            <td>
-                                <span class="wr-badge {{ wr.status }}">
-                                    {% if wr.status == 'pending' %}<i class="fas fa-clock"></i>
-                                    {% elif wr.status == 'approved' %}<i class="fas fa-check"></i>
-                                    {% else %}<i class="fas fa-times"></i>{% endif %}
-                                    {{ wr.get_status_display }}
-                                </span>
-                            </td>
-                            <td style="color:var(--card-secondary-text);font-size:13px;">
-                                {{ wr.note|default:"—" }}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="table-empty">
-                                <i class="fas fa-inbox"></i>
-                                <span data-translate="wa-no-tx">No withdrawal requests yet.</span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+</div>
 
-        <!-- ── Recent Wallet Transactions ── -->
-        <div class="animate-on-scroll">
-            <div class="section-header">
-                <i class="fas fa-receipt" style="color:var(--accent);"></i>
-                <span data-translate="wa-tx-title">Recent Transactions</span>
-            </div>
-            <div class="data-table-wrap">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Course</th>
-                            <th>Type</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for tx in transactions %}
-                        <tr>
-                            <td>{{ tx.created_at|date:"M d, Y" }}</td>
-                            <td>
-                                {% if tx.payment and tx.payment.course %}
-                                    {{ tx.payment.course.title }}
-                                {% else %}—{% endif %}
-                            </td>
-                            <td>
-                                <span style="background:rgba(0,201,167,0.1);color:var(--accent);padding:3px 10px;border-radius:50px;font-size:12px;font-weight:600;">
-                                    {{ tx.get_tx_type_display|default:"Earning" }}
-                                </span>
-                            </td>
-                            <td><span class="amount-text">{{ tx.amount|floatformat:2 }} EGP</span></td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="table-empty">
-                                <i class="fas fa-inbox"></i>
-                                <span data-translate="wa-no-tx">No transactions yet.</span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <p data-i18n="footer">© 2025 <a href="/">Eduvia</a> and creativitycode. All rights reserved.</p>
+</footer>
 
-    </main>
+<div class="toast-wrap" id="toast-wrap"></div>
 
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+<script>
+/* ── i18n ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_about:'About', nav_contact:'Contact', nav_logout:'Logout',
+    my_courses:'My Courses',
+    page_title:'Instructor Wallet',
+    page_sub:'Manage your earnings, course revenue, and withdrawal requests.',
+    available_balance:'Available Balance', total_withdrawn:'Total Withdrawn', total_courses:'Total Courses',
+    course_revenue:'Course Revenue Breakdown',
+    th_course:'Course', th_price:'Price', th_students:'Students',
+    th_total_rev:'Total Revenue', th_share:'Your Share (70%)',
+    th_date:'Date', th_amount:'Amount', th_code:'Code',
+    th_status:'Status', th_note:'Note', th_type:'Type',
+    no_courses_msg:'No courses found. Start creating courses to see revenue.',
+    request_withdrawal:'Request Withdrawal',
+    withdrawal_sub:'Submit a withdrawal request. All requests are reviewed within 1–3 business days.',
+    amount_label:'Amount (EGP)', code_label:'Withdrawal Code',
+    available:'Available', submit:'Submit',
+    withdrawal_history:'Withdrawal History',
+    no_wr:'No withdrawal requests yet.',
+    recent_tx:'Recent Transactions', no_tx:'No transactions yet.',
+    footer:'© 2025 Eduvia and creativitycode. All rights reserved.',
+  },
+  ar: {
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'المحادثة',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_about:'عن التطبيق', nav_contact:'تواصل معنا', nav_logout:'تسجيل خروج',
+    my_courses:'كورساتي',
+    page_title:'محفظة المحاضر',
+    page_sub:'إدارة أرباحك وإيرادات الكورسات وطلبات السحب.',
+    available_balance:'الرصيد المتاح', total_withdrawn:'إجمالي المسحوب', total_courses:'إجمالي الكورسات',
+    course_revenue:'تفاصيل إيرادات الكورسات',
+    th_course:'الكورس', th_price:'السعر', th_students:'الطلاب',
+    th_total_rev:'الإيراد الكلي', th_share:'حصتك (70%)',
+    th_date:'التاريخ', th_amount:'المبلغ', th_code:'الكود',
+    th_status:'الحالة', th_note:'ملاحظة', th_type:'النوع',
+    no_courses_msg:'لا توجد كورسات. أنشئ كورسات لرؤية الإيرادات.',
+    request_withdrawal:'طلب سحب',
+    withdrawal_sub:'أرسل طلب سحب. يتم مراجعة جميع الطلبات خلال 1–3 أيام عمل.',
+    amount_label:'المبلغ (جنيه)', code_label:'كود السحب',
+    available:'المتاح', submit:'إرسال',
+    withdrawal_history:'سجل طلبات السحب',
+    no_wr:'لا توجد طلبات سحب بعد.',
+    recent_tx:'المعاملات الأخيرة', no_tx:'لا توجد معاملات بعد.',
+    footer:'© 2025 Eduvia وكريativtycode. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
 
-    <script src="{% static 'marketplace/marketplace.js' %}"></script>
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+function toggleMobileNav() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+
+/* ── Animate on scroll ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.aos').forEach(el => observer.observe(el));
+
+/* ── Toast ── */
+function toast(msg, type='info', dur=3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  // trigger AOS for elements already in view
+  document.querySelectorAll('.aos').forEach(el => observer.observe(el));
+});
+</script>
 </body>
 </html>

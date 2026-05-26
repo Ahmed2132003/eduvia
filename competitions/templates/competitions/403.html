@@ -1,10 +1,499 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <title>رفض الوصول</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied — 403 | Eduvia</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- 🖼️ Favicon -->
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+
+    <!-- 🌐 Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (403)
+   Identical tokens to lesson_view.html
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --danger:      var(--rose-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+  display: flex; flex-direction: column;
+}
+
+[lang="ar"] body,
+[lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0;
+  text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-tag {
+  font-size: 12px; font-weight: 700; letter-spacing: .4px;
+  padding: 4px 10px; border-radius: 99px;
+  background: rgba(251,113,133,.08); border: 1px solid rgba(251,113,133,.2);
+  color: var(--danger); flex-shrink: 0;
+}
+.topbar-spacer { flex: 1; }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ═══ MAIN ══════════════════════════════════════════════════════════════ */
+.page-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  padding-top: var(--topbar-h);
+}
+
+.error-shell {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 48px 24px;
+}
+
+/* ── Error Card ── */
+.error-card {
+  max-width: 520px; width: 100%;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow);
+  animation: cardReveal .55s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(32px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Glowing top strip */
+.error-strip {
+  height: 4px;
+  background: linear-gradient(90deg, var(--danger), rgba(251,113,133,.2), transparent);
+}
+
+/* Icon section */
+.error-icon-wrap {
+  padding: 40px 32px 28px;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative;
+}
+.error-icon-wrap::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 120px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(251,113,133,.07), transparent 70%);
+  pointer-events: none;
+}
+
+/* Animated lock */
+.lock-orb {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: rgba(251,113,133,.07);
+  border: 2px solid rgba(251,113,133,.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; color: var(--danger);
+  margin-bottom: 24px;
+  position: relative;
+  animation: orb-pulse 3s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(251,113,133,.2);
+}
+@keyframes orb-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(251,113,133,.2); }
+  50%      { box-shadow: 0 0 0 14px rgba(251,113,133,0); }
+}
+.lock-orb::after {
+  content: '';
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px dashed rgba(251,113,133,.15);
+  animation: spin-slow 12s linear infinite;
+}
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+/* 403 code */
+.error-code {
+  font-family: var(--font-display);
+  font-size: 76px; font-weight: 800;
+  line-height: 1; letter-spacing: -4px;
+  background: linear-gradient(135deg, var(--danger), rgba(251,113,133,.5));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+  position: relative;
+}
+.error-code::after {
+  content: attr(data-text);
+  position: absolute; left: 2px; top: 2px;
+  background: linear-gradient(135deg, rgba(251,113,133,.15), transparent);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  z-index: -1;
+}
+
+/* Body section */
+.error-body { padding: 0 32px 36px; }
+
+.error-title {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800; color: var(--text-h);
+  margin-bottom: 10px; text-align: center;
+}
+.error-desc {
+  font-size: 14px; color: var(--text-muted); line-height: 1.75;
+  text-align: center; margin-bottom: 28px;
+}
+
+/* Reasons list */
+.reason-list {
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px 18px;
+  margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px;
+}
+.reason-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; color: var(--text-p); line-height: 1.5;
+}
+.reason-icon { color: var(--danger); font-size: 12px; margin-top: 2px; flex-shrink: 0; }
+
+/* Action buttons */
+.error-actions {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+}
+.action-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+  text-decoration: none; transition: var(--trans); font-family: inherit;
+}
+.action-btn-accent {
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.action-btn-accent:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+.action-btn-ghost {
+  background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border);
+}
+.action-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.action-btn-danger {
+  background: rgba(251,113,133,.1); color: var(--danger);
+  border: 1px solid rgba(251,113,133,.2);
+}
+.action-btn-danger:hover { background: rgba(251,113,133,.15); border-color: rgba(251,113,133,.4); }
+
+/* Divider */
+.error-divider {
+  display: flex; align-items: center; gap: 12px; margin: 20px 0;
+}
+.error-divider-line { flex: 1; height: 1px; background: var(--border); }
+.error-divider-txt { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; }
+
+/* Support link */
+.support-row {
+  text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-muted);
+}
+.support-row a { color: var(--violet-400); text-decoration: none; transition: var(--trans); }
+.support-row a:hover { color: var(--violet-400); opacity: .75; }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+}
+.footer a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer a:hover { color: var(--accent); }
+.footer-logo {
+  font-family: var(--font-display); font-weight: 800; font-size: 14px;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-sep { opacity: .3; }
+
+/* responsive */
+@media (max-width: 640px) {
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-tag { display: none; }
+  .error-code { font-size: 56px; }
+  .error-icon-wrap, .error-body { padding-left: 20px; padding-right: 20px; }
+  .lock-orb { width: 78px; height: 78px; font-size: 28px; }
+}
+</style>
 </head>
 <body>
-    <h1>رفض الوصول</h1>
-    <p>ليس لديك إذن للوصول إلى هذه الصفحة. من فضلك <a href="{% url 'login' %}">سجل الدخول</a> أو تواصل مع الدعم.</p>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-tag" data-i18n="error-tag">403 Access Denied</span>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-actions">
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" id="lang-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <a href="/" class="tb-btn tb-btn-ghost"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <div class="error-shell">
+    <div class="error-card">
+
+      <!-- Top strip -->
+      <div class="error-strip"></div>
+
+      <!-- Icon & Code -->
+      <div class="error-icon-wrap">
+        <div class="lock-orb"><i class="fas fa-shield-halved"></i></div>
+        <div class="error-code" data-text="403">403</div>
+      </div>
+
+      <!-- Body -->
+      <div class="error-body">
+        <h1 class="error-title" data-i18n="error-title">Access Denied</h1>
+        <p class="error-desc" data-i18n="error-desc">
+          You don't have permission to view this page. This area is restricted to authorized users only.
+        </p>
+
+        <!-- Reasons -->
+        <div class="reason-list">
+          <div class="reason-item">
+            <i class="fas fa-circle-xmark reason-icon"></i>
+            <span data-i18n="reason-1">You may not be logged in to your account.</span>
+          </div>
+          <div class="reason-item">
+            <i class="fas fa-circle-xmark reason-icon"></i>
+            <span data-i18n="reason-2">Your account doesn't have the required role or subscription.</span>
+          </div>
+          <div class="reason-item">
+            <i class="fas fa-circle-xmark reason-icon"></i>
+            <span data-i18n="reason-3">The page may be restricted to instructors or admins only.</span>
+          </div>
+        </div>
+
+        <!-- Primary actions -->
+        <div class="error-actions">
+          <a href="{% url 'login' %}" class="action-btn action-btn-accent">
+            <i class="fas fa-sign-in-alt"></i>
+            <span data-i18n="login">Log In</span>
+          </a>
+          <a href="/" class="action-btn action-btn-ghost">
+            <i class="fas fa-home"></i>
+            <span data-i18n="go-home">Go Home</span>
+          </a>
+          <button class="action-btn action-btn-ghost" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i>
+            <span data-i18n="go-back">Go Back</span>
+          </button>
+        </div>
+
+        <div class="error-divider">
+          <div class="error-divider-line"></div>
+          <span class="error-divider-txt" data-i18n="or">or</span>
+          <div class="error-divider-line"></div>
+        </div>
+
+        <!-- Secondary actions -->
+        <div class="error-actions">
+          <a href="/accounts/register/" class="action-btn action-btn-ghost">
+            <i class="fas fa-user-plus"></i>
+            <span data-i18n="register">Create Account</span>
+          </a>
+            <i class="fas fa-crown"></i>
+            <span data-i18n="subscribe">Subscribe</span>
+          </a>
+        </div>
+
+        <div class="support-row">
+          <span data-i18n="need-help">Need help?</span>
+          <a href="/contact_us/" data-i18n="contact-support">Contact support</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-logo">Eduvia</span>
+    <span class="footer-sep">|</span>
+    <a href="/">Home</a>
+    <a href="/courses/">Courses</a>
+    <a href="/competitions/">Competitions</a>
+    <a href="/about/">About</a>
+    <a href="/contact_us/">Contact</a>
+    <span class="footer-sep">|</span>
+    <span>© 2025 Eduvia & creativitycode. All rights reserved.</span>
+  </footer>
+
+</div><!-- /page-wrap -->
+
+<script>
+const I18N = {
+  en: {
+    'error-tag':'403 Access Denied',
+    'error-title':'Access Denied',
+    'error-desc':"You don't have permission to view this page. This area is restricted to authorized users only.",
+    'reason-1':'You may not be logged in to your account.',
+    'reason-2':"Your account doesn't have the required role or subscription.",
+    'reason-3':'The page may be restricted to instructors or admins only.',
+    'login':'Log In','go-home':'Go Home','go-back':'Go Back',
+    'or':'or','register':'Create Account','subscribe':'Subscribe',
+    'need-help':'Need help? ','contact-support':'Contact support','home':'Home',
+  },
+  ar: {
+    'error-tag':'403 وصول مرفوض',
+    'error-title':'تم رفض الوصول',
+    'error-desc':'ليس لديك صلاحية لعرض هذه الصفحة. هذه المنطقة مقيدة للمستخدمين المصرح لهم فقط.',
+    'reason-1':'قد لا تكون مسجلاً الدخول إلى حسابك.',
+    'reason-2':'حسابك لا يملك الدور أو الاشتراك المطلوب.',
+    'reason-3':'قد تكون الصفحة مقيدة للمحاضرين أو المسؤولين فقط.',
+    'login':'تسجيل الدخول','go-home':'الصفحة الرئيسية','go-back':'العودة',
+    'or':'أو','register':'إنشاء حساب','subscribe':'اشترك',
+    'need-help':'تحتاج مساعدة؟ ','contact-support':'تواصل مع الدعم','home':'الرئيسية',
+  }
+};
+let lang = localStorage.getItem('lang') || 'en';
+
+function applyLang(l) {
+  lang = l;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', l);
+  root.setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[l]?.[key]) el.textContent = I18N[l][key];
+  });
+  localStorage.setItem('lang', l);
+}
+function toggleLang() { applyLang(lang === 'en' ? 'ar' : 'en'); }
+
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('theme-icon').className = t === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', t);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+});
+</script>
 </body>
 </html>

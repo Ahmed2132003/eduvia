@@ -1,226 +1,847 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="page_title">Eduvia Platform — Learn Without Limits</title>
+<meta name="description" content="Discover Eduvia's online learning platform with expert-led courses, collaborative projects, and performance analytics.">
+<meta name="keywords" content="online learning, Eduvia, courses, skills market, collaboration rooms, performance analytics">
+<meta name="author" content="Eduvia">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://eduvia-ai.fly.dev/">
+<meta property="og:title" content="Eduvia Platform - Eduvia">
+<meta property="og:description" content="Join Eduvia to access expert-led courses, collaborate on projects, and track your learning progress.">
+<meta property="og:image" content="https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg">
+<meta property="og:url" content="https://eduvia-ai.fly.dev/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Eduvia Platform - Eduvia">
+<meta name="twitter:image" content="https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg">
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🔍 SEO -->
-    <title data-translate="page-title">Eduvia Platform - Eduvia</title>
-    <meta name="description" content="Discover Eduvia's online learning platform with expert-led courses, collaborative projects, and performance analytics.">
-    <meta name="keywords" content="online learning, Eduvia, courses, skills market, collaboration rooms, performance analytics">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://eduvia-ai.fly.dev/#organization","name":"Eduvia","url":"https://eduvia-ai.fly.dev","logo":{"@type":"ImageObject","url":"https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"},"sameAs":["https://www.facebook.com/share/18iRSctdxN/","https://x.com/Eduvia7","https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"]},{"@type":"WebPage","@id":"https://eduvia-ai.fly.dev/#webpage","url":"https://eduvia-ai.fly.dev/","name":"Eduvia Platform - Eduvia","description":"Discover Eduvia's online learning platform with expert-led courses, collaborative projects, and performance analytics.","inLanguage":"en"}]}
+</script>
 
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Eduvia Platform - Eduvia">
-    <meta property="og:description" content="Join Eduvia to access expert-led courses, collaborate on projects, and track your learning progress.">
-    <meta property="og:image" content="https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/">
-    <meta property="og:type" content="website">
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (shared with Lesson View)
+   ══════════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Eduvia Platform - Eduvia">
-    <meta name="twitter:description" content="Explore Eduvia's platform for online courses, collaboration, and performance tracking.">
-    <meta name="twitter:image" content="https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg">
+:root{
+  --bg-base:#080b14;--bg-panel:#0d1120;--bg-card:#131929;
+  --bg-card-2:#1a2236;--bg-hover:#1e2840;
+  --border:rgba(120,130,180,.12);--border-glow:rgba(139,92,246,.25);
+  --violet-400:#a78bfa;--violet-500:#8b5cf6;--violet-600:#7c3aed;
+  --violet-glow:rgba(139,92,246,.18);
+  --gold-400:#fbbf24;--gold-300:#fcd34d;
+  --emerald-400:#34d399;--emerald-500:#10b981;
+  --rose-400:#fb7185;--sky-400:#38bdf8;--sky-500:#0ea5e9;
+  --text-h:#f1f5ff;--text-p:#94a3c4;--text-muted:#5a6585;
+  --accent:var(--violet-500);--accent-d:var(--violet-600);
+  --success:var(--emerald-400);--warning:var(--gold-400);
+  --danger:var(--rose-400);--info:var(--sky-400);
+  --radius-sm:6px;--radius-md:12px;--radius-lg:18px;--radius-xl:24px;
+  --topbar-h:62px;
+  --trans:all .22s cubic-bezier(.4,0,.2,1);
+  --glow:0 0 40px rgba(139,92,246,.15);
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-arabic:'Cairo',sans-serif;
+}
+[data-theme="light"]{
+  --bg-base:#f4f6fc;--bg-panel:#ffffff;--bg-card:#f8faff;
+  --bg-card-2:#eef2fc;--bg-hover:#e8ecf8;
+  --border:rgba(100,110,160,.14);--border-glow:rgba(139,92,246,.3);
+  --text-h:#0f172a;--text-p:#374365;--text-muted:#8896b3;
+  --violet-glow:rgba(139,92,246,.1);--glow:0 0 40px rgba(139,92,246,.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-p);min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s}
+[lang="ar"] body,[lang="ar"] *{font-family:var(--font-arabic),sans-serif!important}
+[lang="ar"]{direction:rtl}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg-base)}
+::-webkit-scrollbar-thumb{background:var(--bg-card-2);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 
-    <!-- 🖼️ Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+/* ── TOPBAR ── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:600;
+  height:var(--topbar-h);
+  background:rgba(8,11,20,.88);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 24px;gap:16px;
+}
+[data-theme="light"] .topbar{background:rgba(255,255,255,.88)}
+.topbar-logo{
+  font-family:var(--font-display);font-size:22px;font-weight:800;
+  background:linear-gradient(135deg,var(--violet-400),var(--gold-400));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:-.5px;flex-shrink:0;text-decoration:none;
+}
+.topbar-spacer{flex:1}
+.topbar-nav{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.topbar-nav a{
+  font-size:13px;font-weight:500;color:var(--text-muted);
+  text-decoration:none;padding:6px 10px;border-radius:var(--radius-sm);
+  transition:var(--trans);white-space:nowrap;
+}
+.topbar-nav a:hover{color:var(--text-h);background:var(--bg-card)}
+.topbar-nav a.active{color:var(--accent)}
+.topbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ctrl-btn{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--border);background:var(--bg-card);
+  color:var(--text-p);font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:var(--trans);
+}
+.ctrl-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--violet-glow)}
+.tb-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:var(--radius-sm);
+  font-size:12px;font-weight:600;cursor:pointer;
+  border:none;text-decoration:none;transition:var(--trans);font-family:inherit;
+}
+.tb-btn-ghost{background:var(--bg-card);color:var(--text-p);border:1px solid var(--border)}
+.tb-btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.tb-btn-accent{background:var(--accent);color:#fff}
+.tb-btn-accent:hover{background:var(--accent-d);transform:translateY(-1px)}
+.coins-chip{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:99px;padding:4px 12px;
+  font-size:12px;color:var(--warning);font-weight:600;
+}
+.ham-btn{
+  display:none;width:36px;height:36px;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:var(--bg-card);
+  color:var(--text-p);font-size:16px;
+  align-items:center;justify-content:center;cursor:pointer;
+  transition:var(--trans);
+}
+.ham-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-    <!-- 🌐 Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+/* Mobile nav drawer */
+.mobile-nav{
+  display:none;position:fixed;top:var(--topbar-h);left:0;right:0;
+  background:var(--bg-panel);border-bottom:1px solid var(--border);
+  z-index:500;padding:12px;flex-direction:column;gap:4px;
+  box-shadow:0 10px 40px rgba(0,0,0,.4);
+}
+.mobile-nav.open{display:flex}
+.mobile-nav a,.mobile-nav span{
+  font-size:14px;font-weight:500;color:var(--text-p);
+  text-decoration:none;padding:10px 14px;border-radius:var(--radius-sm);
+  transition:var(--trans);display:block;
+}
+.mobile-nav a:hover{background:var(--bg-card);color:var(--accent)}
 
-    <!-- 🎨 Styles -->
-    <link rel="stylesheet" href="{% static 'pages/home.css' %}">
+/* ── MAIN ── */
+main{padding-top:var(--topbar-h)}
 
-    <!-- 🖼️ Hero Background -->
-    <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg");
-        }
-    </style>
+/* ── HERO ── */
+.hero{
+  position:relative;min-height:88vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px 100px;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(139,92,246,.25),transparent),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(251,191,36,.08),transparent),
+    var(--bg-base);
+}
+[data-theme="light"] .hero-bg{
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(139,92,246,.12),transparent),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(251,191,36,.05),transparent),
+    var(--bg-base);
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);
+}
+.hero-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;
+}
+.hero-orb-1{width:600px;height:600px;top:-100px;left:-100px;background:rgba(139,92,246,.12)}
+.hero-orb-2{width:400px;height:400px;bottom:-50px;right:-50px;background:rgba(251,191,36,.07)}
+.hero-inner{position:relative;z-index:1;max-width:780px;margin:0 auto}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--violet-glow);border:1px solid var(--border-glow);
+  border-radius:99px;padding:6px 16px;
+  font-size:12px;font-weight:700;color:var(--violet-400);
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:28px;
+  animation:fadeUp .6s ease both;
+}
+.hero-badge i{font-size:10px}
+.hero-h1{
+  font-family:var(--font-display);
+  font-size:clamp(36px,6vw,72px);font-weight:800;
+  color:var(--text-h);line-height:1.1;letter-spacing:-1.5px;
+  margin-bottom:20px;
+  animation:fadeUp .7s .1s ease both;
+}
+.hero-h1 span{
+  background:linear-gradient(135deg,var(--violet-400),var(--gold-400));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  font-size:18px;color:var(--text-p);line-height:1.65;
+  max-width:560px;margin:0 auto 36px;
+  animation:fadeUp .7s .2s ease both;
+}
+.hero-actions{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  flex-wrap:wrap;margin-bottom:56px;
+  animation:fadeUp .7s .3s ease both;
+}
+.btn-primary{
+  padding:14px 32px;border-radius:var(--radius-md);
+  font-size:15px;font-weight:700;cursor:pointer;border:none;
+  background:linear-gradient(135deg,var(--violet-500),var(--accent-d));
+  color:#fff;font-family:var(--font-display);
+  display:inline-flex;align-items:center;gap:8px;
+  transition:var(--trans);position:relative;overflow:hidden;
+  box-shadow:0 4px 20px rgba(139,92,246,.35);text-decoration:none;
+}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);border-radius:inherit}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,.45)}
+.btn-secondary{
+  padding:14px 32px;border-radius:var(--radius-md);
+  font-size:15px;font-weight:700;cursor:pointer;
+  background:var(--bg-card);color:var(--text-p);
+  border:1px solid var(--border);font-family:var(--font-display);
+  display:inline-flex;align-items:center;gap:8px;
+  transition:var(--trans);text-decoration:none;
+}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
 
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/#webpage",
-                "url": "https://eduvia-ai.fly.dev/",
-                "name": "Eduvia Platform - Eduvia",
-                "description": "Discover Eduvia's online learning platform with expert-led courses, collaborative projects, and performance analytics.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
+/* Stats row */
+.hero-stats{
+  display:flex;align-items:center;justify-content:center;gap:40px;
+  flex-wrap:wrap;animation:fadeUp .7s .4s ease both;
+}
+.stat{text-align:center}
+.stat-num{font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--text-h)}
+.stat-num span{color:var(--accent)}
+.stat-lbl{font-size:12px;color:var(--text-muted);margin-top:2px}
+.stat-sep{width:1px;height:40px;background:var(--border)}
+
+/* ── SEARCH ── */
+.search-section{padding:0 24px 60px;max-width:700px;margin:0 auto}
+.search-wrap{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-xl);padding:6px 6px 6px 20px;
+  display:flex;align-items:center;gap:12px;
+  transition:var(--trans);
+  box-shadow:var(--glow);
+}
+.search-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.12),var(--glow)}
+.search-wrap i{color:var(--text-muted);font-size:15px;flex-shrink:0}
+.search-inp{
+  flex:1;background:none;border:none;outline:none;
+  font-size:15px;font-family:var(--font-body);color:var(--text-h);
+  caret-color:var(--accent);
+}
+.search-inp::placeholder{color:var(--text-muted)}
+.search-btn{
+  padding:10px 22px;border-radius:var(--radius-lg);
+  background:var(--accent);color:#fff;border:none;
+  font-size:13px;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:var(--trans);
+  display:flex;align-items:center;gap:6px;
+}
+.search-btn:hover{background:var(--accent-d)}
+
+/* ── SECTION HEADERS ── */
+.section-header{
+  text-align:center;margin-bottom:48px;padding:0 24px;
+}
+.section-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:12px;
+}
+.section-h2{
+  font-family:var(--font-display);font-size:clamp(26px,4vw,42px);
+  font-weight:800;color:var(--text-h);letter-spacing:-.5px;margin-bottom:10px;
+}
+.section-sub{font-size:16px;color:var(--text-muted);max-width:520px;margin:0 auto}
+
+/* ── CARDS GRID ── */
+.cards-section{padding:80px 24px;max-width:1280px;margin:0 auto}
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:24px;
+}
+.card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-xl);overflow:hidden;
+  transition:var(--trans);position:relative;
+  animation:cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.card:hover{
+  border-color:var(--border-glow);
+  transform:translateY(-6px);
+  box-shadow:0 20px 60px rgba(0,0,0,.3),var(--glow);
+}
+.card-img{
+  width:100%;height:200px;object-fit:cover;
+  display:block;transition:transform .4s ease;
+}
+.card:hover .card-img{transform:scale(1.04)}
+.card-img-wrap{overflow:hidden;position:relative}
+.card-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 50%,rgba(8,11,20,.85));
+}
+[data-theme="light"] .card-img-overlay{
+  background:linear-gradient(to bottom,transparent 50%,rgba(244,246,252,.7));
+}
+.card-body{padding:22px 22px 24px}
+.card-icon{
+  width:40px;height:40px;border-radius:var(--radius-md);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;margin-bottom:14px;flex-shrink:0;
+  background:var(--violet-glow);color:var(--violet-400);
+  border:1px solid var(--border-glow);
+}
+.card-title{
+  font-family:var(--font-display);font-size:18px;font-weight:700;
+  color:var(--text-h);margin-bottom:8px;line-height:1.3;
+}
+.card-desc{
+  font-size:14px;color:var(--text-p);line-height:1.7;margin-bottom:20px;
+}
+.card-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 20px;border-radius:var(--radius-md);
+  font-size:13px;font-weight:600;text-decoration:none;
+  background:var(--bg-card-2);color:var(--text-p);
+  border:1px solid var(--border);transition:var(--trans);
+}
+.card-btn:hover{background:var(--violet-glow);border-color:var(--border-glow);color:var(--violet-400)}
+.card-btn i{font-size:11px;transition:transform .2s}
+.card-btn:hover i{transform:translateX(3px)}
+[lang="ar"] .card-btn:hover i{transform:translateX(-3px)}
+
+/* Card color variants */
+.card.gold .card-icon{background:rgba(251,191,36,.1);color:var(--gold-400);border-color:rgba(251,191,36,.25)}
+.card.sky  .card-icon{background:rgba(56,189,248,.1);color:var(--sky-400);border-color:rgba(56,189,248,.25)}
+.card.emerald .card-icon{background:rgba(52,211,153,.1);color:var(--emerald-400);border-color:rgba(52,211,153,.25)}
+.card.rose .card-icon{background:rgba(251,113,133,.1);color:var(--rose-400);border-color:rgba(251,113,133,.2)}
+
+/* Animated border on hover */
+.card::before{
+  content:'';position:absolute;inset:0;border-radius:var(--radius-xl);
+  border:1px solid transparent;
+  background:linear-gradient(135deg,var(--violet-500),var(--gold-400)) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:destination-out;mask-composite:exclude;
+  opacity:0;transition:opacity .3s;
+}
+.card:hover::before{opacity:1}
+
+/* Stagger delays */
+.card:nth-child(1){animation-delay:.05s}
+.card:nth-child(2){animation-delay:.1s}
+.card:nth-child(3){animation-delay:.15s}
+.card:nth-child(4){animation-delay:.2s}
+.card:nth-child(5){animation-delay:.25s}
+.card:nth-child(6){animation-delay:.3s}
+.card:nth-child(7){animation-delay:.35s}
+.card:nth-child(8){animation-delay:.4s}
+.card:nth-child(9){animation-delay:.45s}
+.card:nth-child(10){animation-delay:.5s}
+.card:nth-child(11){animation-delay:.55s}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--bg-panel);border-top:1px solid var(--border);
+  padding:40px 24px;text-align:center;
+}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-logo{
+  font-family:var(--font-display);font-size:24px;font-weight:800;
+  background:linear-gradient(135deg,var(--violet-400),var(--gold-400));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:16px;display:inline-block;
+}
+.footer-links{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.footer-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:var(--trans)}
+.footer-links a:hover{color:var(--accent)}
+.footer-socials{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px}
+.social-btn{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg-card);border:1px solid var(--border);
+  color:var(--text-muted);font-size:14px;
+  text-decoration:none;transition:var(--trans);
+}
+.social-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--violet-glow)}
+.footer-divider{width:100%;height:1px;background:var(--border);margin-bottom:20px}
+.footer-copy{font-size:12px;color:var(--text-muted);line-height:1.7}
+.footer-copy strong{color:var(--violet-400)}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9998;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 20px;border-radius:var(--radius-md);font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:toastIn .3s ease;pointer-events:auto;display:flex;align-items:center;gap:8px;min-width:220px}
+.toast-info{background:rgba(139,92,246,.12);color:var(--violet-400);border:1px solid rgba(139,92,246,.25)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardReveal{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .topbar-nav{display:none}
+  .ham-btn{display:flex}
+  .topbar{padding:0 16px;gap:10px}
+  .hero-stats .stat-sep{display:none}
+  .hero-stats{gap:20px}
+}
+@media(max-width:640px){
+  .cards-grid{grid-template-columns:1fr}
+  .hero-h1{letter-spacing:-.5px}
+  .hero-stats{flex-wrap:wrap;gap:16px}
+  .stat-sep{display:none!important}
+  .hero{min-height:70vh}
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo" data-translate="title">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Welcome to Eduvia</h1>
-        <p data-translate="hero-subtitle">Unlock Your Potential with Our Expert-Led Online Courses</p>
-        <a href="/accounts/register/" class="btn" data-translate="hero-btn">Start Now!</a>
-    </section>
+<!-- ── TOPBAR ── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
 
-    <!-- Search Form -->
-    <form method="get" action="{% url 'courses:search_courses' %}" class="search-form">
-        <input type="text" name="q" data-translate-placeholder="search-placeholder" placeholder="Search for a course...">
-        <button type="submit" class="btn" data-translate="search-btn">Search</button>
+  <nav class="topbar-nav">
+    <a href="/" class="active" data-i18n="nav_home">Home</a>
+    <a href="/courses/" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" data-i18n="nav_competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
+    <a href="/about/" data-i18n="nav_about">About Us</a>
+    <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="nav_dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
+      <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
+    {% else %}
+      <a href="/accounts/register/" data-i18n="nav_login">Login</a>
+    {% endif %}
+  </nav>
+
+  <div class="topbar-spacer"></div>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-chip">
+      <i class="fas fa-coins"></i>
+      <span>{{ user.courses_profile.coins }}</span>
+    </div>
+    {% endif %}
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    {% if not user.is_authenticated %}
+    <a href="{% url 'accounts:subscribe' %}" class="tb-btn tb-btn-accent" data-i18n="nav_subscribe">Subscribe</a>
+    {% endif %}
+    <button class="ham-btn" id="ham-btn" onclick="toggleMobileNav()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/" data-i18n="nav_home">Home</a>
+  <a href="/courses/" data-i18n="nav_courses">Courses</a>
+  <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
+  <a href="/competitions/" data-i18n="nav_competitions">Competitions</a>
+  <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
+  <a href="/about/" data-i18n="nav_about">About Us</a>
+  <a href="/contact_us/" data-i18n="nav_contact">Contact Us</a>
+  {% if user.is_authenticated %}
+    <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
+    <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
+  {% else %}
+    <a href="/accounts/register/" data-i18n="nav_login">Login</a>
+    <a href="{% url 'accounts:subscribe' %}" data-i18n="nav_subscribe">Subscribe</a>
+  {% endif %}
+</div>
+
+<main>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <i class="fas fa-bolt"></i>
+        <span data-i18n="hero_badge">AI-Powered Learning Platform</span>
+      </div>
+      <h1 class="hero-h1">
+        <span data-i18n="hero_title_1">Unlock Your Potential</span><br>
+        <span data-i18n="hero_title_2">with <span>Eduvia</span></span>
+      </h1>
+      <p class="hero-sub" data-i18n="hero_sub">Expert-led courses, collaborative projects, and intelligent tools — everything you need to accelerate your learning journey.</p>
+      <div class="hero-actions">
+        <a href="/accounts/register/" class="btn-primary">
+          <i class="fas fa-rocket"></i>
+          <span data-i18n="hero_cta">Start Learning Free</span>
+        </a>
+        <a href="/courses/" class="btn-secondary">
+          <i class="fas fa-play-circle"></i>
+          <span data-i18n="hero_browse">Browse Courses</span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">500<span>+</span></div>
+          <div class="stat-lbl" data-i18n="stat_courses">Courses</div>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat">
+          <div class="stat-num">12K<span>+</span></div>
+          <div class="stat-lbl" data-i18n="stat_students">Students</div>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat">
+          <div class="stat-num">98<span>%</span></div>
+          <div class="stat-lbl" data-i18n="stat_satisfaction">Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEARCH ── -->
+  <div class="search-section">
+    <form method="get" action="{% url 'courses:search_courses' %}" class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input class="search-inp" type="text" name="q"
+             data-i18n-placeholder="search_placeholder"
+             placeholder="Search for a course, skill, or topic…">
+      <button type="submit" class="search-btn">
+        <i class="fas fa-arrow-right"></i>
+        <span data-i18n="search_btn">Search</span>
+      </button>
     </form>
+  </div>
 
-    <!-- Cards Container -->
-    <div class="cards-container">
-        <section class="hero-card">
-            <h1 data-translate="card-courses-title">Courses Section</h1>
-            <p data-translate="card-courses-desc">Explore a wide range of courses, apply easily, and start learning. Each course is structured with sequential lectures, evaluations, and comments to enhance your learning experience.</p>
-            <img src="https://i.postimg.cc/26YgDhWr/course-page1.jpg" alt="Course Image">
-            <a href="/courses/" class="btn" data-translate="card-courses-btn">Courses</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-projects-title">Explore Your Collaborative Projects</h1>
-            <p data-translate="card-projects-desc">Join collaboration rooms, create tasks, and share files with your team effortlessly using our advanced project system.</p>
-            <img src="https://i.postimg.cc/sx6L7LNg/projects.jpg" alt="Projects Image">
-            <a href="{% url 'projects:project_list' %}" class="btn" data-translate="card-projects-btn">Browse Projects</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-performance-title">Unlock Performance Insights</h1>
-            <p data-translate="card-performance-desc">Track your progress, analyze project metrics, and optimize your performance with our powerful analytics tools.</p>
-            <img src="https://i.postimg.cc/MpjLfdbz/analisis.jpg" alt="Performance Analytics Image">
-            <a href="{% url 'performance_analysis:dashboard' %}" class="btn" data-translate="card-performance-btn">Explore Analytics</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-rooms-title">Discover Collaboration Rooms</h1>
-            <p data-translate="card-rooms-desc">Join dynamic collaboration rooms to work on tasks, share files, and connect with your team seamlessly.</p>
-            <img src="https://i.postimg.cc/rpXP1xQx/room.jpg" alt="Collaboration Rooms Image">
-            <a href="{% url 'projects:room_list' %}" class="btn" data-translate="card-rooms-btn">Browse Rooms</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-chatbot-title">Chatbot Section</h1>
-            <p data-translate="card-chatbot-desc">Our intelligent chatbot assists with course-related queries, platform navigation, and subjects like English, programming, and mathematics.</p>
-            <img src="https://i.postimg.cc/j5R39KVj/chat-eduvia2.jpg" alt="Chatbot Image">
-            <a href="/chatbot/" class="btn" data-translate="card-chatbot-btn">Chatbot</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-about-title">About Us Section</h1>
-            <p data-translate="card-about-desc">Learn more about Eduvia, our mission, and how we empower learners worldwide with quality education.</p>
-            <img src="https://i.postimg.cc/nzTSf5ZG/about-us1.jpg" alt="About Us Image">
-            <a href="/about/" class="btn" data-translate="card-about-btn">About Us</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-skills-title">Skills Section</h1>
-            <p data-translate="card-skills-desc">Explore and enhance your skills through our Skills Market. Offer or acquire skills to boost your learning journey.</p>
-            <img src="https://i.postimg.cc/BQjYRMz2/skils.jpg" alt="Skills Image">
-            <a href="{% url 'skills_market:skills_list' %}" class="btn" data-translate="card-skills-btn">Skills</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-services-title">Services Section</h1>
-            <p data-translate="card-services-desc">Discover a variety of services in our Skills Market. Find or offer services to support your educational goals.</p>
-            <img src="https://i.postimg.cc/L8fy8h2X/skils1.jpg" alt="Services Image">
-            <a href="{% url 'skills_market:services_list' %}" class="btn" data-translate="card-services-btn">Services</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-contact-title">Contact Us Section</h1>
-            <p data-translate="card-contact-desc">Reach out to our team for support, inquiries, or feedback. We're here to help you succeed.</p>
-            <img src="https://i.postimg.cc/8CmtL3Fg/contact-us1.jpg" alt="Contact Us Image">
-            <a href="/contact_us/" class="btn" data-translate="card-contact-btn">Contact Us</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-mentor-title">Mentor Dashboard</h1>
-            <p data-translate="card-mentor-desc">Manage your mentees, groups, and mentorship activities seamlessly with our Mentor Dashboard.</p>
-            <img src="https://i.postimg.cc/1X2H91dw/mentor1.jpg" alt="Mentor Dashboard Image">
-            <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="card-mentor-btn">Mentor Dashboard</a>
-        </section>
-        <section class="hero-card">
-            <h1 data-translate="card-live-title">Live Sessions</h1>
-            <p data-translate="card-live-desc">Join interactive live sessions with expert instructors to enhance your learning experience in real-time.</p>
-            <img src="https://i.postimg.cc/FHtZ8m3Q/workshops3.jpg" alt="Live Sessions Image">
-            <a href="{% url 'workshops:live_session_list' %}" class="btn" data-translate="card-live-btn">Live Sessions</a>
-        </section>
+  <!-- ── CARDS ── -->
+  <section class="cards-section">
+    <div class="section-header">
+      <div class="section-eyebrow"><i class="fas fa-th-large"></i> <span data-i18n="explore_label">Explore</span></div>
+      <h2 class="section-h2" data-i18n="explore_title">Everything You Need to Succeed</h2>
+      <p class="section-sub" data-i18n="explore_sub">Discover all the tools and features Eduvia has to offer.</p>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+    <div class="cards-grid">
 
-    <script src="{% static 'pages/home.js' %}"></script>
+      <div class="card">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/26YgDhWr/course-page1.jpg" alt="Courses" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3 class="card-title" data-i18n="card_courses_title">Courses</h3>
+          <p class="card-desc" data-i18n="card_courses_desc">Explore a wide range of expert-led courses. Apply easily and start learning with sequential lectures, evaluations, and community comments.</p>
+          <a href="/courses/" class="card-btn"><span data-i18n="card_courses_btn">Browse Courses</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card sky">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/sx6L7LNg/projects.jpg" alt="Projects" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
+          <h3 class="card-title" data-i18n="card_projects_title">Collaborative Projects</h3>
+          <p class="card-desc" data-i18n="card_projects_desc">Join collaboration rooms, create tasks, and share files with your team effortlessly using our advanced project system.</p>
+          <a href="{% url 'projects:project_list' %}" class="card-btn"><span data-i18n="card_projects_btn">Browse Projects</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card gold">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/MpjLfdbz/analisis.jpg" alt="Analytics" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+          <h3 class="card-title" data-i18n="card_performance_title">Performance Insights</h3>
+          <p class="card-desc" data-i18n="card_performance_desc">Track your progress, analyze project metrics, and optimize your performance with our powerful analytics tools.</p>
+          <a href="{% url 'performance_analysis:dashboard' %}" class="card-btn"><span data-i18n="card_performance_btn">Explore Analytics</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card emerald">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/rpXP1xQx/room.jpg" alt="Rooms" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-users"></i></div>
+          <h3 class="card-title" data-i18n="card_rooms_title">Collaboration Rooms</h3>
+          <p class="card-desc" data-i18n="card_rooms_desc">Join dynamic rooms to work on tasks, share files, and connect with your team seamlessly in real-time.</p>
+          <a href="{% url 'projects:room_list' %}" class="card-btn"><span data-i18n="card_rooms_btn">Browse Rooms</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card sky">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/j5R39KVj/chat-eduvia2.jpg" alt="Chatbot" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-robot"></i></div>
+          <h3 class="card-title" data-i18n="card_chatbot_title">AI Chatbot</h3>
+          <p class="card-desc" data-i18n="card_chatbot_desc">Our intelligent chatbot assists with course queries, platform navigation, and subjects like English, programming, and mathematics.</p>
+          <a href="/chatbot/" class="card-btn"><span data-i18n="card_chatbot_btn">Open Chatbot</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/nzTSf5ZG/about-us1.jpg" alt="About Us" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-info-circle"></i></div>
+          <h3 class="card-title" data-i18n="card_about_title">About Us</h3>
+          <p class="card-desc" data-i18n="card_about_desc">Learn about Eduvia's mission and how we empower learners worldwide with quality, AI-integrated education.</p>
+          <a href="/about/" class="card-btn"><span data-i18n="card_about_btn">Learn More</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card gold">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/BQjYRMz2/skils.jpg" alt="Skills" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-star"></i></div>
+          <h3 class="card-title" data-i18n="card_skills_title">Skills Market</h3>
+          <p class="card-desc" data-i18n="card_skills_desc">Explore and enhance your skills through our Skills Market. Offer or acquire skills to boost your learning journey.</p>
+          <a href="{% url 'skills_market:skills_list' %}" class="card-btn"><span data-i18n="card_skills_btn">Browse Skills</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card emerald">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/L8fy8h2X/skils1.jpg" alt="Services" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-briefcase"></i></div>
+          <h3 class="card-title" data-i18n="card_services_title">Services</h3>
+          <p class="card-desc" data-i18n="card_services_desc">Discover a variety of services in our Skills Market. Find or offer services to support your educational goals.</p>
+          <a href="{% url 'skills_market:services_list' %}" class="card-btn"><span data-i18n="card_services_btn">Browse Services</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card rose">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/8CmtL3Fg/contact-us1.jpg" alt="Contact" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-envelope"></i></div>
+          <h3 class="card-title" data-i18n="card_contact_title">Contact Us</h3>
+          <p class="card-desc" data-i18n="card_contact_desc">Reach out to our team for support, inquiries, or feedback. We're always here to help you succeed.</p>
+          <a href="/contact_us/" class="card-btn"><span data-i18n="card_contact_btn">Get in Touch</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/1X2H91dw/mentor1.jpg" alt="Mentor" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <h3 class="card-title" data-i18n="card_mentor_title">Mentor Dashboard</h3>
+          <p class="card-desc" data-i18n="card_mentor_desc">Manage your mentees, groups, and mentorship activities seamlessly with our dedicated Mentor Dashboard.</p>
+          <a href="{% url 'mentorship:mentor_dashboard' %}" class="card-btn"><span data-i18n="card_mentor_btn">Open Dashboard</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="card sky">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://i.postimg.cc/FHtZ8m3Q/workshops3.jpg" alt="Live Sessions" loading="lazy">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon"><i class="fas fa-broadcast-tower"></i></div>
+          <h3 class="card-title" data-i18n="card_live_title">Live Sessions</h3>
+          <p class="card-desc" data-i18n="card_live_desc">Join interactive live sessions with expert instructors to enhance your learning experience in real-time.</p>
+          <a href="{% url 'workshops:live_session_list' %}" class="card-btn"><span data-i18n="card_live_btn">Join Live</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Eduvia</div>
+    <div class="footer-links">
+      <a href="/" data-i18n="nav_home">Home</a>
+      <a href="/courses/" data-i18n="nav_courses">Courses</a>
+      <a href="/about/" data-i18n="nav_about">About Us</a>
+      <a href="/contact_us/" data-i18n="nav_contact">Contact Us</a>
+    </div>
+    <div class="footer-socials">
+      <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/eduv.ia/" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/201029102507" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://x.com/Eduvia7" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://www.youtube.com/@Eduvia-ai-creativitycode" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.tiktok.com/@eduvia7" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-tiktok"></i></a>
+    </div>
+    <div class="footer-divider"></div>
+    <p class="footer-copy">
+      <span data-i18n="footer_copy">This platform was produced by</span>
+      <strong> Creativity Code </strong>
+      <span data-i18n="footer_and">and Engineer</span>
+      <strong> Ahmed Ibrahim</strong>
+      &nbsp;·&nbsp; © 2025 Eduvia
+    </p>
+  </div>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+const I18N = {
+  en: {
+    page_title:'Eduvia Platform — Learn Without Limits',
+    nav_home:'Home',nav_courses:'Courses',nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions',nav_performance:'Performance',
+    nav_about:'About Us',nav_contact:'Contact',nav_dashboard:'Dashboard',
+    nav_profile:'Profile',nav_logout:'Logout',nav_login:'Login',
+    nav_subscribe:'Subscribe',
+    hero_badge:'AI-Powered Learning Platform',
+    hero_title_1:'Unlock Your Potential',hero_title_2:'with Eduvia',
+    hero_sub:'Expert-led courses, collaborative projects, and intelligent tools — everything you need to accelerate your learning journey.',
+    hero_cta:'Start Learning Free',hero_browse:'Browse Courses',
+    stat_courses:'Courses',stat_students:'Students',stat_satisfaction:'Satisfaction',
+    search_placeholder:'Search for a course, skill, or topic…',search_btn:'Search',
+    explore_label:'Explore',explore_title:'Everything You Need to Succeed',
+    explore_sub:'Discover all the tools and features Eduvia has to offer.',
+    card_courses_title:'Courses',card_courses_desc:'Explore a wide range of expert-led courses. Apply easily and start learning with sequential lectures, evaluations, and community comments.',card_courses_btn:'Browse Courses',
+    card_projects_title:'Collaborative Projects',card_projects_desc:'Join collaboration rooms, create tasks, and share files with your team effortlessly using our advanced project system.',card_projects_btn:'Browse Projects',
+    card_performance_title:'Performance Insights',card_performance_desc:'Track your progress, analyze project metrics, and optimize your performance with our powerful analytics tools.',card_performance_btn:'Explore Analytics',
+    card_rooms_title:'Collaboration Rooms',card_rooms_desc:'Join dynamic rooms to work on tasks, share files, and connect with your team seamlessly in real-time.',card_rooms_btn:'Browse Rooms',
+    card_chatbot_title:'AI Chatbot',card_chatbot_desc:'Our intelligent chatbot assists with course queries, platform navigation, and subjects like English, programming, and mathematics.',card_chatbot_btn:'Open Chatbot',
+    card_about_title:'About Us',card_about_desc:"Learn about Eduvia's mission and how we empower learners worldwide with quality, AI-integrated education.",card_about_btn:'Learn More',
+    card_skills_title:'Skills Market',card_skills_desc:'Explore and enhance your skills through our Skills Market. Offer or acquire skills to boost your learning journey.',card_skills_btn:'Browse Skills',
+    card_services_title:'Services',card_services_desc:'Discover a variety of services in our Skills Market. Find or offer services to support your educational goals.',card_services_btn:'Browse Services',
+    card_contact_title:'Contact Us',card_contact_desc:"Reach out to our team for support, inquiries, or feedback. We're always here to help you succeed.",card_contact_btn:'Get in Touch',
+    card_mentor_title:'Mentor Dashboard',card_mentor_desc:'Manage your mentees, groups, and mentorship activities seamlessly with our dedicated Mentor Dashboard.',card_mentor_btn:'Open Dashboard',
+    card_live_title:'Live Sessions',card_live_desc:'Join interactive live sessions with expert instructors to enhance your learning experience in real-time.',card_live_btn:'Join Live',
+    footer_copy:'This platform was produced by',footer_and:'and Engineer',
+  },
+  ar: {
+    page_title:'منصة Eduvia — تعلم بلا حدود',
+    nav_home:'الرئيسية',nav_courses:'الكورسات',nav_chatbot:'المساعد الذكي',
+    nav_competitions:'المسابقات',nav_performance:'الأداء',
+    nav_about:'من نحن',nav_contact:'تواصل معنا',nav_dashboard:'لوحة التحكم',
+    nav_profile:'الملف الشخصي',nav_logout:'تسجيل الخروج',nav_login:'تسجيل الدخول',
+    nav_subscribe:'اشتراك',
+    hero_badge:'منصة تعلم مدعومة بالذكاء الاصطناعي',
+    hero_title_1:'أطلق إمكاناتك',hero_title_2:'مع Eduvia',
+    hero_sub:'كورسات بإشراف خبراء، مشاريع تعاونية، وأدوات ذكية — كل ما تحتاجه لتسريع رحلة التعلم.',
+    hero_cta:'ابدأ التعلم مجاناً',hero_browse:'استعرض الكورسات',
+    stat_courses:'كورس',stat_students:'طالب',stat_satisfaction:'رضا',
+    search_placeholder:'ابحث عن كورس أو مهارة أو موضوع…',search_btn:'بحث',
+    explore_label:'استكشف',explore_title:'كل ما تحتاجه للنجاح',
+    explore_sub:'اكتشف جميع الأدوات والميزات التي تقدمها Eduvia.',
+    card_courses_title:'الكورسات',card_courses_desc:'استكشف مجموعة واسعة من الكورسات المتميزة. تقدم بسهولة وابدأ التعلم بمحاضرات متسلسلة وتقييمات ومجتمع نشط.',card_courses_btn:'استعرض الكورسات',
+    card_projects_title:'المشاريع التعاونية',card_projects_desc:'انضم إلى غرف التعاون، أنشئ مهام، وشارك الملفات مع فريقك بسهولة باستخدام نظام المشاريع المتقدم.',card_projects_btn:'استعرض المشاريع',
+    card_performance_title:'تحليلات الأداء',card_performance_desc:'تتبع تقدمك، حلل مقاييس المشروع، وحسّن أدائك باستخدام أدوات التحليل القوية.',card_performance_btn:'استكشف التحليلات',
+    card_rooms_title:'غرف التعاون',card_rooms_desc:'انضم إلى غرف التعاون للعمل على المهام ومشاركة الملفات والتواصل مع فريقك في الوقت الفعلي.',card_rooms_btn:'استعرض الغرف',
+    card_chatbot_title:'المساعد الذكي',card_chatbot_desc:'مساعدنا الذكي يساعدك في استفسارات الكورسات والتصفح والمواد مثل الإنجليزية والبرمجة والرياضيات.',card_chatbot_btn:'افتح المساعد',
+    card_about_title:'من نحن',card_about_desc:'تعرف على مهمة Eduvia وكيف نُمكّن المتعلمين حول العالم بتعليم عالي الجودة مدعوم بالذكاء الاصطناعي.',card_about_btn:'اعرف المزيد',
+    card_skills_title:'سوق المهارات',card_skills_desc:'استكشف وطوّر مهاراتك من خلال سوق المهارات. اعرض أو اكتسب المهارات لتعزيز رحلتك التعليمية.',card_skills_btn:'استعرض المهارات',
+    card_services_title:'الخدمات',card_services_desc:'اكتشف مجموعة متنوعة من الخدمات في سوق المهارات. ابحث عن خدمات أو قدمها لدعم أهدافك التعليمية.',card_services_btn:'استعرض الخدمات',
+    card_contact_title:'تواصل معنا',card_contact_desc:'تواصل مع فريقنا للحصول على الدعم أو الاستفسارات أو التغذية الراجعة. نحن دائماً هنا لمساعدتك.',card_contact_btn:'تواصل الآن',
+    card_mentor_title:'لوحة المرشد',card_mentor_desc:'أدر المتدربين والمجموعات وأنشطة الإرشاد بسلاسة من خلال لوحة المرشد المخصصة.',card_mentor_btn:'افتح اللوحة',
+    card_live_title:'الجلسات المباشرة',card_live_desc:'انضم إلى جلسات مباشرة تفاعلية مع مدربين متخصصين لتعزيز تجربة التعلم في الوقت الفعلي.',card_live_btn:'انضم الآن',
+    footer_copy:'هذه المنصة من إنتاج',footer_and:'والمهندس',
+  }
+};
+
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (I18N[lang]?.[key]) el.placeholder = I18N[lang][key];
+  });
+  if (I18N[lang]?.page_title) document.title = I18N[lang].page_title;
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+function toggleMobileNav() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+});
+</script>
 </body>
 </html>

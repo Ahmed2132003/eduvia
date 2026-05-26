@@ -1,218 +1,901 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
-    <title data-translate="page-title">Edit Group - Eduvia</title>
-    <meta name="description" content="Edit your mentorship group and manage members in Eduvia's Mentorship System.">
-    <meta name="keywords" content="edit group, manage members, Eduvia, mentorship">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/">
+<!-- 🔍 SEO -->
+<title data-i18n-title="page_title">Edit Group — Eduvia</title>
+<meta name="description" content="Edit your mentorship group and manage members in Eduvia's Mentorship System.">
+<meta name="keywords" content="edit group, manage members, Eduvia, mentorship">
+<meta name="author" content="Eduvia">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/">
 
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Edit Group - Eduvia">
-    <meta property="og:description" content="Edit your mentorship group and manage members in Eduvia's Mentorship System.">
-    <meta property="og:image" content="https://i.postimg.cc/qBZnCmD1/mentor1.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/">
-    <meta property="og:type" content="website">
+<!-- 🌍 Open Graph -->
+<meta property="og:title" content="Edit Group - Eduvia">
+<meta property="og:description" content="Edit your mentorship group and manage members in Eduvia's Mentorship System.">
+<meta property="og:image" content="https://i.postimg.cc/qBZnCmD1/mentor1.jpg">
+<meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/">
+<meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Edit Group - Eduvia">
-    <meta name="twitter:description" content="Edit your mentorship group and manage members in Eduvia's Mentorship System.">
-    <meta name="twitter:image" content="https://i.postimg.cc/qBZnCmD1/mentor1.jpg">
+<!-- 🐦 Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Edit Group - Eduvia">
+<meta name="twitter:description" content="Edit your mentorship group and manage members in Eduvia's Mentorship System.">
+<meta name="twitter:image" content="https://i.postimg.cc/qBZnCmD1/mentor1.jpg">
 
-    <!-- 🖼️ Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<!-- 🖼️ Favicon -->
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-    <!-- 🌐 Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- 🌐 Fonts & Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🎨 Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'mentorship/edit_group.css' %}">
-
-    <!-- 🖼️ Hero Background -->
-    <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/qBZnCmD1/mentor1.jpg");
-        }
-    </style>
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
+<!-- 📊 Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/#webpage",
-                "url": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/",
-                "name": "Edit Group - Eduvia",
-                "description": "Edit your mentorship group and manage members in Eduvia's Mentorship System.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Mentorship",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "Edit Group",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/"
-                    }
-                ]
-            }
-        ]
+      "@type": "Organization",
+      "@id": "https://eduvia-ai.fly.dev/#organization",
+      "name": "Eduvia",
+      "url": "https://eduvia-ai.fly.dev",
+      "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" },
+      "sameAs": [
+        "https://www.facebook.com/share/18iRSctdxN/",
+        "https://x.com/Eduvia7",
+        "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/#webpage",
+      "url": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/",
+      "name": "Edit Group - Eduvia",
+      "description": "Edit your mentorship group and manage members in Eduvia's Mentorship System.",
+      "breadcrumb": { "@id": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/#breadcrumb" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Eduvia",     "item": "https://eduvia-ai.fly.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Mentorship", "item": "https://eduvia-ai.fly.dev/mentorship/" },
+        { "@type": "ListItem", "position": 3, "name": "Edit Group", "item": "https://eduvia-ai.fly.dev/mentorship/edit_group/{{ group.id }}/" }
+      ]
     }
-    </script>
+  ]
+}
+</script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"  (shared with lesson_view)
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  white-space: nowrap; overflow: hidden;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .bc-sep { color: var(--text-muted); opacity: .4; }
+.topbar-breadcrumb .bc-current { color: var(--text-p); }
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* Coins badge */
+.coins-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 99px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 12px; font-weight: 600; color: var(--gold-400);
+}
+.coins-badge i { color: var(--gold-400); }
+
+/* ═══ PAGE WRAPPER ══════════════════════════════════════════════════════ */
+.page-wrapper {
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ═══ HERO BANNER ═══════════════════════════════════════════════════════ */
+.page-hero {
+  position: relative;
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 24px 40px;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(139,92,246,.12), transparent 65%);
+  pointer-events: none;
+}
+.page-hero::after {
+  content: '\f0c0';
+  font-family: 'Font Awesome 6 Free'; font-weight: 900;
+  position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+  font-size: 120px; color: rgba(139,92,246,.06);
+  pointer-events: none;
+}
+.page-hero-inner { max-width: 900px; margin: 0 auto; position: relative; }
+.page-hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 4px 12px;
+  font-size: 11px; font-weight: 700; color: var(--violet-400);
+  letter-spacing: .5px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 800; color: var(--text-h);
+  line-height: 1.2; letter-spacing: -.5px; margin-bottom: 8px;
+}
+.page-hero p {
+  font-size: 15px; color: var(--text-muted); max-width: 520px;
+}
+
+/* ═══ MAIN CONTENT ══════════════════════════════════════════════════════ */
+.main-content {
+  flex: 1;
+  max-width: 900px; width: 100%;
+  margin: 0 auto; padding: 36px 24px 80px;
+}
+
+/* ═══ MESSAGES ══════════════════════════════════════════════════════════ */
+.messages-wrap { margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
+.msg-alert {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 500;
+  animation: cardReveal .4s ease both;
+}
+.msg-alert.success { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25); color: var(--success); }
+.msg-alert.error,
+.msg-alert.danger  { background: rgba(251,113,133,.07); border: 1px solid rgba(251,113,133,.2); color: var(--danger); }
+.msg-alert.warning { background: rgba(251,191,36,.07);  border: 1px solid rgba(251,191,36,.2);  color: var(--warning); }
+.msg-alert.info    { background: rgba(56,189,248,.07);  border: 1px solid rgba(56,189,248,.2);  color: var(--info); }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ═══ SECTION CARD ══════════════════════════════════════════════════════ */
+.section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: var(--glow);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.section-card:nth-child(2) { animation-delay: .08s; }
+.section-card:nth-child(3) { animation-delay: .16s; }
+
+.card-header {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.card-header-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  background: var(--violet-glow); color: var(--violet-400);
+  border: 1px solid var(--border-glow);
+}
+.card-header-icon.gold  { background: rgba(251,191,36,.08);  color: var(--gold-400);    border-color: rgba(251,191,36,.2); }
+.card-header-icon.sky   { background: rgba(56,189,248,.08);  color: var(--sky-400);     border-color: rgba(56,189,248,.2); }
+.card-header-icon.green { background: rgba(52,211,153,.08);  color: var(--success);     border-color: rgba(52,211,153,.2); }
+.card-header-icon.rose  { background: rgba(251,113,133,.08); color: var(--danger);      border-color: rgba(251,113,133,.2); }
+
+.card-header-info { flex: 1; }
+.card-header-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--text-h); margin-bottom: 2px;
+}
+.card-header-sub { font-size: 12px; color: var(--text-muted); }
+
+.card-body { padding: 24px; }
+
+/* ═══ FORM ELEMENTS ═════════════════════════════════════════════════════ */
+.field-group { margin-bottom: 18px; }
+.field-group:last-child { margin-bottom: 0; }
+.field-label {
+  display: block; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px;
+  margin-bottom: 7px;
+}
+.field-inp {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 12px 14px; font-size: 14px; font-family: inherit;
+  transition: var(--trans);
+}
+.field-inp:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.field-inp::placeholder { color: var(--text-muted); }
+
+.field-textarea {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 12px 14px; font-size: 14px; font-family: inherit;
+  line-height: 1.65; resize: vertical; min-height: 100px;
+  transition: var(--trans);
+}
+.field-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.field-textarea::placeholder { color: var(--text-muted); }
+
+/* Django auto-form styling */
+.django-form p { margin-bottom: 16px; }
+.django-form label {
+  display: block; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px;
+  margin-bottom: 7px;
+}
+.django-form input[type="text"],
+.django-form input[type="email"],
+.django-form input[type="url"],
+.django-form input[type="number"],
+.django-form input[type="password"],
+.django-form select,
+.django-form textarea {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 12px 14px; font-size: 14px; font-family: inherit; transition: var(--trans);
+}
+.django-form input:focus,
+.django-form select:focus,
+.django-form textarea:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+}
+.django-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%235a6585' d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
+  padding-right: 36px;
+}
+.django-form select option { background: var(--bg-card); color: var(--text-p); }
+.django-form textarea { resize: vertical; min-height: 100px; line-height: 1.65; }
+.django-form .helptext { font-size: 11px; color: var(--text-muted); margin-top: 5px; display: block; }
+.django-form .errorlist { list-style: none; margin-top: 5px; }
+.django-form .errorlist li {
+  font-size: 12px; color: var(--danger);
+  background: rgba(251,113,133,.07); border: 1px solid rgba(251,113,133,.2);
+  border-radius: var(--radius-sm); padding: 5px 10px; margin-top: 4px;
+}
+
+/* Checkbox / radio */
+.django-form input[type="checkbox"],
+.django-form input[type="radio"] {
+  width: 16px; height: 16px; accent-color: var(--accent);
+  border: 1.5px solid var(--border); border-radius: 4px; padding: 0;
+}
+
+/* ═══ SUBMIT BUTTON ══════════════════════════════════════════════════════ */
+.submit-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  transition: var(--trans); position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139,92,246,.35);
+}
+.submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
+  border-radius: inherit;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+.submit-btn-danger {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 4px 20px rgba(251,113,133,.25);
+}
+.submit-btn-danger:hover { box-shadow: 0 8px 30px rgba(251,113,133,.35); }
+
+.submit-btn-success {
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  box-shadow: 0 4px 20px rgba(52,211,153,.3);
+}
+.submit-btn-success:hover { box-shadow: 0 8px 30px rgba(52,211,153,.4); }
+
+.submit-btn-sm { padding: 8px 18px; font-size: 12px; }
+
+/* ═══ MEMBER LIST ════════════════════════════════════════════════════════ */
+.members-list { display: flex; flex-direction: column; gap: 10px; }
+.member-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: var(--radius-md);
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  transition: var(--trans);
+  animation: cardReveal .35s ease both;
+}
+.member-row:hover { border-color: var(--border-glow); background: var(--bg-hover); }
+
+.member-avatar {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: #fff;
+}
+.member-info { flex: 1; min-width: 0; }
+.member-name { font-size: 14px; font-weight: 600; color: var(--text-h); }
+.member-role-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700;
+  background: rgba(251,191,36,.1); color: var(--gold-400);
+  border: 1px solid rgba(251,191,36,.2); margin-left: 6px;
+}
+.member-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ═══ EMPTY STATE ════════════════════════════════════════════════════════ */
+.empty-state {
+  text-align: center; padding: 36px; color: var(--text-muted); font-size: 14px;
+}
+.empty-state i { font-size: 36px; display: block; margin-bottom: 10px; opacity: .25; }
+
+/* ═══ ACTION BAR ═════════════════════════════════════════════════════════ */
+.action-bar {
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  margin-top: 32px;
+}
+
+/* Nav buttons (ghost style) */
+.nav-btn {
+  padding: 10px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; border: 1px solid var(--border);
+  color: var(--text-muted); background: var(--bg-card);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--trans); cursor: pointer; font-family: inherit;
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-btn.primary:hover { background: var(--accent-d); }
+
+/* ═══ SPINNER ════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ FOOTER ═════════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  padding: 28px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.footer-inner {
+  max-width: 900px; margin: 0 auto;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.footer-logo {
+  font-family: var(--font-display); font-size: 18px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.footer-links a {
+  color: var(--text-muted); text-decoration: none; font-size: 12px; transition: var(--trans);
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-socials { display: flex; gap: 10px; }
+.social-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; transition: var(--trans);
+}
+.social-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+.footer-copy { color: var(--text-muted); font-size: 11px; }
+
+/* ═══ MOBILE ════════════════════════════════════════════════════════════ */
+.hamburger {
+  display: none; background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-p); border-radius: var(--radius-sm);
+  width: 36px; height: 36px; font-size: 16px; cursor: pointer;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.mobile-menu {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; z-index: 500;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  padding: 16px;
+  flex-direction: column; gap: 8px;
+  animation: fadeDown .25s ease;
+}
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.mobile-menu.open { display: flex; }
+.mob-link {
+  padding: 11px 16px; border-radius: var(--radius-sm);
+  color: var(--text-p); text-decoration: none; font-size: 14px; font-weight: 500;
+  transition: var(--trans); display: flex; align-items: center; gap: 8px;
+}
+.mob-link:hover { background: var(--bg-card); color: var(--accent); }
+.mob-link.active-link { background: var(--violet-glow); color: var(--accent); }
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .topbar-nav { display: none; }
+  .topbar-breadcrumb { display: none; }
+  .main-content { padding: 24px 14px 60px; }
+  .page-hero { padding: 36px 14px 30px; }
+  .page-hero h1 { font-size: 24px; }
+  .card-body { padding: 16px; }
+  .card-header { padding: 16px; }
+  .action-bar { flex-direction: column; }
+  .action-bar .nav-btn,
+  .action-bar .submit-btn { width: 100%; justify-content: center; }
+}
+</style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <section class="hero">
-        <h1 data-translate="hero-title">Edit Group</h1>
-        <p data-translate="hero-desc">Modify your mentorship group and manage its members</p>
-    </section>
+<!-- ═══ TOPBAR ═══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+    <a href="/mentorship/"><span data-i18n="mentorship">Mentorship</span></a>
+    <span class="bc-sep">/</span>
+    <span class="bc-current" data-i18n="edit_group">Edit Group</span>
+  </nav>
+  <div class="topbar-actions topbar-nav">
+    <a href="/" class="tb-btn tb-btn-ghost"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a>
+    <a href="/courses/" class="tb-btn tb-btn-ghost"><i class="fas fa-graduation-cap"></i> <span data-i18n="courses">Courses</span></a>
+    <a href="/chatbot/" class="tb-btn tb-btn-ghost"><i class="fas fa-robot"></i> <span data-i18n="chatbot">Chatbot</span></a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="tb-btn tb-btn-ghost">
+          <i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard">Dashboard</span>
+        </a>
+      {% endif %}
+      {% if user.courses_profile %}
+        <div class="coins-badge"><i class="fas fa-coins"></i> {{ user.courses_profile.coins }}</div>
+      {% endif %}
+      <a href="/accounts/profile/" class="tb-btn tb-btn-ghost"><i class="fas fa-user-circle"></i> <span data-i18n="profile">Profile</span></a>
+      <a href="/accounts/logout/" class="tb-btn tb-btn-ghost"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></a>
+    {% else %}
+      <a href="/accounts/register/" class="tb-btn tb-btn-accent"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span></a>
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme"><i class="fas fa-moon" id="theme-icon"></i></button>
+    <button class="ctrl-btn" onclick="toggleLang()"  title="Toggle language"><i class="fas fa-globe"></i></button>
+  </div>
+  <!-- Hamburger -->
+  <button class="hamburger" onclick="toggleMobileMenu()" id="hamburger-btn" aria-label="Menu">
+    <i class="fas fa-bars"></i>
+  </button>
+</header>
 
+<!-- Mobile Menu -->
+<nav class="mobile-menu" id="mobile-menu">
+  <a href="/" class="mob-link"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a>
+  <a href="/courses/" class="mob-link"><i class="fas fa-graduation-cap"></i> <span data-i18n="courses">Courses</span></a>
+  <a href="/chatbot/" class="mob-link"><i class="fas fa-robot"></i> <span data-i18n="chatbot">Chatbot</span></a>
+  <a href="/competitions/" class="mob-link"><i class="fas fa-trophy"></i> <span data-i18n="competitions">Competitions</span></a>
+  <a href="/about/" class="mob-link"><i class="fas fa-info-circle"></i> <span data-i18n="about">About Us</span></a>
+  {% if user.is_authenticated %}
+    <a href="/accounts/profile/" class="mob-link"><i class="fas fa-user-circle"></i> <span data-i18n="profile">Profile</span></a>
+    <a href="/accounts/logout/" class="mob-link"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></a>
+  {% else %}
+    <a href="/accounts/register/" class="mob-link active-link"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span></a>
+  {% endif %}
+  <div style="display:flex;gap:10px;padding:4px 0;">
+    <button class="ctrl-btn" onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon-mob"></i></button>
+    <button class="ctrl-btn" onclick="toggleLang()"><i class="fas fa-globe"></i></button>
+  </div>
+</nav>
+
+<!-- ═══ PAGE WRAPPER ═════════════════════════════════════════════════════ -->
+<div class="page-wrapper">
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-hero-badge"><i class="fas fa-users-cog"></i> <span data-i18n="mentorship_system">Mentorship System</span></div>
+      <h1 data-i18n="hero_title">Edit Group</h1>
+      <p data-i18n="hero_desc">Modify your mentorship group settings and manage its members</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- Messages -->
     {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} fadeIn">{{ message }}</div>
-            {% endfor %}
-        </div>
+    <div class="messages-wrap">
+      {% for message in messages %}
+      <div class="msg-alert {{ message.tags }}">
+        <i class="fas {% if 'success' in message.tags %}fa-check-circle{% elif 'error' in message.tags or 'danger' in message.tags %}fa-exclamation-circle{% elif 'warning' in message.tags %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i>
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
     {% endif %}
 
-    <div class="edit-container">
-        <h2 data-translate="edit-heading">Edit Group: {{ group.name }}</h2>
-        
-        <form method="post" class="form-group">
-            {% csrf_token %}
-            <input type="hidden" name="update_group" value="true">
-            {{ form.as_p }}
-            <button type="submit" data-translate="update-group">Update Group</button>
+    <!-- ── EDIT GROUP FORM ──────────────────────────────────────────── -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-header-icon"><i class="fas fa-edit"></i></div>
+        <div class="card-header-info">
+          <div class="card-header-title" data-i18n="edit_group_title">Edit Group Settings</div>
+          <div class="card-header-sub">{{ group.name }}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="post" class="django-form">
+          {% csrf_token %}
+          <input type="hidden" name="update_group" value="true">
+          {{ form.as_p }}
+          <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-save"></i>
+              <span data-i18n="update_group">Update Group</span>
+            </button>
+          </div>
         </form>
+      </div>
+    </div>
 
-        <div class="members-section">
-            <h3 data-translate="members-heading">Current Members</h3>
-            {% if group.members.all %}
-                {% for member in group.members.all %}
-                    <div class="member-item">
-                        <p>{{ member.username }}</p>
-                        {% if member != group.admin %}
-                            <form method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="remove_member" value="true">
-                                <input type="hidden" name="member_id" value="{{ member.id }}">
-                                <button type="submit" data-translate="remove-member">Remove</button>
-                            </form>
-                        {% else %}
-                            <p data-translate="admin-label">(Admin)</p>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p class="text-center" data-translate="no-members">No members in this group yet.</p>
-            {% endif %}
+    <!-- ── CURRENT MEMBERS ─────────────────────────────────────────── -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-header-icon gold"><i class="fas fa-users"></i></div>
+        <div class="card-header-info">
+          <div class="card-header-title" data-i18n="current_members">Current Members</div>
+          <div class="card-header-sub">
+            {{ group.members.all|length }}
+            <span data-i18n="members_count"> member(s) in this group</span>
+          </div>
         </div>
-
-        <div class="members-section">
-            <h3 data-translate="add-member-heading">Add New Member</h3>
-            <form method="post" class="form-group">
+      </div>
+      <div class="card-body">
+        {% if group.members.all %}
+        <div class="members-list">
+          {% for member in group.members.all %}
+          <div class="member-row">
+            <div class="member-avatar">{{ member.username|slice:":1"|upper }}</div>
+            <div class="member-info">
+              <div class="member-name">
+                {{ member.username }}
+                {% if member == group.admin %}
+                <span class="member-role-badge"><i class="fas fa-crown"></i> <span data-i18n="admin_label">Admin</span></span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="member-actions">
+              {% if member != group.admin %}
+              <form method="post" style="margin:0;">
                 {% csrf_token %}
-                <input type="hidden" name="add_member" value="true">
-                {{ add_form.as_p }}
-                <button type="submit" data-translate="add-member">Add Member</button>
-            </form>
+                <input type="hidden" name="remove_member" value="true">
+                <input type="hidden" name="member_id" value="{{ member.id }}">
+                <button type="submit" class="submit-btn submit-btn-danger submit-btn-sm"
+                        onclick="return confirm('Remove {{ member.username }}?')">
+                  <i class="fas fa-user-minus"></i>
+                  <span data-i18n="remove">Remove</span>
+                </button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
         </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-user-slash"></i>
+          <span data-i18n="no_members">No members in this group yet.</span>
+        </div>
+        {% endif %}
+      </div>
     </div>
 
-    <div class="action-buttons">
-        <a href="{% url 'mentorship:group_detail' group_id=group.id %}" class="btn" data-translate="back-to-group">Back to Group</a>
-        <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="mentor-dashboard">Mentor Dashboard</a>
+    <!-- ── ADD NEW MEMBER ─────────────────────────────────────────── -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-header-icon green"><i class="fas fa-user-plus"></i></div>
+        <div class="card-header-info">
+          <div class="card-header-title" data-i18n="add_member_title">Add New Member</div>
+          <div class="card-header-sub" data-i18n="add_member_sub">Search and add a user to the group</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="post" class="django-form">
+          {% csrf_token %}
+          <input type="hidden" name="add_member" value="true">
+          {{ add_form.as_p }}
+          <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+            <button type="submit" class="submit-btn submit-btn-success">
+              <i class="fas fa-user-plus"></i>
+              <span data-i18n="add_member_btn">Add Member</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+    <!-- ── ACTION BAR ─────────────────────────────────────────────── -->
+    <div class="action-bar">
+      <a href="{% url 'mentorship:group_detail' group_id=group.id %}" class="nav-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span data-i18n="back_to_group">Back to Group</span>
+      </a>
+      <a href="{% url 'mentorship:mentor_dashboard' %}" class="nav-btn primary">
+        <i class="fas fa-tachometer-alt"></i>
+        <span data-i18n="mentor_dashboard">Mentor Dashboard</span>
+      </a>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'mentorship/edit_group.js' %}"></script>
+  </div>{# /main-content #}
+
+  <!-- ═══ FOOTER ═══════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">Eduvia</div>
+      <nav class="footer-links">
+        <a href="/" data-i18n="home">Home</a>
+        <a href="/courses/" data-i18n="courses">Courses</a>
+        <a href="/chatbot/" data-i18n="chatbot">Chatbot</a>
+        <a href="/about/" data-i18n="about">About Us</a>
+        <a href="/contact_us/" data-i18n="contact">Contact Us</a>
+      </nav>
+      <div class="footer-socials">
+        <a href="https://www.facebook.com/share/18iRSctdxN/" class="social-btn" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://x.com/Eduvia7" class="social-btn" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" class="social-btn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <p class="footer-copy" data-i18n="footer_text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
+    </div>
+  </footer>
+
+</div>{# /page-wrapper #}
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    mentorship:'Mentorship', edit_group:'Edit Group',
+    home:'Home', courses:'Courses', chatbot:'Chatbot',
+    competitions:'Competitions', about:'About Us', contact:'Contact Us',
+    profile:'Profile', logout:'Logout', login:'Login', dashboard:'Dashboard',
+    mentorship_system:'Mentorship System',
+    hero_title:'Edit Group', hero_desc:'Modify your mentorship group settings and manage its members',
+    edit_group_title:'Edit Group Settings', update_group:'Update Group',
+    current_members:'Current Members', members_count:' member(s) in this group',
+    admin_label:'Admin', remove:'Remove', no_members:'No members in this group yet.',
+    add_member_title:'Add New Member', add_member_sub:'Search and add a user to the group',
+    add_member_btn:'Add Member', back_to_group:'Back to Group',
+    mentor_dashboard:'Mentor Dashboard', footer_text:'© 2025 Eduvia and creativitycode. All rights reserved.',
+  },
+  ar: {
+    mentorship:'الإرشاد', edit_group:'تعديل المجموعة',
+    home:'الرئيسية', courses:'الكورسات', chatbot:'المساعد الذكي',
+    competitions:'المسابقات', about:'من نحن', contact:'اتصل بنا',
+    profile:'الملف الشخصي', logout:'تسجيل الخروج', login:'تسجيل الدخول', dashboard:'لوحة التحكم',
+    mentorship_system:'نظام الإرشاد',
+    hero_title:'تعديل المجموعة', hero_desc:'عدّل إعدادات مجموعتك وإدارة أعضائها',
+    edit_group_title:'تعديل إعدادات المجموعة', update_group:'تحديث المجموعة',
+    current_members:'الأعضاء الحاليون', members_count:' عضو في هذه المجموعة',
+    admin_label:'مسؤول', remove:'إزالة', no_members:'لا يوجد أعضاء في هذه المجموعة بعد.',
+    add_member_title:'إضافة عضو جديد', add_member_sub:'ابحث عن مستخدم وأضفه للمجموعة',
+    add_member_btn:'إضافة عضو', back_to_group:'العودة للمجموعة',
+    mentor_dashboard:'لوحة تحكم المرشد', footer_text:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ──────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const icon = document.getElementById('theme-icon');
+  const iconMob = document.getElementById('theme-icon-mob');
+  const cls = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  if (icon) icon.className = cls;
+  if (iconMob) iconMob.className = cls;
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile Menu ─────────────────────────────────────────────────────── */
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const mm = document.getElementById('mobile-menu');
+  const hb = document.getElementById('hamburger-btn');
+  if (mm && hb && !mm.contains(e.target) && !hb.contains(e.target)) mm.classList.remove('open');
+});
+
+/* ── Toast ────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ─────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  // Auto-show Django messages as toasts
+  document.querySelectorAll('.msg-alert').forEach(el => {
+    const type = el.classList.contains('success') ? 'success'
+               : (el.classList.contains('error') || el.classList.contains('danger')) ? 'error' : 'info';
+    toast(el.textContent.trim(), type);
+  });
+});
+</script>
 </body>
 </html>

@@ -1,183 +1,833 @@
 <!DOCTYPE html>
 {% load static competition_filters competition_tags i18n %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-translate="competitions-title">Educational Competitions | Eduvia</title>
+<meta name="description" content="Join educational competitions on the Eduvia platform and earn XP and coins!" data-translate="competitions-meta-desc">
+<meta name="keywords" content="educational competitions, interactive learning, Eduvia platform" data-translate="competitions-meta-keywords">
+<meta name="author" content="Eduvia Team">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:title" content="Educational Competitions | Eduvia" data-translate="competitions-og-title">
+<meta property="og:description" content="Join educational competitions on the Eduvia platform and earn XP and coins!" data-translate="competitions-og-desc">
+<meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Educational Competitions | Eduvia">
+<meta name="twitter:description" content="Join educational competitions on the Eduvia platform and earn XP and coins!">
+<meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <title data-translate="competitions-title">Educational Competitions | Eduvia</title>
-    <meta name="description" content="Join educational competitions on the Eduvia platform and earn XP and coins!" data-translate="competitions-meta-desc">
-    <meta name="keywords" content="educational competitions, interactive learning, Eduvia platform" data-translate="competitions-meta-keywords">
-    <meta name="author" content="Eduvia Team">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"  (shared with lesson_view)
+   ═══════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <meta property="og:title" content="Educational Competitions | Eduvia" data-translate="competitions-og-title">
-    <meta property="og:description" content="Join educational competitions on the Eduvia platform and earn XP and coins!" data-translate="competitions-og-desc">
-    <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:type" content="website">
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Educational Competitions | Eduvia">
-    <meta name="twitter:description" content="Join educational competitions on the Eduvia platform and earn XP and coins!">
-    <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
 
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'competitions/competition_list.css' %}">
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
 
-    <style>
-        /* رسالة منع الوصول */
-        .access-denied-box {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 32px 28px;
-            background: linear-gradient(145deg, #fff8f8, #ffe8e8);
-            border: 2px solid #ff6b6b;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.15);
-        }
-        .access-denied-box .lock-icon { font-size: 52px; color: #ff6b6b; margin-bottom: 16px; }
-        .access-denied-box h2 { color: #cc0000; font-size: 22px; margin-bottom: 12px; }
-        .access-denied-box p { color: #444; font-size: 17px; line-height: 1.7; margin-bottom: 20px; }
-        .access-denied-box .courses-btn {
-            display: inline-block;
-            background: linear-gradient(90deg, #00c9a7, #12d3cf);
-            color: #fff;
-            padding: 11px 26px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .access-denied-box .courses-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 201, 167, 0.4);
-        }
-    </style>
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ══════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px; gap: 18px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-page-label {
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-nav {
+  display: flex; align-items: center; gap: 4px;
+}
+.topbar-nav a {
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.topbar-nav a:hover { color: var(--text-h); background: var(--bg-card); }
+.topbar-nav a.active { color: var(--accent); background: var(--violet-glow); }
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.coins-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 12px 5px 8px;
+  font-size: 13px; font-weight: 600; color: var(--warning);
+}
+.coins-chip i { font-size: 14px; }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* Hamburger for mobile */
+.hamburger-btn {
+  display: none; width: 36px; height: 36px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 16px; cursor: pointer;
+  align-items: center; justify-content: center; transition: var(--trans);
+}
+.hamburger-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ HERO ════════════════════════════════════════════════════════════ */
+.hero {
+  padding-top: calc(var(--topbar-h) + 60px);
+  padding-bottom: 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(139,92,246,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-icon {
+  width: 72px; height: 72px; border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--violet-600), var(--violet-400));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; color: #fff; margin: 0 auto 20px;
+  box-shadow: 0 0 40px rgba(139,92,246,.4);
+  animation: iconPulse 3s ease-in-out infinite;
+}
+@keyframes iconPulse {
+  0%,100% { box-shadow: 0 0 40px rgba(139,92,246,.4); }
+  50%      { box-shadow: 0 0 60px rgba(139,92,246,.6), 0 0 100px rgba(139,92,246,.2); }
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 48px); font-weight: 800;
+  color: var(--text-h); letter-spacing: -1px; line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero h1 span {
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 16px; color: var(--text-muted); max-width: 480px; margin: 0 auto;
+}
+.hero-stats {
+  display: flex; justify-content: center; gap: 32px; margin-top: 36px; flex-wrap: wrap;
+}
+.hero-stat {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.hero-stat-val {
+  font-family: var(--font-display); font-size: 28px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-stat-lbl { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+/* ═══ MAIN CONTENT ════════════════════════════════════════════════════ */
+.page-container { max-width: 1100px; margin: 0 auto; padding: 0 24px 100px; }
+
+/* ── Section header ── */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 800; color: var(--text-h);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title i { color: var(--accent); font-size: 16px; }
+.section-count {
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 2px 10px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+}
+
+/* ── Messages ── */
+.messages-wrap { margin-bottom: 24px; }
+.msg-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 500; margin-bottom: 8px;
+  animation: slideDown .3s ease;
+}
+@keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+.msg-item.error   { background: rgba(251,113,133,.1); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+.msg-item.success { background: rgba(52,211,153,.1);  color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+.msg-item.warning { background: rgba(251,191,36,.1);  color: var(--warning); border: 1px solid rgba(251,191,36,.2); }
+.msg-item i { flex-shrink: 0; }
+
+/* ── Access denied box ── */
+.access-denied-box {
+  max-width: 560px; margin: 0 auto 40px;
+  padding: 36px 32px; text-align: center;
+  background: var(--bg-card); border: 1px solid rgba(251,113,133,.25);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 0 40px rgba(251,113,133,.08);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.access-denied-icon {
+  width: 68px; height: 68px; border-radius: var(--radius-lg);
+  background: rgba(251,113,133,.1); border: 1px solid rgba(251,113,133,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: var(--danger); margin: 0 auto 20px;
+}
+.access-denied-box h2 {
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  color: var(--danger); margin-bottom: 10px;
+}
+.access-denied-box p {
+  font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 22px;
+}
+
+/* ── Create button ── */
+.create-btn-wrap { margin-bottom: 32px; }
+.create-comp-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 24px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; font-size: 14px; font-weight: 700;
+  text-decoration: none; transition: var(--trans);
+  box-shadow: 0 4px 20px rgba(139,92,246,.3);
+  font-family: var(--font-display);
+}
+.create-comp-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
+
+/* ── Competitions grid ── */
+.competitions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.comp-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  transition: var(--trans); text-decoration: none; display: block;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+  position: relative;
+}
+.comp-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  box-shadow: var(--glow);
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.comp-card:nth-child(1) { animation-delay: .05s; }
+.comp-card:nth-child(2) { animation-delay: .10s; }
+.comp-card:nth-child(3) { animation-delay: .15s; }
+.comp-card:nth-child(4) { animation-delay: .20s; }
+.comp-card:nth-child(5) { animation-delay: .25s; }
+.comp-card:nth-child(6) { animation-delay: .30s; }
+
+/* Card accent bar */
+.comp-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--violet-500), var(--gold-400));
+  opacity: 0; transition: opacity .3s;
+}
+.comp-card:hover::before { opacity: 1; }
+
+.comp-card-head {
+  padding: 22px 22px 16px;
+  display: flex; align-items: flex-start; gap: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.comp-card-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md); flex-shrink: 0;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--violet-400);
+  transition: var(--trans);
+}
+.comp-card:hover .comp-card-icon {
+  background: rgba(139,92,246,.3); color: var(--violet-300, #c4b5fd);
+}
+.comp-card-info { flex: 1; min-width: 0; }
+.comp-card-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--text-h);
+  line-height: 1.3; margin-bottom: 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.comp-card-status { }
+
+/* Status badges */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; letter-spacing: .3px;
+}
+.status-ongoing    { background: rgba(52,211,153,.12); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.status-not-started{ background: rgba(251,191,36,.1);  color: var(--warning); border: 1px solid rgba(251,191,36,.25); }
+.status-ended      { background: rgba(251,113,133,.08); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+}
+.status-ongoing .status-dot { animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+.comp-card-body { padding: 16px 22px; }
+.comp-date-row {
+  display: flex; flex-direction: column; gap: 6px;
+  font-size: 12px; color: var(--text-muted);
+}
+.comp-date-item { display: flex; align-items: center; gap: 7px; }
+.comp-date-item i { color: var(--accent); width: 14px; text-align: center; font-size: 11px; }
+
+.comp-card-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.comp-enter-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: var(--radius-sm);
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 12px; font-weight: 600;
+  text-decoration: none; transition: var(--trans);
+}
+.comp-enter-btn:hover,
+.comp-card:hover .comp-enter-btn {
+  background: var(--violet-glow); border-color: var(--accent); color: var(--accent);
+}
+.comp-arrow { font-size: 12px; color: var(--text-muted); transition: var(--trans); }
+.comp-card:hover .comp-arrow { color: var(--accent); transform: translateX(3px); }
+[lang="ar"] .comp-card:hover .comp-arrow { transform: translateX(-3px); }
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center; padding: 72px 24px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+.empty-state i { font-size: 48px; color: var(--text-muted); opacity: .25; display: block; margin-bottom: 16px; }
+.empty-state h3 { font-family: var(--font-display); font-size: 18px; color: var(--text-h); margin-bottom: 8px; }
+.empty-state p  { font-size: 14px; color: var(--text-muted); }
+
+/* ── Current time pill ── */
+.time-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 14px;
+  font-size: 12px; color: var(--text-muted); margin-top: 28px;
+}
+.time-pill i { color: var(--accent); font-size: 11px; }
+
+/* ═══ FOOTER ══════════════════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 24px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-brand {
+  font-family: var(--font-display); font-size: 16px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-links { display: flex; gap: 16px; }
+.footer-links a {
+  font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans);
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ═══ MOBILE NAV DRAWER ═══════════════════════════════════════════════ */
+.mobile-nav-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 700; backdrop-filter: blur(4px);
+}
+.mobile-nav-overlay.open { display: block; }
+.mobile-nav-drawer {
+  position: fixed; top: 0; right: -100%; bottom: 0; width: 280px;
+  background: var(--bg-panel); border-left: 1px solid var(--border);
+  z-index: 800; transition: right .3s cubic-bezier(.4,0,.2,1);
+  padding: 24px; display: flex; flex-direction: column; gap: 8px;
+  overflow-y: auto;
+}
+[lang="ar"] .mobile-nav-drawer { right: auto; left: -100%; border-left: none; border-right: 1px solid var(--border); }
+.mobile-nav-drawer.open { right: 0; }
+[lang="ar"] .mobile-nav-drawer.open { left: 0; right: auto; }
+.mobile-nav-drawer .nav-logo {
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+}
+.mobile-nav-drawer a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); border: 1px solid transparent;
+}
+.mobile-nav-drawer a:hover { background: var(--bg-card); color: var(--text-h); border-color: var(--border); }
+.mobile-nav-drawer a.active { background: var(--violet-glow); color: var(--accent); border-color: var(--border-glow); }
+.mobile-nav-drawer .close-btn {
+  align-self: flex-end; margin-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .topbar-nav { display: none; }
+  .hamburger-btn { display: flex; }
+}
+@media (max-width: 600px) {
+  .topbar { padding: 0 16px; gap: 12px; }
+  .topbar-page-label { display: none; }
+  .competitions-grid { grid-template-columns: 1fr; }
+  .hero { padding-top: calc(var(--topbar-h) + 40px); padding-bottom: 40px; }
+  .footer { flex-direction: column; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
+
+<!-- ═══ TOPBAR ══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-page-label">
+    <i class="fas fa-trophy" style="color:var(--accent);margin-right:6px;"></i>
+    <span data-i18n="competitions">Competitions</span>
+  </span>
+
+  <nav class="topbar-nav">
+    <a href="/" data-i18n="nav_home">Home</a>
+    <a href="/courses/" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" class="active" data-i18n="nav_competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
+    <a href="/about/" data-i18n="nav_about">About</a>
+    <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="nav_dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
+      <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
+    {% else %}
+      <a href="/accounts/register/" data-i18n="nav_login">Login</a>
+    {% endif %}
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-chip">
+      <i class="fas fa-coins"></i>
+      <span>{{ user.courses_profile.coins }}</span>
+    </div>
+    {% elif user.is_authenticated %}
+    <div class="coins-chip">
+      <i class="fas fa-coins"></i>
+      <span>0</span>
+    </div>
+    {% endif %}
+
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <button class="hamburger-btn" onclick="openMobileNav()" aria-label="Menu">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<div class="mobile-nav-overlay" id="nav-overlay" onclick="closeMobileNav()"></div>
+<div class="mobile-nav-drawer" id="nav-drawer">
+  <div class="nav-logo">Eduvia</div>
+  <a href="/" data-i18n="nav_home"><i class="fas fa-home"></i> Home</a>
+  <a href="/courses/" data-i18n="nav_courses"><i class="fas fa-book"></i> Courses</a>
+  <a href="/chatbot/" data-i18n="nav_chatbot"><i class="fas fa-robot"></i> Chatbot</a>
+  <a href="/competitions/" class="active" data-i18n="nav_competitions"><i class="fas fa-trophy"></i> Competitions</a>
+  <a href="/performance/dashboard/" data-i18n="nav_performance"><i class="fas fa-chart-line"></i> Performance</a>
+  <a href="/about/" data-i18n="nav_about"><i class="fas fa-info-circle"></i> About</a>
+  <a href="/contact_us/" data-i18n="nav_contact"><i class="fas fa-envelope"></i> Contact</a>
+  {% if user.is_authenticated %}
+    {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    {% endif %}
+    <a href="/accounts/profile/"><i class="fas fa-user"></i> Profile</a>
+    <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  {% else %}
+    <a href="/accounts/register/"><i class="fas fa-sign-in-alt"></i> Login</a>
+  {% endif %}
+</div>
+
+<!-- ═══ HERO ════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-icon"><i class="fas fa-trophy"></i></div>
+  <h1 data-i18n="hero_title">Educational <span>Competitions</span></h1>
+  <p data-i18n="hero_desc">Join exciting learning challenges, answer questions, and earn XP and coins!</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-val">{{ competitions|length }}</span>
+      <span class="hero-stat-lbl" data-i18n="stat_total">Total Competitions</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val" id="ongoing-count">–</span>
+      <span class="hero-stat-lbl" data-i18n="stat_ongoing">Ongoing Now</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val"><i class="fas fa-coins" style="font-size:20px;color:var(--gold-400);-webkit-text-fill-color:var(--gold-400);"></i></span>
+      <span class="hero-stat-lbl" data-i18n="stat_earn">Earn Coins & XP</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MAIN CONTENT ═════════════════════════════════════════════════════ -->
+<main class="page-container">
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="messages-wrap" id="messages-wrap">
+    {% for message in messages %}
+    <div class="msg-item {% if message.tags %}{{ message.tags }}{% endif %}">
+      <i class="fas {% if 'error' in message.tags %}fa-exclamation-circle{% elif 'success' in message.tags %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Access Denied -->
+  {% if not user_can_access and user.is_authenticated %}
+  <div class="access-denied-box">
+    <div class="access-denied-icon"><i class="fas fa-lock"></i></div>
+    <h2 data-i18n="access_denied_title">Access Restricted</h2>
+    <p data-i18n="access_denied_desc">You need to be enrolled in at least one course in the last two months to access competitions and the chatbot.</p>
+    <a href="/courses/" class="create-comp-btn" style="display:inline-flex;margin:0 auto;">
+      <i class="fas fa-book-open"></i>
+      <span data-i18n="browse_courses">Browse Courses</span>
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Section header -->
+  <div class="section-header">
+    <div class="section-title">
+      <i class="fas fa-list-ul"></i>
+      <span data-i18n="list_title">Competitions</span>
+      <span class="section-count">{{ competitions|length }}</span>
+    </div>
+    {% if user.role == 'instructor' %}
+    <div class="create-btn-wrap" style="margin-bottom:0;">
+      <a href="{% url 'competitions:create_competition' %}" class="create-comp-btn">
+        <i class="fas fa-plus"></i>
+        <span data-i18n="create_competition">Create Competition</span>
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Grid -->
+  {% if competitions %}
+  <div class="competitions-grid" id="comp-grid">
+    {% for competition in competitions %}
+    <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}" class="comp-card">
+      <div class="comp-card-head">
+        <div class="comp-card-icon">
+          {% if competition.is_ongoing %}
+            <i class="fas fa-fire"></i>
+          {% elif competition.start_time > now %}
+            <i class="fas fa-hourglass-start"></i>
+          {% else %}
+            <i class="fas fa-flag-checkered"></i>
+          {% endif %}
+        </div>
+        <div class="comp-card-info">
+          <div class="comp-card-title">{{ competition.title }}</div>
+          <div class="comp-card-status">
+            {% if competition.is_ongoing %}
+              <span class="status-badge status-ongoing">
+                <span class="status-dot"></span>
+                <span data-i18n="status_ongoing">Live Now</span>
+              </span>
+            {% elif competition.start_time > now %}
+              <span class="status-badge status-not-started">
+                <span class="status-dot"></span>
+                <span data-i18n="status_upcoming">Upcoming</span>
+              </span>
             {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+              <span class="status-badge status-ended">
+                <span class="status-dot"></span>
+                <span data-i18n="status_ended">Ended</span>
+              </span>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
+          </div>
+        </div>
+      </div>
+      <div class="comp-card-body">
+        <div class="comp-date-row">
+          <div class="comp-date-item">
+            <i class="fas fa-calendar-plus"></i>
+            <span data-i18n="starts">Starts:</span>&nbsp;{{ competition.start_time|localtime }}
+          </div>
+          <div class="comp-date-item">
+            <i class="fas fa-calendar-check"></i>
+            <span data-i18n="ends">Ends:</span>&nbsp;{{ competition.end_time|localtime }}
+          </div>
+        </div>
+      </div>
+      <div class="comp-card-footer">
+        <span class="comp-enter-btn">
+          <i class="fas fa-arrow-right"></i>
+          <span data-i18n="view_details">View Details</span>
+        </span>
+        <i class="fas fa-chevron-right comp-arrow"></i>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-trophy"></i>
+    <h3 data-i18n="no_comp_title">No Competitions Yet</h3>
+    <p data-i18n="no_comp_desc">Check back soon for exciting new challenges!</p>
+  </div>
+  {% endif %}
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Educational Competitions</h1>
-        <p data-translate="hero-desc">Join fun learning challenges and earn XP and coins!</p>
-    </section>
+  <div style="text-align:center;">
+    <div class="time-pill">
+      <i class="fas fa-clock"></i>
+      <span data-i18n="current_time">Current time:</span>&nbsp;{{ now|localtime }}
+    </div>
+  </div>
+</main>
 
-    <!-- Competitions Section -->
-    <section class="competitions-container">
-        <h1 data-translate="competitions-list-title">List of Competitions</h1>
+<!-- ═══ FOOTER ══════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <span class="footer-brand">Eduvia</span>
+  <span class="footer-copy" data-i18n="footer_copy">© 2025 Eduvia & creativitycode. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="/about/" data-i18n="footer_about">About</a>
+    <a href="/contact_us/" data-i18n="footer_contact">Contact</a>
+    <a href="/competitions/" data-i18n="footer_competitions">Competitions</a>
+  </div>
+</footer>
 
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <p class="{% if message.tags %}{{ message.tags }}{% endif %}">
-                        <i class="fas fa-exclamation-triangle"></i> {{ message }}
-                    </p>
-                {% endfor %}
-            </div>
-        {% endif %}
+<script>
+/* ─── i18n ─────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    competitions:'Competitions', nav_home:'Home', nav_courses:'Courses',
+    nav_chatbot:'Chatbot', nav_competitions:'Competitions',
+    nav_performance:'Performance', nav_about:'About', nav_contact:'Contact',
+    nav_dashboard:'Dashboard', nav_subscribe:'Subscribe',
+    nav_profile:'Profile', nav_logout:'Logout', nav_login:'Login',
+    hero_title:'Educational <span>Competitions</span>',
+    hero_desc:'Join exciting learning challenges, answer questions, and earn XP and coins!',
+    stat_total:'Total Competitions', stat_ongoing:'Ongoing Now', stat_earn:'Earn Coins & XP',
+    list_title:'Competitions', create_competition:'Create Competition',
+    view_details:'View Details', starts:'Starts:', ends:'Ends:',
+    status_ongoing:'Live Now', status_upcoming:'Upcoming', status_ended:'Ended',
+    no_comp_title:'No Competitions Yet', no_comp_desc:'Check back soon!',
+    access_denied_title:'Access Restricted',
+    access_denied_desc:'You need to be enrolled in at least one course in the last two months to access competitions.',
+    browse_courses:'Browse Courses',
+    current_time:'Current time:',
+    footer_copy:'© 2025 Eduvia & creativitycode. All rights reserved.',
+    footer_about:'About', footer_contact:'Contact', footer_competitions:'Competitions',
+  },
+  ar: {
+    competitions:'المسابقات', nav_home:'الرئيسية', nav_courses:'الكورسات',
+    nav_chatbot:'الدردشة', nav_competitions:'المسابقات',
+    nav_performance:'الأداء', nav_about:'عنّا', nav_contact:'تواصل',
+    nav_dashboard:'لوحة التحكم', nav_subscribe:'اشتراك',
+    nav_profile:'الملف الشخصي', nav_logout:'تسجيل الخروج', nav_login:'تسجيل الدخول',
+    hero_title:'المسابقات <span>التعليمية</span>',
+    hero_desc:'انضم لتحديات تعليمية ممتعة، أجب على الأسئلة، واكسب XP وعملات!',
+    stat_total:'إجمالي المسابقات', stat_ongoing:'جارية الآن', stat_earn:'اكسب عملات و XP',
+    list_title:'المسابقات', create_competition:'إنشاء مسابقة',
+    view_details:'عرض التفاصيل', starts:'تبدأ:', ends:'تنتهي:',
+    status_ongoing:'جارية الآن', status_upcoming:'قريباً', status_ended:'انتهت',
+    no_comp_title:'لا توجد مسابقات بعد', no_comp_desc:'تحقق مرة أخرى قريباً!',
+    access_denied_title:'الوصول مقيّد',
+    access_denied_desc:'يجب الاشتراك في كورس واحد خلال آخر شهرين للوصول للمسابقات.',
+    browse_courses:'تصفح الكورسات',
+    current_time:'الوقت الحالي:',
+    footer_copy:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+    footer_about:'عنّا', footer_contact:'تواصل', footer_competitions:'المسابقات',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
 
-        <!-- رسالة منع الوصول إذا لم يكن مؤهلاً -->
-        {% if not user_can_access and user.is_authenticated %}
-            <div class="access-denied-box">
-                <div class="lock-icon"><i class="fas fa-lock"></i></div>
-                <h2>الوصول مقيّد</h2>
-                <p>يجب الاشتراك في كورس واحد على الأقل خلال آخر شهرين لاستخدام الشات بوت أو الدخول للمسابقات.</p>
-                <a href="/courses/" class="courses-btn">
-                    <i class="fas fa-book-open"></i> تصفح الكورسات
-                </a>
-            </div>
-        {% endif %}
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang] && I18N[lang][key]) {
+      if (key === 'hero_title') el.innerHTML = I18N[lang][key];
+      else el.textContent = I18N[lang][key];
+    }
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
 
-        {% if user.role == 'instructor' %}
-            <div class="create-competition">
-                <a href="{% url 'competitions:create_competition' %}" data-translate="create-competition-link">Create New Competition</a>
-            </div>
-        {% endif %}
+/* ─── Theme ─────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
 
-        <ul class="competitions-list">
-            {% for competition in competitions %}
-                <li class="competition-card">
-                    <a href="{% url 'competitions:competition_detail' competition.id competition.title|custom_slugify %}">{{ competition.title }}</a>
-                    <p data-translate="date-label">From: {{ competition.start_time|localtime }}<br>To: {{ competition.end_time|localtime }}</p>
-                    <p>
-                        {% if competition.is_ongoing %}
-                            <span class="status-ongoing" data-translate="status-ongoing">Ongoing</span>
-                        {% elif competition.start_time > now %}
-                            <span class="status-not-started" data-translate="status-not-started">Not Started</span>
-                        {% else %}
-                            <span class="status-ended" data-translate="status-ended">Ended</span>
-                        {% endif %}
-                    </p>
-                </li>
-            {% empty %}
-                <li class="no-competitions" data-translate="no-competitions">No competitions available.</li>
-            {% endfor %}
-        </ul>
-        <p class="current-time" data-translate="current-time-label">Current time: {{ now|localtime }}</p>
-    </section>
+/* ─── Mobile nav ────────────────────────────────────────────────────── */
+function openMobileNav() {
+  document.getElementById('nav-overlay').classList.add('open');
+  document.getElementById('nav-drawer').classList.add('open');
+}
+function closeMobileNav() {
+  document.getElementById('nav-overlay').classList.remove('open');
+  document.getElementById('nav-drawer').classList.remove('open');
+}
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+/* ─── Ongoing counter ────────────────────────────────────────────────── */
+function countOngoing() {
+  const cards = document.querySelectorAll('.status-ongoing');
+  document.getElementById('ongoing-count').textContent = cards.length;
+}
 
-    <script src="{% static 'competitions/competition_list.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const msgs = document.querySelectorAll('.messages p');
-            msgs.forEach(function (msg) {
-                setTimeout(function () {
-                    msg.style.opacity = '0';
-                    setTimeout(function () { msg.remove(); }, 500);
-                }, 5000);
-            });
-        });
-    </script>
+/* ─── Auto-dismiss messages ─────────────────────────────────────────── */
+function autoDismissMessages() {
+  setTimeout(() => {
+    const wrap = document.getElementById('messages-wrap');
+    if (wrap) { wrap.style.opacity = '0'; wrap.style.transition = 'opacity .5s'; setTimeout(()=>wrap.remove(),550); }
+  }, 5000);
+}
+
+/* ─── Init ───────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  countOngoing();
+  autoDismissMessages();
+});
+</script>
 </body>
 </html>

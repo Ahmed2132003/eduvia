@@ -1,168 +1,764 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="page-title">Community Feed - Eduvia</title>
-    <meta name="description" content="Engage with the Eduvia community through posts and discussions.">
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'mentorship/community_feed.css' %}">
-    <style>:root { --hero-bg-image: url("https://i.postimg.cc/3RbkxP2b/oppo3.jpg"); }</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="page_title">Community Feed — Eduvia</title>
+<meta name="description" content="Engage with the Eduvia community through posts and discussions.">
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0;
+  text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-page-label {
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-nav {
+  display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+}
+.topbar-nav a {
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.topbar-nav a:hover { color: var(--text-h); background: var(--bg-card); }
+.topbar-nav a.active { color: var(--accent); background: var(--violet-glow); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.coins-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2);
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700; color: var(--gold-400);
+}
+
+/* hamburger hidden on desktop */
+.hamburger { display: none; }
+
+/* ═══ HERO ══════════════════════════════════════════════════════════════ */
+.hero {
+  padding-top: var(--topbar-h);
+  background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -60px; right: -80px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.12), transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: ''; position: absolute; bottom: -40px; left: 10%;
+  width: 260px; height: 260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,191,36,.07), transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 900px; margin: 0 auto;
+  padding: 36px 28px 32px; position: relative; z-index: 1;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 5px 14px; font-size: 11px; font-weight: 700;
+  color: var(--violet-400); letter-spacing: .5px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -.5px; line-height: 1.2; margin-bottom: 8px;
+}
+.hero-sub { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+/* ═══ MAIN LAYOUT ════════════════════════════════════════════════════════ */
+.page-wrap {
+  max-width: 900px; margin: 0 auto;
+  padding: 28px 28px 80px;
+}
+
+/* ═══ ALERTS ═════════════════════════════════════════════════════════════ */
+.alert-strip {
+  background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.2);
+  border-radius: var(--radius-md); padding: 12px 16px;
+  font-size: 13px; color: var(--sky-400);
+  display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+}
+
+/* ═══ COMPOSE CARD ══════════════════════════════════════════════════════ */
+.compose-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 22px;
+  margin-bottom: 28px; box-shadow: var(--glow);
+  animation: cardReveal .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.compose-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.compose-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.compose-title {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
+}
+.compose-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.compose-textarea {
+  width: 100%; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 14px 16px; font-size: 14px; font-family: inherit;
+  line-height: 1.65; resize: vertical; min-height: 110px;
+  transition: var(--trans); margin-bottom: 12px;
+}
+.compose-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.12); }
+.compose-textarea::placeholder { color: var(--text-muted); }
+
+.compose-url-field {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+}
+.compose-url-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: rgba(56,189,248,.08); color: var(--sky-400);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0; border: 1px solid rgba(56,189,248,.15);
+}
+.compose-url-field input {
+  flex: 1; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text-p);
+  padding: 10px 13px; font-size: 13px; font-family: inherit;
+  transition: var(--trans);
+}
+.compose-url-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
+.compose-url-field input::placeholder { color: var(--text-muted); }
+.compose-url-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.compose-url-hint a { color: var(--accent); text-decoration: none; }
+
+.compose-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border); padding-top: 14px;
+}
+.char-count { font-size: 11px; color: var(--text-muted); }
+
+.post-btn {
+  padding: 10px 28px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
+  color: #fff; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: var(--trans);
+  box-shadow: 0 4px 18px rgba(139,92,246,.3);
+}
+.post-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,92,246,.4); }
+
+/* ═══ FEED ═══════════════════════════════════════════════════════════════ */
+.feed { display: flex; flex-direction: column; gap: 18px; }
+
+.post-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  transition: var(--trans); box-shadow: var(--glow);
+  animation: cardReveal .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+.post-card:hover { border-color: var(--border-glow); transform: translateY(-2px); }
+
+.post-head {
+  padding: 18px 20px 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.post-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 2px solid var(--border-glow);
+}
+.post-avatar-fallback {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 800; color: #fff; flex-shrink: 0;
+  border: 2px solid var(--border-glow);
+}
+.post-author-info { flex: 1; }
+.post-author-name { font-size: 14px; font-weight: 600; color: var(--text-h); }
+.post-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+
+.post-body { padding: 0 20px 16px; }
+.post-text { font-size: 14px; color: var(--text-p); line-height: 1.7; margin-bottom: 12px; }
+.post-text a { color: var(--accent); }
+.post-image {
+  width: 100%; border-radius: var(--radius-md);
+  border: 1px solid var(--border); object-fit: cover;
+  max-height: 380px;
+}
+
+/* Actions */
+.post-actions {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 12px 20px; border-top: 1px solid var(--border);
+  background: var(--bg-card-2);
+}
+.action-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 99px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-muted);
+  transition: var(--trans); font-family: inherit;
+  text-decoration: none;
+}
+.action-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+.action-btn.like-active { border-color: var(--success); color: var(--success); background: rgba(52,211,153,.08); }
+.action-btn.dislike-active { border-color: var(--danger); color: var(--danger); background: rgba(251,113,133,.08); }
+.action-btn.comment-link { border-color: rgba(56,189,248,.25); color: var(--sky-400); background: rgba(56,189,248,.07); }
+.action-btn.comment-link:hover { background: rgba(56,189,248,.14); }
+.action-count {
+  background: var(--bg-base); border-radius: 99px;
+  padding: 1px 7px; font-size: 10px; font-weight: 800;
+}
+
+/* Comments section */
+.comments-section {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+}
+.comments-section-title {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--text-muted); padding: 14px 0 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.comments-list-inner { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.comment-item {
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.c-avatar-sm {
+  width: 30px; height: 30px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 1.5px solid var(--border);
+}
+.c-avatar-sm-fallback {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.c-bubble {
+  flex: 1; background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 10px 13px;
+}
+.c-bubble-name { font-size: 12px; font-weight: 700; color: var(--text-h); margin-bottom: 4px; }
+.c-bubble-text { font-size: 13px; color: var(--text-p); line-height: 1.55; }
+.c-bubble-date { font-size: 10px; color: var(--text-muted); margin-top: 5px; }
+
+.comment-compose-row {
+  display: flex; gap: 10px; align-items: flex-end;
+}
+.comment-compose-row textarea {
+  flex: 1; background: var(--bg-base); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-p);
+  padding: 10px 13px; font-size: 13px; font-family: inherit;
+  line-height: 1.55; resize: none; min-height: 48px;
+  transition: var(--trans);
+}
+.comment-compose-row textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
+.comment-compose-row textarea::placeholder { color: var(--text-muted); }
+.comment-send-btn {
+  width: 42px; height: 42px; border-radius: var(--radius-sm);
+  border: none; background: var(--accent); color: #fff;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: var(--trans); flex-shrink: 0;
+}
+.comment-send-btn:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
+.empty-state i { font-size: 44px; display: block; margin-bottom: 12px; opacity: .2; }
+.empty-state p { font-size: 15px; }
+
+/* ═══ TOAST ═══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+.footer {
+  background: var(--bg-panel); border-top: 1px solid var(--border);
+  padding: 22px 28px; text-align: center;
+  color: var(--text-muted); font-size: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* ═══ SPINNER ════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ MOBILE ═════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .topbar-nav { display: none; }
+  .topbar { padding: 0 14px; }
+  .hero-title { font-size: 24px; }
+  .hero-inner { padding: 24px 16px 20px; }
+  .page-wrap { padding: 20px 14px 60px; }
+}
+</style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></div>
-            <div class="language-toggle" onclick="toggleLanguage()"><i class="fas fa-globe"></i></div>
-        </nav>
-    </header>
 
-    <div class="container mt-4">
-        <h1 data-translate="feed-heading">Community Feed</h1>
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-page-label"><i class="fas fa-users" style="margin-right:5px;color:var(--accent)"></i><span data-i18n="community_feed">Community Feed</span></span>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-info">{{ message }}</div>
-            {% endfor %}
+  <nav class="topbar-nav">
+    <a href="/" data-i18n="home">Home</a>
+    <a href="/courses/" data-i18n="courses">Courses</a>
+    <a href="/chatbot/" data-i18n="chatbot">Chatbot</a>
+    <a href="/competitions/" data-i18n="competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="performance">Performance</a>
+    <a href="/skills_market/" data-i18n="skills_market">Skills Market</a>
+    <a href="/about/" data-i18n="about">About</a>
+    <a href="/contact_us/" data-i18n="contact">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" data-i18n="profile">Profile</a>
+      <a href="/accounts/logout/" data-i18n="logout">Logout</a>
+    {% else %}
+      <a href="/accounts/register/" data-i18n="login">Login</a>
+    {% endif %}
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-badge">
+      <i class="fas fa-coins"></i>
+      <span>{{ user.courses_profile.coins }}</span>
+    </div>
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ── HERO ───────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><i class="fas fa-users"></i> <span data-i18n="community">Community</span></div>
+    <h1 class="hero-title" data-i18n="feed_title">Community Feed</h1>
+    <p class="hero-sub" data-i18n="feed_sub">Share thoughts, ask questions, and engage with fellow learners.</p>
+  </div>
+</section>
+
+<!-- ── MAIN ────────────────────────────────────────────────────────────── -->
+<main class="page-wrap">
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert-strip">
+    <i class="fas fa-info-circle"></i> {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <!-- Compose -->
+  <div class="compose-card">
+    <div class="compose-header">
+      {% if user.is_authenticated %}
+      <div class="compose-avatar">{{ user.username|slice:":1"|upper }}</div>
+      {% else %}
+      <div class="compose-avatar"><i class="fas fa-user"></i></div>
+      {% endif %}
+      <div>
+        <div class="compose-title" data-i18n="share_title">Share with the community</div>
+        <div class="compose-sub" data-i18n="share_sub">Programming tips, resources, and discussions</div>
+      </div>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <textarea name="post_content" class="compose-textarea"
+        rows="4" maxlength="2000"
+        placeholder="Share something about programming or the job market…"
+        data-i18n-placeholder="post_placeholder"
+        oninput="document.getElementById('compose-char').textContent = this.value.length + ' / 2000'"></textarea>
+      <div class="compose-url-field">
+        <div class="compose-url-icon"><i class="fas fa-image"></i></div>
+        <div style="flex:1;">
+          <input type="url" name="image_file"
+            placeholder="Image URL (optional — e.g. https://i.postimg.cc/…)"
+            data-i18n-placeholder="img_placeholder">
+          <div class="compose-url-hint" data-i18n="img_hint">
+            Upload to <a href="https://postimg.cc/" target="_blank" rel="noopener">PostImage</a> and paste the link here.
+          </div>
+        </div>
+      </div>
+      <div class="compose-footer">
+        <span class="char-count" id="compose-char">0 / 2000</span>
+        <button type="submit" class="post-btn">
+          <i class="fas fa-paper-plane"></i>
+          <span data-i18n="post_btn">Post</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Feed -->
+  <div class="feed">
+    {% for post in posts %}
+    <div class="post-card">
+      <div class="post-head">
+        <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}"
+             alt="{{ post.author.username }}"
+             class="post-avatar"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="post-avatar-fallback" style="display:none;">{{ post.author.username|slice:":1"|upper }}</div>
+        <div class="post-author-info">
+          <div class="post-author-name">{{ post.author.get_full_name|default:post.author.username }}</div>
+          <div class="post-date"><i class="fas fa-clock"></i> {{ post.created_at }}</div>
+        </div>
+      </div>
+
+      <div class="post-body">
+        <div class="post-text">{{ post.content|urlize }}</div>
+        {% if post.image_file %}
+        <img src="{{ post.image_file }}" alt="Post image" class="post-image"
+             onerror="this.style.display='none'">
         {% endif %}
+      </div>
 
-        <!-- نموذج إنشاء منشور جديد - متاح لجميع المستخدمين المؤهلين -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="form-group mb-2">
-                        <textarea name="post_content" class="form-control" rows="3"
-                                  placeholder="Share something about programming or the job market..."
-                                  data-translate-placeholder="post-placeholder"></textarea>
-                    </div>
-                    <div class="form-group mb-2">
-                        <input type="url" name="image_file" class="form-control"
-                               placeholder="Image URL (optional - e.g., https://i.postimg.cc/...)"
-                               data-translate-placeholder="image-placeholder">
-                        <small>Upload your image to <a href="https://postimg.cc/" target="_blank">PostImage</a> and paste the link.</small>
-                    </div>
-                    <button type="submit" class="btn btn-primary" data-translate="post-button">Post</button>
-                </form>
+      <!-- Actions -->
+      <div class="post-actions">
+        <form method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="post_id" value="{{ post.id }}">
+          <input type="hidden" name="like_post" value="true">
+          <button type="submit" class="action-btn {% if request.user in post.likes.all %}like-active{% endif %}">
+            <i class="fas fa-heart"></i>
+            <span>{% if request.user in post.likes.all %}<span data-i18n="unlike">Unlike</span>{% else %}<span data-i18n="like">Like</span>{% endif %}</span>
+            <span class="action-count">{{ post.likes.count }}</span>
+          </button>
+        </form>
+        <form method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="post_id" value="{{ post.id }}">
+          <input type="hidden" name="dislike_post" value="true">
+          <button type="submit" class="action-btn {% if request.user in post.dislikes.all %}dislike-active{% endif %}">
+            <i class="fas fa-thumbs-down"></i>
+            <span>{% if request.user in post.dislikes.all %}<span data-i18n="remove_dislike">Remove Dislike</span>{% else %}<span data-i18n="dislike">Dislike</span>{% endif %}</span>
+            <span class="action-count">{{ post.dislikes.count }}</span>
+          </button>
+        </form>
+        <a href="{% url 'mentorship:post_comments' post_id=post.id %}" class="action-btn comment-link">
+          <i class="fas fa-comment-alt"></i>
+          <span data-i18n="comments">Comments</span>
+          <span class="action-count">{{ post.mentorship_comments.count }}</span>
+        </a>
+      </div>
+
+      <!-- Comments -->
+      <div class="comments-section">
+        <div class="comments-section-title">
+          <i class="fas fa-comments"></i>
+          <span data-i18n="recent_comments">Recent Comments</span>
+        </div>
+        <div class="comments-list-inner">
+          {% for comment in post.mentorship_comments.all %}
+          <div class="comment-item">
+            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}"
+                 alt="{{ comment.author.username }}" class="c-avatar-sm"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="c-avatar-sm-fallback" style="display:none;">{{ comment.author.username|slice:":1"|upper }}</div>
+            <div class="c-bubble">
+              <div class="c-bubble-name">{{ comment.author.get_full_name|default:comment.author.username }}</div>
+              <div class="c-bubble-text">{{ comment.content|urlize }}</div>
+              <div class="c-bubble-date">{{ comment.created_at }}</div>
             </div>
+          </div>
+          {% empty %}
+          <p style="font-size:12px;color:var(--text-muted);padding:6px 0;" data-i18n="no_comments">No comments yet.</p>
+          {% endfor %}
         </div>
 
-        <!-- عرض المنشورات -->
-        {% for post in posts %}
-            <div class="post">
-                <div class="post-header">
-                    <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}"
-                         alt="{{ post.author.username }}'s profile" class="profile-pic">
-                    <strong>{{ post.author.username }}</strong>
-                    <small class="text-muted ms-2">{{ post.created_at }}</small>
-                </div>
-                <div class="post-content">
-                    {{ post.content|urlize }}
-                    {% if post.image_file %}
-                        <img src="{{ post.image_file }}" alt="Post image" class="post-image"
-                             onerror="this.src='https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png'">
-                    {% endif %}
-                </div>
-                <div class="post-actions">
-                    <div class="post-action-btn">
-                        <form method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="post_id" value="{{ post.id }}">
-                            <input type="hidden" name="like_post" value="true">
-                            <button type="submit"
-                                    class="btn btn-sm btn-{% if request.user in post.likes.all %}danger{% else %}success{% endif %}">
-                                {% if request.user in post.likes.all %}Unlike{% else %}Like{% endif %}
-                                ({{ post.likes.count }})
-                            </button>
-                        </form>
-                    </div>
-                    <div class="post-action-btn">
-                        <form method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="post_id" value="{{ post.id }}">
-                            <input type="hidden" name="dislike_post" value="true">
-                            <button type="submit"
-                                    class="btn btn-sm btn-{% if request.user in post.dislikes.all %}danger{% else %}warning{% endif %}">
-                                {% if request.user in post.dislikes.all %}Remove Dislike{% else %}Dislike{% endif %}
-                                ({{ post.dislikes.count }})
-                            </button>
-                        </form>
-                    </div>
-                    <div class="post-action-btn">
-                        <a href="{% url 'mentorship:post_comments' post_id=post.id %}" class="show-comments">
-                            Comments ({{ post.mentorship_comments.count }})
-                        </a>
-                    </div>
-                </div>
-
-                <!-- تعليقات -->
-                <div class="comments-section">
-                    {% for comment in post.mentorship_comments.all %}
-                        <div class="comment">
-                            <img src="{% if comment.author.profile.profile_picture %}{{ comment.author.profile.profile_picture }}{% else %}https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png{% endif %}"
-                                 alt="{{ comment.author.username }}" class="profile-pic">
-                            <div class="comment-content">
-                                <strong>{{ comment.author.username }}</strong>
-                                <p>{{ comment.content|urlize }}</p>
-                                <small class="text-muted">{{ comment.created_at }}</small>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <p class="text-muted" data-translate="no-comments">No comments yet.</p>
-                    {% endfor %}
-
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="post_id" value="{{ post.id }}">
-                        <div class="form-group">
-                            <textarea name="comment_content" class="form-control" rows="2"
-                                      placeholder="Write a comment..."
-                                      data-translate-placeholder="comment-placeholder"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-secondary"
-                                data-translate="comment-button">Comment</button>
-                    </form>
-                </div>
-            </div>
-        {% empty %}
-            <p class="text-center" data-translate="no-posts">No posts yet!</p>
-        {% endfor %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="post_id" value="{{ post.id }}">
+          <div class="comment-compose-row">
+            <textarea name="comment_content" rows="1"
+              placeholder="Write a comment…"
+              data-i18n-placeholder="comment_placeholder"></textarea>
+            <button type="submit" class="comment-send-btn" title="Send">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+    {% empty %}
+    <div class="empty-state">
+      <i class="fas fa-comments"></i>
+      <p data-i18n="no_posts">No posts yet! Be the first to share something.</p>
+    </div>
+    {% endfor %}
+  </div>
 
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+</main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'mentorship/community_feed.js' %}"></script>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <i class="fas fa-graduation-cap" style="color:var(--accent)"></i>
+  <span data-i18n="footer_text">© 2025 Eduvia and creativitycode. All rights reserved.</span>
+  <span>·</span>
+  <a href="/about/" data-i18n="about">About</a>
+  <span>·</span>
+  <a href="/contact_us/" data-i18n="contact">Contact</a>
+</footer>
+
+<script>
+/* ── i18n ──────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    page_title:'Community Feed — Eduvia', community:'Community',
+    community_feed:'Community Feed', home:'Home', courses:'Courses',
+    chatbot:'Chatbot', competitions:'Competitions', performance:'Performance',
+    skills_market:'Skills Market', about:'About', contact:'Contact',
+    dashboard:'Dashboard', profile:'Profile', logout:'Logout', login:'Login',
+    feed_title:'Community Feed',
+    feed_sub:'Share thoughts, ask questions, and engage with fellow learners.',
+    share_title:'Share with the community',
+    share_sub:'Programming tips, resources, and discussions',
+    post_placeholder:'Share something about programming or the job market…',
+    img_placeholder:'Image URL (optional)',
+    img_hint:'Upload to PostImage and paste the link here.',
+    post_btn:'Post', like:'Like', unlike:'Unlike', dislike:'Dislike',
+    remove_dislike:'Remove Dislike', comments:'Comments',
+    recent_comments:'Recent Comments', no_comments:'No comments yet.',
+    comment_placeholder:'Write a comment…', no_posts:'No posts yet!',
+    footer_text:'© 2025 Eduvia and creativitycode. All rights reserved.',
+  },
+  ar: {
+    page_title:'المجتمع — Eduvia', community:'المجتمع',
+    community_feed:'مجتمع الطلاب', home:'الرئيسية', courses:'الكورسات',
+    chatbot:'الدردشة الذكية', competitions:'المسابقات', performance:'الأداء',
+    skills_market:'سوق المهارات', about:'من نحن', contact:'تواصل معنا',
+    dashboard:'لوحة التحكم', profile:'الملف الشخصي', logout:'تسجيل خروج', login:'تسجيل الدخول',
+    feed_title:'مجتمع الطلاب',
+    feed_sub:'شارك أفكارك، اطرح أسئلة، وتفاعل مع زملائك.',
+    share_title:'شارك مع المجتمع',
+    share_sub:'نصائح برمجية، موارد تعليمية، ونقاشات.',
+    post_placeholder:'شارك شيئاً عن البرمجة أو سوق العمل…',
+    img_placeholder:'رابط الصورة (اختياري)',
+    img_hint:'ارفع الصورة على PostImage والصق الرابط هنا.',
+    post_btn:'نشر', like:'إعجاب', unlike:'إلغاء الإعجاب', dislike:'عدم الإعجاب',
+    remove_dislike:'إلغاء عدم الإعجاب', comments:'تعليقات',
+    recent_comments:'آخر التعليقات', no_comments:'لا توجد تعليقات بعد.',
+    comment_placeholder:'اكتب تعليقاً…', no_posts:'لا توجد منشورات بعد!',
+    footer_text:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (I18N[lang]?.[key]) el.placeholder = I18N[lang][key];
+  });
+  document.title = I18N[lang].page_title || document.title;
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Toast ─────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+});
+</script>
 </body>
 </html>

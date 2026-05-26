@@ -1,174 +1,472 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="page_title">Contact Us — Eduvia</title>
+<meta name="description" content="Contact Eduvia for support and inquiries about our online courses. Our team is here to assist you anytime!">
+<meta name="keywords" content="Eduvia, contact us, online courses, education platform, customer support">
+<meta name="author" content="Eduvia">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://eduvia-ai.fly.dev/contact_us/">
+<meta property="og:title" content="Contact Us - Eduvia">
+<meta property="og:description" content="Reach out to Eduvia's support team for assistance with online courses and platform inquiries.">
+<meta property="og:image" content="https://i.postimg.cc/nzTSf5ZG/about-us1.jpg">
+<meta property="og:url" content="https://eduvia-ai.fly.dev/contact_us/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.postimg.cc/nzTSf5ZG/about-us1.jpg">
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🔍 SEO -->
-    <title data-translate="title">Contact Us - Eduvia</title>
-    <meta name="description" content="Contact Eduvia for support and inquiries about our online courses. Our team is here to assist you anytime!">
-    <meta name="keywords" content="Eduvia, contact us, online courses, education platform, customer support">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/contact_us/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://eduvia-ai.fly.dev/#organization","name":"Eduvia","url":"https://eduvia-ai.fly.dev","logo":{"@type":"ImageObject","url":"https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"}},{"@type":"WebPage","@id":"https://eduvia-ai.fly.dev/contact_us/#webpage","url":"https://eduvia-ai.fly.dev/contact_us/","name":"Contact Us - Eduvia","inLanguage":"en"}]}
+</script>
 
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Contact Us - Eduvia">
-    <meta property="og:description" content="Reach out to Eduvia's support team for assistance with online courses and platform inquiries.">
-    <meta property="og:image" content="https://i.postimg.cc/nzTSf5ZG/about-us1.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/contact_us/">
-    <meta property="og:type" content="website">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-base:#080b14;--bg-panel:#0d1120;--bg-card:#131929;
+  --bg-card-2:#1a2236;--bg-hover:#1e2840;
+  --border:rgba(120,130,180,.12);--border-glow:rgba(139,92,246,.25);
+  --violet-400:#a78bfa;--violet-500:#8b5cf6;--violet-600:#7c3aed;
+  --violet-glow:rgba(139,92,246,.18);
+  --gold-400:#fbbf24;--emerald-400:#34d399;--emerald-500:#10b981;
+  --rose-400:#fb7185;--sky-400:#38bdf8;--sky-500:#0ea5e9;
+  --text-h:#f1f5ff;--text-p:#94a3c4;--text-muted:#5a6585;
+  --accent:var(--violet-500);--accent-d:var(--violet-600);
+  --success:var(--emerald-400);--warning:var(--gold-400);
+  --radius-sm:6px;--radius-md:12px;--radius-lg:18px;--radius-xl:24px;
+  --topbar-h:62px;--trans:all .22s cubic-bezier(.4,0,.2,1);
+  --glow:0 0 40px rgba(139,92,246,.15);
+  --font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
+  --font-arabic:'Cairo',sans-serif;
+}
+[data-theme="light"]{
+  --bg-base:#f4f6fc;--bg-panel:#ffffff;--bg-card:#f8faff;
+  --bg-card-2:#eef2fc;--border:rgba(100,110,160,.14);
+  --border-glow:rgba(139,92,246,.3);
+  --text-h:#0f172a;--text-p:#374365;--text-muted:#8896b3;
+  --violet-glow:rgba(139,92,246,.1);--glow:0 0 40px rgba(139,92,246,.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-p);min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s}
+[lang="ar"] body,[lang="ar"] *{font-family:var(--font-arabic),sans-serif!important}
+[lang="ar"]{direction:rtl}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg-base)}
+::-webkit-scrollbar-thumb{background:var(--bg-card-2);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Contact Us - Eduvia">
-    <meta name="twitter:description" content="Get in touch with Eduvia's team for support with your learning journey.">
-    <meta name="twitter:image" content="https://i.postimg.cc/nzTSf5ZG/about-us1.jpg">
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:600;height:var(--topbar-h);background:rgba(8,11,20,.88);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px}
+[data-theme="light"] .topbar{background:rgba(255,255,255,.88)}
+.topbar-logo{font-family:var(--font-display);font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--violet-400),var(--gold-400));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px;flex-shrink:0;text-decoration:none}
+.topbar-spacer{flex:1}
+.topbar-nav{display:flex;align-items:center;gap:4px}
+.topbar-nav a{font-size:13px;font-weight:500;color:var(--text-muted);text-decoration:none;padding:6px 10px;border-radius:var(--radius-sm);transition:var(--trans);white-space:nowrap}
+.topbar-nav a:hover{color:var(--text-h);background:var(--bg-card)}
+.topbar-nav a.active{color:var(--accent)}
+.topbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ctrl-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text-p);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--trans)}
+.ctrl-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--violet-glow)}
+.tb-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:var(--trans);font-family:inherit}
+.tb-btn-accent{background:var(--accent);color:#fff}
+.tb-btn-accent:hover{background:var(--accent-d);transform:translateY(-1px)}
+.coins-chip{display:flex;align-items:center;gap:5px;background:var(--bg-card);border:1px solid var(--border);border-radius:99px;padding:4px 12px;font-size:12px;color:var(--warning);font-weight:600}
+.ham-btn{display:none;width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);color:var(--text-p);font-size:16px;align-items:center;justify-content:center;cursor:pointer;transition:var(--trans)}
+.ham-btn:hover{border-color:var(--accent);color:var(--accent)}
+.mobile-nav{display:none;position:fixed;top:var(--topbar-h);left:0;right:0;background:var(--bg-panel);border-bottom:1px solid var(--border);z-index:500;padding:12px;flex-direction:column;gap:4px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.mobile-nav.open{display:flex}
+.mobile-nav a{font-size:14px;font-weight:500;color:var(--text-p);text-decoration:none;padding:10px 14px;border-radius:var(--radius-sm);transition:var(--trans);display:block}
+.mobile-nav a:hover{background:var(--bg-card);color:var(--accent)}
 
-    <!-- 🖼️ Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+main{padding-top:var(--topbar-h)}
 
-    <!-- 🌐 Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+/* ── HERO ── */
+.hero{position:relative;padding:100px 24px 80px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;min-height:55vh}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(56,189,248,.15),transparent),radial-gradient(ellipse 40% 30% at 90% 90%,rgba(52,211,153,.06),transparent),var(--bg-base)}
+[data-theme="light"] .hero-bg{background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(56,189,248,.08),transparent),var(--bg-base)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 20%,transparent 100%)}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.hero-orb-1{width:500px;height:500px;top:-80px;left:-80px;background:rgba(56,189,248,.08)}
+.hero-orb-2{width:300px;height:300px;bottom:0;right:-50px;background:rgba(52,211,153,.05)}
+.hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);border-radius:99px;padding:6px 16px;font-size:12px;font-weight:700;color:var(--sky-400);letter-spacing:.5px;text-transform:uppercase;margin-bottom:24px;animation:fadeUp .6s ease both}
+.hero-h1{font-family:var(--font-display);font-size:clamp(32px,5vw,60px);font-weight:800;color:var(--text-h);line-height:1.1;letter-spacing:-1px;margin-bottom:18px;animation:fadeUp .7s .1s ease both}
+.hero-h1 .accent-sky{background:linear-gradient(135deg,var(--sky-400),var(--emerald-400));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:17px;color:var(--text-p);line-height:1.65;max-width:500px;margin:0 auto;animation:fadeUp .7s .2s ease both}
 
-    <!-- 🎨 Styles -->
-    <link rel="stylesheet" href="{% static 'pages/contact_us.css' %}">
+/* ── CONTACT SECTION ── */
+.contact-section{max-width:1000px;margin:0 auto;padding:80px 24px}
 
-    <!-- 🖼️ Hero Background -->
-    <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/nzTSf5ZG/about-us1.jpg");
-        }
-    </style>
+.section-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--sky-400);margin-bottom:12px}
+.section-h2{font-family:var(--font-display);font-size:clamp(24px,4vw,40px);font-weight:800;color:var(--text-h);letter-spacing:-.5px;margin-bottom:14px}
 
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/contact_us/#webpage",
-                "url": "https://eduvia-ai.fly.dev/contact_us/",
-                "name": "Contact Us - Eduvia",
-                "description": "Contact Eduvia for support and inquiries about our online courses. Our team is here to assist you anytime!",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/contact_us/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/contact_us/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Contact Us",
-                        "item": "https://eduvia-ai.fly.dev/contact_us/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
+/* Intro card */
+.intro-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-left:3px solid var(--sky-500);border-radius:var(--radius-xl);
+  padding:36px;margin-bottom:48px;box-shadow:0 0 40px rgba(14,165,233,.1);
+  animation:cardReveal .5s ease both;
+}
+[lang="ar"] .intro-card{border-left:none;border-right:3px solid var(--sky-500)}
+.intro-icon{width:52px;height:52px;border-radius:var(--radius-lg);background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--sky-400);margin-bottom:18px}
+.intro-title{font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--text-h);margin-bottom:10px}
+.intro-text{font-size:15px;color:var(--text-p);line-height:1.8;margin-bottom:6px}
+
+/* Social grid */
+.social-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:16px;margin-bottom:48px;
+}
+.social-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:22px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  text-decoration:none;transition:var(--trans);
+  animation:cardReveal .5s ease both;text-align:center;
+}
+.social-card:hover{transform:translateY(-5px);border-color:var(--card-color, var(--border-glow));box-shadow:0 16px 40px rgba(0,0,0,.25)}
+.social-card-icon{
+  width:52px;height:52px;border-radius:var(--radius-md);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;transition:var(--trans);
+}
+.social-card-name{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text-h)}
+.social-card-handle{font-size:12px;color:var(--text-muted)}
+.social-card-arrow{font-size:11px;color:var(--text-muted);transition:var(--trans)}
+.social-card:hover .social-card-arrow{color:var(--accent);transform:translateX(3px)}
+[lang="ar"] .social-card:hover .social-card-arrow{transform:translateX(-3px)}
+
+/* Platform-specific colors */
+.sc-facebook{--card-color:rgba(24,119,242,.3)}
+.sc-facebook .social-card-icon{background:rgba(24,119,242,.12);color:#1877f2;border:1px solid rgba(24,119,242,.25)}
+.sc-instagram{--card-color:rgba(225,48,108,.3)}
+.sc-instagram .social-card-icon{background:rgba(225,48,108,.1);color:#e1306c;border:1px solid rgba(225,48,108,.25)}
+.sc-whatsapp{--card-color:rgba(37,211,102,.3)}
+.sc-whatsapp .social-card-icon{background:rgba(37,211,102,.1);color:#25d366;border:1px solid rgba(37,211,102,.25)}
+.sc-linkedin{--card-color:rgba(10,102,194,.3)}
+.sc-linkedin .social-card-icon{background:rgba(10,102,194,.1);color:#0a66c2;border:1px solid rgba(10,102,194,.25)}
+.sc-github{--card-color:rgba(110,118,129,.3)}
+.sc-github .social-card-icon{background:rgba(110,118,129,.1);color:var(--text-p);border:1px solid rgba(110,118,129,.25)}
+.sc-tiktok{--card-color:rgba(255,0,80,.3)}
+.sc-tiktok .social-card-icon{background:rgba(255,0,80,.08);color:#ff0050;border:1px solid rgba(255,0,80,.2)}
+.sc-youtube{--card-color:rgba(255,0,0,.3)}
+.sc-youtube .social-card-icon{background:rgba(255,0,0,.08);color:#ff0000;border:1px solid rgba(255,0,0,.2)}
+.sc-x{--card-color:rgba(120,130,180,.3)}
+.sc-x .social-card-icon{background:rgba(120,130,180,.1);color:var(--text-p);border:1px solid rgba(120,130,180,.2)}
+
+/* Stagger */
+.social-card:nth-child(1){animation-delay:.05s}
+.social-card:nth-child(2){animation-delay:.1s}
+.social-card:nth-child(3){animation-delay:.15s}
+.social-card:nth-child(4){animation-delay:.2s}
+.social-card:nth-child(5){animation-delay:.25s}
+.social-card:nth-child(6){animation-delay:.3s}
+.social-card:nth-child(7){animation-delay:.35s}
+.social-card:nth-child(8){animation-delay:.4s}
+
+/* Support card */
+.support-card{
+  background:linear-gradient(135deg,var(--bg-card-2),var(--bg-card));
+  border:1px solid var(--border-glow);border-radius:var(--radius-xl);
+  padding:36px;display:flex;align-items:center;gap:28px;flex-wrap:wrap;
+  box-shadow:var(--glow);margin-bottom:0;
+}
+.support-icon{
+  width:60px;height:60px;border-radius:var(--radius-lg);flex-shrink:0;
+  background:var(--violet-glow);border:1px solid var(--border-glow);
+  display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--violet-400);
+}
+.support-info{flex:1}
+.support-title{font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--text-h);margin-bottom:6px}
+.support-text{font-size:14px;color:var(--text-p);line-height:1.7}
+.btn-primary{padding:13px 28px;border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;border:none;background:linear-gradient(135deg,var(--violet-500),var(--accent-d));color:#fff;font-family:var(--font-display);display:inline-flex;align-items:center;gap:8px;transition:var(--trans);position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(139,92,246,.35);text-decoration:none;white-space:nowrap}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);border-radius:inherit}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,.45)}
+
+/* ── FOOTER ── */
+footer{background:var(--bg-panel);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+.footer-inner{max-width:1000px;margin:0 auto}
+.footer-logo{font-family:var(--font-display);font-size:24px;font-weight:800;background:linear-gradient(135deg,var(--violet-400),var(--gold-400));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;display:inline-block}
+.footer-links{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.footer-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:var(--trans)}
+.footer-links a:hover{color:var(--accent)}
+.footer-socials{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px}
+.social-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:14px;text-decoration:none;transition:var(--trans)}
+.social-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--violet-glow)}
+.footer-divider{width:100%;height:1px;background:var(--border);margin-bottom:20px}
+.footer-copy{font-size:12px;color:var(--text-muted);line-height:1.7}
+.footer-copy strong{color:var(--violet-400)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardReveal{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+@media(max-width:960px){.topbar-nav{display:none}.ham-btn{display:flex}.topbar{padding:0 16px;gap:10px}}
+@media(max-width:640px){.contact-section{padding:48px 16px}.social-grid{grid-template-columns:1fr 1fr}.support-card{flex-direction:column;text-align:center}.hero{min-height:50vh}}
+@media(max-width:400px){.social-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title">Contact Us</h1>
-        <p data-translate="hero-subtitle">Our team is ready to answer your questions and support your learning journey</p>
-    </section>
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <nav class="topbar-nav">
+    <a href="/" data-i18n="nav_home">Home</a>
+    <a href="/courses/" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" data-i18n="nav_competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
+    <a href="/about/" data-i18n="nav_about">About Us</a>
+    <a href="/contact_us/" class="active" data-i18n="nav_contact">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="nav_dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
+      <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
+    {% else %}
+      <a href="/accounts/register/" data-i18n="nav_login">Login</a>
+    {% endif %}
+  </nav>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-chip"><i class="fas fa-coins"></i><span>{{ user.courses_profile.coins }}</span></div>
+    {% endif %}
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon"></i></button>
+    <button class="ctrl-btn" onclick="toggleLang()"><i class="fas fa-globe"></i></button>
+    {% if not user.is_authenticated %}
+    <a href="{% url 'accounts:subscribe' %}" class="tb-btn tb-btn-accent" data-i18n="nav_subscribe">Subscribe</a>
+    {% endif %}
+    <button class="ham-btn" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <h3 data-translate="content-title">We are here to help you anytime</h3>
-        <div class="content">
-            <p data-translate="content-desc1">If you need any assistance, please feel free to contact us. Our support team is always available to answer all your queries.</p>
-            <p data-translate="content-desc2">You can reach us through the following channels or via social media.</p>
-        </div>
-        <div class="social-buttons">
-            <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" class="facebook" data-translate="social-facebook">Facebook</a>
-            <a href="https://www.instagram.com/eduv.ia/" target="_blank" class="instagram" data-translate="social-instagram">Instagram</a>
-            <a href="https://wa.me/201029102507" target="_blank" class="whatsapp" data-translate="social-whatsapp">WhatsApp</a>
-            <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" class="linkedin" data-translate="social-linkedin">LinkedIn</a>
-            <a href="https://l.facebook.com/l.php?u=https%3A%2F%2Fgithub.com%2Feduvia-ai%3Ffbclid%3DIwZXh0bgNhZW0CMTAAYnJpZBExZ1JGdENXQnRCWnp1dTBvSQEeExYWptACTRurlVFf_aDt77b-kcqFiHOP4UpmLlpIf7sXgzdHRSwVAJUFGGU_aem_R7-TPDlTJZWduv1h3nihaQ&h=AT2crUcDIDkTIw77hLwEly646D2dxOrbwPAJ3XbsJCUCO5WaX1niaa7siIKeZIqWpnVoU4WF1QzfX3QQl7qtrFChE9Yn_v2nzRKpvh-69-xDqxhsnnusUVG95uYzXOPNdXoc" target="_blank" class="github" data-translate="social-github">GitHub</a>
-            <a href="https://www.tiktok.com/@eduvia7?is_from_webapp=1&sender_device=pc" target="_blank" class="tiktok" data-translate="social-tiktok">TikTok</a>
-            <a href="https://www.youtube.com/@Eduvia-ai-creativitycode" target="_blank" class="youtube" data-translate="social-youtube">YouTube</a>
-        </div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/" data-i18n="nav_home">Home</a>
+  <a href="/courses/" data-i18n="nav_courses">Courses</a>
+  <a href="/about/" data-i18n="nav_about">About Us</a>
+  <a href="/contact_us/" data-i18n="nav_contact">Contact Us</a>
+  {% if user.is_authenticated %}
+    <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
+    <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
+  {% else %}
+    <a href="/accounts/register/" data-i18n="nav_login">Login</a>
+  {% endif %}
+</div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-inner">
+      <div class="hero-badge"><i class="fas fa-headset"></i> <span data-i18n="hero_badge">We're here for you</span></div>
+      <h1 class="hero-h1"><span data-i18n="hero_title">Get in <span class="accent-sky">Touch</span></span></h1>
+      <p class="hero-sub" data-i18n="hero_sub">Our team is ready to answer your questions and support your learning journey — anytime, anywhere.</p>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="contact-section">
+
+    <!-- Intro -->
+    <div class="intro-card">
+      <div class="intro-icon"><i class="fas fa-comments"></i></div>
+      <div class="intro-title" data-i18n="intro_title">We Are Here to Help You</div>
+      <p class="intro-text" data-i18n="intro_text1">If you need any assistance, please feel free to contact us. Our support team is always available to answer all your queries and guide you through your learning journey.</p>
+      <p class="intro-text" data-i18n="intro_text2">You can reach us through the following channels or via social media — we usually respond within a few hours.</p>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+    <!-- Section header -->
+    <div style="margin-bottom:32px">
+      <div class="section-eyebrow"><i class="fas fa-share-alt"></i> <span data-i18n="social_label">Find Us Online</span></div>
+      <h2 class="section-h2" data-i18n="social_title">Connect With Us</h2>
+    </div>
 
-    <script src="{% static 'pages/contact_us.js' %}"></script>
+    <!-- Social grid -->
+    <div class="social-grid">
+
+      <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" rel="noopener" class="social-card sc-facebook">
+        <div class="social-card-icon"><i class="fab fa-facebook-f"></i></div>
+        <div class="social-card-name" data-i18n="sc_facebook">Facebook</div>
+        <div class="social-card-handle">@Eduvia</div>
+        <div class="social-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://www.instagram.com/eduv.ia/" target="_blank" rel="noopener" class="social-card sc-instagram">
+        <div class="social-card-icon"><i class="fab fa-instagram"></i></div>
+        <div class="social-card-name" data-i18n="sc_instagram">Instagram</div>
+        <div class="social-card-handle">@eduv.ia</div>
+        <div class="social-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://wa.me/201029102507" target="_blank" rel="noopener" class="social-card sc-whatsapp">
+        <div class="social-card-icon"><i class="fab fa-whatsapp"></i></div>
+        <div class="social-card-name" data-i18n="sc_whatsapp">WhatsApp</div>
+        <div class="social-card-handle">+20 102 910 2507</div>
+        <div class="social-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" rel="noopener" class="social-card sc-linkedin">
+        <div class="social-card-icon"><i class="fab fa-linkedin-in"></i></div>
+        <div class="social-card-name" data-i18n="sc_linkedin">LinkedIn</div>
+        <div class="social-card-handle">Eduvia CreativityCode</div>
+        <div class="social-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://github.com/eduvia-ai" target="_blank" rel="noopener" class="social-card sc-github">
+        <div class="social-card-icon"><i class="fab fa-github"></i></div>
+        <div class="social-card-name" data-i18n="sc_github">GitHub</div>
+        <div class="social-card-handle">@eduvia-ai</div>
+        <div class="social-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://www.tiktok.com/@eduvia7" target="_blank" rel="noopener" class="social-card sc-tiktok">
+        <div class="social-card-icon"><i class="fab fa-tiktok"></i></div>
+        <div class="social-card-name" data-i18n="sc_tiktok">TikTok</div>
+        <div class="social-card-handle">@eduvia7</div>
+        <div class="social-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://www.youtube.com/@Eduvia-ai-creativitycode" target="_blank" rel="noopener" class="social-card sc-youtube">
+        <div class="social-card-icon"><i class="fab fa-youtube"></i></div>
+        <div class="social-card-name" data-i18n="sc_youtube">YouTube</div>
+        <div class="social-card-handle">@Eduvia-ai</div>
+        <div class="social-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://x.com/Eduvia7" target="_blank" rel="noopener" class="social-card sc-x">
+        <div class="social-card-icon"><i class="fab fa-x-twitter"></i></div>
+        <div class="social-card-name" data-i18n="sc_x">X (Twitter)</div>
+        <div class="social-card-handle">@Eduvia7</div>
+        <div class="social-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+    </div>
+
+    <!-- Support card -->
+    <div class="support-card">
+      <div class="support-icon"><i class="fas fa-life-ring"></i></div>
+      <div class="support-info">
+        <div class="support-title" data-i18n="support_title">Need Immediate Help?</div>
+        <p class="support-text" data-i18n="support_text">Reach us directly on WhatsApp for the fastest response. Our team is available every day to assist you with any questions about courses, subscriptions, or the platform.</p>
+      </div>
+      <a href="https://wa.me/201029102507" target="_blank" rel="noopener" class="btn-primary">
+        <i class="fab fa-whatsapp"></i>
+        <span data-i18n="support_btn">Chat on WhatsApp</span>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Eduvia</div>
+    <div class="footer-links">
+      <a href="/" data-i18n="nav_home">Home</a>
+      <a href="/courses/" data-i18n="nav_courses">Courses</a>
+      <a href="/about/" data-i18n="nav_about">About Us</a>
+      <a href="/contact_us/" data-i18n="nav_contact">Contact Us</a>
+    </div>
+    <div class="footer-socials">
+      <a href="https://www.facebook.com/share/18iRSctdxN/" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/eduv.ia/" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/201029102507" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://x.com/Eduvia7" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://www.youtube.com/@Eduvia-ai-creativitycode" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.tiktok.com/@eduvia7" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-tiktok"></i></a>
+    </div>
+    <div class="footer-divider"></div>
+    <p class="footer-copy">
+      <span data-i18n="footer_copy">This platform was produced by</span>
+      <strong> Creativity Code </strong>
+      <span data-i18n="footer_and">and Engineer</span>
+      <strong> Ahmed Ibrahim</strong>
+      &nbsp;·&nbsp; © 2025 Eduvia
+    </p>
+  </div>
+</footer>
+
+<script>
+const I18N = {
+  en:{
+    page_title:'Contact Us — Eduvia',
+    nav_home:'Home',nav_courses:'Courses',nav_chatbot:'Chatbot',nav_competitions:'Competitions',
+    nav_performance:'Performance',nav_about:'About Us',nav_contact:'Contact',
+    nav_dashboard:'Dashboard',nav_profile:'Profile',nav_logout:'Logout',
+    nav_login:'Login',nav_subscribe:'Subscribe',
+    hero_badge:"We're here for you",
+    hero_title:'Get in Touch',
+    hero_sub:"Our team is ready to answer your questions and support your learning journey — anytime, anywhere.",
+    intro_title:'We Are Here to Help You',
+    intro_text1:'If you need any assistance, please feel free to contact us. Our support team is always available to answer all your queries and guide you through your learning journey.',
+    intro_text2:'You can reach us through the following channels or via social media — we usually respond within a few hours.',
+    social_label:'Find Us Online',social_title:'Connect With Us',
+    sc_facebook:'Facebook',sc_instagram:'Instagram',sc_whatsapp:'WhatsApp',
+    sc_linkedin:'LinkedIn',sc_github:'GitHub',sc_tiktok:'TikTok',
+    sc_youtube:'YouTube',sc_x:'X (Twitter)',
+    support_title:'Need Immediate Help?',
+    support_text:'Reach us directly on WhatsApp for the fastest response. Our team is available every day to assist you with any questions about courses, subscriptions, or the platform.',
+    support_btn:'Chat on WhatsApp',
+    footer_copy:'This platform was produced by',footer_and:'and Engineer',
+  },
+  ar:{
+    page_title:'تواصل معنا — Eduvia',
+    nav_home:'الرئيسية',nav_courses:'الكورسات',nav_chatbot:'المساعد الذكي',nav_competitions:'المسابقات',
+    nav_performance:'الأداء',nav_about:'من نحن',nav_contact:'تواصل معنا',
+    nav_dashboard:'لوحة التحكم',nav_profile:'الملف الشخصي',nav_logout:'تسجيل الخروج',
+    nav_login:'تسجيل الدخول',nav_subscribe:'اشتراك',
+    hero_badge:'نحن هنا من أجلك',
+    hero_title:'تواصل معنا',
+    hero_sub:'فريقنا مستعد للإجابة على أسئلتك ودعم رحلتك التعليمية — في أي وقت وأي مكان.',
+    intro_title:'نحن هنا لمساعدتك',
+    intro_text1:'إذا كنت بحاجة إلى أي مساعدة، فلا تتردد في التواصل معنا. فريق الدعم لدينا متاح دائماً للإجابة على جميع استفساراتك وتوجيهك.',
+    intro_text2:'يمكنك التواصل معنا عبر القنوات التالية أو وسائل التواصل الاجتماعي — نستجيب عادةً في غضون ساعات قليلة.',
+    social_label:'ابحث عنا',social_title:'تواصل معنا',
+    sc_facebook:'فيسبوك',sc_instagram:'إنستغرام',sc_whatsapp:'واتساب',
+    sc_linkedin:'لينكدإن',sc_github:'GitHub',sc_tiktok:'تيك توك',
+    sc_youtube:'يوتيوب',sc_x:'X (تويتر)',
+    support_title:'تحتاج مساعدة فورية؟',
+    support_text:'تواصل معنا مباشرةً على واتساب للحصول على أسرع رد. فريقنا متاح كل يوم للإجابة على أسئلتك حول الكورسات والاشتراكات والمنصة.',
+    support_btn:'تواصل عبر واتساب',
+    footer_copy:'هذه المنصة من إنتاج',footer_and:'والمهندس',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  if (I18N[lang]?.page_title) document.title = I18N[lang].page_title;
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() { applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
+function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+});
+</script>
 </body>
 </html>

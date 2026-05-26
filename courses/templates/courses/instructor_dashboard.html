@@ -311,6 +311,8 @@ body {
 }
 .video-list-item a:hover { color: var(--sky-400); background: var(--bg-hover); border-color: var(--border); }
 .video-list-item a i { color: var(--sky-400); flex-shrink: 0; }
+/* Muted style for videos not yet linked to a lesson */
+.video-list-item a.no-lesson { color: var(--text-muted); cursor: default; pointer-events: none; opacity: .5; }
 .no-videos { font-size: 12px; color: var(--text-muted); padding: 6px 10px; display: flex; align-items: center; gap: 6px; }
 
 /* Actions */
@@ -538,21 +540,34 @@ body {
             <div class="course-row-body">
                 <div class="course-content-grid">
 
-                    <!-- Videos list -->
+                    <!--
+                        Video list — each title links to Lesson View (lesson_view).
+                        video.lesson_id is set by instructor_dashboard view via the
+                        per-course lesson_map built from Section/Lesson objects.
+                        If lesson_id is None (video not yet linked to curriculum),
+                        the link is visually disabled.
+                    -->
                     <div class="video-list-wrap">
                         <div class="video-list-label">
                             <i class="fas fa-film"></i> Legacy Videos
                         </div>
                         <ul class="video-list">
                             {% for video in course.video_list %}
-                            {% with video_slug=video.title|arabic_slug:video.id %}
                             <li class="video-list-item">
-                                <a href="{% url 'courses:watch_video' course_id=course.id course_slug=course_slug video_id=video.id video_slug=video_slug %}">
-                                    <i class="fas fa-play-circle"></i>
-                                    {{ video.title|default:'Untitled Video'|truncatechars:40 }}
-                                </a>
+                                {% if video.lesson_id %}
+                                    {# Link to Lesson View — same page students use #}
+                                    <a href="{% url 'courses:lesson_view' course_id=course.id course_slug=course_slug lesson_id=video.lesson_id %}">
+                                        <i class="fas fa-play-circle"></i>
+                                        {{ video.title|default:'Untitled Video'|truncatechars:40 }}
+                                    </a>
+                                {% else %}
+                                    {# No lesson linked yet — show muted, non-clickable entry #}
+                                    <a class="no-lesson" title="Add this video to a curriculum section to enable the lesson view.">
+                                        <i class="fas fa-play-circle"></i>
+                                        {{ video.title|default:'Untitled Video'|truncatechars:40 }}
+                                    </a>
+                                {% endif %}
                             </li>
-                            {% endwith %}
                             {% empty %}
                             <li class="no-videos">
                                 <i class="fas fa-inbox" style="opacity:.4;"></i> No videos yet

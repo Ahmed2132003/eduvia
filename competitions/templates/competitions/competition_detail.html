@@ -1,213 +1,1129 @@
 <!DOCTYPE html>
 {% load static competition_filters competition_tags i18n %}
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔍 SEO -->
-    <title data-translate="competition-details-title">{{ competition.title }} | Eduvia</title>
-    <meta name="description" data-translate="competition-details-meta-desc" content="Explore the details of educational competitions on the Eduvia platform, participate in challenges, answer questions, and earn XP and coins!">
-    <meta name="keywords" data-translate="competition-details-meta-keywords" content="competition details, educational competitions, Eduvia platform, interactive learning, learning challenges, XP, coins">
-    <meta name="author" content="Eduvia Team">
-    <meta name="robots" content="index, follow">
-    <meta http-equiv="content-language" content="ar, en">
-    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+<!-- 🔍 SEO -->
+<title data-translate="competition-details-title">{{ competition.title }} | Eduvia</title>
+<meta name="description" content="Explore the details of educational competitions on the Eduvia platform, participate in challenges, answer questions, and earn XP and coins!">
+<meta name="keywords" content="competition details, educational competitions, Eduvia platform, interactive learning">
+<meta name="author" content="Eduvia Team">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" data-translate="competition-details-og-title" content="Competition Details | Eduvia">
-    <meta property="og:description" data-translate="competition-details-og-desc" content="Explore the details of educational competitions on the Eduvia platform, participate in challenges, answer questions, and earn XP and coins!">
-    <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:type" content="website">
+<!-- Open Graph -->
+<meta property="og:title" content="Competition Details | Eduvia">
+<meta property="og:description" content="Explore the details of educational competitions on the Eduvia platform.">
+<meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" data-translate="competition-details-og-title" content="Competition Details | Eduvia">
-    <meta name="twitter:description" data-translate="competition-details-og-desc" content="Explore the details of educational competitions on the Eduvia platform, participate in challenges, answer questions, and earn XP and coins!">
-    <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Competition Details | Eduvia">
+<meta name="twitter:description" content="Explore the details of educational competitions on the Eduvia platform.">
+<meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
 
-    <!-- 🖼️ Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🌐 Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- 🎨 Styles -->
-    <link rel="stylesheet" href="{% static 'competitions/competition_detail.css' %}">
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://eduvia-ai.fly.dev/#organization", "name": "Eduvia", "url": "https://eduvia-ai.fly.dev" },
     {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/#webpage",
-                "url": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/",
-                "name": "{{ competition.title }} | Eduvia",
-                "description": "Explore the details of educational competitions on the Eduvia platform, participate in challenges, answer questions, and earn XP and coins!",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Competitions",
-                        "item": "https://eduvia-ai.fly.dev/competitions/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "{{ competition.title }}",
-                        "item": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/"
-                    }
-                ]
-            }
-        ]
+      "@type": "WebPage",
+      "@id": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/#webpage",
+      "url": "https://eduvia-ai.fly.dev/competitions/{{ competition.id }}/{{ competition.title|custom_slugify }}/",
+      "name": "{{ competition.title }} | Eduvia"
     }
-    </script>
+  ]
+}
+</script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"  (shared with lesson_view)
+   ═══════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ══════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px; gap: 18px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.topbar-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted); flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.topbar-breadcrumb a:hover { color: var(--accent); }
+.topbar-breadcrumb .sep { font-size: 10px; color: var(--text-muted); opacity: .5; }
+.topbar-breadcrumb .current { color: var(--text-p); font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
+
+.topbar-nav {
+  display: flex; align-items: center; gap: 4px;
+}
+.topbar-nav a {
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: var(--trans); white-space: nowrap;
+}
+.topbar-nav a:hover { color: var(--text-h); background: var(--bg-card); }
+.topbar-nav a.active { color: var(--accent); background: var(--violet-glow); }
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans); text-decoration: none;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.coins-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 12px 5px 8px;
+  font-size: 13px; font-weight: 600; color: var(--warning);
+}
+.coins-chip i { font-size: 14px; }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans); font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.hamburger-btn {
+  display: none; width: 36px; height: 36px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 16px; cursor: pointer;
+  align-items: center; justify-content: center; transition: var(--trans);
+}
+.hamburger-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ HERO ════════════════════════════════════════════════════════════ */
+.hero {
+  padding-top: calc(var(--topbar-h) + 48px);
+  padding-bottom: 0;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(139,92,246,.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 28px 48px;
+  display: flex; align-items: flex-end; gap: 32px; flex-wrap: wrap;
+}
+.hero-main { flex: 1; min-width: 280px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  border-radius: 99px; padding: 4px 14px;
+  font-size: 11px; font-weight: 700; color: var(--violet-400);
+  letter-spacing: .5px; text-transform: uppercase; margin-bottom: 14px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 40px); font-weight: 800;
+  color: var(--text-h); line-height: 1.15; letter-spacing: -1px;
+  margin-bottom: 14px;
+}
+.hero-desc {
+  font-size: 15px; color: var(--text-muted); line-height: 1.7;
+  max-width: 560px; margin-bottom: 22px;
+}
+.hero-meta-row {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  font-size: 13px; color: var(--text-muted);
+}
+.hero-meta-item { display: flex; align-items: center; gap: 7px; }
+.hero-meta-item i { color: var(--accent); font-size: 12px; width: 14px; text-align: center; }
+
+/* Status badge */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 14px; border-radius: 99px;
+  font-size: 12px; font-weight: 700; letter-spacing: .3px;
+}
+.status-ongoing    { background: rgba(52,211,153,.12); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.status-not-active { background: rgba(251,113,133,.08); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status-ongoing .status-dot { animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+/* ═══ PAGE LAYOUT ═════════════════════════════════════════════════════ */
+.page-layout {
+  max-width: 1100px; margin: 0 auto; padding: 0 28px 100px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 28px;
+  align-items: start;
+}
+.page-main { min-width: 0; }
+.page-sidebar { }
+
+/* ═══ CARDS (shared) ═════════════════════════════════════════════════ */
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  margin-bottom: 24px;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.card-header {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.card-header-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-md); flex-shrink: 0;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--violet-400);
+}
+.card-header-icon.gold { background: rgba(251,191,36,.1); color: var(--gold-400); border-color: rgba(251,191,36,.25); }
+.card-header-icon.green { background: rgba(52,211,153,.1); color: var(--success); border-color: rgba(52,211,153,.25); }
+.card-header-title {
+  font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text-h);
+}
+.card-header-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.card-body { padding: 22px; }
+
+/* ═══ MESSAGES ════════════════════════════════════════════════════════ */
+.messages-wrap { margin-bottom: 24px; }
+.msg-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 500; margin-bottom: 8px;
+  animation: slideDown .3s ease;
+}
+@keyframes slideDown { from { opacity:0; transform:translateY(-8px);} to { opacity:1; transform:translateY(0);} }
+.msg-item.error   { background: rgba(251,113,133,.1); color: var(--danger);  border: 1px solid rgba(251,113,133,.2); }
+.msg-item.success { background: rgba(52,211,153,.1);  color: var(--success); border: 1px solid rgba(52,211,153,.2); }
+.msg-item.warning { background: rgba(251,191,36,.1);  color: var(--warning); border: 1px solid rgba(251,191,36,.2); }
+.msg-item i { flex-shrink: 0; }
+
+/* ═══ PROGRESS STATS ══════════════════════════════════════════════════ */
+.progress-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-bottom: 22px;
+}
+.stat-box {
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; text-align: center;
+}
+.stat-box-icon { font-size: 22px; }
+.stat-box-val {
+  font-family: var(--font-display); font-size: 28px; font-weight: 800;
+  color: var(--text-h);
+}
+.stat-box.xp   .stat-box-val { color: var(--violet-400); }
+.stat-box.coins .stat-box-val { color: var(--gold-400); }
+.stat-box-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+/* ═══ QUESTIONS LIST ═════════════════════════════════════════════════ */
+.questions-list { display: flex; flex-direction: column; gap: 12px; }
+.question-item {
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px;
+  transition: var(--trans); animation: fadeIn .3s ease;
+}
+@keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+.question-item:hover { border-color: var(--border-glow); background: var(--bg-hover); }
+.q-number {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: var(--violet-glow); border: 1px solid var(--border-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: var(--accent);
+  font-family: var(--font-display);
+}
+.q-text { flex: 1; font-size: 14px; color: var(--text-p); line-height: 1.5; }
+.q-type-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 99px;
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* Question with answer status */
+.question-item.answered { border-color: rgba(52,211,153,.2); background: rgba(52,211,153,.04); }
+.question-item.answered .q-number { background: rgba(52,211,153,.1); border-color: rgba(52,211,153,.3); color: var(--success); }
+
+.answer-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  background: var(--accent); color: #fff;
+  font-size: 12px; font-weight: 700; text-decoration: none;
+  transition: var(--trans); white-space: nowrap; flex-shrink: 0;
+  font-family: var(--font-display);
+  box-shadow: 0 4px 14px rgba(139,92,246,.3);
+}
+.answer-btn:hover { background: var(--accent-d); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,92,246,.4); }
+.answered-check {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 700; color: var(--success);
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.25);
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* ═══ JOIN COMPETITION ════════════════════════════════════════════════ */
+.join-card {
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-xl); padding: 28px;
+  text-align: center; margin-bottom: 24px;
+  box-shadow: var(--glow);
+  position: relative; overflow: hidden;
+  animation: cardReveal .6s cubic-bezier(.34,1.56,.64,1) both;
+}
+.join-card::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.15), transparent 70%);
+  pointer-events: none;
+}
+.join-card-icon {
+  width: 64px; height: 64px; border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--violet-600), var(--violet-400));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; color: #fff; margin: 0 auto 18px;
+  box-shadow: 0 0 30px rgba(139,92,246,.4);
+}
+.join-card h3 {
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  color: var(--text-h); margin-bottom: 8px;
+}
+.join-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 22px; }
+
+.join-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 32px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; font-size: 15px; font-weight: 800;
+  border: none; cursor: pointer; font-family: var(--font-display);
+  transition: var(--trans); box-shadow: 0 4px 24px rgba(139,92,246,.35);
+  position: relative; overflow: hidden;
+}
+.join-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.12), transparent);
+}
+.join-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(139,92,246,.5); }
+
+/* ═══ INSTRUCTOR PANEL ════════════════════════════════════════════════ */
+.instructor-actions {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px;
+}
+.action-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; text-decoration: none;
+  transition: var(--trans); font-family: var(--font-display);
+}
+.action-btn-primary {
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; box-shadow: 0 4px 16px rgba(139,92,246,.3);
+}
+.action-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,92,246,.45); }
+.action-btn-secondary {
+  background: var(--bg-card-2); color: var(--text-p);
+  border: 1px solid var(--border);
+}
+.action-btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+/* ═══ STUDENT ONLY MSG ════════════════════════════════════════════════ */
+.student-only-msg {
+  padding: 20px 24px; border-radius: var(--radius-lg);
+  background: var(--bg-card); border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  color: var(--text-muted); font-size: 14px;
+}
+.student-only-msg i { font-size: 22px; color: var(--warning); flex-shrink: 0; }
+
+/* ═══ LEADERBOARD BTN ════════════════════════════════════════════════ */
+.leaderboard-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 22px; border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #1a1040, #0d1120);
+  border: 1px solid rgba(251,191,36,.25);
+  color: var(--gold-400); text-decoration: none;
+  font-size: 14px; font-weight: 700;
+  transition: var(--trans); font-family: var(--font-display);
+  box-shadow: 0 0 30px rgba(251,191,36,.07);
+  position: relative; overflow: hidden;
+}
+[data-theme="light"] .leaderboard-btn {
+  background: linear-gradient(135deg, #fffbf0, #fff8e1);
+  border-color: rgba(251,191,36,.4);
+}
+.leaderboard-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.04), transparent);
+}
+.leaderboard-btn:hover {
+  border-color: rgba(251,191,36,.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(251,191,36,.15);
+}
+.leaderboard-btn i { font-size: 20px; }
+.leaderboard-btn-info { flex: 1; }
+.leaderboard-btn-label { font-size: 13px; font-weight: 800; }
+.leaderboard-btn-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 400; }
+
+/* ═══ SIDEBAR WIDGETS ════════════════════════════════════════════════ */
+.info-widget {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); margin-bottom: 20px;
+  overflow: hidden;
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) .1s both;
+}
+.info-widget-head {
+  padding: 14px 18px; background: var(--bg-card-2);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  color: var(--text-h); display: flex; align-items: center; gap: 8px;
+}
+.info-widget-head i { color: var(--accent); }
+.info-widget-body { padding: 14px 18px; }
+.info-row {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row-label { color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.info-row-label i { color: var(--accent); font-size: 11px; width: 14px; text-align: center; }
+.info-row-val { color: var(--text-h); font-weight: 500; text-align: right; }
+
+/* ═══ EMPTY STATE ════════════════════════════════════════════════════ */
+.empty-state {
+  text-align: center; padding: 40px 24px;
+  color: var(--text-muted); font-size: 14px;
+}
+.empty-state i { font-size: 36px; display: block; margin-bottom: 12px; opacity: .25; }
+.empty-state p { color: var(--text-muted); }
+
+/* ═══ SPINNER ════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ FOOTER ══════════════════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 24px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-brand {
+  font-family: var(--font-display); font-size: 16px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-links { display: flex; gap: 16px; }
+.footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer-links a:hover { color: var(--accent); }
+
+/* ═══ MOBILE NAV ══════════════════════════════════════════════════════ */
+.mobile-nav-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 700; backdrop-filter: blur(4px);
+}
+.mobile-nav-overlay.open { display: block; }
+.mobile-nav-drawer {
+  position: fixed; top: 0; right: -100%; bottom: 0; width: 280px;
+  background: var(--bg-panel); border-left: 1px solid var(--border);
+  z-index: 800; transition: right .3s cubic-bezier(.4,0,.2,1);
+  padding: 24px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto;
+}
+[lang="ar"] .mobile-nav-drawer { right:auto; left:-100%; border-left:none; border-right:1px solid var(--border); }
+.mobile-nav-drawer.open { right: 0; }
+[lang="ar"] .mobile-nav-drawer.open { left:0; right:auto; }
+.mobile-nav-drawer .nav-logo {
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+}
+.mobile-nav-drawer a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 14px;
+  border-radius: var(--radius-md); font-size: 14px; font-weight: 500;
+  color: var(--text-muted); text-decoration: none; transition: var(--trans);
+  border: 1px solid transparent;
+}
+.mobile-nav-drawer a:hover { background: var(--bg-card); color: var(--text-h); border-color: var(--border); }
+.mobile-nav-drawer a.active { background: var(--violet-glow); color: var(--accent); border-color: var(--border-glow); }
+
+/* ═══ RESPONSIVE ══════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .topbar-nav { display: none; }
+  .hamburger-btn { display: flex; }
+  .page-layout { grid-template-columns: 1fr; }
+  .page-sidebar { order: -1; }
+}
+@media (max-width: 600px) {
+  .topbar { padding: 0 16px; gap: 12px; }
+  .topbar-breadcrumb { display: none; }
+  .hero-inner { padding: 0 16px 36px; }
+  .page-layout { padding: 0 16px 80px; }
+  .progress-stats { grid-template-columns: 1fr 1fr; }
+  .footer { flex-direction: column; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            <a href="{% url 'accounts:subscribe' %}" data-translate="nav-subscribe">subscribe</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
+
+<!-- ═══ TOPBAR ══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-breadcrumb">
+    <a href="/competitions/" data-i18n="nav_competitions">Competitions</a>
+    <span class="sep"><i class="fas fa-chevron-right"></i></span>
+    <span class="current">{{ competition.title }}</span>
+  </div>
+
+  <nav class="topbar-nav">
+    <a href="/" data-i18n="nav_home">Home</a>
+    <a href="/courses/" data-i18n="nav_courses">Courses</a>
+    <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
+    <a href="/competitions/" class="active" data-i18n="nav_competitions">Competitions</a>
+    <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
+    <a href="/about/" data-i18n="nav_about">About</a>
+    <a href="/contact_us/" data-i18n="nav_contact">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="nav_dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
+      <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
+    {% else %}
+      <a href="/accounts/register/" data-i18n="nav_login">Login</a>
+    {% endif %}
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-chip">
+      <i class="fas fa-coins"></i>
+      <span>{{ user.courses_profile.coins }}</span>
+    </div>
+    {% elif user.is_authenticated %}
+    <div class="coins-chip">
+      <i class="fas fa-coins"></i>
+      <span>0</span>
+    </div>
+    {% endif %}
+
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <a href="/competitions/" class="tb-btn tb-btn-ghost">
+      <i class="fas fa-arrow-left"></i>
+      <span data-i18n="back_to_list">Back</span>
+    </a>
+    <button class="hamburger-btn" onclick="openMobileNav()"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<div class="mobile-nav-overlay" id="nav-overlay" onclick="closeMobileNav()"></div>
+<div class="mobile-nav-drawer" id="nav-drawer">
+  <div class="nav-logo">Eduvia</div>
+  <a href="/" data-i18n="nav_home"><i class="fas fa-home"></i> Home</a>
+  <a href="/courses/" data-i18n="nav_courses"><i class="fas fa-book"></i> Courses</a>
+  <a href="/chatbot/" data-i18n="nav_chatbot"><i class="fas fa-robot"></i> Chatbot</a>
+  <a href="/competitions/" class="active" data-i18n="nav_competitions"><i class="fas fa-trophy"></i> Competitions</a>
+  <a href="/performance/dashboard/" data-i18n="nav_performance"><i class="fas fa-chart-line"></i> Performance</a>
+  <a href="/about/" data-i18n="nav_about"><i class="fas fa-info-circle"></i> About</a>
+  <a href="/contact_us/" data-i18n="nav_contact"><i class="fas fa-envelope"></i> Contact</a>
+  {% if user.is_authenticated %}
+    {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'courses:instructor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    {% endif %}
+    <a href="/accounts/profile/"><i class="fas fa-user"></i> Profile</a>
+    <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  {% else %}
+    <a href="/accounts/register/"><i class="fas fa-sign-in-alt"></i> Login</a>
+  {% endif %}
+</div>
+
+<!-- ═══ HERO ════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-main">
+      <div class="hero-badge">
+        <i class="fas fa-trophy"></i>
+        <span data-i18n="competition_label">Competition</span>
+      </div>
+      <h1 class="hero-title">{{ competition.title }}</h1>
+      {% if competition.description %}
+      <p class="hero-desc">{{ competition.description }}</p>
+      {% endif %}
+      <div class="hero-meta-row">
+        <div class="hero-meta-item">
+          <i class="fas fa-calendar-plus"></i>
+          <span data-i18n="starts">Starts:</span>&nbsp;{{ competition.start_time|localtime }}
+        </div>
+        <div class="hero-meta-item">
+          <i class="fas fa-calendar-check"></i>
+          <span data-i18n="ends">Ends:</span>&nbsp;{{ competition.end_time|localtime }}
+        </div>
+        <div class="hero-meta-item">
+          {% if competition.is_ongoing %}
+            <span class="status-badge status-ongoing">
+              <span class="status-dot"></span>
+              <span data-i18n="status_ongoing">Live Now</span>
+            </span>
+          {% else %}
+            <span class="status-badge status-not-active">
+              <span class="status-dot"></span>
+              <span data-i18n="status_not_active">Not Active</span>
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE LAYOUT ══════════════════════════════════════════════════════ -->
+<div class="page-layout">
+
+  <!-- ── MAIN ──────────────────────────────────────────────────────────── -->
+  <div class="page-main">
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages-wrap" id="messages-wrap">
+      {% for message in messages %}
+      <div class="msg-item {% if message.tags %}{{ message.tags }}{% endif %}">
+        <i class="fas {% if 'error' in message.tags %}fa-exclamation-circle{% elif 'success' in message.tags %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ── INSTRUCTOR VIEW ── -->
+    {% if is_instructor and competition.instructor == user %}
+
+      <div class="card" style="animation-delay:.05s;">
+        <div class="card-header">
+          <div class="card-header-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <div>
+            <div class="card-header-title" data-i18n="instructor_panel">Instructor Panel</div>
+            <div class="card-header-sub" data-i18n="manage_competition">Manage this competition</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="instructor-actions">
+            <a href="{% url 'competitions:add_question' competition.id competition.title|custom_slugify %}" class="action-btn action-btn-primary">
+              <i class="fas fa-plus-circle"></i>
+              <span data-i18n="add_question">Add New Question</span>
+            </a>
+            <a href="{% url 'competitions:edit_competition' competition.id competition.title|custom_slugify %}" class="action-btn action-btn-secondary">
+              <i class="fas fa-edit"></i>
+              <span data-i18n="edit_competition">Edit Competition</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.1s;">
+        <div class="card-header">
+          <div class="card-header-icon"><i class="fas fa-list-check"></i></div>
+          <div>
+            <div class="card-header-title" data-i18n="questions_heading">Questions</div>
+            <div class="card-header-sub">{{ competition.questions.count }} <span data-i18n="questions_total">questions total</span></div>
+          </div>
+        </div>
+        <div class="card-body">
+          {% if competition.questions.all %}
+          <div class="questions-list">
+            {% for question in competition.questions.all %}
+            <div class="question-item">
+              <div class="q-number">{{ forloop.counter }}</div>
+              <div class="q-text">{{ question.text }}</div>
+              <span class="q-type-badge">{{ question.question_type }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-clipboard-question"></i>
+            <p data-i18n="no_questions">No questions yet. Add the first one!</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+    <!-- ── STUDENT VIEW ── -->
+    {% elif user.role == 'student' %}
+
+      {% if not is_participant %}
+        <!-- Join card -->
+        <div class="join-card">
+          <div class="join-card-icon"><i class="fas fa-rocket"></i></div>
+          <h3 data-i18n="join_title">Ready to Compete?</h3>
+          <p data-i18n="join_desc">Join this competition to answer questions and earn XP and coins. Test your knowledge and climb the leaderboard!</p>
+          <form method="post" action="{% url 'competitions:join_competition' competition.id competition.title|custom_slugify %}">
+            {% csrf_token %}
+            <button type="submit" class="join-btn">
+              <i class="fas fa-trophy"></i>
+              <span data-i18n="join_button">Join Competition</span>
+            </button>
+          </form>
+        </div>
+
+      {% else %}
+        <!-- Progress stats -->
+        <div class="progress-stats">
+          <div class="stat-box xp">
+            <div class="stat-box-icon">⚡</div>
+            <div class="stat-box-val">{{ participant.total_xp }}</div>
+            <div class="stat-box-lbl" data-i18n="xp_label">XP Earned</div>
+          </div>
+          <div class="stat-box coins">
+            <div class="stat-box-icon">🪙</div>
+            <div class="stat-box-val">{{ participant.total_coins }}</div>
+            <div class="stat-box-lbl" data-i18n="coins_label">Coins Earned</div>
+          </div>
+        </div>
+
+        <!-- Questions -->
+        <div class="card" style="animation-delay:.1s;">
+          <div class="card-header">
+            <div class="card-header-icon green"><i class="fas fa-clipboard-question"></i></div>
+            <div>
+              <div class="card-header-title" data-i18n="questions_heading">Questions</div>
+              <div class="card-header-sub">
+                {% with answered=questions_with_status|length total=questions_with_status|length %}
+                <span id="answered-count">
+                  {% for item in questions_with_status %}{% if item.answered %}{% endif %}{% endfor %}
+                </span>
+                {{ questions_with_status|length }} <span data-i18n="questions_available">questions</span>
+                {% endwith %}
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            {% if questions_with_status %}
+            <div class="questions-list">
+              {% for item in questions_with_status %}
+              <div class="question-item {% if item.answered %}answered{% endif %}">
+                <div class="q-number">
+                  {% if item.answered %}<i class="fas fa-check"></i>{% else %}{{ forloop.counter }}{% endif %}
+                </div>
+                <div class="q-text">{{ item.question.text }}</div>
+                {% if item.answered %}
+                  <span class="answered-check"><i class="fas fa-check-circle"></i> <span data-i18n="answered_label">Answered</span></span>
                 {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
+                  <a href="{% url 'competitions:answer_question' competition.id competition.title|custom_slugify item.question.id %}" class="answer-btn">
+                    <i class="fas fa-pen"></i>
+                    <span data-i18n="answer_link">Answer</span>
+                  </a>
                 {% endif %}
+              </div>
+              {% endfor %}
+            </div>
             {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
+            <div class="empty-state">
+              <i class="fas fa-clipboard-question"></i>
+              <p data-i18n="no_questions_available">No questions available yet.</p>
+            </div>
             {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
+          </div>
+        </div>
+      {% endif %}
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 data-translate="hero-title" data-original-title="{{ competition.title }}">{{ competition.title }}</h1>
-        <p data-translate="hero-desc">Participate in this exciting challenge and earn rewards!</p>
-    </section>
+    <!-- ── NON-STUDENT MESSAGE ── -->
+    {% else %}
+    <div class="student-only-msg">
+      <i class="fas fa-info-circle"></i>
+      <span data-i18n="student_only_message">Only students can participate in competitions. Please log in with a student account to join.</span>
+    </div>
+    {% endif %}
 
-    <!-- Content Section -->
-    <section class="content-container">
-        <h1 data-translate="content-title" data-original-title="{{ competition.title }}">{{ competition.title }}</h1>
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <p class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-        <p data-translate="description-label">Description: {{ competition.description }}</p>
-        <p data-translate="start-label">Start: {{ competition.start_time|localtime }}</p>
-        <p data-translate="end-label">End: {{ competition.end_time|localtime }}</p>
-        <p data-translate="status-label">Status: {% if competition.is_ongoing %}<span data-translate="status-ongoing">Ongoing</span>{% else %}<span data-translate="status-not-active">Not Active</span>{% endif %}</p>
+    <!-- ── Leaderboard link ── -->
+    <a href="{% url 'competitions:leaderboard' competition.id competition.title|custom_slugify %}" class="leaderboard-btn">
+      <i class="fas fa-ranking-star"></i>
+      <div class="leaderboard-btn-info">
+        <div class="leaderboard-btn-label" data-i18n="leaderboard_link">View Leaderboard</div>
+        <div class="leaderboard-btn-sub" data-i18n="leaderboard_sub">See how you rank against other participants</div>
+      </div>
+      <i class="fas fa-chevron-right" style="font-size:14px;"></i>
+    </a>
 
-        {% if is_instructor and competition.instructor == user %}
-            <h2 data-translate="questions-heading">Questions</h2>
-            <ul>
-                {% for question in competition.questions.all %}
-                    <li>{{ question.text }} ({{ question.question_type }})</li>
-                {% empty %}
-                    <li data-translate="no-questions">No questions yet.</li>
-                {% endfor %}
-            </ul>
-            <a href="{% url 'competitions:add_question' competition.id competition.title|custom_slugify %}" data-translate="add-question-link">Add New Question</a>
-            <a href="{% url 'competitions:edit_competition' competition.id competition.title|custom_slugify %}" data-translate="edit-competition-link">Edit Competition</a>
-        {% elif user.role == 'student' %}
-            {% if not is_participant %}
-                <form method="post" action="{% url 'competitions:join_competition' competition.id competition.title|custom_slugify %}">
-                    {% csrf_token %}
-                    <button type="submit" data-translate="join-competition-button">Join Competition</button>
-                </form>
+  </div>{# /page-main #}
+
+  <!-- ── SIDEBAR ────────────────────────────────────────────────────────── -->
+  <aside class="page-sidebar">
+
+    <!-- Competition info widget -->
+    <div class="info-widget">
+      <div class="info-widget-head">
+        <i class="fas fa-circle-info"></i>
+        <span data-i18n="competition_info">Competition Info</span>
+      </div>
+      <div class="info-widget-body">
+        <div class="info-row">
+          <span class="info-row-label"><i class="fas fa-calendar-plus"></i> <span data-i18n="start_label">Start</span></span>
+          <span class="info-row-val">{{ competition.start_time|localtime }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label"><i class="fas fa-calendar-check"></i> <span data-i18n="end_label">End</span></span>
+          <span class="info-row-val">{{ competition.end_time|localtime }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label"><i class="fas fa-signal"></i> <span data-i18n="status_label">Status</span></span>
+          <span class="info-row-val">
+            {% if competition.is_ongoing %}
+              <span class="status-badge status-ongoing" style="font-size:11px;padding:3px 9px;">
+                <span class="status-dot"></span>
+                <span data-i18n="status_ongoing">Live Now</span>
+              </span>
             {% else %}
-                <h2 data-translate="progress-heading">Your Progress</h2>
-                <p data-translate="xp-label">XP: {{ participant.total_xp }}</p>
-                <p data-translate="coins-label">Coins: {{ participant.total_coins }}</p>
-                <h2 data-translate="questions-heading">Questions</h2>
-                <ul>
-                    {% for item in questions_with_status %}
-                        <li>
-                            {{ item.question.text }}
-                            {% if item.answered %}
-                                (<span data-translate="answered-label">Answered</span>)
-                            {% else %}
-                                <a href="{% url 'competitions:answer_question' competition.id competition.title|custom_slugify item.question.id %}" data-translate="answer-link">Answer</a>
-                            {% endif %}
-                        </li>
-                    {% empty %}
-                        <li data-translate="no-questions-available">No questions available.</li>
-                    {% endfor %}
-                </ul>
+              <span class="status-badge status-not-active" style="font-size:11px;padding:3px 9px;">
+                <span class="status-dot"></span>
+                <span data-i18n="status_not_active">Not Active</span>
+              </span>
             {% endif %}
-        {% else %}
-            <p data-translate="student-only-message">Only students can participate in competitions.</p>
+          </span>
+        </div>
+        {% if is_participant and participant %}
+        <div class="info-row">
+          <span class="info-row-label"><i class="fas fa-bolt"></i> <span>XP</span></span>
+          <span class="info-row-val" style="color:var(--violet-400);font-weight:700;">{{ participant.total_xp }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label"><i class="fas fa-coins"></i> <span data-i18n="coins_label">Coins</span></span>
+          <span class="info-row-val" style="color:var(--gold-400);font-weight:700;">{{ participant.total_coins }}</span>
+        </div>
         {% endif %}
-        <a href="{% url 'competitions:leaderboard' competition.id competition.title|custom_slugify %}" data-translate="leaderboard-link">View Leaderboard</a>
-    </section>
+      </div>
+    </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+    <!-- Quick links widget -->
+    <div class="info-widget" style="animation-delay:.15s;">
+      <div class="info-widget-head">
+        <i class="fas fa-link"></i>
+        <span data-i18n="quick_links">Quick Links</span>
+      </div>
+      <div class="info-widget-body" style="padding:12px 14px;">
+        <a href="{% url 'competitions:leaderboard' competition.id competition.title|custom_slugify %}"
+           style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-md);color:var(--text-muted);text-decoration:none;font-size:13px;transition:var(--trans);border:1px solid transparent;">
+          <i class="fas fa-ranking-star" style="color:var(--gold-400);width:16px;text-align:center;"></i>
+          <span data-i18n="leaderboard_link">View Leaderboard</span>
+        </a>
+        <a href="/competitions/"
+           style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-md);color:var(--text-muted);text-decoration:none;font-size:13px;transition:var(--trans);border:1px solid transparent;">
+          <i class="fas fa-list-ul" style="color:var(--accent);width:16px;text-align:center;"></i>
+          <span data-i18n="all_competitions">All Competitions</span>
+        </a>
+        {% if user.is_authenticated %}
+        <a href="/performance/dashboard/"
+           style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-md);color:var(--text-muted);text-decoration:none;font-size:13px;transition:var(--trans);border:1px solid transparent;">
+          <i class="fas fa-chart-line" style="color:var(--success);width:16px;text-align:center;"></i>
+          <span data-i18n="nav_performance">Performance</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
 
-    <script src="{% static 'competitions/competition_detail.js' %}"></script>
+  </aside>
+
+</div>{# /page-layout #}
+
+<!-- ═══ FOOTER ══════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <span class="footer-brand">Eduvia</span>
+  <span class="footer-copy" data-i18n="footer_copy">© 2025 Eduvia & creativitycode. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="/about/" data-i18n="footer_about">About</a>
+    <a href="/contact_us/" data-i18n="footer_contact">Contact</a>
+    <a href="/competitions/" data-i18n="footer_competitions">Competitions</a>
+  </div>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ─── i18n ─────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
+    nav_competitions:'Competitions', nav_performance:'Performance',
+    nav_about:'About', nav_contact:'Contact', nav_dashboard:'Dashboard',
+    nav_subscribe:'Subscribe', nav_profile:'Profile', nav_logout:'Logout', nav_login:'Login',
+    competition_label:'Competition', back_to_list:'Back',
+    starts:'Starts:', ends:'Ends:',
+    status_ongoing:'Live Now', status_not_active:'Not Active',
+    instructor_panel:'Instructor Panel', manage_competition:'Manage this competition',
+    add_question:'Add New Question', edit_competition:'Edit Competition',
+    questions_heading:'Questions', questions_total:'questions total',
+    questions_available:'questions', questions_available_label:'questions available',
+    no_questions:'No questions yet. Add the first one!',
+    no_questions_available:'No questions available yet.',
+    join_title:'Ready to Compete?',
+    join_desc:'Join this competition to answer questions and earn XP and coins. Test your knowledge and climb the leaderboard!',
+    join_button:'Join Competition',
+    xp_label:'XP Earned', coins_label:'Coins Earned',
+    answered_label:'Answered', answer_link:'Answer',
+    student_only_message:'Only students can participate in competitions.',
+    leaderboard_link:'View Leaderboard',
+    leaderboard_sub:'See how you rank against other participants',
+    competition_info:'Competition Info',
+    start_label:'Start', end_label:'End', status_label:'Status',
+    quick_links:'Quick Links', all_competitions:'All Competitions',
+    footer_copy:'© 2025 Eduvia & creativitycode. All rights reserved.',
+    footer_about:'About', footer_contact:'Contact', footer_competitions:'Competitions',
+  },
+  ar: {
+    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'الدردشة',
+    nav_competitions:'المسابقات', nav_performance:'الأداء',
+    nav_about:'عنّا', nav_contact:'تواصل', nav_dashboard:'لوحة التحكم',
+    nav_subscribe:'اشتراك', nav_profile:'الملف الشخصي', nav_logout:'تسجيل الخروج', nav_login:'تسجيل الدخول',
+    competition_label:'مسابقة', back_to_list:'رجوع',
+    starts:'تبدأ:', ends:'تنتهي:',
+    status_ongoing:'جارية الآن', status_not_active:'غير نشطة',
+    instructor_panel:'لوحة المحاضر', manage_competition:'إدارة هذه المسابقة',
+    add_question:'إضافة سؤال جديد', edit_competition:'تعديل المسابقة',
+    questions_heading:'الأسئلة', questions_total:'سؤال إجمالاً',
+    questions_available:'أسئلة',
+    no_questions:'لا توجد أسئلة بعد. أضف أول سؤال!',
+    no_questions_available:'لا توجد أسئلة متاحة بعد.',
+    join_title:'مستعد للمنافسة؟',
+    join_desc:'انضم لهذه المسابقة للإجابة على الأسئلة وكسب XP والعملات. اختبر معرفتك وتسلق لوحة المتصدرين!',
+    join_button:'انضم للمسابقة',
+    xp_label:'XP مكتسب', coins_label:'عملات مكتسبة',
+    answered_label:'تمت الإجابة', answer_link:'أجب',
+    student_only_message:'فقط الطلاب يمكنهم المشاركة في المسابقات.',
+    leaderboard_link:'عرض لوحة المتصدرين',
+    leaderboard_sub:'اعرف ترتيبك بين المشاركين',
+    competition_info:'معلومات المسابقة',
+    start_label:'البداية', end_label:'النهاية', status_label:'الحالة',
+    quick_links:'روابط سريعة', all_competitions:'كل المسابقات',
+    footer_copy:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
+    footer_about:'عنّا', footer_contact:'تواصل', footer_competitions:'المسابقات',
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ─── Theme ─────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ─── Mobile nav ────────────────────────────────────────────────────── */
+function openMobileNav() {
+  document.getElementById('nav-overlay').classList.add('open');
+  document.getElementById('nav-drawer').classList.add('open');
+}
+function closeMobileNav() {
+  document.getElementById('nav-overlay').classList.remove('open');
+  document.getElementById('nav-drawer').classList.remove('open');
+}
+
+/* ─── Sidebar quick links hover ─────────────────────────────────────── */
+document.querySelectorAll('.info-widget-body a').forEach(a => {
+  a.addEventListener('mouseenter', () => {
+    a.style.background = 'var(--bg-hover)';
+    a.style.borderColor = 'var(--border)';
+    a.style.color = 'var(--text-h)';
+  });
+  a.addEventListener('mouseleave', () => {
+    a.style.background = '';
+    a.style.borderColor = 'transparent';
+    a.style.color = '';
+  });
+});
+
+/* ─── Auto-dismiss messages ─────────────────────────────────────────── */
+function autoDismissMessages() {
+  setTimeout(() => {
+    const wrap = document.getElementById('messages-wrap');
+    if (wrap) { wrap.style.opacity = '0'; wrap.style.transition = 'opacity .5s'; setTimeout(()=>wrap.remove(), 550); }
+  }, 5000);
+}
+
+/* ─── Toast ──────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ─── Init ───────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+  autoDismissMessages();
+});
+</script>
 </body>
 </html>

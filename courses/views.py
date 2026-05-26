@@ -389,14 +389,31 @@ def instructor_dashboard(request):
         user_profile = request.user.courses_profile
     except UserProfile.DoesNotExist:
         user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
-
+ 
     courses = Course.objects.filter(instructor=request.user.username)
     total_courses = courses.count()
     total_videos = Video.objects.filter(course__in=courses).count()
-
+ 
     for course in courses:
-        course.video_list = Video.objects.filter(course=course).order_by('order')
-
+        videos_qs = list(Video.objects.filter(course=course).order_by('order'))
+ 
+        # Annotate each Video with .lesson_id so the template can link to
+        # lesson_view instead of the legacy watch_video page.
+        lesson_pairs = Lesson.objects.filter(
+            section__course=course,
+            lesson_type='video',
+            title__in=[v.title for v in videos_qs],
+        ).values_list('title', 'id')
+ 
+        lesson_map = {}
+        for title, lesson_id in lesson_pairs:
+            lesson_map.setdefault(title, lesson_id)   # first match wins
+ 
+        for video in videos_qs:
+            video.lesson_id = lesson_map.get(video.title)  # None if not yet linked
+ 
+        course.video_list = videos_qs
+ 
     context = {
         'courses': courses,
         'total_courses': total_courses,

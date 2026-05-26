@@ -353,10 +353,6 @@ body {
 .vid-btn.watch:hover { background: rgba(56,189,248,.12); border-color: var(--sky-400); }
 .vid-btn.edit   { border-color: rgba(251,191,36,.3); color: var(--gold-400); background: rgba(251,191,36,.06); }
 .vid-btn.edit:hover { background: rgba(251,191,36,.12); border-color: var(--gold-400); }
-.vid-btn.task   { border-color: rgba(52,211,153,.3); color: var(--success); background: rgba(52,211,153,.06); }
-.vid-btn.task:hover { background: rgba(52,211,153,.12); border-color: var(--success); }
-.vid-btn.quiz   { border-color: rgba(139,92,246,.3); color: var(--violet-400); background: rgba(139,92,246,.06); }
-.vid-btn.quiz:hover { background: rgba(139,92,246,.12); border-color: var(--violet-400); }
 
 /* ═══ EMPTY STATE ══════════════════════════════════════════════════════════ */
 .empty-state-card {
@@ -562,23 +558,24 @@ body {
                         </div>
                     </div>
 
-                    <!-- Footer Actions -->
                     <div class="video-card-footer">
-                        <a href="{% url 'courses:watch_video' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}"
-                           class="vid-btn watch" data-translate="watch-link">
-                            <i class="fas fa-play"></i> Watch
-                        </a>
+                        {% if video.lesson_id %}
+                         
+                            <a href="{% url 'courses:lesson_view' course_id=course.id course_slug=course_slug|arabic_slug lesson_id=video.lesson_id %}"
+                               class="vid-btn watch" data-translate="watch-link">
+                                <i class="fas fa-play"></i> Watch
+                            </a>
+                        {% else %}
+                          
+                            <span class="vid-btn watch" style="opacity:.45;cursor:not-allowed;"
+                                  title="No lesson linked yet — add this video to a curriculum section first.">
+                                <i class="fas fa-play"></i> Watch
+                            </span>
+                        {% endif %}
+
                         <a href="{% url 'courses:edit_video' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}"
                            class="vid-btn edit" data-translate="edit-link">
                             <i class="fas fa-pen"></i> Edit
-                        </a>
-                        <a href="{% url 'courses:add_task' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}"
-                           class="vid-btn task">
-                            <i class="fas fa-list-check"></i> Add Task
-                        </a>
-                        <a href="{% url 'courses:add_alternative_quiz' course_id=course.id course_slug=course_slug|arabic_slug video_id=video.id video_slug=video_slug|arabic_slug %}"
-                           class="vid-btn quiz" data-translate="add-alternative-quiz">
-                            <i class="fas fa-question-circle"></i> Quiz
                         </a>
                     </div>
 
@@ -640,7 +637,6 @@ const I18N = {
         'add-btn': 'Add New Video',
         'watch-link': 'Watch',
         'edit-link': 'Edit',
-        'add-alternative-quiz': 'Quiz',
         'empty-title': 'No Videos Yet',
         'empty-text': 'Add your first video to get started and engage your students.',
         'back-link': 'Back to Dashboard',
@@ -654,7 +650,6 @@ const I18N = {
         'add-btn': 'إضافة فيديو جديد',
         'watch-link': 'مشاهدة',
         'edit-link': 'تعديل',
-        'add-alternative-quiz': 'اختبار',
         'empty-title': 'لا توجد فيديوهات بعد',
         'empty-text': 'أضف أول فيديو لك وابدأ في إشراك طلابك.',
         'back-link': 'العودة للوحة التحكم',

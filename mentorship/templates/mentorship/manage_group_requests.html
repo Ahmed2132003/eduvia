@@ -1,200 +1,775 @@
 {% load static mentorship_filters %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html-root">
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Requests — {{ group.name }} | Eduvia</title>
+<link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 
-    <!-- 🔍 SEO -->
-    <title data-translate="manage-requests-title">Manage Group Requests - Eduvia</title>
-    <meta name="description" content="Manage requests to join {{ group.name }} in Eduvia's Mentorship System.">
-    <meta name="keywords" content="manage group requests, {{ group.name }}, Eduvia, mentorship">
-    <meta name="author" content="Eduvia">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/">
+<!-- SEO -->
+<meta name="description" content="Manage requests to join {{ group.name }} in Eduvia's Mentorship System.">
+<meta name="keywords" content="manage group requests, {{ group.name }}, Eduvia, mentorship">
+<meta name="author" content="Eduvia">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/">
 
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Manage Group Requests - Eduvia">
-    <meta property="og:description" content="Manage requests to join {{ group.name }} in Eduvia's Mentorship System.">
-    <meta property="og:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
-    <meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/">
-    <meta property="og:type" content="website">
+<!-- Open Graph -->
+<meta property="og:title" content="Manage Group Requests - Eduvia">
+<meta property="og:description" content="Manage requests to join {{ group.name }} in Eduvia's Mentorship System.">
+<meta property="og:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
+<meta property="og:url" content="https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/">
+<meta property="og:type" content="website">
 
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Manage Group Requests - Eduvia">
-    <meta name="twitter:description" content="Manage requests to join {{ group.name }} in Eduvia's Mentorship System.">
-    <meta name="twitter:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manage Group Requests - Eduvia">
+<meta name="twitter:description" content="Manage requests to join {{ group.name }} in Eduvia's Mentorship System.">
+<meta name="twitter:image" content="https://i.postimg.cc/kM86Bn8g/oppo3.jpg">
 
-    <!-- 🖼️ Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🌐 Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {"@type":"Organization","@id":"https://eduvia-ai.fly.dev/#organization","name":"Eduvia","url":"https://eduvia-ai.fly.dev","logo":{"@type":"ImageObject","url":"https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"},"sameAs":["https://www.facebook.com/share/18iRSctdxN/","https://x.com/Eduvia7","https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"]},
+        {"@type":"WebPage","@id":"https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/#webpage","url":"https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/","name":"Manage Group Requests - Eduvia","description":"Manage requests to join {{ group.name }} in Eduvia's Mentorship System.","inLanguage":"en"},
+        {"@type":"BreadcrumbList","@id":"https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Eduvia","item":"https://eduvia-ai.fly.dev/"},{"@type":"ListItem","position":2,"name":"Mentorship","item":"https://eduvia-ai.fly.dev/mentorship/"},{"@type":"ListItem","position":3,"name":"Manage Group Requests","item":"https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/"}]}
+    ]
+}
+</script>
 
-    <!-- 🎨 Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'mentorship/manage_group_requests.css' %}">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy"
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <!-- 🖼️ Hero Background -->
-    <style>
-        :root {
-            --hero-bg-image: url("https://i.postimg.cc/kM86Bn8g/oppo3.jpg");
-        }
-    </style>
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
 
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/#webpage",
-                "url": "https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/",
-                "name": "Manage Group Requests - Eduvia",
-                "description": "Manage requests to join {{ group.name }} in Eduvia's Mentorship System.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/#breadcrumb",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Eduvia",
-                        "item": "https://eduvia-ai.fly.dev/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Mentorship",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "Manage Group Requests",
-                        "item": "https://eduvia-ai.fly.dev/mentorship/manage_group_requests/{{ group.id }}/"
-                    }
-                ]
-            }
-        ]
-    }
-    </script>
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --gold-300:    #fcd34d;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+[lang="ar"] body,
+[lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ════════════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+.topbar-section {
+  font-size: 13px; color: var(--text-muted);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--trans);
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none; transition: var(--trans);
+  font-family: inherit;
+}
+.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
+.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tb-btn-accent { background: var(--accent); color: #fff; }
+.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+.coins-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700; color: var(--gold-400);
+}
+.coins-pill i { animation: coinSpin 3s linear infinite; }
+@keyframes coinSpin { to { transform: rotateY(360deg); } }
+
+.nav-links {
+  display: flex; align-items: center; gap: 4px; flex: 1;
+}
+.nav-link {
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; padding: 6px 10px; border-radius: var(--radius-sm);
+  transition: var(--trans); white-space: nowrap;
+}
+.nav-link:hover { color: var(--text-h); background: var(--bg-card); }
+
+.hamburger {
+  display: none; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); font-size: 16px;
+  align-items: center; justify-content: center; cursor: pointer;
+  transition: var(--trans);
+}
+.hamburger:hover { border-color: var(--accent); color: var(--accent); }
+
+.mobile-drawer {
+  display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; bottom: 0;
+  background: rgba(8,11,20,.97); backdrop-filter: blur(20px);
+  z-index: 590; flex-direction: column; padding: 24px;
+  border-top: 1px solid var(--border); overflow-y: auto;
+  animation: drawerIn .25s ease;
+}
+@keyframes drawerIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.mobile-drawer.open { display: flex; }
+[data-theme="light"] .mobile-drawer { background: rgba(255,255,255,.97); }
+.mobile-drawer .nav-link {
+  font-size: 16px; padding: 12px 8px;
+  border-bottom: 1px solid var(--border); border-radius: 0;
+  display: block; width: 100%;
+}
+
+/* ═══ PAGE LAYOUT ════════════════════════════════════════════════════════ */
+.page-wrap {
+  padding-top: var(--topbar-h);
+  min-height: 100vh; display: flex; flex-direction: column;
+}
+
+/* ═══ HERO BANNER ════════════════════════════════════════════════════════ */
+.hero-banner {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  padding: 44px 28px 36px; text-align: center;
+}
+.hero-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(251,191,36,.12), transparent 65%);
+  pointer-events: none;
+}
+.hero-banner::after {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238b5cf6' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none; opacity: .5;
+}
+.hero-banner-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.hero-group-icon {
+  width: 72px; height: 72px; border-radius: var(--radius-lg);
+  background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.25);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 30px; color: var(--gold-400); margin-bottom: 18px;
+  box-shadow: 0 0 30px rgba(251,191,36,.15);
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 800; color: var(--text-h);
+  letter-spacing: -.5px; margin-bottom: 10px;
+}
+.hero-desc { font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.25);
+  border-radius: 99px; padding: 6px 16px;
+  font-size: 12px; font-weight: 700; color: var(--gold-400);
+}
+
+/* ═══ CONTENT AREA ═══════════════════════════════════════════════════════ */
+.content-area { flex: 1; max-width: 860px; margin: 0 auto; width: 100%; padding: 32px 24px 80px; }
+
+/* ═══ STATS ROW ══════════════════════════════════════════════════════════ */
+.stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; margin-bottom: 28px;
+  animation: cardReveal .5s ease both;
+}
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  display: flex; align-items: center; gap: 14px;
+  transition: var(--trans);
+}
+.stat-card:hover { border-color: var(--border-glow); background: var(--bg-card-2); }
+.stat-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.stat-icon.violet { background: var(--violet-glow); color: var(--violet-400); border: 1px solid var(--border-glow); }
+.stat-icon.gold   { background: rgba(251,191,36,.1);  color: var(--gold-400);   border: 1px solid rgba(251,191,36,.2); }
+.stat-icon.green  { background: rgba(52,211,153,.1);  color: var(--success);    border: 1px solid rgba(52,211,153,.2); }
+.stat-val {
+  font-family: var(--font-display); font-size: 26px;
+  font-weight: 800; color: var(--text-h); line-height: 1;
+}
+.stat-lbl { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ═══ ACTION BAR ═════════════════════════════════════════════════════════ */
+.action-bar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 24px; animation: cardReveal .5s ease .08s both;
+}
+.action-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; text-decoration: none;
+  border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p);
+  transition: var(--trans);
+}
+.action-link:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
+.action-link.accent {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+  box-shadow: 0 4px 20px rgba(139,92,246,.3);
+}
+.action-link.accent:hover { background: var(--accent-d); transform: translateY(-1px); }
+
+/* ═══ ALERTS ═════════════════════════════════════════════════════════════ */
+.alert-strip {
+  padding: 12px 18px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.alert-strip.warning { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.25); color: var(--warning); }
+.alert-strip.success { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.25); color: var(--success); }
+.alert-strip.info    { background: var(--violet-glow); border: 1px solid var(--border-glow); color: var(--violet-400); }
+
+/* ═══ REQUESTS SECTION CARD ══════════════════════════════════════════════ */
+.section-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--glow); animation: cardReveal .5s ease .16s both;
+}
+.section-header {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.section-header-icon {
+  width: 38px; height: 38px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+  background: rgba(251,191,36,.1); color: var(--gold-400);
+  border: 1px solid rgba(251,191,36,.2);
+}
+.section-header-title {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--text-h);
+}
+.section-header-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.section-body { padding: 22px; }
+
+/* ═══ REQUEST ITEMS ══════════════════════════════════════════════════════ */
+.requests-list { display: flex; flex-direction: column; gap: 14px; }
+
+.request-item {
+  background: var(--bg-card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  transition: var(--trans); animation: fadeUp .35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.request-item:hover { border-color: rgba(139,92,246,.2); background: var(--bg-hover); }
+
+.req-avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-600), var(--sky-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.req-info { flex: 1; min-width: 0; }
+.req-name {
+  font-size: 15px; font-weight: 700; color: var(--text-h); margin-bottom: 4px;
+}
+.req-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.req-meta i { color: var(--accent); font-size: 10px; }
+
+.req-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.req-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+  font-family: inherit; transition: var(--trans);
+}
+.req-btn-accept {
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  color: #fff; box-shadow: 0 4px 16px rgba(52,211,153,.3);
+}
+.req-btn-accept:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(52,211,153,.4); }
+
+.req-btn-reject {
+  background: rgba(251,113,133,.1); color: var(--danger);
+  border: 1px solid rgba(251,113,133,.25);
+}
+.req-btn-reject:hover { background: rgba(251,113,133,.2); transform: translateY(-1px); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 52px 24px; color: var(--text-muted); }
+.empty-state i { font-size: 48px; display: block; margin-bottom: 14px; opacity: .2; }
+.empty-state h3 { font-family: var(--font-display); font-size: 18px; color: var(--text-h); margin-bottom: 8px; }
+.empty-state p { font-size: 14px; }
+
+/* ═══ TOAST ══════════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
+  display: flex; align-items: center; gap: 8px; min-width: 220px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-success { background: rgba(52,211,153,.15); color: var(--success); border: 1px solid rgba(52,211,153,.3); }
+.toast-error   { background: rgba(251,113,133,.12); color: var(--danger);  border: 1px solid rgba(251,113,133,.25); }
+.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
+
+/* ═══ SPINNER ════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: currentColor; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ FOOTER ══════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 20px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-logo {
+  font-family: var(--font-display); font-size: 16px; font-weight: 800;
+  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-links { display: flex; gap: 16px; }
+.footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: var(--trans); }
+.footer-links a:hover { color: var(--accent); }
+
+/* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .topbar-section { display: none; }
+  .content-area { padding: 20px 14px 60px; }
+  .hero-title { font-size: 24px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .request-item { flex-direction: column; align-items: flex-start; }
+  .req-actions { width: 100%; }
+  .req-btn { flex: 1; justify-content: center; }
+}
+@media (max-width: 480px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .hero-banner { padding: 32px 14px 24px; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Eduvia</div>
-        <button class="hamburger" onclick="toggleMenu()">☰</button>
-        <nav class="menu">
-            <a href="/" data-translate="nav-home">Home</a>
-            <a href="/courses/" data-translate="nav-courses">Courses</a>
-            <a href="/chatbot/" data-translate="nav-chatbot">Chatbot</a>
-            <a href="/competitions/" data-translate="nav-competitions">Competitions</a>
-            <a href="/performance/dashboard/" data-translate="nav-performance">Performance</a>
-            <a href="{% url 'skills_market:services_list' %}" data-translate="nav-skills-market">Skills Market</a>
-            <a href="/about/" data-translate="nav-about">About Us</a>
-            <a href="/contact_us/" data-translate="nav-contact">Contact Us</a>
-            {% if user.is_authenticated %}
-                {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-                    <a href="{% url 'courses:instructor_dashboard' %}" data-translate="nav-dashboard">Dashboard</a>
-                {% endif %}
-                <a href="/accounts/profile/" data-translate="nav-profile">Profile</a>
-                <a href="/accounts/logout/" data-translate="nav-logout">Logout</a>
-                {% if user.courses_profile %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> {{ user.courses_profile.coins }}
-                    </span>
-                {% else %}
-                    <span class="coins-display">
-                        <i class="fas fa-coins coins-icon"></i>
-                        <span data-translate="nav-coins">Coins:</span> 0
-                    </span>
-                {% endif %}
-            {% else %}
-                <a href="/accounts/register/" data-translate="nav-login">Login</a>
-            {% endif %}
-            <div class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <i class="fas fa-globe"></i>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>{{ group.name|default:"Unnamed Group" }}</h1>
-        <p>{{ group.description|truncatewords:20|default:"No description available" }}</p>
-    </section>
-    <!-- Messages -->
-    <div class="messages">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'warning' %}alert-warning{% endif %}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+<!-- ── TOPBAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a href="/" class="topbar-logo">Eduvia</a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-section">
+    <i class="fas fa-user-check" style="color:var(--gold-400);margin-right:6px;"></i>
+    <span data-i18n="manage-requests">Manage Requests</span> — {{ group.name }}
+  </span>
+
+  <nav class="nav-links">
+    <a href="/" class="nav-link" data-i18n="nav-home">Home</a>
+    <a href="/courses/" class="nav-link" data-i18n="nav-courses">Courses</a>
+    <a href="/chatbot/" class="nav-link" data-i18n="nav-chatbot">Chatbot</a>
+    <a href="/competitions/" class="nav-link" data-i18n="nav-competitions">Competitions</a>
+    <a href="/performance/dashboard/" class="nav-link" data-i18n="nav-performance">Performance</a>
+    <a href="{% url 'skills_market:services_list' %}" class="nav-link" data-i18n="nav-skills">Skills Market</a>
+    <a href="/about/" class="nav-link" data-i18n="nav-about">About</a>
+    <a href="/contact_us/" class="nav-link" data-i18n="nav-contact">Contact</a>
+    {% if user.is_authenticated %}
+      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+        <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link" data-i18n="nav-dashboard">Dashboard</a>
+      {% endif %}
+      <a href="/accounts/profile/" class="nav-link" data-i18n="nav-profile">Profile</a>
+      <a href="/accounts/logout/" class="nav-link" data-i18n="nav-logout">Logout</a>
+    {% else %}
+      <a href="/accounts/register/" class="nav-link" data-i18n="nav-login">Login</a>
+    {% endif %}
+  </nav>
+
+  <div class="topbar-actions">
+    {% if user.is_authenticated and user.courses_profile %}
+    <div class="coins-pill">
+      <i class="fas fa-coins"></i>
+      <span>{{ user.courses_profile.coins }}</span>
+    </div>
+    {% endif %}
+    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+      <i class="fas fa-globe"></i>
+    </button>
+    <a href="{% url 'mentorship:group_detail' group_id=group.id %}" class="tb-btn tb-btn-ghost">
+      <i class="fas fa-arrow-left"></i>
+      <span data-i18n="back-group">Back to Group</span>
+    </a>
+    <button class="hamburger" onclick="toggleMobileMenu()" id="hamburger-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Drawer -->
+<div class="mobile-drawer" id="mobile-drawer">
+  <a href="/" class="nav-link" data-i18n="nav-home">Home</a>
+  <a href="/courses/" class="nav-link" data-i18n="nav-courses">Courses</a>
+  <a href="/chatbot/" class="nav-link" data-i18n="nav-chatbot">Chatbot</a>
+  <a href="/competitions/" class="nav-link" data-i18n="nav-competitions">Competitions</a>
+  <a href="/performance/dashboard/" class="nav-link" data-i18n="nav-performance">Performance</a>
+  <a href="{% url 'skills_market:services_list' %}" class="nav-link" data-i18n="nav-skills">Skills Market</a>
+  <a href="/about/" class="nav-link" data-i18n="nav-about">About</a>
+  <a href="/contact_us/" class="nav-link" data-i18n="nav-contact">Contact</a>
+  {% if user.is_authenticated %}
+    {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
+      <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link">Dashboard</a>
+    {% endif %}
+    <a href="/accounts/profile/" class="nav-link" data-i18n="nav-profile">Profile</a>
+    <a href="/accounts/logout/" class="nav-link" data-i18n="nav-logout">Logout</a>
+  {% else %}
+    <a href="/accounts/register/" class="nav-link" data-i18n="nav-login">Login</a>
+  {% endif %}
+</div>
+
+<!-- ── PAGE ────────────────────────────────────────────────────────────── -->
+<div class="page-wrap">
+
+  <!-- Hero Banner -->
+  <div class="hero-banner">
+    <div class="hero-banner-inner">
+      <div class="hero-group-icon"><i class="fas fa-user-check"></i></div>
+      <h1 class="hero-title" data-i18n="heading">Manage Join Requests</h1>
+      <p class="hero-desc">{{ group.name }} — <span data-i18n="hero-sub">Review and respond to pending membership requests</span></p>
+      <span class="hero-badge">
+        <i class="fas fa-shield-alt"></i>
+        <span data-i18n="admin-only">Admin Only</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content-area">
+
+    <!-- Django messages -->
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert-strip {% if message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+        <i class="fas {% if message.tags == 'warning' %}fa-exclamation-triangle{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon violet"><i class="fas fa-clock"></i></div>
+        <div>
+          <div class="stat-val">{{ requests|length|default:0 }}</div>
+          <div class="stat-lbl" data-i18n="pending">Pending Requests</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-users"></i></div>
+        <div>
+          <div class="stat-val">{{ group.members.count|default:0 }}</div>
+          <div class="stat-lbl" data-i18n="members">Current Members</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon gold"><i class="fas fa-user-shield"></i></div>
+        <div>
+          <div class="stat-val" style="font-size:16px;margin-top:2px;">{{ group.admin.username|truncatechars:10 }}</div>
+          <div class="stat-lbl" data-i18n="admin">Group Admin</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Requests Container -->
-    <div class="requests-container">
-        <h2 data-translate="requests-heading">Group Join Requests</h2>
-        {% if requests %}
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <a href="{% url 'mentorship:group_detail' group_id=group.id %}" class="action-link">
+        <i class="fas fa-arrow-left"></i>
+        <span data-i18n="back-group">Back to Group</span>
+      </a>
+      <a href="{% url 'mentorship:mentor_dashboard' %}" class="action-link">
+        <i class="fas fa-th-large"></i>
+        <span data-i18n="dashboard">Back to Dashboard</span>
+      </a>
+    </div>
+
+    <!-- Requests Card -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-header-icon"><i class="fas fa-user-clock"></i></div>
+        <div>
+          <div class="section-header-title" data-i18n="requests-title">Pending Join Requests</div>
+          <div class="section-header-sub">
+            {{ requests|length|default:0 }} <span data-i18n="requests-sub">request(s) awaiting your decision</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-body">
+        <div class="requests-list" id="requests-list">
+          {% if requests %}
             {% for request in requests %}
-                <div class="request-item">
-                    <p><strong>{{ request.user.username }}</strong></p>
-                    <p data-translate="requested-at-label">Requested At: {{ request.created_at|date:"F d, Y H:i" }}</p>
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="request_id" value="{{ request.id }}">
-                        <button type="submit" name="action" value="accept" data-translate="accept">Accept</button>
-                        <button type="submit" name="action" value="reject" class="reject" data-translate="reject">Reject</button>
-                    </form>
+            <div class="request-item" id="req-{{ request.id }}">
+              <div class="req-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+              <div class="req-info">
+                <div class="req-name">{{ request.user.get_full_name|default:request.user.username }}</div>
+                <div class="req-meta">
+                  <i class="fas fa-at"></i> {{ request.user.username }}
+                  &nbsp;·&nbsp;
+                  <i class="fas fa-calendar-alt"></i>
+                  {{ request.created_at|date:"M d, Y · H:i" }}
                 </div>
+              </div>
+              <div class="req-actions">
+                <form method="post" style="display:contents;">
+                  {% csrf_token %}
+                  <input type="hidden" name="request_id" value="{{ request.id }}">
+                  <button type="submit" name="action" value="accept"
+                          class="req-btn req-btn-accept"
+                          onclick="animateAction(this, {{ request.id }}, 'accept')">
+                    <i class="fas fa-check"></i>
+                    <span data-i18n="accept">Accept</span>
+                  </button>
+                  <button type="submit" name="action" value="reject"
+                          class="req-btn req-btn-reject"
+                          onclick="animateAction(this, {{ request.id }}, 'reject')">
+                    <i class="fas fa-times"></i>
+                    <span data-i18n="reject">Reject</span>
+                  </button>
+                </form>
+              </div>
+            </div>
             {% endfor %}
-        {% else %}
-            <p class="text-center" data-translate="no-requests">No pending requests at the moment.</p>
-        {% endif %}
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <h3 data-i18n="no-requests-title">All Clear!</h3>
+              <p data-i18n="no-requests">No pending requests at the moment.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{% url 'mentorship:group_detail' group_id=group.id %}" class="btn" data-translate="back-to-group">Back to Group</a>
-        <a href="{% url 'mentorship:mentor_dashboard' %}" class="btn" data-translate="back-to-dashboard">Back to Dashboard</a>
+  </div><!-- /content-area -->
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span class="footer-logo">Eduvia</span>
+    <span class="footer-copy" data-i18n="footer">© 2025 Eduvia &amp; CreativityCode. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="/about/" data-i18n="nav-about">About</a>
+      <a href="/contact_us/" data-i18n="nav-contact">Contact</a>
+      <a href="/courses/" data-i18n="nav-courses">Courses</a>
     </div>
+  </footer>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-translate="footer-text">© 2025 Eduvia and creativitycode. All rights reserved.</p>
-    </footer>
+</div><!-- /page-wrap -->
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'mentorship/manage_group_requests.js' %}"></script>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── i18n ──────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    "nav-home":"Home","nav-courses":"Courses","nav-chatbot":"Chatbot",
+    "nav-competitions":"Competitions","nav-performance":"Performance",
+    "nav-skills":"Skills Market","nav-about":"About","nav-contact":"Contact",
+    "nav-dashboard":"Dashboard","nav-profile":"Profile","nav-logout":"Logout","nav-login":"Login",
+    "manage-requests":"Manage Requests","back-group":"Back to Group","dashboard":"Back to Dashboard",
+    "heading":"Manage Join Requests","hero-sub":"Review and respond to pending membership requests",
+    "admin-only":"Admin Only","pending":"Pending Requests","members":"Current Members","admin":"Group Admin",
+    "requests-title":"Pending Join Requests","requests-sub":"request(s) awaiting your decision",
+    "accept":"Accept","reject":"Reject",
+    "no-requests-title":"All Clear!","no-requests":"No pending requests at the moment.",
+    "footer":"© 2025 Eduvia & CreativityCode. All rights reserved.",
+  },
+  ar: {
+    "nav-home":"الرئيسية","nav-courses":"الكورسات","nav-chatbot":"الشات بوت",
+    "nav-competitions":"المسابقات","nav-performance":"الأداء",
+    "nav-skills":"سوق المهارات","nav-about":"من نحن","nav-contact":"تواصل معنا",
+    "nav-dashboard":"لوحة التحكم","nav-profile":"الملف الشخصي","nav-logout":"تسجيل الخروج","nav-login":"تسجيل الدخول",
+    "manage-requests":"إدارة الطلبات","back-group":"العودة للمجموعة","dashboard":"العودة للوحة التحكم",
+    "heading":"إدارة طلبات الانضمام","hero-sub":"راجع طلبات العضوية المعلقة وردّ عليها",
+    "admin-only":"للمشرف فقط","pending":"الطلبات المعلقة","members":"الأعضاء الحاليين","admin":"مشرف المجموعة",
+    "requests-title":"طلبات الانضمام المعلقة","requests-sub":"طلب(ات) تنتظر قرارك",
+    "accept":"قبول","reject":"رفض",
+    "no-requests-title":"كل شيء على ما يرام!","no-requests":"لا توجد طلبات معلقة في الوقت الحالي.",
+    "footer":"© 2025 Eduvia و CreativityCode. جميع الحقوق محفوظة.",
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const root = document.getElementById('html-root');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+  });
+  localStorage.setItem('lang', lang);
+}
+function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
+
+/* ── Theme ──────────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Mobile menu ────────────────────────────────────────────────────────── */
+function toggleMobileMenu() { document.getElementById('mobile-drawer').classList.toggle('open'); }
+document.addEventListener('click', e => {
+  const drawer = document.getElementById('mobile-drawer');
+  const btn = document.getElementById('hamburger-btn');
+  if (drawer && btn && !drawer.contains(e.target) && !btn.contains(e.target)) drawer.classList.remove('open');
+});
+
+/* ── Toast ──────────────────────────────────────────────────────────────── */
+function toast(msg, type = 'info', dur = 3200) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  el.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
+}
+
+/* ── Action animation ────────────────────────────────────────────────────── */
+function animateAction(btn, reqId, action) {
+  const item = document.getElementById('req-' + reqId);
+  if (item) {
+    item.style.transition = 'all .4s ease';
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(' + (action === 'accept' ? '20px' : '-20px') + ')';
+  }
+  btn.innerHTML = `<span class="spinner"></span>`;
+  btn.disabled = true;
+}
+
+/* ── Init ───────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyLang(localStorage.getItem('lang') || 'en');
+});
+</script>
 </body>
 </html>
