@@ -444,7 +444,7 @@ def instructor_dashboard(request):
 @instructor_required
 def add_course(request):
     if request.method == 'POST':
-        form = CourseForm(request.POST)
+        form = CourseForm(request.POST, request.FILES)
         if form.is_valid():
             course = form.save(commit=False)
             course.instructor = request.user.username
