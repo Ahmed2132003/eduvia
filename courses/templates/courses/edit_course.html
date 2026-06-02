@@ -631,7 +631,7 @@ body {
       </div>
 
       <!-- Body — Django Form -->
-      <form method="post" action="{% url 'courses:edit_course' course_id=course.id course_slug=slugified_course_title|arabic_slug:course.id %}">
+      <form method="post" enctype="multipart/form-data" action="{% url 'courses:edit_course' course_id=course.id course_slug=slugified_course_title|arabic_slug:course.id %}">
         {% csrf_token %}
 
         <div class="form-card-body">

@@ -469,7 +469,7 @@ def edit_course(request, course_id, course_slug=None):
         return redirect('courses:instructor_dashboard')
 
     if request.method == 'POST':
-        form = CourseForm(request.POST, instance=course)
+        form = CourseForm(request.POST, request.FILES, instance=course)
         if form.is_valid():
             form.save()
             messages.success(request, "تم تحديث الكورس بنجاح!")
