@@ -272,9 +272,21 @@ def download_certificate(request, course_id, course_slug):
 # ─────────────────────────────────────────────────────────────────────────────
 
 class CourseForm(forms.ModelForm):
+    IMAGE_TYPE_CHOICES = [
+        ('url', 'Image URL'),
+        ('upload', 'Upload Image'),
+    ]
+    image_type = forms.ChoiceField(
+        choices=IMAGE_TYPE_CHOICES,
+        widget=forms.RadioSelect,
+        initial='url',
+        required=False,
+        label='Image Source',
+    )
+
     class Meta:
         model = Course
-        fields = ['title', 'description', 'category', 'image', 'is_finished']        
+        fields = ['title', 'description', 'category', 'image', 'image_file', 'is_finished']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'category': forms.Select(choices=Course.CATEGORY_CHOICES),
@@ -286,15 +298,18 @@ class CourseForm(forms.ModelForm):
             'description': 'Description',
             'category': 'Category',
             'image': 'Image URL',
+            'image_file': 'Upload Image File',
             'is_finished': 'Mark Course as Finished (enables certificates)',
         }
 
-    def clean_image(self):
-        image_url = self.cleaned_data.get('image')
+    def clean(self):
+        cleaned_data = super().clean()
+        image_url = cleaned_data.get('image')
+        image_file = cleaned_data.get('image_file')
+        image_type = cleaned_data.get('image_type')
         if image_url and not image_url.startswith(('http://', 'https://')):
-            raise forms.ValidationError("Please enter a valid URL starting with http:// or https://")
-        return image_url
-
+            self.add_error('image', "Please enter a valid URL starting with http:// or https://")
+        return cleaned_data
 
 class VideoForm(forms.ModelForm):
     class Meta:

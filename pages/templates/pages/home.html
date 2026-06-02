@@ -20,16 +20,13 @@
 <meta name="twitter:image" content="https://i.postimg.cc/nrpx0N2K/eduvia-home-1.jpg">
 <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://eduvia-ai.fly.dev/#organization","name":"Eduvia","url":"https://eduvia-ai.fly.dev","logo":{"@type":"ImageObject","url":"https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"},"sameAs":["https://www.facebook.com/share/18iRSctdxN/","https://x.com/Eduvia7","https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"]},{"@type":"WebPage","@id":"https://eduvia-ai.fly.dev/#webpage","url":"https://eduvia-ai.fly.dev/","name":"Eduvia Platform - Eduvia","description":"Discover Eduvia's online learning platform with expert-led courses, collaborative projects, and performance analytics.","inLanguage":"en"}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://eduvia-ai.fly.dev/#organization","name":"Eduvia","url":"https://eduvia-ai.fly.dev","logo":{"@type":"ImageObject","url":"https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"},"sameAs":["https://www.facebook.com/share/18iRSctdxN/","https://x.com/Eduvia7","https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"]},{"@type":"WebPage","@id":"https://eduvia-ai.fly.dev/#webpage","url":"https://eduvia-ai.fly.dev/","name":"Eduvia Platform - Eduvia","description":"Discover Eduvia's online learning platform.","inLanguage":"en"}]}
 </script>
 
 <style>
-/* ══════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — "Obsidian Academy" (shared with Lesson View)
-   ══════════════════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
@@ -137,7 +134,7 @@ body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-p);
   box-shadow:0 10px 40px rgba(0,0,0,.4);
 }
 .mobile-nav.open{display:flex}
-.mobile-nav a,.mobile-nav span{
+.mobile-nav a{
   font-size:14px;font-weight:500;color:var(--text-p);
   text-decoration:none;padding:10px 14px;border-radius:var(--radius-sm);
   transition:var(--trans);display:block;
@@ -175,9 +172,7 @@ main{padding-top:var(--topbar-h)}
   background-size:60px 60px;
   mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);
 }
-.hero-orb{
-  position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;
-}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
 .hero-orb-1{width:600px;height:600px;top:-100px;left:-100px;background:rgba(139,92,246,.12)}
 .hero-orb-2{width:400px;height:400px;bottom:-50px;right:-50px;background:rgba(251,191,36,.07)}
 .hero-inner{position:relative;z-index:1;max-width:780px;margin:0 auto}
@@ -220,7 +215,7 @@ main{padding-top:var(--topbar-h)}
   transition:var(--trans);position:relative;overflow:hidden;
   box-shadow:0 4px 20px rgba(139,92,246,.35);text-decoration:none;
 }
-.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);border-radius:inherit}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);border-radius:inherit;pointer-events:none}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,.45)}
 .btn-secondary{
   padding:14px 32px;border-radius:var(--radius-md);
@@ -233,10 +228,7 @@ main{padding-top:var(--topbar-h)}
 .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
 
 /* Stats row */
-.hero-stats{
-  display:flex;align-items:center;justify-content:center;gap:40px;
-  flex-wrap:wrap;animation:fadeUp .7s .4s ease both;
-}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;animation:fadeUp .7s .4s ease both}
 .stat{text-align:center}
 .stat-num{font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--text-h)}
 .stat-num span{color:var(--accent)}
@@ -249,16 +241,11 @@ main{padding-top:var(--topbar-h)}
   background:var(--bg-card);border:1px solid var(--border);
   border-radius:var(--radius-xl);padding:6px 6px 6px 20px;
   display:flex;align-items:center;gap:12px;
-  transition:var(--trans);
-  box-shadow:var(--glow);
+  transition:var(--trans);box-shadow:var(--glow);
 }
 .search-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.12),var(--glow)}
 .search-wrap i{color:var(--text-muted);font-size:15px;flex-shrink:0}
-.search-inp{
-  flex:1;background:none;border:none;outline:none;
-  font-size:15px;font-family:var(--font-body);color:var(--text-h);
-  caret-color:var(--accent);
-}
+.search-inp{flex:1;background:none;border:none;outline:none;font-size:15px;font-family:var(--font-body);color:var(--text-h);caret-color:var(--accent)}
 .search-inp::placeholder{color:var(--text-muted)}
 .search-btn{
   padding:10px 22px;border-radius:var(--radius-lg);
@@ -270,31 +257,24 @@ main{padding-top:var(--topbar-h)}
 .search-btn:hover{background:var(--accent-d)}
 
 /* ── SECTION HEADERS ── */
-.section-header{
-  text-align:center;margin-bottom:48px;padding:0 24px;
-}
-.section-eyebrow{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--accent);margin-bottom:12px;
-}
-.section-h2{
-  font-family:var(--font-display);font-size:clamp(26px,4vw,42px);
-  font-weight:800;color:var(--text-h);letter-spacing:-.5px;margin-bottom:10px;
-}
+.section-header{text-align:center;margin-bottom:48px;padding:0 24px}
+.section-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.section-h2{font-family:var(--font-display);font-size:clamp(26px,4vw,42px);font-weight:800;color:var(--text-h);letter-spacing:-.5px;margin-bottom:10px}
 .section-sub{font-size:16px;color:var(--text-muted);max-width:520px;margin:0 auto}
 
-/* ── CARDS GRID ── */
+/* ── CARDS ── */
 .cards-section{padding:80px 24px;max-width:1280px;margin:0 auto}
-.cards-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-  gap:24px;
-}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+
+/* ═══════════════════════════════════════════════════
+   CARD — key fix: position:relative + z-index stack
+   ═══════════════════════════════════════════════════ */
 .card{
   background:var(--bg-card);border:1px solid var(--border);
   border-radius:var(--radius-xl);overflow:hidden;
-  transition:var(--trans);position:relative;
+  transition:var(--trans);
+  /* CRITICAL: isolate stacking context so ::before never blocks children */
+  isolation:isolate;
   animation:cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
 }
 .card:hover{
@@ -302,20 +282,24 @@ main{padding-top:var(--topbar-h)}
   transform:translateY(-6px);
   box-shadow:0 20px 60px rgba(0,0,0,.3),var(--glow);
 }
-.card-img{
-  width:100%;height:200px;object-fit:cover;
-  display:block;transition:transform .4s ease;
-}
+.card-img{width:100%;height:200px;object-fit:cover;display:block;transition:transform .4s ease}
 .card:hover .card-img{transform:scale(1.04)}
 .card-img-wrap{overflow:hidden;position:relative}
 .card-img-overlay{
   position:absolute;inset:0;
   background:linear-gradient(to bottom,transparent 50%,rgba(8,11,20,.85));
+  /* pointer-events:none so it NEVER blocks clicks on the card body */
+  pointer-events:none;
 }
 [data-theme="light"] .card-img-overlay{
   background:linear-gradient(to bottom,transparent 50%,rgba(244,246,252,.7));
 }
-.card-body{padding:22px 22px 24px}
+.card-body{
+  padding:22px 22px 24px;
+  /* ensure card body is above the ::before glow border */
+  position:relative;
+  z-index:1;
+}
 .card-icon{
   width:40px;height:40px;border-radius:var(--radius-md);
   display:flex;align-items:center;justify-content:center;
@@ -323,19 +307,17 @@ main{padding-top:var(--topbar-h)}
   background:var(--violet-glow);color:var(--violet-400);
   border:1px solid var(--border-glow);
 }
-.card-title{
-  font-family:var(--font-display);font-size:18px;font-weight:700;
-  color:var(--text-h);margin-bottom:8px;line-height:1.3;
-}
-.card-desc{
-  font-size:14px;color:var(--text-p);line-height:1.7;margin-bottom:20px;
-}
+.card-title{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text-h);margin-bottom:8px;line-height:1.3}
+.card-desc{font-size:14px;color:var(--text-p);line-height:1.7;margin-bottom:20px}
 .card-btn{
   display:inline-flex;align-items:center;gap:7px;
   padding:9px 20px;border-radius:var(--radius-md);
   font-size:13px;font-weight:600;text-decoration:none;
   background:var(--bg-card-2);color:var(--text-p);
   border:1px solid var(--border);transition:var(--trans);
+  /* CRITICAL: ensure button is clickable above everything */
+  position:relative;
+  z-index:2;
 }
 .card-btn:hover{background:var(--violet-glow);border-color:var(--border-glow);color:var(--violet-400)}
 .card-btn i{font-size:11px;transition:transform .2s}
@@ -348,53 +330,36 @@ main{padding-top:var(--topbar-h)}
 .card.emerald .card-icon{background:rgba(52,211,153,.1);color:var(--emerald-400);border-color:rgba(52,211,153,.25)}
 .card.rose .card-icon{background:rgba(251,113,133,.1);color:var(--rose-400);border-color:rgba(251,113,133,.2)}
 
-/* Animated border on hover */
+/* Animated border glow on hover — pointer-events:none so it NEVER blocks clicks */
 .card::before{
   content:'';position:absolute;inset:0;border-radius:var(--radius-xl);
-  border:1px solid transparent;
+  border:1.5px solid transparent;
   background:linear-gradient(135deg,var(--violet-500),var(--gold-400)) border-box;
   -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
   -webkit-mask-composite:destination-out;mask-composite:exclude;
   opacity:0;transition:opacity .3s;
+  pointer-events:none; /* ← THE KEY FIX: pseudo-element never intercepts clicks */
+  z-index:0;
 }
 .card:hover::before{opacity:1}
 
 /* Stagger delays */
-.card:nth-child(1){animation-delay:.05s}
-.card:nth-child(2){animation-delay:.1s}
-.card:nth-child(3){animation-delay:.15s}
-.card:nth-child(4){animation-delay:.2s}
-.card:nth-child(5){animation-delay:.25s}
-.card:nth-child(6){animation-delay:.3s}
-.card:nth-child(7){animation-delay:.35s}
-.card:nth-child(8){animation-delay:.4s}
-.card:nth-child(9){animation-delay:.45s}
-.card:nth-child(10){animation-delay:.5s}
+.card:nth-child(1){animation-delay:.05s}.card:nth-child(2){animation-delay:.1s}
+.card:nth-child(3){animation-delay:.15s}.card:nth-child(4){animation-delay:.2s}
+.card:nth-child(5){animation-delay:.25s}.card:nth-child(6){animation-delay:.3s}
+.card:nth-child(7){animation-delay:.35s}.card:nth-child(8){animation-delay:.4s}
+.card:nth-child(9){animation-delay:.45s}.card:nth-child(10){animation-delay:.5s}
 .card:nth-child(11){animation-delay:.55s}
 
 /* ── FOOTER ── */
-footer{
-  background:var(--bg-panel);border-top:1px solid var(--border);
-  padding:40px 24px;text-align:center;
-}
+footer{background:var(--bg-panel);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
 .footer-inner{max-width:1280px;margin:0 auto}
-.footer-logo{
-  font-family:var(--font-display);font-size:24px;font-weight:800;
-  background:linear-gradient(135deg,var(--violet-400),var(--gold-400));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  margin-bottom:16px;display:inline-block;
-}
+.footer-logo{font-family:var(--font-display);font-size:24px;font-weight:800;background:linear-gradient(135deg,var(--violet-400),var(--gold-400));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;display:inline-block}
 .footer-links{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:20px}
 .footer-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:var(--trans)}
 .footer-links a:hover{color:var(--accent)}
 .footer-socials{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px}
-.social-btn{
-  width:36px;height:36px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--bg-card);border:1px solid var(--border);
-  color:var(--text-muted);font-size:14px;
-  text-decoration:none;transition:var(--trans);
-}
+.social-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:14px;text-decoration:none;transition:var(--trans)}
 .social-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--violet-glow)}
 .footer-divider{width:100%;height:1px;background:var(--border);margin-bottom:20px}
 .footer-copy{font-size:12px;color:var(--text-muted);line-height:1.7}
@@ -411,20 +376,8 @@ footer{
 @keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── RESPONSIVE ── */
-@media(max-width:960px){
-  .topbar-nav{display:none}
-  .ham-btn{display:flex}
-  .topbar{padding:0 16px;gap:10px}
-  .hero-stats .stat-sep{display:none}
-  .hero-stats{gap:20px}
-}
-@media(max-width:640px){
-  .cards-grid{grid-template-columns:1fr}
-  .hero-h1{letter-spacing:-.5px}
-  .hero-stats{flex-wrap:wrap;gap:16px}
-  .stat-sep{display:none!important}
-  .hero{min-height:70vh}
-}
+@media(max-width:960px){.topbar-nav{display:none}.ham-btn{display:flex}.topbar{padding:0 16px;gap:10px}.hero-stats .stat-sep{display:none}.hero-stats{gap:20px}}
+@media(max-width:640px){.cards-grid{grid-template-columns:1fr}.hero-h1{letter-spacing:-.5px}.hero-stats{flex-wrap:wrap;gap:16px}.stat-sep{display:none!important}.hero{min-height:70vh}}
 </style>
 </head>
 <body>
@@ -743,13 +696,12 @@ footer{
 
 <script>
 const I18N = {
-  en: {
+  en:{
     page_title:'Eduvia Platform — Learn Without Limits',
     nav_home:'Home',nav_courses:'Courses',nav_chatbot:'Chatbot',
     nav_competitions:'Competitions',nav_performance:'Performance',
     nav_about:'About Us',nav_contact:'Contact',nav_dashboard:'Dashboard',
     nav_profile:'Profile',nav_logout:'Logout',nav_login:'Login',
-    nav_subscribe:'Subscribe',
     hero_badge:'AI-Powered Learning Platform',
     hero_title_1:'Unlock Your Potential',hero_title_2:'with Eduvia',
     hero_sub:'Expert-led courses, collaborative projects, and intelligent tools — everything you need to accelerate your learning journey.',
@@ -771,13 +723,12 @@ const I18N = {
     card_live_title:'Live Sessions',card_live_desc:'Join interactive live sessions with expert instructors to enhance your learning experience in real-time.',card_live_btn:'Join Live',
     footer_copy:'This platform was produced by',footer_and:'and Engineer',
   },
-  ar: {
+  ar:{
     page_title:'منصة Eduvia — تعلم بلا حدود',
     nav_home:'الرئيسية',nav_courses:'الكورسات',nav_chatbot:'المساعد الذكي',
     nav_competitions:'المسابقات',nav_performance:'الأداء',
     nav_about:'من نحن',nav_contact:'تواصل معنا',nav_dashboard:'لوحة التحكم',
     nav_profile:'الملف الشخصي',nav_logout:'تسجيل الخروج',nav_login:'تسجيل الدخول',
-    nav_subscribe:'اشتراك',
     hero_badge:'منصة تعلم مدعومة بالذكاء الاصطناعي',
     hero_title_1:'أطلق إمكاناتك',hero_title_2:'مع Eduvia',
     hero_sub:'كورسات بإشراف خبراء، مشاريع تعاونية، وأدوات ذكية — كل ما تحتاجه لتسريع رحلة التعلم.',
@@ -786,17 +737,17 @@ const I18N = {
     search_placeholder:'ابحث عن كورس أو مهارة أو موضوع…',search_btn:'بحث',
     explore_label:'استكشف',explore_title:'كل ما تحتاجه للنجاح',
     explore_sub:'اكتشف جميع الأدوات والميزات التي تقدمها Eduvia.',
-    card_courses_title:'الكورسات',card_courses_desc:'استكشف مجموعة واسعة من الكورسات المتميزة. تقدم بسهولة وابدأ التعلم بمحاضرات متسلسلة وتقييمات ومجتمع نشط.',card_courses_btn:'استعرض الكورسات',
-    card_projects_title:'المشاريع التعاونية',card_projects_desc:'انضم إلى غرف التعاون، أنشئ مهام، وشارك الملفات مع فريقك بسهولة باستخدام نظام المشاريع المتقدم.',card_projects_btn:'استعرض المشاريع',
-    card_performance_title:'تحليلات الأداء',card_performance_desc:'تتبع تقدمك، حلل مقاييس المشروع، وحسّن أدائك باستخدام أدوات التحليل القوية.',card_performance_btn:'استكشف التحليلات',
-    card_rooms_title:'غرف التعاون',card_rooms_desc:'انضم إلى غرف التعاون للعمل على المهام ومشاركة الملفات والتواصل مع فريقك في الوقت الفعلي.',card_rooms_btn:'استعرض الغرف',
-    card_chatbot_title:'المساعد الذكي',card_chatbot_desc:'مساعدنا الذكي يساعدك في استفسارات الكورسات والتصفح والمواد مثل الإنجليزية والبرمجة والرياضيات.',card_chatbot_btn:'افتح المساعد',
-    card_about_title:'من نحن',card_about_desc:'تعرف على مهمة Eduvia وكيف نُمكّن المتعلمين حول العالم بتعليم عالي الجودة مدعوم بالذكاء الاصطناعي.',card_about_btn:'اعرف المزيد',
-    card_skills_title:'سوق المهارات',card_skills_desc:'استكشف وطوّر مهاراتك من خلال سوق المهارات. اعرض أو اكتسب المهارات لتعزيز رحلتك التعليمية.',card_skills_btn:'استعرض المهارات',
-    card_services_title:'الخدمات',card_services_desc:'اكتشف مجموعة متنوعة من الخدمات في سوق المهارات. ابحث عن خدمات أو قدمها لدعم أهدافك التعليمية.',card_services_btn:'استعرض الخدمات',
-    card_contact_title:'تواصل معنا',card_contact_desc:'تواصل مع فريقنا للحصول على الدعم أو الاستفسارات أو التغذية الراجعة. نحن دائماً هنا لمساعدتك.',card_contact_btn:'تواصل الآن',
-    card_mentor_title:'لوحة المرشد',card_mentor_desc:'أدر المتدربين والمجموعات وأنشطة الإرشاد بسلاسة من خلال لوحة المرشد المخصصة.',card_mentor_btn:'افتح اللوحة',
-    card_live_title:'الجلسات المباشرة',card_live_desc:'انضم إلى جلسات مباشرة تفاعلية مع مدربين متخصصين لتعزيز تجربة التعلم في الوقت الفعلي.',card_live_btn:'انضم الآن',
+    card_courses_title:'الكورسات',card_courses_desc:'استكشف مجموعة واسعة من الكورسات المتميزة.',card_courses_btn:'استعرض الكورسات',
+    card_projects_title:'المشاريع التعاونية',card_projects_desc:'انضم إلى غرف التعاون، أنشئ مهام، وشارك الملفات مع فريقك.',card_projects_btn:'استعرض المشاريع',
+    card_performance_title:'تحليلات الأداء',card_performance_desc:'تتبع تقدمك وحسّن أدائك باستخدام أدوات التحليل القوية.',card_performance_btn:'استكشف التحليلات',
+    card_rooms_title:'غرف التعاون',card_rooms_desc:'انضم إلى غرف التعاون للعمل على المهام ومشاركة الملفات.',card_rooms_btn:'استعرض الغرف',
+    card_chatbot_title:'المساعد الذكي',card_chatbot_desc:'مساعدنا الذكي يساعدك في استفسارات الكورسات والمواد.',card_chatbot_btn:'افتح المساعد',
+    card_about_title:'من نحن',card_about_desc:'تعرف على مهمة Eduvia وكيف نُمكّن المتعلمين.',card_about_btn:'اعرف المزيد',
+    card_skills_title:'سوق المهارات',card_skills_desc:'استكشف وطوّر مهاراتك من خلال سوق المهارات.',card_skills_btn:'استعرض المهارات',
+    card_services_title:'الخدمات',card_services_desc:'اكتشف مجموعة متنوعة من الخدمات في سوق المهارات.',card_services_btn:'استعرض الخدمات',
+    card_contact_title:'تواصل معنا',card_contact_desc:'تواصل مع فريقنا للحصول على الدعم أو الاستفسارات.',card_contact_btn:'تواصل الآن',
+    card_mentor_title:'لوحة المرشد',card_mentor_desc:'أدر المتدربين وأنشطة الإرشاد من خلال لوحة المرشد.',card_mentor_btn:'افتح اللوحة',
+    card_live_title:'الجلسات المباشرة',card_live_desc:'انضم إلى جلسات مباشرة تفاعلية مع مدربين متخصصين.',card_live_btn:'انضم الآن',
     footer_copy:'هذه المنصة من إنتاج',footer_and:'والمهندس',
   }
 };
@@ -833,6 +784,13 @@ function toggleTheme() {
 function toggleMobileNav() {
   document.getElementById('mobile-nav').classList.toggle('open');
 }
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const btn = document.getElementById('ham-btn');
+  if (nav && btn && !nav.contains(e.target) && !btn.contains(e.target)) {
+    nav.classList.remove('open');
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('theme') || 'dark');

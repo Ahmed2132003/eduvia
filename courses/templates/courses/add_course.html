@@ -4,607 +4,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- 🔍 SEO -->
     <title data-translate="add-course-title">Add New Course - Eduvia</title>
-    <meta name="description" content="Create a new course on Eduvia's Instructor Dashboard. Share your expertise with students worldwide." data-translate="add-course-meta-desc-en">
-    <meta name="keywords" content="Eduvia, add course, instructor dashboard, online teaching, course creation" data-translate="add-course-meta-keywords-en">
-    <meta name="description" lang="ar" content="أنشئ دورة جديدة على لوحة تحكم المدربين في Eduvia. شارك خبراتك مع الطلاب حول العالم." data-translate="add-course-meta-desc-ar">
-    <meta name="keywords" lang="ar" content="Eduvia، إضافة دورة، لوحة تحكم المدربين، التعليم عبر الإنترنت، إنشاء دورة" data-translate="add-course-meta-keywords-ar">
-    <meta name="author" content="Eduvia Team">
-    <meta name="robots" content="index, follow">
-    <meta http-equiv="content-language" content="ar, en">
-    <link rel="canonical" href="{{ request.build_absolute_uri }}">
-
-    <!-- 🌍 Open Graph -->
-    <meta property="og:title" content="Add New Course - Eduvia" data-translate="add-course-og-title">
-    <meta property="og:description" content="Start teaching by creating a new course on Eduvia's Instructor Dashboard." data-translate="add-course-og-desc">
-    <meta property="og:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:type" content="website">
-
-    <!-- 🐦 Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Add New Course - Eduvia" data-translate="add-course-twitter-title">
-    <meta name="twitter:description" content="Start teaching by creating a new course on Eduvia's Instructor Dashboard." data-translate="add-course-twitter-desc">
-    <meta name="twitter:image" content="https://i.postimg.cc/3JrZfCbb/eduvia_home_1.jpg">
-
-    <!-- 🖼️ Favicon -->
+    <meta name="description" content="Create a new course on Eduvia's Instructor Dashboard.">
     <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
-
-    <!-- 🌐 Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- 📊 Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://eduvia-ai.fly.dev/#organization",
-                "name": "Eduvia",
-                "url": "https://eduvia-ai.fly.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png"
-                },
-                "sameAs": [
-                    "https://www.facebook.com/share/18iRSctdxN/",
-                    "https://x.com/Eduvia7",
-                    "https://www.linkedin.com/in/eduvia-creativitycode-964ba7366/"
-                ]
-            },
-            {
-                "@type": "WebPage",
-                "@id": "https://eduvia-ai.fly.dev/courses/add_course/#webpage",
-                "url": "https://eduvia-ai.fly.dev/courses/add_course/",
-                "name": "Add New Course - Eduvia",
-                "description": "Create a new course on Eduvia's Instructor Dashboard. Share your expertise with students worldwide.",
-                "breadcrumb": {
-                    "@id": "https://eduvia-ai.fly.dev/courses/add_course/#breadcrumb"
-                },
-                "inLanguage": "en"
-            },
-            {
-                "@type": "BreadcrumbList",
-                "@id": "https://eduvia-ai.fly.dev/courses/add_course/#breadcrumb",
-                "itemListElement": [
-                    { "@type": "ListItem", "position": 1, "name": "Eduvia", "item": "https://eduvia-ai.fly.dev/" },
-                    { "@type": "ListItem", "position": 2, "name": "Courses", "item": "https://eduvia-ai.fly.dev/courses/" },
-                    { "@type": "ListItem", "position": 3, "name": "Add New Course", "item": "https://eduvia-ai.fly.dev/courses/add_course/" }
-                ]
-            }
-        ]
-    }
-    </script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — "Obsidian Academy"  (Add Course)
-   ═══════════════════════════════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-base:#080b14;--bg-panel:#0d1120;--bg-card:#131929;
+  --bg-card-2:#1a2236;--bg-hover:#1e2840;
+  --border:rgba(120,130,180,.12);--border-glow:rgba(139,92,246,.25);
+  --violet-400:#a78bfa;--violet-500:#8b5cf6;--violet-600:#7c3aed;
+  --violet-glow:rgba(139,92,246,.18);
+  --gold-400:#fbbf24;--emerald-400:#34d399;--rose-400:#fb7185;
+  --text-h:#f1f5ff;--text-p:#94a3c4;--text-muted:#5a6585;
+  --accent:var(--violet-500);--accent-d:var(--violet-600);
+  --radius-sm:6px;--radius-md:12px;--radius-lg:18px;--radius-xl:24px;
+  --topbar-h:62px;--trans:all .22s cubic-bezier(.4,0,.2,1);
+  --glow:0 0 40px rgba(139,92,246,.15);
+  --font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
+  --font-arabic:'Cairo',sans-serif;
+}
+[data-theme="light"]{
+  --bg-base:#f4f6fc;--bg-panel:#ffffff;--bg-card:#f8faff;
+  --bg-card-2:#eef2fc;--border:rgba(100,110,160,.14);
+  --text-h:#0f172a;--text-p:#374365;--text-muted:#8896b3;
+  --violet-glow:rgba(139,92,246,.1);--glow:0 0 40px rgba(139,92,246,.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-p);min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s}
+[lang="ar"] body,[lang="ar"] *{font-family:var(--font-arabic),sans-serif!important}
+[lang="ar"]{direction:rtl}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg-base)}
+::-webkit-scrollbar-thumb{background:var(--bg-card-2);border-radius:99px}
 
-:root {
-  --bg-base:     #080b14;
-  --bg-panel:    #0d1120;
-  --bg-card:     #131929;
-  --bg-card-2:   #1a2236;
-  --bg-hover:    #1e2840;
-  --border:      rgba(120,130,180,.12);
-  --border-glow: rgba(139,92,246,.25);
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:600;height:var(--topbar-h);background:rgba(8,11,20,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px}
+[data-theme="light"] .topbar{background:rgba(255,255,255,.88)}
+.topbar-logo{font-family:var(--font-display);font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--violet-400),var(--gold-400));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px;flex-shrink:0;text-decoration:none}
+.topbar-sep{width:1px;height:20px;background:var(--border)}
+.topbar-nav{display:flex;align-items:center;gap:4px;flex:1}
+.topbar-nav a{font-size:12.5px;font-weight:500;color:var(--text-muted);text-decoration:none;padding:6px 10px;border-radius:var(--radius-sm);transition:var(--trans)}
+.topbar-nav a:hover{color:var(--text-p);background:var(--bg-card)}
+.topbar-nav a.active{color:var(--accent);background:var(--violet-glow)}
+.topbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ctrl-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text-p);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--trans);text-decoration:none}
+.ctrl-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--violet-glow)}
+.tb-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:var(--trans);font-family:inherit}
+.tb-btn-ghost{background:var(--bg-card);color:var(--text-p);border:1px solid var(--border)}
+.tb-btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.coins-pill{display:flex;align-items:center;gap:6px;background:var(--bg-card);border:1px solid var(--border);border-radius:99px;padding:4px 12px;font-size:12px;color:var(--gold-400);font-weight:700}
 
-  --violet-400:  #a78bfa;
-  --violet-500:  #8b5cf6;
-  --violet-600:  #7c3aed;
-  --violet-glow: rgba(139,92,246,.18);
-  --gold-400:    #fbbf24;
-  --gold-300:    #fcd34d;
-  --emerald-400: #34d399;
-  --emerald-500: #10b981;
-  --rose-400:    #fb7185;
-  --sky-400:     #38bdf8;
-  --sky-500:     #0ea5e9;
+/* ── PAGE ── */
+.page-wrapper{padding-top:var(--topbar-h);min-height:100vh;display:flex;flex-direction:column}
+.hero{position:relative;overflow:hidden;padding:52px 28px 44px;background:var(--bg-panel);border-bottom:1px solid var(--border);text-align:center}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 120% at 50% 0%,rgba(139,92,246,.12),transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);background:var(--violet-glow);border:1px solid var(--border-glow);padding:4px 14px;border-radius:99px;margin-bottom:16px}
+.hero h1{font-family:var(--font-display);font-size:clamp(28px,5vw,42px);font-weight:800;color:var(--text-h);letter-spacing:-1px;line-height:1.15;margin-bottom:12px}
+.hero h1 span{background:linear-gradient(135deg,var(--violet-400),var(--gold-400));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:15px;color:var(--text-muted);max-width:520px;margin:0 auto;line-height:1.65}
+.content{flex:1;display:flex;justify-content:center;align-items:flex-start;padding:40px 20px 60px}
 
-  --text-h:      #f1f5ff;
-  --text-p:      #94a3c4;
-  --text-muted:  #5a6585;
+/* ── FORM CARD ── */
+.form-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-xl);width:100%;max-width:700px;box-shadow:var(--glow);overflow:hidden;animation:cardReveal .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes cardReveal{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.form-card-header{padding:24px 28px 20px;background:linear-gradient(135deg,var(--bg-card-2),var(--bg-card));border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px}
+.form-card-icon{width:48px;height:48px;border-radius:var(--radius-md);background:var(--violet-glow);border:1px solid var(--border-glow);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--violet-400);flex-shrink:0}
+.form-card-title{font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--text-h)}
+.form-card-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.form-card-body{padding:28px}
 
-  --accent:      var(--violet-500);
-  --accent-d:    var(--violet-600);
+/* ── FORM FIELDS ── */
+.field-group{margin-bottom:22px}
+.field-label{display:block;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.field-input,
+.field-textarea,
+.field-select{
+  width:100%;background:var(--bg-base);border:1.5px solid var(--border);
+  border-radius:var(--radius-md);color:var(--text-p);padding:12px 15px;
+  font-size:14px;font-family:inherit;line-height:1.6;transition:var(--trans);
+  outline:none;-webkit-appearance:none
+}
+.field-textarea{resize:vertical;min-height:110px}
+.field-select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a6585' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+  padding-right:38px;cursor:pointer
+}
+.field-input:focus,.field-textarea:focus,.field-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.12);color:var(--text-h)}
+.field-input::placeholder,.field-textarea::placeholder{color:var(--text-muted)}
 
-  --radius-sm:  6px;
-  --radius-md:  12px;
-  --radius-lg:  18px;
-  --radius-xl:  24px;
-  --topbar-h:   62px;
-  --trans:      all .22s cubic-bezier(.4,0,.2,1);
-  --glow:       0 0 40px rgba(139,92,246,.15);
+/* ── IMAGE TOGGLE ── */
+.img-toggle-wrap{display:flex;gap:10px;margin-bottom:14px}
+.img-toggle-btn{
+  flex:1;padding:10px 16px;border-radius:var(--radius-md);
+  border:1.5px solid var(--border);background:var(--bg-card);
+  color:var(--text-muted);font-size:13px;font-weight:600;
+  cursor:pointer;transition:var(--trans);display:flex;
+  align-items:center;justify-content:center;gap:8px;font-family:inherit
+}
+.img-toggle-btn.active{
+  border-color:var(--accent);color:var(--accent);
+  background:var(--violet-glow)
+}
+.img-panel{display:none}
+.img-panel.active{display:block}
 
-  --font-display: 'Syne', sans-serif;
-  --font-body:    'DM Sans', sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
-  --font-arabic:  'Cairo', sans-serif;
+/* Preview */
+.img-preview-wrap{
+  margin-top:12px;border-radius:var(--radius-md);
+  overflow:hidden;border:1.5px solid var(--border);
+  display:none;max-height:200px
 }
+.img-preview-wrap.show{display:block}
+.img-preview-wrap img{width:100%;height:200px;object-fit:cover;display:block}
 
-[data-theme="light"] {
-  --bg-base:     #f4f6fc;
-  --bg-panel:    #ffffff;
-  --bg-card:     #f8faff;
-  --bg-card-2:   #eef2fc;
-  --bg-hover:    #e8ecf8;
-  --border:      rgba(100,110,160,.14);
-  --border-glow: rgba(139,92,246,.3);
-  --text-h:      #0f172a;
-  --text-p:      #374365;
-  --text-muted:  #8896b3;
-  --violet-glow: rgba(139,92,246,.1);
-  --glow:        0 0 40px rgba(139,92,246,.08);
+/* File upload zone */
+.upload-zone{
+  border:2px dashed var(--border);border-radius:var(--radius-md);
+  padding:32px 20px;text-align:center;cursor:pointer;
+  transition:var(--trans);position:relative;background:var(--bg-base)
 }
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg-base);
-  color: var(--text-p);
-  min-height: 100vh;
-  overflow-x: hidden;
-  transition: background .35s, color .35s;
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:var(--violet-glow)}
+.upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone-icon{font-size:28px;color:var(--text-muted);margin-bottom:8px}
+.upload-zone-text{font-size:14px;color:var(--text-muted)}
+.upload-zone-text strong{color:var(--accent)}
+.upload-zone-hint{font-size:11px;color:var(--text-muted);margin-top:4px}
+.upload-chosen{
+  margin-top:10px;padding:8px 14px;border-radius:var(--radius-sm);
+  background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);
+  font-size:12px;color:var(--emerald-400);display:none;
+  align-items:center;gap:8px
 }
-
-[lang="ar"] body,
-[lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
-[lang="ar"] { direction: rtl; }
-
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--bg-base); }
-::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-/* ══ TOPBAR ══════════════════════════════════════════════════════════════ */
-.topbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
-  height: var(--topbar-h);
-  background: rgba(8,11,20,.88);
-  backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 24px; gap: 16px;
-}
-[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
-
-.topbar-logo {
-  font-family: var(--font-display);
-  font-size: 22px; font-weight: 800;
-  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  letter-spacing: -0.5px; flex-shrink: 0; text-decoration: none;
-}
-.topbar-sep { width: 1px; height: 20px; background: var(--border); }
-.topbar-breadcrumb {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 13px; color: var(--text-muted); flex: 1;
-}
-.topbar-breadcrumb a {
-  color: var(--text-muted); text-decoration: none; transition: var(--trans);
-}
-.topbar-breadcrumb a:hover { color: var(--accent); }
-.topbar-breadcrumb .sep { opacity: .4; }
-.topbar-breadcrumb .current { color: var(--text-p); }
-.topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-
-.ctrl-btn {
-  width: 36px; height: 36px; border-radius: 50%;
-  border: 1px solid var(--border); background: var(--bg-card);
-  color: var(--text-p); font-size: 14px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: var(--trans); text-decoration: none;
-}
-.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--violet-glow); }
-
-.tb-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: var(--radius-sm);
-  font-size: 12px; font-weight: 600; cursor: pointer;
-  border: none; text-decoration: none; transition: var(--trans);
-  font-family: inherit;
-}
-.tb-btn-ghost { background: var(--bg-card); color: var(--text-p); border: 1px solid var(--border); }
-.tb-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-.tb-btn-accent { background: var(--accent); color: #fff; }
-.tb-btn-accent:hover { background: var(--accent-d); transform: translateY(-1px); }
-
-/* ── Nav links in topbar ── */
-.topbar-nav {
-  display: flex; align-items: center; gap: 4px; flex: 1;
-}
-.topbar-nav a {
-  font-size: 12.5px; font-weight: 500; color: var(--text-muted);
-  text-decoration: none; padding: 6px 10px; border-radius: var(--radius-sm);
-  transition: var(--trans);
-}
-.topbar-nav a:hover { color: var(--text-p); background: var(--bg-card); }
-.topbar-nav a.active { color: var(--accent); background: var(--violet-glow); }
-
-/* ── Coins pill ── */
-.coins-pill {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 99px; padding: 4px 12px;
-  font-size: 12px; color: var(--gold-400); font-weight: 700;
-}
-.coins-pill i { font-size: 12px; }
-
-/* ══ PAGE WRAPPER ════════════════════════════════════════════════════════ */
-.page-wrapper {
-  padding-top: var(--topbar-h);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ══ HERO ════════════════════════════════════════════════════════════════ */
-.hero {
-  position: relative; overflow: hidden;
-  padding: 52px 28px 44px;
-  background: var(--bg-panel);
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-}
-.hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 120% at 50% 0%, rgba(139,92,246,.12), transparent 70%);
-  pointer-events: none;
-}
-.hero::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-}
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
-  color: var(--accent);
-  background: var(--violet-glow); border: 1px solid var(--border-glow);
-  padding: 4px 14px; border-radius: 99px; margin-bottom: 16px;
-}
-.hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 5vw, 42px);
-  font-weight: 800; color: var(--text-h);
-  letter-spacing: -1px; line-height: 1.15;
-  margin-bottom: 12px;
-}
-.hero h1 span {
-  background: linear-gradient(135deg, var(--violet-400), var(--gold-400));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.hero p {
-  font-size: 15px; color: var(--text-muted); max-width: 520px; margin: 0 auto;
-  line-height: 1.65;
-}
-
-/* ══ CONTENT AREA ════════════════════════════════════════════════════════ */
-.content {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 40px 20px 60px;
-}
-
-/* ══ FORM CARD ═══════════════════════════════════════════════════════════ */
-.form-card {
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  width: 100%; max-width: 700px;
-  box-shadow: var(--glow);
-  overflow: hidden;
-  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1) both;
-}
-@keyframes cardReveal {
-  from { opacity: 0; transform: translateY(28px) scale(.97); }
-  to   { opacity: 1; transform: translateY(0)   scale(1); }
-}
-
-.form-card-header {
-  padding: 24px 28px 20px;
-  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 14px;
-}
-.form-card-icon {
-  width: 48px; height: 48px; border-radius: var(--radius-md);
-  background: var(--violet-glow); border: 1px solid var(--border-glow);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; color: var(--violet-400); flex-shrink: 0;
-}
-.form-card-title {
-  font-family: var(--font-display);
-  font-size: 19px; font-weight: 700; color: var(--text-h);
-}
-.form-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-.form-card-body { padding: 28px; }
-
-/* ── Django form as_p override ── */
-.form-card-body p {
-  margin-bottom: 22px;
-}
-.form-card-body label {
-  display: block;
-  font-size: 12px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
-  color: var(--text-muted); margin-bottom: 8px;
-}
-.form-card-body input[type="text"],
-.form-card-body input[type="url"],
-.form-card-body input[type="number"],
-.form-card-body input[type="email"],
-.form-card-body input[type="password"],
-.form-card-body input[type="date"],
-.form-card-body textarea,
-.form-card-body select {
-  width: 100%;
-  background: var(--bg-base);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  color: var(--text-p);
-  padding: 12px 15px;
-  font-size: 14px;
-  font-family: inherit;
-  line-height: 1.6;
-  transition: var(--trans);
-  outline: none;
-  -webkit-appearance: none;
-}
-.form-card-body textarea { resize: vertical; min-height: 110px; }
-.form-card-body select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a6585' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 38px;
-  cursor: pointer;
-}
-[lang="ar"] .form-card-body select {
-  background-position: left 14px center;
-  padding-right: 15px;
-  padding-left: 38px;
-}
-.form-card-body input:focus,
-.form-card-body textarea:focus,
-.form-card-body select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(139,92,246,.12);
-  color: var(--text-h);
-}
-.form-card-body input::placeholder,
-.form-card-body textarea::placeholder { color: var(--text-muted); }
-
-/* Checkbox row */
-.form-card-body input[type="checkbox"] {
-  width: 18px; height: 18px;
-  accent-color: var(--accent);
-  cursor: pointer;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-[lang="ar"] .form-card-body input[type="checkbox"] {
-  margin-right: 0; margin-left: 8px;
-}
-
-/* Help text */
-.form-card-body .helptext,
-.form-card-body span.helptext {
-  display: block;
-  font-size: 11.5px;
-  color: var(--text-muted);
-  margin-top: 5px;
-  line-height: 1.5;
-}
+.upload-chosen.show{display:flex}
 
 /* Error list */
-.form-card-body ul.errorlist {
-  list-style: none;
-  margin: 6px 0 0;
-  padding: 0;
-}
-.form-card-body ul.errorlist li {
-  font-size: 12px;
-  color: var(--rose-400);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.form-card-body ul.errorlist li::before {
-  content: '\f06a';
-  font-family: 'Font Awesome 6 Free';
-  font-weight: 900;
-}
+.errorlist{list-style:none;margin:6px 0 0;padding:0}
+.errorlist li{font-size:12px;color:var(--rose-400);display:flex;align-items:center;gap:5px}
+.errorlist li::before{content:'\f06a';font-family:'Font Awesome 6 Free';font-weight:900}
 
-/* ── Form Divider ── */
-.form-divider {
-  height: 1px;
-  background: var(--border);
-  margin: 8px 0 24px;
-}
+/* ── ACTIONS ── */
+.form-actions{display:flex;align-items:center;gap:12px;padding:20px 28px;border-top:1px solid var(--border);background:linear-gradient(135deg,var(--bg-card-2),var(--bg-card));flex-wrap:wrap}
+.btn-submit{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;border:none;background:linear-gradient(135deg,var(--violet-500),var(--accent-d));color:#fff;font-family:inherit;transition:var(--trans);box-shadow:0 4px 20px rgba(139,92,246,.35)}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,.45)}
+.btn-cancel{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--radius-md);font-size:14px;font-weight:600;cursor:pointer;background:var(--bg-card);border:1.5px solid var(--border);color:var(--text-muted);font-family:inherit;text-decoration:none;transition:var(--trans)}
+.btn-cancel:hover{border-color:var(--rose-400);color:var(--rose-400);background:rgba(251,113,133,.06)}
 
-/* ── Buttons row ── */
-.form-actions {
-  display: flex; align-items: center; gap: 12px;
-  padding: 20px 28px;
-  border-top: 1px solid var(--border);
-  background: linear-gradient(135deg, var(--bg-card-2), var(--bg-card));
-  flex-wrap: wrap;
-}
+/* ── FOOTER ── */
+.footer{border-top:1px solid var(--border);background:var(--bg-panel);padding:20px 28px;text-align:center;color:var(--text-muted);font-size:12px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.footer a{color:var(--text-muted);text-decoration:none;transition:var(--trans)}
+.footer a:hover{color:var(--accent)}
+.footer-dot{opacity:.3}
 
-.btn-submit {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 32px; border-radius: var(--radius-md);
-  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
-  background: linear-gradient(135deg, var(--violet-500), var(--accent-d));
-  color: #fff; font-family: inherit;
-  transition: var(--trans); position: relative; overflow: hidden;
-  box-shadow: 0 4px 20px rgba(139,92,246,.35);
-}
-.btn-submit::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,.1), transparent);
-  border-radius: inherit;
-}
-.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,.45); }
-.btn-submit:active { transform: translateY(0); }
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9998;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 20px;border-radius:var(--radius-md);font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:toastIn .3s ease;pointer-events:auto;display:flex;align-items:center;gap:8px;min-width:220px}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.toast-success{background:rgba(52,211,153,.15);color:var(--emerald-400);border:1px solid rgba(52,211,153,.3)}
+.toast-error{background:rgba(251,113,133,.12);color:var(--rose-400);border:1px solid rgba(251,113,133,.25)}
+.toast-info{background:rgba(139,92,246,.12);color:var(--violet-400);border:1px solid rgba(139,92,246,.25)}
+.spinner{width:14px;height:14px;border:2px solid transparent;border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.btn-cancel {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 24px; border-radius: var(--radius-md);
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  background: var(--bg-card); border: 1.5px solid var(--border);
-  color: var(--text-muted); font-family: inherit;
-  text-decoration: none; transition: var(--trans);
+@media(max-width:768px){
+  .topbar-nav{display:none}
+  .form-card-body{padding:20px}
+  .form-actions{padding:16px 20px}
+  .hero{padding:40px 16px 32px}
+  .content{padding:24px 14px 50px}
 }
-.btn-cancel:hover {
-  border-color: var(--rose-400); color: var(--rose-400);
-  background: rgba(251,113,133,.06);
-}
-
-/* ══ FOOTER ══════════════════════════════════════════════════════════════ */
-.footer {
-  border-top: 1px solid var(--border);
-  background: var(--bg-panel);
-  padding: 20px 28px;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.footer a {
-  color: var(--text-muted); text-decoration: none; transition: var(--trans);
-}
-.footer a:hover { color: var(--accent); }
-.footer-dot { opacity: .3; }
-
-/* ══ TOAST ═══════════════════════════════════════════════════════════════ */
-.toast-wrap {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-  z-index: 9998; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
-}
-.toast {
-  padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
-  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: toastIn .3s ease; pointer-events: auto;
-  display: flex; align-items: center; gap: 8px; min-width: 220px;
-}
-@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.toast-success { background: rgba(52,211,153,.15); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.3); }
-.toast-error   { background: rgba(251,113,133,.12); color: var(--rose-400);  border: 1px solid rgba(251,113,133,.25); }
-.toast-info    { background: rgba(139,92,246,.12);  color: var(--violet-400); border: 1px solid rgba(139,92,246,.25); }
-
-/* ══ MOBILE ══════════════════════════════════════════════════════════════ */
-.topbar-nav-mobile { display: none; }
-
-@media (max-width: 768px) {
-  .topbar-nav { display: none; }
-  .topbar-nav-mobile { display: flex; }
-  .form-card-body { padding: 20px; }
-  .form-actions { padding: 16px 20px; }
-  .hero { padding: 40px 16px 32px; }
-  .content { padding: 24px 14px 50px; }
-}
-
-/* ══ SPINNER ════════════════════════════════════════════════════════════= */
-.spinner {
-  width: 14px; height: 14px; border: 2px solid transparent;
-  border-top-color: currentColor; border-radius: 50%;
-  animation: spin .7s linear infinite; display: inline-block;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<!-- ══ TOPBAR ═════════════════════════════════════════════════════════════ -->
 <header class="topbar">
   <a href="/" class="topbar-logo">Eduvia</a>
   <div class="topbar-sep"></div>
-
   <nav class="topbar-nav">
-    <a href="/" data-i18n="nav_home">Home</a>
-    <a href="/courses/" data-i18n="nav_courses">Courses</a>
-    <a href="/chatbot/" data-i18n="nav_chatbot">Chatbot</a>
-    <a href="/competitions/" data-i18n="nav_competitions">Competitions</a>
-    <a href="/performance/dashboard/" data-i18n="nav_performance">Performance</a>
-    <a href="/about/" data-i18n="nav_about">About Us</a>
-    <a href="/contact_us/" data-i18n="nav_contact">Contact Us</a>
+    <a href="/">Home</a>
+    <a href="/courses/">Courses</a>
+    <a href="/chatbot/">Chatbot</a>
+    <a href="/competitions/">Competitions</a>
+    <a href="/performance/dashboard/">Performance</a>
+    <a href="/about/">About Us</a>
+    <a href="/contact_us/">Contact Us</a>
     {% if user.is_authenticated %}
-      {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
-        <a href="{% url 'courses:instructor_dashboard' %}" class="active" data-i18n="nav_dashboard">Dashboard</a>
-      {% endif %}
-      <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
-      <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
+      <a href="{% url 'courses:instructor_dashboard' %}" class="active">Dashboard</a>
+      <a href="/accounts/profile/">Profile</a>
+      <a href="/accounts/logout/">Logout</a>
     {% else %}
-      <a href="/accounts/register/" data-i18n="nav_login">Login</a>
+      <a href="/accounts/register/">Login</a>
     {% endif %}
   </nav>
-
   <div class="topbar-actions">
     {% if user.is_authenticated and user.courses_profile %}
-    <div class="coins-pill">
-      <i class="fas fa-coins"></i>
-      <span>{{ user.courses_profile.coins }}</span>
-    </div>
+    <div class="coins-pill"><i class="fas fa-coins"></i><span>{{ user.courses_profile.coins }}</span></div>
     {% endif %}
-    <button class="ctrl-btn" onclick="toggleTheme()" title="Toggle theme" id="theme-btn">
-      <i class="fas fa-moon" id="theme-icon"></i>
-    </button>
-    <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
-      <i class="fas fa-globe"></i>
-    </button>
+    <button class="ctrl-btn" onclick="toggleTheme()" id="theme-btn"><i class="fas fa-moon" id="theme-icon"></i></button>
+    <button class="ctrl-btn" onclick="toggleLang()"><i class="fas fa-globe"></i></button>
   </div>
 </header>
 
-<!-- ══ PAGE WRAPPER ═══════════════════════════════════════════════════════ -->
 <div class="page-wrapper">
-
-  <!-- ── HERO ─────────────────────────────────────────────────────────── -->
   <section class="hero">
-    <div class="hero-eyebrow">
-      <i class="fas fa-chalkboard-teacher"></i>
-      <span data-i18n="hero_eyebrow">Instructor Dashboard</span>
-    </div>
+    <div class="hero-eyebrow"><i class="fas fa-chalkboard-teacher"></i> <span data-i18n="hero_eyebrow">Instructor Dashboard</span></div>
     <h1 data-i18n="hero_title">Create a <span>New Course</span></h1>
-    <p data-i18n="hero_desc">Share your expertise with students worldwide. Fill in the details below to launch your course.</p>
+    <p data-i18n="hero_desc">Share your expertise with students worldwide.</p>
   </section>
 
-  <!-- ── CONTENT ───────────────────────────────────────────────────────── -->
   <div class="content">
     <div class="form-card">
-
-      <!-- Header -->
       <div class="form-card-header">
-        <div class="form-card-icon">
-          <i class="fas fa-plus-circle"></i>
-        </div>
+        <div class="form-card-icon"><i class="fas fa-plus-circle"></i></div>
         <div>
           <div class="form-card-title" data-i18n="form_title">Add New Course</div>
           <div class="form-card-sub" data-i18n="form_sub">Fill in all required fields to create your course</div>
         </div>
       </div>
 
-      <!-- Body — Django Form -->
-      <form method="post">
+      <form method="post" enctype="multipart/form-data" id="course-form">
         {% csrf_token %}
         <div class="form-card-body">
-          {{ form.as_p }}
+
+          <!-- Title -->
+          <div class="field-group">
+            <label class="field-label" data-i18n="lbl_title">Course Title</label>
+            <input type="text" name="title" class="field-input"
+                   placeholder="Enter course title"
+                   value="{{ form.title.value|default:'' }}" required>
+            {% if form.title.errors %}<ul class="errorlist">{% for e in form.title.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+
+          <!-- Description -->
+          <div class="field-group">
+            <label class="field-label" data-i18n="lbl_desc">Description</label>
+            <textarea name="description" class="field-textarea" placeholder="Describe your course..." rows="4">{{ form.description.value|default:'' }}</textarea>
+            {% if form.description.errors %}<ul class="errorlist">{% for e in form.description.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+
+          <!-- Category -->
+          <div class="field-group">
+            <label class="field-label" data-i18n="lbl_cat">Category</label>
+            <select name="category" class="field-select">
+              {% for val, display in form.fields.category.choices %}
+                <option value="{{ val }}" {% if form.category.value == val %}selected{% endif %}>{{ display }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- IMAGE — toggle between URL and Upload -->
+          <div class="field-group">
+            <label class="field-label" data-i18n="lbl_image">Course Image</label>
+
+            <!-- Toggle buttons -->
+            <div class="img-toggle-wrap">
+              <button type="button" class="img-toggle-btn active" id="btn-url"
+                      onclick="switchImgMode('url')">
+                <i class="fas fa-link"></i>
+                <span data-i18n="img_url">Image URL</span>
+              </button>
+              <button type="button" class="img-toggle-btn" id="btn-upload"
+                      onclick="switchImgMode('upload')">
+                <i class="fas fa-upload"></i>
+                <span data-i18n="img_upload">Upload Image</span>
+              </button>
+            </div>
+
+            <!-- URL panel -->
+            <div class="img-panel active" id="panel-url">
+              <input type="url" name="image" id="img-url-input" class="field-input"
+                     placeholder="https://example.com/image.jpg"
+                     value="{{ form.image.value|default:'' }}"
+                     oninput="previewFromUrl(this.value)">
+              <div class="img-preview-wrap" id="url-preview-wrap">
+                <img id="url-preview-img" src="" alt="Preview">
+              </div>
+              {% if form.image.errors %}<ul class="errorlist">{% for e in form.image.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+
+            <!-- Upload panel -->
+            <div class="img-panel" id="panel-upload">
+              <div class="upload-zone" id="upload-zone">
+                <input type="file" name="image_file" id="img-file-input"
+                       accept="image/*" onchange="handleFileSelect(this)">
+                <div class="upload-zone-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <div class="upload-zone-text">
+                  <strong data-i18n="upload_click">Click to upload</strong>
+                  <span data-i18n="upload_or"> or drag & drop</span>
+                </div>
+                <div class="upload-zone-hint">PNG, JPG, WEBP — max 5MB</div>
+              </div>
+              <div class="upload-chosen" id="upload-chosen">
+                <i class="fas fa-check-circle"></i>
+                <span id="chosen-filename">No file chosen</span>
+              </div>
+              <!-- Preview uploaded image -->
+              <div class="img-preview-wrap" id="upload-preview-wrap">
+                <img id="upload-preview-img" src="" alt="Preview">
+              </div>
+              {% if form.image_file.errors %}<ul class="errorlist">{% for e in form.image_file.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+          </div>
+          <!-- end image field -->
+
         </div>
 
-        <!-- Actions -->
         <div class="form-actions">
           <button type="submit" class="btn-submit" id="submit-btn">
             <i class="fas fa-rocket"></i>
@@ -616,73 +323,121 @@ body {
           </a>
         </div>
       </form>
-
     </div>
   </div>
 
-  <!-- ── FOOTER ────────────────────────────────────────────────────────── -->
   <footer class="footer">
-    <span data-i18n="footer_copy">© 2025 Eduvia and creativitycode. All rights reserved.</span>
+    <span>© 2025 Eduvia and creativitycode.</span>
     <span class="footer-dot">·</span>
-    <a href="/about/" data-i18n="footer_about">About</a>
+    <a href="/about/">About</a>
     <span class="footer-dot">·</span>
-    <a href="/contact_us/" data-i18n="footer_contact">Contact</a>
+    <a href="/contact_us/">Contact</a>
   </footer>
-
-</div><!-- /page-wrapper -->
+</div>
 
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
+/* ── Image mode toggle ── */
+let currentMode = 'url';
+
+function switchImgMode(mode) {
+  currentMode = mode;
+  document.getElementById('btn-url').classList.toggle('active', mode === 'url');
+  document.getElementById('btn-upload').classList.toggle('active', mode === 'upload');
+  document.getElementById('panel-url').classList.toggle('active', mode === 'url');
+  document.getElementById('panel-upload').classList.toggle('active', mode === 'upload');
+
+  // Clear the other field so backend won't get confused
+  if (mode === 'url') {
+    document.getElementById('img-file-input').value = '';
+    document.getElementById('upload-preview-wrap').classList.remove('show');
+    document.getElementById('upload-chosen').classList.remove('show');
+  } else {
+    document.getElementById('img-url-input').value = '';
+    document.getElementById('url-preview-wrap').classList.remove('show');
+  }
+}
+
+function previewFromUrl(url) {
+  const wrap = document.getElementById('url-preview-wrap');
+  const img  = document.getElementById('url-preview-img');
+  if (url && url.startsWith('http')) {
+    img.src = url;
+    wrap.classList.add('show');
+    img.onerror = () => wrap.classList.remove('show');
+  } else {
+    wrap.classList.remove('show');
+  }
+}
+
+function handleFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    toast('File too large — max 5MB', 'error');
+    input.value = '';
+    return;
+  }
+  document.getElementById('chosen-filename').textContent = file.name;
+  document.getElementById('upload-chosen').classList.add('show');
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('upload-preview-img').src = e.target.result;
+    document.getElementById('upload-preview-wrap').classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+/* Drag & drop */
+const zone = document.getElementById('upload-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag-over');
+  const dt = e.dataTransfer;
+  if (dt.files.length) {
+    document.getElementById('img-file-input').files = dt.files;
+    handleFileSelect(document.getElementById('img-file-input'));
+  }
+});
+
 /* ── i18n ── */
 const I18N = {
-  en: {
-    nav_home:'Home', nav_courses:'Courses', nav_chatbot:'Chatbot',
-    nav_competitions:'Competitions', nav_performance:'Performance',
-    nav_about:'About Us', nav_contact:'Contact Us',
-    nav_dashboard:'Dashboard', nav_profile:'Profile',
-    nav_logout:'Logout', nav_login:'Login',
-    hero_eyebrow:'Instructor Dashboard',
-    hero_title:'Create a New Course',
-    hero_desc:'Share your expertise with students worldwide. Fill in the details below to launch your course.',
-    form_title:'Add New Course',
-    form_sub:'Fill in all required fields to create your course',
-    btn_create:'Create Course', btn_cancel:'Cancel',
-    footer_copy:'© 2025 Eduvia and creativitycode. All rights reserved.',
-    footer_about:'About', footer_contact:'Contact',
+  en:{
+    hero_eyebrow:'Instructor Dashboard',hero_title:'Create a New Course',
+    hero_desc:'Share your expertise with students worldwide.',
+    form_title:'Add New Course',form_sub:'Fill in all required fields to create your course',
+    lbl_title:'Course Title',lbl_desc:'Description',lbl_cat:'Category',lbl_image:'Course Image',
+    img_url:'Image URL',img_upload:'Upload Image',
+    upload_click:'Click to upload',upload_or:' or drag & drop',
+    btn_create:'Create Course',btn_cancel:'Cancel',
   },
-  ar: {
-    nav_home:'الرئيسية', nav_courses:'الكورسات', nav_chatbot:'الشات بوت',
-    nav_competitions:'المسابقات', nav_performance:'الأداء',
-    nav_about:'من نحن', nav_contact:'تواصل معنا',
-    nav_dashboard:'لوحة التحكم', nav_profile:'الملف الشخصي',
-    nav_logout:'تسجيل الخروج', nav_login:'تسجيل الدخول',
-    hero_eyebrow:'لوحة المحاضر',
-    hero_title:'إنشاء كورس جديد',
-    hero_desc:'شارك خبراتك مع الطلاب حول العالم. أدخل التفاصيل أدناه لإطلاق كورسك.',
-    form_title:'إضافة كورس جديد',
-    form_sub:'أكمل جميع الحقول المطلوبة لإنشاء الكورس',
-    btn_create:'إنشاء الكورس', btn_cancel:'إلغاء',
-    footer_copy:'© 2025 Eduvia و creativitycode. جميع الحقوق محفوظة.',
-    footer_about:'من نحن', footer_contact:'تواصل معنا',
+  ar:{
+    hero_eyebrow:'لوحة المحاضر',hero_title:'إنشاء كورس جديد',
+    hero_desc:'شارك خبراتك مع الطلاب حول العالم.',
+    form_title:'إضافة كورس جديد',form_sub:'أكمل جميع الحقول المطلوبة',
+    lbl_title:'عنوان الكورس',lbl_desc:'الوصف',lbl_cat:'الفئة',lbl_image:'صورة الكورس',
+    img_url:'رابط الصورة',img_upload:'رفع صورة',
+    upload_click:'اضغط للرفع',upload_or:' أو اسحب وأفلت',
+    btn_create:'إنشاء الكورس',btn_cancel:'إلغاء',
   }
 };
 let currentLang = localStorage.getItem('lang') || 'en';
-
 function applyLang(lang) {
   currentLang = lang;
   const root = document.getElementById('html-root');
   root.setAttribute('lang', lang);
   root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
   document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (I18N[lang]?.[key]) el.textContent = I18N[lang][key];
+    const k = el.getAttribute('data-i18n');
+    if (I18N[lang]?.[k]) el.textContent = I18N[lang][k];
   });
   localStorage.setItem('lang', lang);
 }
 function toggleLang() { applyLang(currentLang === 'en' ? 'ar' : 'en'); }
 
-/* ── Theme ── */
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   document.getElementById('theme-icon').className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
@@ -692,32 +447,37 @@ function toggleTheme() {
   applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 }
 
-/* ── Toast ── */
 function toast(msg, type = 'info', dur = 3200) {
   const wrap = document.getElementById('toast-wrap');
   const el = document.createElement('div');
   el.className = `toast toast-${type}`;
-  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  const icons = {success:'fa-check-circle',error:'fa-exclamation-circle',info:'fa-info-circle'};
   el.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
   wrap.appendChild(el);
   setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),350); }, dur);
 }
 
-/* ── Submit loading ── */
-document.querySelector('form').addEventListener('submit', function() {
+document.getElementById('course-form').addEventListener('submit', function() {
   const btn = document.getElementById('submit-btn');
-  btn.innerHTML = `<span class="spinner"></span>`;
+  btn.innerHTML = '<span class="spinner"></span>';
   btn.disabled = true;
 });
 
-/* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('theme') || 'dark');
   applyLang(localStorage.getItem('lang') || 'en');
 
-  /* Django form error → show toast */
+  // If form was submitted with a file error, switch to upload tab
+  {% if form.image_file.errors %}
+  switchImgMode('upload');
+  {% endif %}
+
   const errors = document.querySelectorAll('.errorlist');
-  if (errors.length) toast(currentLang === 'ar' ? 'يرجى تصحيح الأخطاء.' : 'Please fix the errors above.', 'error');
+  if (errors.length) toast('Please fix the errors above.', 'error');
+
+  // Re-show URL preview if editing and URL exists
+  const urlVal = document.getElementById('img-url-input').value;
+  if (urlVal) previewFromUrl(urlVal);
 });
 </script>
 </body>

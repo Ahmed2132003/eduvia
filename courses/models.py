@@ -78,6 +78,7 @@ class Course(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     average_rating = models.FloatField(default=0)
     image = models.URLField(max_length=500, null=True, blank=True)
+    image_file = models.ImageField(upload_to='course_images/', null=True, blank=True)    
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default='beginner')
     total_lessons = models.PositiveIntegerField(default=0)
     slug = models.SlugField(max_length=500, unique=True, allow_unicode=True, blank=True)
@@ -87,7 +88,11 @@ class Course(models.Model):
         return self.title
 
     def get_image_url(self):
-        return self.image if self.image else 'https://via.placeholder.com/300x200?text=No+Image'
+        if self.image_file:
+            return self.image_file.url
+        if self.image:
+            return self.image
+        return 'https://via.placeholder.com/300x200?text=No+Image'
 
     def get_slug(self):
         if self.slug:
