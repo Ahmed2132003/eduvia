@@ -1,0 +1,491 @@
+{% load static i18n projects_filters %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ group.category }} - Eduvia</title>
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+/* نفس نظام "Obsidian Academy" — Part 13 ضافت أقسام جلسات اللايف
+   (active/upcoming + إدارة المدرس)، الشات الجماعي هيتضاف في Part 14. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base: #080b14; --bg-panel: #0d1120; --bg-card: #131929; --bg-card-2: #1a2236;
+  --bg-hover: #1e2840; --border: rgba(120,130,180,.12); --border-glow: rgba(139,92,246,.25);
+  --violet-400: #a78bfa; --violet-500: #8b5cf6; --violet-600: #7c3aed; --violet-glow: rgba(139,92,246,.18);
+  --gold-400: #fbbf24; --emerald-400: #34d399; --emerald-500: #10b981; --rose-400: #fb7185; --sky-400: #38bdf8;
+  --text-h: #f1f5ff; --text-p: #94a3c4; --text-muted: #5a6585;
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 18px; --topbar-h: 62px;
+  --trans: all .22s cubic-bezier(.4,0,.2,1);
+  --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif; --font-arabic: 'Cairo', sans-serif;
+}
+[data-theme="light"] {
+  --bg-base: #f4f6fc; --bg-panel: #ffffff; --bg-card: #f8faff; --bg-card-2: #eef2fc; --bg-hover: #e8ecf8;
+  --border: rgba(100,110,160,.14); --text-h: #0f172a; --text-p: #374365; --text-muted: #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body); background: var(--bg-base); color: var(--text-p);
+  min-height: 100vh; overflow-x: hidden; transition: background .35s, color .35s; margin-top: var(--topbar-h);
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600; height: var(--topbar-h);
+  display: flex; align-items: center; gap: 18px; padding: 0 28px;
+  background: rgba(8,11,20,.88); backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--text-h); text-decoration: none; }
+.topbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; flex-wrap: wrap; }
+.nav-link { font-size: 13.5px; font-weight: 500; color: var(--text-p); text-decoration: none; padding: 8px 12px; border-radius: var(--radius-sm); transition: var(--trans); }
+.nav-link:hover { background: var(--bg-hover); color: var(--text-h); }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.ctrl-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--trans); }
+.ctrl-btn:hover { background: var(--bg-hover); color: var(--text-h); }
+.hamburger { display: none; }
+@media (max-width: 900px) {
+  .nav-links { display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 10px; gap: 2px; }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 14px; }
+  .topbar-sep { display: none; }
+  .hamburger { display: flex; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); align-items: center; justify-content: center; cursor: pointer; margin-left: auto; }
+}
+
+@media (max-width: 560px) {
+  .session-row { flex-wrap: wrap; }
+  .session-row .sess-btn { width: 100%; justify-content: center; }
+  .manage-row { flex-wrap: wrap; gap: 8px; }
+  .chat-form { flex-direction: column; align-items: stretch; }
+  .chat-send-btn { width: 100%; justify-content: center; }
+  .chat-bubble { max-width: 88%; }
+}
+
+.content-wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.breadcrumb-link {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+  color: var(--text-p); text-decoration: none; margin-bottom: 20px; transition: var(--trans);
+}
+.breadcrumb-link:hover { color: var(--text-h); }
+
+.group-header {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 26px 24px; margin-bottom: 20px;
+}
+.group-header h1 {
+  font-family: var(--font-display); font-weight: 800; font-size: 24px; color: var(--text-h);
+  margin-bottom: 8px;
+}
+.group-header .teacher-line { font-size: 13.5px; color: var(--text-muted); margin-bottom: 4px; }
+.group-header .end-date-line { font-size: 12.5px; color: var(--emerald-400); }
+.owner-badge {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+  padding: 4px 12px; border-radius: 99px; font-size: 11.5px; font-weight: 700;
+  background: var(--violet-glow); color: var(--violet-400); border: 1px solid rgba(139,92,246,.3);
+}
+
+/* ── Alerts (Django messages) — نفس نمط .messages li المستخدم في باقي صفحات groups ── */
+.messages { list-style: none; margin-bottom: 16px; }
+.messages li {
+  padding: 12px 16px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+}
+.messages li.success { background: rgba(52,211,153,.1); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.25); }
+.messages li.error { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.25); }
+.messages li.info { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.25); }
+
+/* ── Section blocks ── */
+.section-block { margin-bottom: 22px; }
+.section-title {
+  display: flex; align-items: center; gap: 8px; font-family: var(--font-display);
+  font-weight: 700; font-size: 15px; color: var(--text-h); margin-bottom: 12px;
+}
+.section-title .count { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.session-row {
+  display: flex; align-items: center; gap: 14px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 14px 16px; margin-bottom: 10px;
+  animation: fadeUp .35s ease both;
+}
+.session-row .s-icon {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
+.s-icon.live { background: rgba(52,211,153,.15); color: var(--emerald-400); }
+.s-icon.upcoming { background: rgba(56,189,248,.15); color: var(--sky-400); }
+.session-row .s-body { flex: 1; min-width: 0; }
+.session-row .s-title { font-size: 14px; font-weight: 700; color: var(--text-h); margin-bottom: 3px; }
+.session-row .s-time { font-size: 12px; color: var(--text-muted); }
+.session-badge {
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px;
+  border-radius: 99px; font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.session-badge.live { background: rgba(52,211,153,.15); color: var(--emerald-400); }
+.session-badge.upcoming { background: rgba(56,189,248,.15); color: var(--sky-400); }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block; animation: pulse-dot 1.4s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+.sess-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+  border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer; transition: var(--trans);
+  flex-shrink: 0;
+}
+.sess-btn-primary { background: var(--violet-500); color: #fff; }
+.sess-btn-primary:hover { background: var(--violet-600); }
+.sess-btn-ghost { background: var(--bg-card-2); color: var(--text-p); border: 1px solid var(--border); }
+.sess-btn-ghost:hover { border-color: var(--rose-400); color: var(--rose-400); }
+
+.empty-mini {
+  background: var(--bg-card); border: 1px dashed var(--border); border-radius: var(--radius-md);
+  padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;
+}
+
+/* ── Owner management box ── */
+.manage-box {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px; margin-top: 26px;
+}
+.manage-box h3 {
+  font-family: var(--font-display); font-size: 14px; color: var(--text-h);
+  margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+}
+.manage-box .manage-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+.manage-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+.manage-row:first-of-type { border-top: none; }
+.manage-row .m-title { flex: 1; font-size: 13px; color: var(--text-p); min-width: 0; }
+.manage-row .m-title strong { color: var(--text-h); }
+.manage-form { display: inline; }
+.attach-btn {
+  background: var(--emerald-500); color: #fff; border: none; padding: 6px 14px;
+  border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.detach-btn {
+  background: transparent; color: var(--rose-400); border: 1px solid rgba(251,113,133,.3);
+  padding: 6px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer;
+}
+
+.placeholder-box {
+  background: var(--bg-card); border: 1px dashed var(--border); border-radius: var(--radius-lg);
+  padding: 40px 24px; text-align: center; margin-top: 22px;
+}
+.placeholder-icon {
+  width: 48px; height: 48px; margin: 0 auto 14px; border-radius: 50%; background: var(--violet-glow);
+  color: var(--violet-400); display: flex; align-items: center; justify-content: center; font-size: 19px;
+}
+.placeholder-box h3 { font-family: var(--font-display); font-size: 15px; color: var(--text-h); margin-bottom: 6px; }
+.placeholder-box p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+/* ── Part 14: الشات الجماعي ── */
+.chat-box {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px; max-height: 420px; overflow-y: auto; display: flex; flex-direction: column;
+  gap: 10px; margin-bottom: 14px;
+}
+.chat-bubble-row { display: flex; align-items: flex-end; gap: 8px; }
+.chat-bubble-row.mine { justify-content: flex-end; }
+.chat-bubble-row.theirs { justify-content: flex-start; }
+.chat-avatar {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--violet-glow); color: var(--violet-400);
+  display: flex; align-items: center; justify-content: center; font-size: 11.5px; font-weight: 700;
+  flex-shrink: 0; margin-bottom: 2px;
+}
+.chat-bubble {
+  max-width: 78%; padding: 9px 14px; border-radius: var(--radius-md); font-size: 13.5px; line-height: 1.5;
+}
+.chat-bubble-row.mine .chat-bubble {
+  background: var(--violet-500); color: #fff; border-bottom-right-radius: 4px;
+}
+.chat-bubble-row.theirs .chat-bubble {
+  background: var(--bg-card-2); color: var(--text-p); border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+.chat-sender {
+  font-size: 11.5px; font-weight: 700; color: var(--violet-400); margin-bottom: 3px;
+  display: flex; align-items: center; gap: 5px;
+}
+.chat-sender-badge {
+  font-size: 9.5px; font-weight: 700; padding: 1px 6px; border-radius: 99px;
+  background: var(--gold-400); color: #1a1200;
+}
+.chat-content { white-space: pre-wrap; word-break: break-word; }
+.chat-time { font-size: 10px; opacity: .65; margin-top: 4px; }
+.chat-bubble-row.mine .chat-time { text-align: right; opacity: .8; }
+.chat-bubble-row.theirs .chat-time { text-align: left; }
+.chat-form { display: flex; gap: 10px; align-items: flex-end; }
+.chat-input {
+  flex: 1; resize: vertical; min-height: 44px; max-height: 140px; padding: 10px 14px;
+  border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-panel);
+  color: var(--text-h); font-family: inherit; font-size: 13.5px;
+}
+.chat-input:focus { outline: none; border-color: var(--violet-500); }
+.chat-send-btn { flex-shrink: 0; }
+
+.footer { text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
+.footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--text-h); margin-bottom: 8px; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+    <nav class="nav-links" id="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/courses/" class="nav-link">Courses</a>
+        {% if is_owner %}
+            <a href="{% url 'groups:teacher_dashboard' %}" class="nav-link">Groups Dashboard</a>
+        {% else %}
+            <a href="{% url 'groups:my_learning_groups' %}" class="nav-link">My Groups</a>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <a href="/accounts/profile/" class="nav-link">Profile</a>
+            <a href="/accounts/logout/" class="nav-link">Logout</a>
+        {% endif %}
+    </nav>
+    <div class="topbar-right">
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+</header>
+
+<div class="content-wrap">
+    {% if is_owner %}
+        <a href="{% url 'groups:teacher_dashboard' %}" class="breadcrumb-link">
+            <i class="fas fa-arrow-right"></i> رجوع للوحة تحكمي
+        </a>
+    {% else %}
+        <a href="{% url 'groups:my_learning_groups' %}" class="breadcrumb-link">
+            <i class="fas fa-arrow-right"></i> رجوع لجروباتي
+        </a>
+    {% endif %}
+
+    <div class="group-header">
+        <h1>{{ group.category }}</h1>
+        <div class="teacher-line">
+            <i class="fas fa-chalkboard-user"></i>
+            {{ group.teacher.get_full_name|default:group.teacher.username }}
+        </div>
+        {% if active_subscription and active_subscription.end_date %}
+        <div class="end-date-line">
+            <i class="fas fa-circle-check"></i>
+            نشط لحد {{ active_subscription.end_date|date:"Y-m-d" }}
+        </div>
+        {% endif %}
+        {% if is_owner %}
+        <span class="owner-badge"><i class="fas fa-user-tie"></i> إنت صاحب الجروب ده</span>
+        {% endif %}
+    </div>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{% if 'error' in message.tags %}error{% elif 'success' in message.tags %}success{% else %}info{% endif %}">
+            <i class="fas {% if 'error' in message.tags %}fa-circle-exclamation{% elif 'success' in message.tags %}fa-circle-check{% else %}fa-circle-info{% endif %}"></i>
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- ── جلسات لايف شغالة دلوقتي ── -->
+    <div class="section-block">
+        <div class="section-title">
+            <span class="live-dot"></span> جلسات لايف شغالة دلوقتي
+            <span class="count">({{ active_live_sessions|length }})</span>
+        </div>
+        {% if active_live_sessions %}
+            {% for session in active_live_sessions %}
+            <div class="session-row">
+                <div class="s-icon live"><i class="fas fa-satellite-dish"></i></div>
+                <div class="s-body">
+                    <div class="s-title">{{ session.title }}</div>
+                    <div class="s-time">{{ session.start_time|date:"H:i" }} — {{ session.end_time|date:"H:i" }}</div>
+                </div>
+                <span class="session-badge live"><span class="live-dot"></span> مباشر الآن</span>
+                <a href="{% url 'workshops:watch_live' session_id=session.id slugified_title=session.title|custom_slugify|default:'no-title' %}"
+                   class="sess-btn sess-btn-primary">
+                    <i class="fas fa-play-circle"></i> انضم دلوقتي
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-mini">مفيش جلسات لايف شغالة دلوقتي في الجروب ده.</div>
+        {% endif %}
+    </div>
+
+    <!-- ── جلسات لايف جاية ── -->
+    <div class="section-block">
+        <div class="section-title">
+            <i class="fas fa-calendar-alt" style="color:var(--sky-400)"></i> جلسات لايف جاية
+            <span class="count">({{ upcoming_live_sessions|length }})</span>
+        </div>
+        {% if upcoming_live_sessions %}
+            {% for session in upcoming_live_sessions %}
+            <div class="session-row">
+                <div class="s-icon upcoming"><i class="fas fa-calendar-check"></i></div>
+                <div class="s-body">
+                    <div class="s-title">{{ session.title }}</div>
+                    <div class="s-time">{{ session.start_time|date:"M d, Y — H:i" }}</div>
+                </div>
+                <span class="session-badge upcoming"><i class="fas fa-clock"></i> قريبًا</span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-mini">مفيش جلسات لايف جاية متجدولة للجروب ده لسه.</div>
+        {% endif %}
+    </div>
+
+    {% if is_owner %}
+    <!-- ── إدارة جلسات الجروب (المدرس بس) ── -->
+    <div class="manage-box">
+        <h3><i class="fas fa-sliders-h"></i> إدارة جلسات الجروب</h3>
+        <p class="manage-sub">
+            اربط أي جلسة لايف من جلساتك الحالية (اللي لسه مش تابعة لأي جروب) بالجروب ده،
+            أو فك ربط جلسة موجودة.
+        </p>
+
+        {% if all_group_sessions %}
+        <div style="margin-bottom:14px;">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">جلسات مربوطة بالجروب ده حاليًا:</div>
+            {% for session in all_group_sessions %}
+            <div class="manage-row">
+                <div class="m-title"><strong>{{ session.title }}</strong> — {{ session.start_time|date:"M d, H:i" }}</div>
+                <form method="post" class="manage-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="detach_session">
+                    <input type="hidden" name="session_id" value="{{ session.id }}">
+                    <button type="submit" class="detach-btn">فك الربط</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if attachable_sessions %}
+        <div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">جلساتك اللي لسه مش مربوطة بأي جروب:</div>
+            {% for session in attachable_sessions %}
+            <div class="manage-row">
+                <div class="m-title"><strong>{{ session.title }}</strong> — {{ session.start_time|date:"M d, H:i" }}</div>
+                <form method="post" class="manage-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="attach_session">
+                    <input type="hidden" name="session_id" value="{{ session.id }}">
+                    <button type="submit" class="attach-btn">ضيفها للجروب ده</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-mini">
+            مفيش جلسات لسه من غير جروب. اعمل جلسة جديدة من
+            <a href="{% url 'workshops:create_live_session' %}" style="color:var(--violet-400);">صفحة إنشاء جلسة</a>
+            وهتلاقيها هنا جاهزة تربطها.
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- ── الشات الجماعي (Part 14) ── -->
+    <div class="section-block">
+        <div class="section-title">
+            <i class="fas fa-comments" style="color:var(--violet-400)"></i> الشات الجماعي
+            <span class="count">({{ chat_messages|length }})</span>
+        </div>
+
+        <div class="chat-box" id="chat-box">
+            {% if chat_messages %}
+                {% for msg in chat_messages %}
+                <div class="chat-bubble-row {% if msg.sender_id == request.user.id %}mine{% else %}theirs{% endif %}">
+                    {% if msg.sender_id != request.user.id %}
+                    <div class="chat-avatar">{{ msg.sender.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                    <div class="chat-bubble">
+                        {% if msg.sender_id != request.user.id %}
+                        <div class="chat-sender">
+                            {{ msg.sender.get_full_name|default:msg.sender.username }}
+                            {% if msg.sender_id == group.teacher_id %}<span class="chat-sender-badge">مدرس</span>{% endif %}
+                        </div>
+                        {% endif %}
+                        <div class="chat-content">{{ msg.content|linebreaksbr }}</div>
+                        <div class="chat-time">{{ msg.sent_at|date:"H:i" }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-mini">مفيش رسائل لسه في شات الجروب ده. ابدأ المحادثة!</div>
+            {% endif %}
+        </div>
+
+        <form method="post" class="chat-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="send_message">
+            <textarea name="content" class="chat-input" placeholder="اكتب رسالتك هنا..." required maxlength="2000"></textarea>
+            <button type="submit" class="sess-btn sess-btn-primary chat-send-btn">
+                <i class="fas fa-paper-plane"></i> إرسال
+            </button>
+        </form>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-logo">Eduvia</div>
+    <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
+
+<script>
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+function toggleLang() {
+    const html = document.getElementById('html-root');
+    const lang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    localStorage.setItem('language', lang);
+}
+function toggleMenu() { document.getElementById('nav-links').classList.toggle('open'); }
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    const lang = localStorage.getItem('language') || 'en';
+    const html = document.getElementById('html-root');
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+    // Part 14: نزّل سكرول الشات لآخر رسالة أول ما الصفحة تتحمل.
+    const chatBox = document.getElementById('chat-box');
+    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+});
+</script>
+</body>
+</html>

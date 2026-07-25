@@ -1,0 +1,76 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<style>
+  /* Part 21: تمييز بصري واضح لصفحة تأكيد الرفض — نفس ألوان rose/danger
+     المستخدمة في تمبلتس الطلاب/المدرسين (var(--rose-400) = #fb7185)،
+     بدون أي اعتماد على CSS variables (مش متاحة جوه لوحة الأدمن). */
+  .reject-warning-box {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: rgba(251, 113, 133, .08); border: 1px solid rgba(251, 113, 133, .35);
+    border-radius: 8px; padding: 14px 18px; margin: 14px 0 18px;
+    color: #b91c3c; font-size: 14px; line-height: 1.7;
+  }
+  .reject-warning-box strong { color: #fb7185; }
+  .reject-queryset-list {
+    list-style: none; margin: 0 0 20px; padding: 0;
+  }
+  .reject-queryset-list li {
+    padding: 8px 14px; margin-bottom: 6px; border-radius: 6px;
+    background: #f8f9fa; border: 1px solid #e2e4e9; font-size: 13.5px;
+  }
+  .reject-note-label { display: block; font-weight: 700; margin-bottom: 6px; }
+  .reject-note-label .required-mark { color: #fb7185; }
+  textarea#id_review_note {
+    width: 100%; max-width: 640px; border-radius: 6px; border: 1px solid #ccc;
+    padding: 10px 12px; font-family: inherit; font-size: 13.5px;
+  }
+  textarea#id_review_note:focus { outline: none; border-color: #fb7185; }
+  .reject-actions { margin-top: 18px; display: flex; align-items: center; gap: 10px; }
+  input[name="apply"].reject-confirm-btn {
+    background: #e11d48 !important; border-color: #e11d48 !important;
+  }
+  input[name="apply"].reject-confirm-btn:hover { background: #be123c !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reject-warning-box">
+  <i class="fas fa-triangle-exclamation" style="margin-top:2px;"></i>
+  <div>
+    إنت على وشك <strong>رفض {{ queryset.count }} طلب دفع</strong>.
+    لازم تكتب سبب الرفض قبل ما تقدر تأكّد — المدرس هيشوف السبب ده بالظبط.
+  </div>
+</div>
+
+<ul class="reject-queryset-list">
+  {% for obj in queryset %}
+    <li><i class="fas fa-file-invoice" style="opacity:.6;margin-left:6px;"></i>{{ obj }}</li>
+  {% endfor %}
+</ul>
+
+<form method="post">
+  {% csrf_token %}
+
+  <div class="form-row">
+    <label class="reject-note-label" for="id_review_note">
+      سبب الرفض <span class="required-mark">(إجباري)</span>
+    </label>
+    <textarea name="review_note" id="id_review_note" rows="4" cols="70" required
+              placeholder="مثال: صورة الإيصال غير واضحة، أو المبلغ المحوّل أقل من سعر الباقة المختارة."></textarea>
+  </div>
+
+  {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}">
+  {% endfor %}
+  <input type="hidden" name="action" value="reject_payment_action">
+
+  <p class="reject-actions">
+    <input type="submit" name="apply" value="تأكيد الرفض" class="default reject-confirm-btn">
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="button cancel-link">إلغاء</a>
+  </p>
+</form>
+{% endblock %}

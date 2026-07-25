@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'courses.apps.CoursesConfig',
     'pages',
-    'chatbot',
     'competitions',
     'performance_analysis',
     'django_celery_beat',
@@ -50,6 +49,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'marketplace.apps.MarketplaceConfig',
+    'groups',
+
 ]
 
 ASGI_APPLICATION = 'Eduvia.asgi.application'

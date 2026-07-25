@@ -13,13 +13,13 @@ urlpatterns = [
     path('healthcheck/', health_check),
     path('', include('pages.urls')),
     path('courses/', include('courses.urls')),
-    path("chatbot/", include("chatbot.urls")),
     path("competitions/", include("competitions.urls")),
     path('performance/', include('performance_analysis.urls')),
     path('projects/', include('projects.urls')),
     path('skills_market/', include('skills_market.urls')),
     path("mentorship/", include("mentorship.urls")),
     path('workshops/', include('workshops.urls')),
+    path('groups/', include('groups.urls', namespace='groups')),
 
     # ── API namespace (existing — untouched) ──────────────────────────────────
     path('api/marketplace/', include('marketplace.urls')),
