@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول القادم - {{ group.category }} - Eduvia</title>
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* نفس نظام "Obsidian Academy" — Part 32 (المرحلة الثانية): صفحة الجدول القادم. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base: #080b14; --bg-panel: #0d1120; --bg-card: #131929; --bg-card-2: #1a2236;
+  --bg-hover: #1e2840; --border: rgba(120,130,180,.12); --border-glow: rgba(139,92,246,.25);
+  --violet-400: #a78bfa; --violet-500: #8b5cf6; --violet-600: #7c3aed; --violet-glow: rgba(139,92,246,.18);
+  --gold-400: #fbbf24; --emerald-400: #34d399; --emerald-500: #10b981; --rose-400: #fb7185; --sky-400: #38bdf8;
+  --text-h: #f1f5ff; --text-p: #94a3c4; --text-muted: #5a6585;
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 18px; --topbar-h: 62px;
+  --trans: all .22s cubic-bezier(.4,0,.2,1);
+  --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif; --font-arabic: 'Cairo', sans-serif;
+}
+[data-theme="light"] {
+  --bg-base: #f4f6fc; --bg-panel: #ffffff; --bg-card: #f8faff; --bg-card-2: #eef2fc; --bg-hover: #e8ecf8;
+  --border: rgba(100,110,160,.14); --text-h: #0f172a; --text-p: #374365; --text-muted: #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body); background: var(--bg-base); color: var(--text-p);
+  min-height: 100vh; overflow-x: hidden; transition: background .35s, color .35s; margin-top: var(--topbar-h);
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600; height: var(--topbar-h);
+  display: flex; align-items: center; gap: 18px; padding: 0 28px;
+  background: rgba(8,11,20,.88); backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--text-h); text-decoration: none; }
+.topbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; flex-wrap: wrap; }
+.nav-link { font-size: 13.5px; font-weight: 500; color: var(--text-p); text-decoration: none; padding: 8px 12px; border-radius: var(--radius-sm); transition: var(--trans); }
+.nav-link:hover { background: var(--bg-hover); color: var(--text-h); }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.ctrl-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--trans); }
+.ctrl-btn:hover { background: var(--bg-hover); color: var(--text-h); }
+.hamburger { display: none; }
+@media (max-width: 900px) {
+  .nav-links { display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 10px; gap: 2px; }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 14px; }
+  .topbar-sep { display: none; }
+  .hamburger { display: flex; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); align-items: center; justify-content: center; cursor: pointer; margin-left: auto; }
+}
+
+.content-wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.breadcrumb-link {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+  color: var(--text-p); text-decoration: none; margin-bottom: 20px; transition: var(--trans);
+}
+.breadcrumb-link:hover { color: var(--text-h); }
+
+.page-head { margin-bottom: 22px; }
+.page-title { font-family: var(--font-display); font-weight: 800; font-size: 22px; color: var(--text-h); }
+.page-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+.messages { list-style: none; margin-bottom: 16px; }
+.messages li {
+  padding: 12px 16px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+}
+.messages li.success { background: rgba(52,211,153,.1); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.25); }
+.messages li.error { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.25); }
+.messages li.info { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.25); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.schedule-row {
+  display: flex; align-items: center; gap: 14px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 14px 16px; margin-bottom: 10px;
+  animation: fadeUp .35s ease both;
+}
+.schedule-row .sc-icon {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
+.sc-icon.live { background: rgba(56,189,248,.15); color: var(--sky-400); }
+.sc-icon.lesson { background: rgba(251,191,36,.15); color: var(--gold-400); }
+.schedule-row .sc-body { flex: 1; min-width: 0; }
+.schedule-row .sc-title { font-size: 14px; font-weight: 700; color: var(--text-h); margin-bottom: 3px; }
+.schedule-row .sc-time { font-size: 12px; color: var(--text-muted); }
+.schedule-badge {
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px;
+  border-radius: 99px; font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.schedule-badge.live { background: rgba(56,189,248,.15); color: var(--sky-400); }
+.schedule-badge.lesson { background: rgba(251,191,36,.15); color: var(--gold-400); }
+
+.sc-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+  border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer; transition: var(--trans);
+  flex-shrink: 0; background: var(--bg-card-2); color: var(--text-p); border: 1px solid var(--border);
+}
+.sc-btn:hover { border-color: var(--violet-500); color: var(--violet-400); }
+
+.empty-state {
+  background: var(--bg-card); border: 1px dashed var(--border); border-radius: var(--radius-lg);
+  padding: 40px 24px; text-align: center; margin-top: 22px;
+}
+.empty-state i { font-size: 30px; color: var(--text-muted); margin-bottom: 12px; }
+.empty-state p { font-size: 13.5px; color: var(--text-muted); }
+
+.footer { text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
+.footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--text-h); margin-bottom: 8px; font-size: 16px; }
+
+/* Part 37: شريط التابات الموحّد داخل الجروب (نفس CSS بالحرف عبر كل صفحات المرحلة الثانية) */
+.group-tabs {
+  display: flex; gap: 4px; overflow-x: auto; margin-bottom: 22px; padding-bottom: 2px;
+  border-bottom: 1px solid var(--border);
+}
+.group-tabs::-webkit-scrollbar { height: 4px; }
+.group-tabs::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+.group-tab {
+  display: inline-flex; align-items: center; gap: 7px; padding: 10px 14px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0; font-size: 12.5px; font-weight: 700;
+  color: var(--text-muted); text-decoration: none; white-space: nowrap; transition: var(--trans);
+  border-bottom: 2px solid transparent; flex-shrink: 0;
+}
+.group-tab:hover { color: var(--text-h); background: var(--bg-hover); }
+.group-tab.active { color: var(--violet-400); border-bottom-color: var(--violet-500); background: var(--violet-glow); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+    <nav class="nav-links" id="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        {% if is_owner %}
+            <a href="{% url 'groups:teacher_dashboard' %}" class="nav-link">Groups Dashboard</a>
+        {% else %}
+            <a href="{% url 'groups:my_learning_groups' %}" class="nav-link">My Groups</a>
+        {% endif %}
+        <a href="{% url 'groups:group_detail' group_id=group.id %}" class="nav-link">Group detail </a>
+    </nav>
+    <div class="topbar-right">
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+</header>
+
+<div class="content-wrap">
+    <a href="{% url 'groups:group_detail' group_id=group.id %}" class="breadcrumb-link">
+        <i class="fas fa-arrow-right"></i> رجوع لصفحة الجروب
+    </a>
+
+    {% include 'groups/_group_tabs.html' %}
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{% if 'error' in message.tags %}error{% elif 'success' in message.tags %}success{% else %}info{% endif %}">
+            <i class="fas {% if 'error' in message.tags %}fa-circle-exclamation{% elif 'success' in message.tags %}fa-circle-check{% else %}fa-circle-info{% endif %}"></i>
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="page-head">
+        <div class="page-title"><i class="fas fa-calendar-days"></i> الجدول القادم</div>
+        <div class="page-sub">{{ group.category }} — {{ group.teacher.get_full_name|default:group.teacher.username }}</div>
+    </div>
+
+    {% if schedule_items %}
+        {% for item in schedule_items %}
+        <div class="schedule-row">
+            <div class="sc-icon {{ item.kind }}">
+                <i class="fas {% if item.kind == 'live' %}fa-satellite-dish{% else %}fa-book-open{% endif %}"></i>
+            </div>
+            <div class="sc-body">
+                <div class="sc-title">{{ item.title }}</div>
+                <div class="sc-time">{{ item.when|date:"M d, Y — H:i" }}</div>
+            </div>
+            <span class="schedule-badge {{ item.kind }}">
+                {% if item.kind == 'live' %}<i class="fas fa-satellite-dish"></i> لايف{% else %}<i class="fas fa-book-open"></i> درس{% endif %}
+            </span>
+            {% if item.kind == 'live' and not is_owner %}
+            <!-- Part 25: join_live_session محمية بـ student_required فقط،
+                 فالرابط ده مش بيظهر للمدرس صاحب الجروب (زي "الميعاد" في
+                 group_detail.html بالظبط). -->
+            <a href="{% url 'groups:join_live_session' session_id=item.obj.id %}" class="sc-btn">
+                <i class="fas fa-info-circle"></i> الميعاد
+            </a>
+            {% elif item.kind == 'lesson' and is_owner %}
+            <!-- Part 28: watch_group_lesson بيمنع الطالب من فتح درس لسه
+                 مش منشور، فالرابط ده مقصور على المدرس صاحب الجروب بس. -->
+            <a href="{% url 'groups:watch_group_lesson' lesson_id=item.obj.id %}" class="sc-btn">
+                <i class="fas fa-eye"></i> معاينة
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-calendar-check"></i>
+            <p>مفيش أي لايف مجدول أو درس هينزل قريب دلوقتي.</p>
+        </div>
+    {% endif %}
+</div>
+
+<footer class="footer">
+    <div class="footer-logo">Eduvia</div>
+    <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
+
+<script>
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+function toggleLang() {
+    const html = document.getElementById('html-root');
+    const lang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    localStorage.setItem('language', lang);
+}
+function toggleMenu() { document.getElementById('nav-links').classList.toggle('open'); }
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    const lang = localStorage.getItem('language') || 'en';
+    const html = document.getElementById('html-root');
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+});
+</script>
+</body>
+</html>

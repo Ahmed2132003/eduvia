@@ -1,0 +1,507 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Groups - Eduvia</title>
+    <meta name="description" content="Your enrolled curriculum groups on Eduvia.">
+    <meta name="author" content="Eduvia Team">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — "Obsidian Academy" (matches dashboard.html / join_teacher_community.html)
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #080b14;
+  --bg-panel:    #0d1120;
+  --bg-card:     #131929;
+  --bg-card-2:   #1a2236;
+  --bg-hover:    #1e2840;
+  --border:      rgba(120,130,180,.12);
+  --border-glow: rgba(139,92,246,.25);
+
+  --violet-400:  #a78bfa;
+  --violet-500:  #8b5cf6;
+  --violet-600:  #7c3aed;
+  --violet-glow: rgba(139,92,246,.18);
+  --gold-400:    #fbbf24;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --rose-400:    #fb7185;
+  --sky-400:     #38bdf8;
+  --sky-500:     #0ea5e9;
+  --amber-400:   #fbbf24;
+
+  --text-h:      #f1f5ff;
+  --text-p:      #94a3c4;
+  --text-muted:  #5a6585;
+
+  --accent:      var(--violet-500);
+  --accent-d:    var(--violet-600);
+  --success:     var(--emerald-400);
+  --warning:     var(--gold-400);
+  --danger:      var(--rose-400);
+  --info:        var(--sky-400);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --topbar-h:   62px;
+  --trans:      all .22s cubic-bezier(.4,0,.2,1);
+  --glow:       0 0 40px rgba(139,92,246,.15);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f4f6fc;
+  --bg-panel:    #ffffff;
+  --bg-card:     #f8faff;
+  --bg-card-2:   #eef2fc;
+  --bg-hover:    #e8ecf8;
+  --border:      rgba(100,110,160,.14);
+  --border-glow: rgba(139,92,246,.3);
+  --text-h:      #0f172a;
+  --text-p:      #374365;
+  --text-muted:  #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+  --glow:        0 0 40px rgba(139,92,246,.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-p);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══ TOPBAR ═══════════════════════════════════════════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: var(--topbar-h);
+  display: flex; align-items: center; gap: 18px;
+  padding: 0 28px;
+  background: rgba(8,11,20,.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+.topbar-logo {
+  font-family: var(--font-display); font-weight: 800; font-size: 20px;
+  color: var(--text-h); text-decoration: none; letter-spacing: -.5px; flex-shrink: 0;
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; flex-wrap: wrap; }
+.nav-link {
+  font-size: 13.5px; font-weight: 500; color: var(--text-p); text-decoration: none;
+  padding: 8px 12px; border-radius: var(--radius-sm); transition: var(--trans); white-space: nowrap;
+}
+.nav-link:hover { background: var(--bg-hover); color: var(--text-h); }
+.nav-link.active { background: var(--violet-glow); color: var(--violet-400); }
+.topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.coins-chip {
+  display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 99px;
+  font-size: 13px; font-weight: 600; color: var(--gold-400);
+}
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-p); display: flex; align-items: center;
+  justify-content: center; cursor: pointer; transition: var(--trans); font-size: 14px;
+}
+.ctrl-btn:hover { background: var(--bg-hover); color: var(--text-h); }
+.hamburger { display: none; }
+
+@media (max-width: 900px) {
+  .nav-links { display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0;
+    flex-direction: column; align-items: stretch; background: var(--bg-panel);
+    border-bottom: 1px solid var(--border); padding: 10px; gap: 2px; }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 14px; }
+  .topbar-sep { display: none; }
+  .hamburger {
+    display: flex; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--bg-card); color: var(--text-p); align-items: center; justify-content: center;
+    cursor: pointer; margin-left: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .mygroup-card { flex-direction: column; align-items: stretch; }
+  .mygroup-actions { justify-content: space-between; }
+  .enter-btn { flex: 1; justify-content: center; }
+}
+
+body { margin-top: var(--topbar-h); }
+
+/* ═══ HERO ══════════════════════════════════════════════════════ */
+.hero {
+  padding: 48px 24px 24px; text-align: center; max-width: 760px; margin: 0 auto;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600;
+  color: var(--violet-400); background: var(--violet-glow); border: 1px solid rgba(139,92,246,.25);
+  padding: 6px 14px; border-radius: 99px; margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--font-display); font-weight: 800; font-size: 30px; color: var(--text-h);
+  letter-spacing: -.5px; margin-bottom: 10px;
+}
+.hero p { font-size: 15px; color: var(--text-p); line-height: 1.65; }
+
+/* ═══ CONTENT WRAP ══════════════════════════════════════════════ */
+.content-wrap { max-width: 900px; margin: 0 auto; padding: 12px 24px 80px; }
+
+.messages { list-style: none; margin-bottom: 20px; }
+.messages li {
+  padding: 12px 16px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.messages li.success { background: rgba(52,211,153,.1); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.messages li.error { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.25); }
+.messages li.info { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.25); }
+
+/* ═══ GROUP CARDS ═════════════════════════════════════════════════ */
+.groups-list { display: flex; flex-direction: column; gap: 14px; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.mygroup-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px 22px; display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; transition: var(--trans);
+  animation: fadeUp .35s ease both;
+}
+.mygroup-card:hover { border-color: var(--border-glow); }
+
+.mygroup-info { min-width: 0; flex: 1; display: flex; align-items: center; gap: 14px; }
+.mygroup-avatar {
+  width: 46px; height: 46px; border-radius: 50%; background: var(--violet-glow); color: var(--violet-400);
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.mygroup-text { min-width: 0; }
+.mygroup-category {
+  font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--text-h);
+  margin-bottom: 4px;
+}
+.mygroup-teacher { font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px; }
+.mygroup-meta-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600;
+  padding: 3px 9px; border-radius: 99px; white-space: nowrap;
+}
+.pill-violet { background: rgba(139,92,246,.1); color: var(--violet-400); border: 1px solid rgba(139,92,246,.2); }
+.pill-sky    { background: rgba(56,189,248,.08); color: var(--sky-400); border: 1px solid rgba(56,189,248,.18); }
+.pill-gold   { background: rgba(251,191,36,.08); color: var(--gold-400); border: 1px solid rgba(251,191,36,.18); }
+
+.mygroup-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;
+  padding: 6px 14px; border-radius: 99px; white-space: nowrap;
+}
+.status-active { background: rgba(52,211,153,.1); color: var(--success); border: 1px solid rgba(52,211,153,.25); }
+.status-frozen { background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.25); }
+
+.enter-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13.5px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer; transition: var(--trans); white-space: nowrap;
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600)); color: #fff;
+  box-shadow: 0 4px 14px rgba(108,52,131,.35);
+}
+.enter-btn:hover { color:#fff; transform:translateY(-1px); box-shadow:0 6px 20px rgba(108,52,131,.45); }
+
+/* ═══ Part 25: زرار "لايف دلوقتي" — بيظهر بس لو فيه GroupLiveSession
+   status='live' شغالة على الجروب ده. أخضر (emerald) عشان يتفرق بصريًا
+   عن زرار "دخول" العادي البنفسجي، بنفس نبضة .live-dot المستخدمة في
+   group_detail.html (Part 24). ═══ */
+@keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.live-now-btn {
+  background: linear-gradient(135deg, var(--emerald-500), #059669);
+  box-shadow: 0 4px 14px rgba(16,185,129,.35);
+}
+.live-now-btn:hover { box-shadow: 0 6px 20px rgba(16,185,129,.45); }
+.live-now-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #fff; display: inline-block;
+  animation: livePulse 1.4s infinite;
+}
+
+/* ═══ Part 32 (المرحلة الثانية): ودجت "الجدول القادم" ═══════════════
+   مجمّع من كل جروبات الطالب النشطة مع بعض (لايفات مجدولة + دروس مجدولة)،
+   نفس مكوّن .schedule-row المستخدم في group_schedule.html بالظبط، بس
+   بإضافة اسم الجروب (لأن الودجت هنا بيجمع أكتر من جروب في قايمة واحدة). */
+/* Part 34 (المرحلة الثانية): بادچ "واجبات معلّقة" جنب كل جروب — تنبيه
+   بسيط للطالب (عدد الواجبات اللي لسه ملهاش تسليم في الجروب ده)، بنفس
+   روح .pill-gold لكن بشكل رابط قابل للضغط يودّي مباشرة لقايمة الواجبات. */
+.pending-assignments-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; margin-top: 6px;
+  border-radius: 99px; font-size: 11.5px; font-weight: 700; text-decoration: none;
+  background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.22);
+  transition: var(--trans);
+}
+.pending-assignments-badge:hover { background: rgba(251,191,36,.18); }
+
+.schedule-widget { margin-bottom: 26px; }
+.schedule-widget-title {
+  display: flex; align-items: center; gap: 8px; font-family: var(--font-display);
+  font-weight: 700; font-size: 15px; color: var(--text-h); margin-bottom: 12px;
+}
+.schedule-row {
+  display: flex; align-items: center; gap: 14px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 12px 16px; margin-bottom: 8px; animation: fadeUp .35s ease both;
+}
+.schedule-row .sc-icon {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sc-icon.live { background: rgba(56,189,248,.15); color: var(--sky-400); }
+.sc-icon.lesson { background: rgba(251,191,36,.15); color: var(--gold-400); }
+.schedule-row .sc-body { flex: 1; min-width: 0; }
+.schedule-row .sc-title { font-size: 13.5px; font-weight: 700; color: var(--text-h); margin-bottom: 2px; }
+.schedule-row .sc-meta { font-size: 11.5px; color: var(--text-muted); }
+.sc-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+  border-radius: var(--radius-sm); font-size: 12px; font-weight: 700;
+  text-decoration: none; border: 1px solid var(--border); background: var(--bg-card-2);
+  color: var(--text-p); transition: var(--trans); flex-shrink: 0;
+}
+.sc-btn:hover { border-color: var(--violet-500); color: var(--violet-400); }
+
+/* ═══ EMPTY STATE ═══════════════════════════════════════════════ */
+.empty-state {
+  text-align: center; padding: 60px 24px; background: var(--bg-card); border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+.empty-state-icon {
+  width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: var(--violet-glow);
+  color: var(--violet-400); display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.empty-state h3 { font-family: var(--font-display); font-size: 17px; color: var(--text-h); margin-bottom: 8px; }
+.empty-state p { font-size: 13.5px; color: var(--text-muted); }
+
+/* ═══ FOOTER ════════════════════════════════════════════════════ */
+.footer { text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
+.footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--text-h); margin-bottom: 8px; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ TOPBAR ════════════════════════════════════════════════════ -->
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+
+    <nav class="nav-links" id="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/courses/" class="nav-link">Courses</a>
+        <a href="/competitions/" class="nav-link">Competitions</a>
+        <a href="/performance/dashboard/" class="nav-link">Performance</a>
+        <a href="{% url 'groups:my_learning_groups' %}" class="nav-link active">My Groups</a>
+        <a href="/about/" class="nav-link">About Us</a>
+        <a href="/contact_us/" class="nav-link">Contact Us</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'groups:my_todo_list' %}" class="nav-link">My Tasks</a>
+            <a href="/accounts/profile/" class="nav-link">Profile</a>
+            <a href="/accounts/logout/" class="nav-link">Logout</a>
+        {% else %}
+            <a href="/accounts/register/" class="nav-link">Login</a>
+        {% endif %}
+    </nav>
+
+    <div class="topbar-right">
+        {% if user.is_authenticated and user.courses_profile %}
+        <div class="coins-chip">
+            <i class="fas fa-coins"></i> {{ user.courses_profile.coins }}
+        </div>
+        {% endif %}
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+</header>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-eyebrow"><i class="fas fa-layer-group"></i> My Groups</div>
+    <h1>جروباتي</h1>
+    <p>كل الجروبات اللي إنت منضم فيها، وحالة كل واحد منها</p>
+</section>
+
+<!-- ═══ CONTENT ═══════════════════════════════════════════════════ -->
+<div class="content-wrap">
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }}">
+            <i class="fas {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'info' %}fa-circle-info{% else %}fa-circle-exclamation{% endif %}"></i>
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Part 32 (المرحلة الثانية): ودجت "الجدول القادم" — مجمّع من كل
+         جروبات الطالب النشطة (لايفات مجدولة + دروس مجدولة)، مرتب
+         بالتاريخ (الأقرب أول)، آخر 8 عناصر بس (upcoming_schedule_items
+         محسوبة ومقصوصة من الـ view، تفاصيل في PROGRESS). لو فاضية، مفيش
+         أي ودجت هيظهر خالص (مش empty state منفصل — الصفحة أصلًا فيها
+         empty state لقايمة الجروبات نفسها لو مفيش جروبات من الأساس). -->
+    {% if upcoming_schedule_items %}
+    <div class="schedule-widget">
+        <div class="schedule-widget-title">
+            <i class="fas fa-calendar-days" style="color:var(--gold-400)"></i> الجدول القادم
+        </div>
+        {% for item in upcoming_schedule_items %}
+        <div class="schedule-row">
+            <div class="sc-icon {{ item.kind }}">
+                <i class="fas {% if item.kind == 'live' %}fa-satellite-dish{% else %}fa-book-open{% endif %}"></i>
+            </div>
+            <div class="sc-body">
+                <div class="sc-title">{{ item.title }}</div>
+                <div class="sc-meta">{{ item.group.category }} — {{ item.when|date:"M d, Y — H:i" }}</div>
+            </div>
+            {% if item.kind == 'live' %}
+            <a href="{% url 'groups:join_live_session' session_id=item.obj.id %}" class="sc-btn">
+                <i class="fas fa-info-circle"></i> الميعاد
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if rows %}
+    <div class="groups-list">
+        {% for row in rows %}
+        <div class="mygroup-card">
+            <div class="mygroup-info">
+                <div class="mygroup-avatar"><i class="fas fa-chalkboard-user"></i></div>
+                <div class="mygroup-text">
+                    <div class="mygroup-category">{{ row.category }}</div>
+                    <div class="mygroup-teacher">
+                        <i class="fas fa-user"></i>
+                        {{ row.teacher.get_full_name|default:row.teacher.username }}
+                    </div>
+                    <div class="mygroup-meta-pills">
+                        <span class="pill pill-violet"><i class="fas fa-globe"></i> {{ row.category.country }}</span>
+                        <span class="pill pill-sky"><i class="fas fa-layer-group"></i> {{ row.category.stage }}</span>
+                        <span class="pill pill-gold"><i class="fas fa-graduation-cap"></i> {{ row.category.grade }}</span>
+                    </div>
+                    {% if row.pending_assignments_count %}
+                    <!-- Part 34 (المرحلة الثانية): تنبيه بسيط بعدد الواجبات
+                         المعلّقة (لسه ملهاش تسليم) — بيودّي مباشرة لقايمة
+                         واجبات الجروب ده. -->
+                    <a href="{% url 'groups:group_assignments_list' group_id=row.group.id %}" class="pending-assignments-badge">
+                        <i class="fas fa-clipboard-list"></i>
+                        {{ row.pending_assignments_count }} واجب{% if row.pending_assignments_count > 1 %}ات{% endif %} محتاج{% if row.pending_assignments_count == 1 %}{% else %}ين{% endif %} تسليم
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mygroup-actions">
+                {% if row.is_active %}
+                {% if row.live_session %}
+                <!-- Part 25: يودّي مباشرة لصفحة مشاهدة اللايف الشغال دلوقتي
+                     (join_live_session)، بدل ما الطالب يعدّي بصفحة الجروب
+                     الأول. -->
+                <a href="{% url 'groups:join_live_session' session_id=row.live_session.id %}" class="enter-btn live-now-btn">
+                    <span class="live-now-dot"></span> لايف دلوقتي
+                </a>
+                {% endif %}
+                <span class="status-badge status-active"><i class="fas fa-circle-check"></i> نشط</span>
+                <a href="{% url 'groups:group_detail' row.group.id %}" class="enter-btn">
+                    <i class="fas fa-arrow-left"></i> دخول
+                </a>
+                {% else %}
+                <span class="status-badge status-frozen"><i class="fas fa-snowflake"></i> متجمد</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fas fa-layer-group"></i></div>
+        <h3>لسه معندكش أي جروب</h3>
+        <p>لما تنضم لجروب مدرس عن طريق رابط الانضمام، هيظهر هنا.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════════════ -->
+<footer class="footer">
+    <div class="footer-logo">Eduvia</div>
+    <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ── Theme ─────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+/* ── Language ──────────────────────────────────────────────────── */
+function toggleLang() {
+    const html = document.getElementById('html-root');
+    const lang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    localStorage.setItem('language', lang);
+}
+
+/* ── Mobile menu ───────────────────────────────────────────────── */
+function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+}
+
+/* ── Init theme/lang ───────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    const lang = localStorage.getItem('language') || 'en';
+    const html = document.getElementById('html-root');
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+});
+</script>
+</body>
+</html>

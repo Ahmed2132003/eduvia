@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'courses.apps.CoursesConfig',
     'pages',
-    'chatbot',
     'competitions',
     'performance_analysis',
     'django_celery_beat',
@@ -53,6 +52,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',                          # ✅ جديد
     'marketplace.apps.MarketplaceConfig',      # ✅ جديد
+    'groups',
 ]
 
 ASGI_APPLICATION = 'Eduvia.asgi.application'
@@ -160,6 +160,24 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='creativitycode78@gmail.com')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Creativity Code <creativitycode78@gmail.com>')
+
+# ---------------------------------------------------------------------------
+# Part 23 (المرحلة الثانية — البث المباشر): إعدادات مزود الـ WebRTC
+# (LiveKit). القرار المعماري الكامل لاختيار LiveKit تحديدًا موثق في
+# PROGRESS_PART22.md (Part 22).
+#
+# القيم الافتراضية فاضية عمدًا — مفيش أي مفتاح/سيكرت حقيقي مكتوب هنا في
+# الكود. لازم تتظبط فعليًا كمتغيرات بيئة (.env) قبل ما
+# groups/live_provider.py يقدر يشتغل فعليًا.
+LIVEKIT_URL = config('LIVEKIT_URL', default='')
+LIVEKIT_API_KEY = config('LIVEKIT_API_KEY', default='')
+LIVEKIT_API_SECRET = config('LIVEKIT_API_SECRET', default='')
+
+# Part 26 (نسخة معدّلة — Manual Recording Upload): حد أقصى لحجم فيديو
+# التسجيل اللي المدرس بيرفعه يدويًا بعد ما اللايف يخلص، بالميجابايت.
+GROUP_LIVE_RECORDING_MAX_UPLOAD_MB = config(
+    'GROUP_LIVE_RECORDING_MAX_UPLOAD_MB', default=1024, cast=int,
+)
 
 # ✅ جديد — encoding fix
 if hasattr(sys.stdout, 'reconfigure'):

@@ -613,10 +613,3 @@ class LessonTaskSubmission(models.Model):
             f'{self.user.username} → {self.task.title} '
             f'(attempt {self.attempt_number}, {self.score:.0f}%)'
         )
- 
-
-
-
-
-
-

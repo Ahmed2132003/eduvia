@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء واجب جديد - {{ group.category }} - Eduvia</title>
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* نفس نظام "Obsidian Academy" — Part 34 (المرحلة الثانية): إنشاء واجب جديد.
+   نفس هيكل form-card/field-group المستخدم في upload_group_lesson.html
+   (Part 28) بالحرف. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base: #080b14; --bg-panel: #0d1120; --bg-card: #131929; --bg-card-2: #1a2236;
+  --bg-hover: #1e2840; --border: rgba(120,130,180,.12); --border-glow: rgba(139,92,246,.25);
+  --violet-400: #a78bfa; --violet-500: #8b5cf6; --violet-600: #7c3aed; --violet-glow: rgba(139,92,246,.18);
+  --gold-400: #fbbf24; --emerald-400: #34d399; --emerald-500: #10b981; --rose-400: #fb7185; --sky-400: #38bdf8;
+  --text-h: #f1f5ff; --text-p: #94a3c4; --text-muted: #5a6585;
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 18px; --topbar-h: 62px;
+  --trans: all .22s cubic-bezier(.4,0,.2,1);
+  --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif; --font-arabic: 'Cairo', sans-serif;
+}
+[data-theme="light"] {
+  --bg-base: #f4f6fc; --bg-panel: #ffffff; --bg-card: #f8faff; --bg-card-2: #eef2fc; --bg-hover: #e8ecf8;
+  --border: rgba(100,110,160,.14); --text-h: #0f172a; --text-p: #374365; --text-muted: #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body); background: var(--bg-base); color: var(--text-p);
+  min-height: 100vh; overflow-x: hidden; transition: background .35s, color .35s; margin-top: var(--topbar-h);
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600; height: var(--topbar-h);
+  display: flex; align-items: center; gap: 18px; padding: 0 28px;
+  background: rgba(8,11,20,.88); backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--text-h); text-decoration: none; }
+.topbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; flex-wrap: wrap; }
+.nav-link { font-size: 13.5px; font-weight: 500; color: var(--text-p); text-decoration: none; padding: 8px 12px; border-radius: var(--radius-sm); transition: var(--trans); }
+.nav-link:hover { background: var(--bg-hover); color: var(--text-h); }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.ctrl-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--trans); }
+.ctrl-btn:hover { background: var(--bg-hover); color: var(--text-h); }
+.hamburger { display: none; }
+@media (max-width: 900px) {
+  .nav-links { display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 10px; gap: 2px; }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 14px; }
+  .topbar-sep { display: none; }
+  .hamburger { display: flex; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); align-items: center; justify-content: center; cursor: pointer; margin-left: auto; }
+}
+
+.content-wrap { max-width: 640px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.breadcrumb-link {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+  color: var(--text-p); text-decoration: none; margin-bottom: 20px; transition: var(--trans);
+}
+.breadcrumb-link:hover { color: var(--text-h); }
+
+.page-title { font-family: var(--font-display); font-weight: 800; font-size: 22px; color: var(--text-h); margin-bottom: 4px; }
+.page-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
+
+.messages { list-style: none; margin-bottom: 16px; }
+.messages li {
+  padding: 12px 16px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+}
+.messages li.success { background: rgba(52,211,153,.1); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.25); }
+.messages li.error { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.25); }
+.messages li.info { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.25); }
+
+@keyframes cardReveal { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.form-card {
+  background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 26px; animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 0 0 1px rgba(139,92,246,.05), 0 12px 40px -14px rgba(139,92,246,.12);
+}
+.field-group { margin-bottom: 18px; }
+.field-label { display: block; font-size: 13px; font-weight: 700; color: var(--text-h); margin-bottom: 7px; }
+.field-label .req { color: var(--rose-400); }
+.field-input, .field-textarea {
+  width: 100%; padding: 11px 14px; border-radius: var(--radius-md); border: 1px solid var(--border);
+  background: var(--bg-card-2); color: var(--text-h); font-family: var(--font-body); font-size: 13.5px; transition: var(--trans);
+}
+.field-input:focus, .field-textarea:focus { outline: none; border-color: var(--violet-500); }
+.field-textarea { resize: vertical; min-height: 90px; }
+.field-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 5px; }
+.field-row { display: flex; gap: 14px; }
+.field-row .field-group { flex: 1; }
+.field-file {
+  width: 100%; padding: 10px 12px; border-radius: var(--radius-md); border: 1px dashed var(--border);
+  background: var(--bg-card-2); color: var(--text-p); font-size: 12.5px; cursor: pointer;
+}
+
+.submit-btn {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 800; cursor: pointer;
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600)); color: #fff; transition: var(--trans);
+}
+.submit-btn:hover { filter: brightness(1.08); }
+
+/* ── Part 37 (المرحلة الثانية): مركز تنقل موحّد داخل الجروب (_group_tabs.html) ── */
+.group-tabs {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 22px;
+  scrollbar-width: thin;
+}
+.group-tabs::-webkit-scrollbar { height: 5px; }
+.group-tabs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+.group-tab {
+  display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; flex-shrink: 0;
+  border-radius: 99px; font-size: 12.5px; font-weight: 700; white-space: nowrap;
+  text-decoration: none; border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); transition: var(--trans);
+}
+.group-tab:hover { border-color: var(--border-glow); color: var(--text-h); }
+.group-tab.active {
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; border-color: transparent;
+}
+
+.footer { text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
+.footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--text-h); margin-bottom: 8px; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+    <nav class="nav-links" id="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="{% url 'groups:teacher_dashboard' %}" class="nav-link">Groups Dashboard</a>
+        <a href="{% url 'groups:group_detail' group_id=group.id %}" class="nav-link">صفحة الجروب</a>
+    </nav>
+    <div class="topbar-right">
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+</header>
+
+<div class="content-wrap">
+    <a href="{% url 'groups:group_assignments_list' group_id=group.id %}" class="breadcrumb-link">
+        <i class="fas fa-arrow-right"></i> رجوع لواجبات الجروب
+    </a>
+
+    {% include 'groups/_group_tabs.html' %}
+
+    <div class="page-title">إنشاء واجب جديد</div>
+    <div class="page-sub">{{ group.category }} — {{ group.teacher.get_full_name|default:group.teacher.username }}</div>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{% if 'error' in message.tags %}error{% elif 'success' in message.tags %}success{% else %}info{% endif %}">
+            <i class="fas {% if 'error' in message.tags %}fa-circle-exclamation{% elif 'success' in message.tags %}fa-circle-check{% else %}fa-circle-info{% endif %}"></i>
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="form-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="field-group">
+                <label class="field-label">عنوان الواجب <span class="req">*</span></label>
+                <input type="text" name="title" class="field-input" required maxlength="300"
+                       value="{{ form_data.title|default:'' }}" placeholder="مثال: واجب الوحدة الثانية — تمارين">
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">وصف الواجب</label>
+                <textarea name="description" class="field-textarea" placeholder="تعليمات الواجب ومطلوب من الطالب (اختياري)">{{ form_data.description|default:'' }}</textarea>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">مرفق (اختياري)</label>
+                <input type="file" name="attachment" class="field-file">
+                <div class="field-hint">ورقة أسئلة أو ملف تعليمات، لو محتاج ترفق حاجة مع الواجب.</div>
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">ميعاد التسليم</label>
+                    <input type="datetime-local" name="due_date" class="field-input"
+                           value="{{ form_data.due_date|default:'' }}">
+                </div>
+                <div class="field-group">
+                    <label class="field-label">الدرجة القصوى</label>
+                    <input type="number" name="max_grade" class="field-input" min="1" step="1"
+                           value="{{ form_data.max_grade|default:'100' }}" placeholder="100">
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn"><i class="fas fa-clipboard-check"></i> إنشاء الواجب</button>
+        </form>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-logo">Eduvia</div>
+    <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
+
+<script>
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+function toggleLang() {
+    const html = document.getElementById('html-root');
+    const lang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    localStorage.setItem('language', lang);
+}
+function toggleMenu() { document.getElementById('nav-links').classList.toggle('open'); }
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    const lang = localStorage.getItem('language') || 'en';
+    const html = document.getElementById('html-root');
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+});
+</script>
+</body>
+</html>

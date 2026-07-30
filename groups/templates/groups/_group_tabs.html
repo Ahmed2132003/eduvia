@@ -1,0 +1,75 @@
+{% comment %}
+Part 37 (المرحلة الثانية) — مركز تنقل موحّد داخل الجروب.
+
+Include واحد بيتكرر جوه كل صفحات الجروب الفرعية (نظرة عامة، اللايف،
+الدروس، الجدول، الواجبات، مهامي، الأعضاء) بدل ما كل صفحة تخترع نافيجيشن
+مستقلة لوحدها. التاب "النشط" بيتحدد تلقائيًا من
+request.resolver_match.url_name (نفس context processor الـ request
+المستخدم بالفعل في كل صفحات groups لـ request.user/request.build_absolute_uri
+— يعني مفيش أي تعديل مطلوب على أي view موجودة عشان الكومبوننت ده يشتغل،
+غير الصفحات اللي بنضيف الـ include ده فيها يدويًا).
+
+المتطلبات من الـ context:
+  - `group` (لازم — object فيه .id، موجود بالفعل في كل صفحات الجروب).
+  - `is_owner` (اختياري — لو مش موجود أو False، تاب "الأعضاء" مش بيظهر
+    خالص، بنفس فلسفة إخفاء أقسام المدرس في group_detail.html الأصلية).
+
+قرارات:
+  - "الشات" مالهاش URL/صفحة منفصلة (لسه جوه group_detail.html نفسها من
+    Part 14) — التاب بيودّي لـ group_detail#chat-section مباشرة.
+    "نظرة عامة" و"الشات" بيبانوا "active" مع بعض وهما على نفس الصفحة
+    (group_detail) — مقبول لإنهم فعليًا نفس الصفحة، مفيش تفرقة مصطنعة.
+  - "اللايف" التاب بيودّي لـ group_detail#live-section (نفس الصفحة، فيها
+    قسم البث المباشر + مكتبة التسجيلات) بدل ما يودّي مباشرة لصفحة إنشاء
+    بث جديدة — عشان لو فيه بث شغال دلوقتي أو مجدول، المستخدم يشوفه الأول
+    قبل ما يضطر يعمل حاجة.
+  - "مهامي" (my_todo_list) صفحة عامة مش تابعة لجروب معين (مفيش group_id
+    في مسارها) — التاب هنا بيودّي ليها كرابط خروج من سياق الجروب الحالي،
+    مش تنقل داخلي بين أقسام نفس الجروب؛ هي الوحيدة اللي معندهاش نسخة من
+    شريط التابات ده في صفحتها هي نفسها (تفاصيل في PROGRESS، Part 37).
+{% endcomment %}
+{% with url_name=request.resolver_match.url_name %}
+<nav class="group-tabs" aria-label="Group sections">
+    <a href="{% url 'groups:group_detail' group_id=group.id %}"
+       class="group-tab {% if url_name == 'group_detail' %}active{% endif %}">
+        <i class="fas fa-house"></i> Overview
+    </a>
+
+    <a href="{% url 'groups:group_detail' group_id=group.id %}#live-section"
+       class="group-tab {% if url_name == 'create_live_session' or url_name == 'live_broadcast' or url_name == 'join_live_session' or url_name == 'group_recordings' or url_name == 'watch_group_recording' or url_name == 'upload_group_recording' %}active{% endif %}">
+        <i class="fas fa-satellite-dish"></i> Live
+    </a>
+
+    <a href="{% url 'groups:group_lessons_list' group_id=group.id %}"
+       class="group-tab {% if url_name == 'group_lessons_list' or url_name == 'upload_group_lesson' or url_name == 'watch_group_lesson' %}active{% endif %}">
+        <i class="fas fa-book-open"></i> Recorded Lessons
+    </a>
+
+    <a href="{% url 'groups:group_schedule' group_id=group.id %}"
+       class="group-tab {% if url_name == 'group_schedule' %}active{% endif %}">
+        <i class="fas fa-calendar-days"></i> Schedule
+    </a>
+
+    <a href="{% url 'groups:group_detail' group_id=group.id %}#chat-section"
+       class="group-tab {% if url_name == 'group_detail' %}active{% endif %}">
+        <i class="fas fa-comments"></i> Chat
+    </a>
+
+    <a href="{% url 'groups:group_assignments_list' group_id=group.id %}"
+       class="group-tab {% if url_name == 'group_assignments_list' or url_name == 'create_group_assignment' or url_name == 'submit_group_assignment' or url_name == 'grade_submissions' %}active{% endif %}">
+        <i class="fas fa-clipboard-list"></i> Assignments
+    </a>
+
+    <a href="{% url 'groups:my_todo_list' %}"
+       class="group-tab {% if url_name == 'my_todo_list' %}active{% endif %}">
+        <i class="fas fa-list-check"></i> My Tasks
+    </a>
+
+    {% if is_owner %}
+    <a href="{% url 'groups:group_members' group_id=group.id %}"
+       class="group-tab {% if url_name == 'group_members' %}active{% endif %}">
+        <i class="fas fa-users"></i> Members
+    </a>
+    {% endif %}
+</nav>
+{% endwith %}

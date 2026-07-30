@@ -398,6 +398,11 @@ footer{background:var(--bg-panel);border-top:1px solid var(--border);padding:40p
       {% if user.is_superuser or user.courses_profile and user.courses_profile.role == 'instructor' %}
         <a href="{% url 'courses:instructor_dashboard' %}" data-i18n="nav_dashboard">Dashboard</a>
       {% endif %}
+      {% if user.role == 'instructor' %}
+        <a href="{% url 'groups:teacher_dashboard' %}" data-i18n="nav_groups_dashboard">Groups Dashboard</a>
+      {% elif user.role == 'student' %}
+        <a href="{% url 'groups:my_learning_groups' %}" data-i18n="nav_my_groups">My Groups</a>
+      {% endif %}
       <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
       <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
     {% else %}
@@ -436,6 +441,11 @@ footer{background:var(--bg-panel);border-top:1px solid var(--border);padding:40p
   <a href="/about/" data-i18n="nav_about">About Us</a>
   <a href="/contact_us/" data-i18n="nav_contact">Contact Us</a>
   {% if user.is_authenticated %}
+    {% if user.role == 'instructor' %}
+      <a href="{% url 'groups:teacher_dashboard' %}" data-i18n="nav_groups_dashboard">Groups Dashboard</a>
+    {% elif user.role == 'student' %}
+      <a href="{% url 'groups:my_learning_groups' %}" data-i18n="nav_my_groups">My Groups</a>
+    {% endif %}
     <a href="/accounts/profile/" data-i18n="nav_profile">Profile</a>
     <a href="/accounts/logout/" data-i18n="nav_logout">Logout</a>
   {% else %}
@@ -701,6 +711,7 @@ const I18N = {
     nav_home:'Home',nav_courses:'Courses',nav_chatbot:'Chatbot',
     nav_competitions:'Competitions',nav_performance:'Performance',
     nav_about:'About Us',nav_contact:'Contact',nav_dashboard:'Dashboard',
+    nav_groups_dashboard:'Groups Dashboard',nav_my_groups:'My Groups',
     nav_profile:'Profile',nav_logout:'Logout',nav_login:'Login',
     hero_badge:'AI-Powered Learning Platform',
     hero_title_1:'Unlock Your Potential',hero_title_2:'with Eduvia',
@@ -728,6 +739,7 @@ const I18N = {
     nav_home:'الرئيسية',nav_courses:'الكورسات',nav_chatbot:'المساعد الذكي',
     nav_competitions:'المسابقات',nav_performance:'الأداء',
     nav_about:'من نحن',nav_contact:'تواصل معنا',nav_dashboard:'لوحة التحكم',
+    nav_groups_dashboard:'لوحة تحكم الجروبات',nav_my_groups:'جروباتي',
     nav_profile:'الملف الشخصي',nav_logout:'تسجيل الخروج',nav_login:'تسجيل الدخول',
     hero_badge:'منصة تعلم مدعومة بالذكاء الاصطناعي',
     hero_title_1:'أطلق إمكاناتك',hero_title_2:'مع Eduvia',

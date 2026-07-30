@@ -1,0 +1,285 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ابدأ بث مباشر - {{ group.category }} - Eduvia</title>
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* نفس نظام "Obsidian Academy" المستخدم في باقي صفحات groups (نفس متغيرات
+   CSS المستخدمة في group_detail.html بالحرف — Part 24، المرحلة الثانية). */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base: #080b14; --bg-panel: #0d1120; --bg-card: #131929; --bg-card-2: #1a2236;
+  --bg-hover: #1e2840; --border: rgba(120,130,180,.12); --border-glow: rgba(139,92,246,.25);
+  --violet-400: #a78bfa; --violet-500: #8b5cf6; --violet-600: #7c3aed; --violet-glow: rgba(139,92,246,.18);
+  --gold-400: #fbbf24; --emerald-400: #34d399; --emerald-500: #10b981; --rose-400: #fb7185; --sky-400: #38bdf8;
+  --text-h: #f1f5ff; --text-p: #94a3c4; --text-muted: #5a6585;
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 18px; --topbar-h: 62px;
+  --trans: all .22s cubic-bezier(.4,0,.2,1);
+  --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif; --font-arabic: 'Cairo', sans-serif;
+}
+[data-theme="light"] {
+  --bg-base: #f4f6fc; --bg-panel: #ffffff; --bg-card: #f8faff; --bg-card-2: #eef2fc; --bg-hover: #e8ecf8;
+  --border: rgba(100,110,160,.14); --text-h: #0f172a; --text-p: #374365; --text-muted: #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body); background: var(--bg-base); color: var(--text-p);
+  min-height: 100vh; overflow-x: hidden; transition: background .35s, color .35s; margin-top: var(--topbar-h);
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600; height: var(--topbar-h);
+  display: flex; align-items: center; gap: 18px; padding: 0 28px;
+  background: rgba(8,11,20,.88); backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--text-h); text-decoration: none; }
+.topbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; flex-wrap: wrap; }
+.nav-link { font-size: 13.5px; font-weight: 500; color: var(--text-p); text-decoration: none; padding: 8px 12px; border-radius: var(--radius-sm); transition: var(--trans); }
+.nav-link:hover { background: var(--bg-hover); color: var(--text-h); }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.ctrl-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--trans); }
+.ctrl-btn:hover { background: var(--bg-hover); color: var(--text-h); }
+.hamburger { display: none; }
+@media (max-width: 900px) {
+  .nav-links { display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 10px; gap: 2px; }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 14px; }
+  .topbar-sep { display: none; }
+  .hamburger { display: flex; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); align-items: center; justify-content: center; cursor: pointer; margin-left: auto; }
+}
+
+.content-wrap { max-width: 640px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.breadcrumb-link {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+  color: var(--text-p); text-decoration: none; margin-bottom: 20px; transition: var(--trans);
+}
+.breadcrumb-link:hover { color: var(--text-h); }
+
+.page-title { font-family: var(--font-display); font-weight: 800; font-size: 22px; color: var(--text-h); margin-bottom: 4px; }
+.page-sub { font-size: 13.5px; color: var(--text-muted); margin-bottom: 22px; }
+
+@keyframes cardReveal { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.form-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 26px 24px; box-shadow: 0 10px 40px rgba(139,92,246,.08);
+  animation: cardReveal .5s cubic-bezier(.34,1.56,.64,1);
+}
+
+.messages { list-style: none; margin-bottom: 16px; }
+.messages li {
+  padding: 12px 16px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+}
+.messages li.success { background: rgba(52,211,153,.1); color: var(--emerald-400); border: 1px solid rgba(52,211,153,.25); }
+.messages li.error { background: rgba(251,113,133,.1); color: var(--rose-400); border: 1px solid rgba(251,113,133,.25); }
+.messages li.info { background: rgba(56,189,248,.1); color: var(--sky-400); border: 1px solid rgba(56,189,248,.25); }
+
+.field-group { margin-bottom: 18px; }
+.field-label { display: block; font-size: 12.5px; font-weight: 700; color: var(--text-h); margin-bottom: 7px; }
+.field-input, .field-textarea, .field-datetime {
+  width: 100%; padding: 11px 14px; border-radius: var(--radius-md); border: 1px solid var(--border);
+  background: var(--bg-panel); color: var(--text-h); font-family: inherit; font-size: 13.5px;
+}
+.field-input:focus, .field-textarea:focus, .field-datetime:focus { outline: none; border-color: var(--violet-500); }
+.field-textarea { resize: vertical; min-height: 80px; }
+.field-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 6px; }
+
+.option-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.option-card {
+  position: relative; cursor: pointer; border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--bg-card-2); padding: 14px; text-align: center; transition: var(--trans);
+}
+.option-card input { position: absolute; opacity: 0; inset: 0; cursor: pointer; margin: 0; }
+.option-card .oc-icon { font-size: 18px; color: var(--violet-400); margin-bottom: 6px; }
+.option-card .oc-label { font-size: 12.5px; font-weight: 700; color: var(--text-h); }
+.option-card:has(input:checked) { border-color: var(--violet-500); background: var(--violet-glow); }
+
+.schedule-field { display: none; margin-top: 14px; }
+.schedule-field.visible { display: block; }
+
+.submit-btn {
+  width: 100%; padding: 13px; border: none; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600)); color: #fff;
+  font-family: var(--font-display); font-weight: 700; font-size: 14px; cursor: pointer;
+  margin-top: 6px; transition: var(--trans);
+}
+.submit-btn:hover { filter: brightness(1.08); }
+.submit-btn i { margin-inline-end: 6px; }
+
+.footer { text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); margin-top: 40px; }
+.footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--text-h); margin-bottom: 8px; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+    <nav class="nav-links" id="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="{% url 'groups:teacher_dashboard' %}" class="nav-link">Groups Dashboard</a>
+        <a href="{% url 'groups:group_detail' group_id=group.id %}" class="nav-link">صفحة الجروب</a>
+        {% if user.is_authenticated %}
+            <a href="/accounts/profile/" class="nav-link">Profile</a>
+            <a href="/accounts/logout/" class="nav-link">Logout</a>
+        {% endif %}
+    </nav>
+    <div class="topbar-right">
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+</header>
+
+<div class="content-wrap">
+    <a href="{% url 'groups:group_detail' group_id=group.id %}" class="breadcrumb-link">
+        <i class="fas fa-arrow-right"></i> رجوع لصفحة الجروب
+    </a>
+
+    <div class="page-title">ابدأ بث مباشر</div>
+    <div class="page-sub">{{ group.category }} — دلوقتي أو مجدول لوقت لاحق</div>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{% if 'error' in message.tags %}error{% elif 'success' in message.tags %}success{% else %}info{% endif %}">
+            <i class="fas {% if 'error' in message.tags %}fa-circle-exclamation{% elif 'success' in message.tags %}fa-circle-check{% else %}fa-circle-info{% endif %}"></i>
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="form-card">
+        <form method="post" id="live-form">
+            {% csrf_token %}
+
+            <div class="field-group">
+                <label class="field-label" for="id_title">عنوان الجلسة</label>
+                <input type="text" name="title" id="id_title" class="field-input"
+                       placeholder="مثال: مراجعة الوحدة الثالثة" required maxlength="200">
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="id_description">وصف مختصر (اختياري)</label>
+                <textarea name="description" id="id_description" class="field-textarea"
+                          placeholder="عن إيه الحصة دي..."></textarea>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">نوع البث</label>
+                <div class="option-grid">
+                    {% for value, label in mode_choices %}
+                    <label class="option-card">
+                        <input type="radio" name="mode" value="{{ value }}" {% if forloop.first %}checked{% endif %} required>
+                        <div class="oc-icon">
+                            {% if value == 'camera' %}<i class="fas fa-video"></i>
+                            {% elif value == 'screen_share' %}<i class="fas fa-desktop"></i>
+                            {% else %}<i class="fas fa-video"></i><i class="fas fa-desktop" style="margin-inline-start:4px;"></i>
+                            {% endif %}
+                        </div>
+                        <div class="oc-label">
+                            {% if value == 'camera' %}كاميرا فقط
+                            {% elif value == 'screen_share' %}مشاركة شاشة فقط
+                            {% else %}كاميرا + مشاركة شاشة
+                            {% endif %}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">إمتى؟</label>
+                <div class="option-grid">
+                    <label class="option-card">
+                        <input type="radio" name="start_choice" value="now" checked id="choice-now">
+                        <div class="oc-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="oc-label">دلوقتي</div>
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="start_choice" value="schedule" id="choice-schedule">
+                        <div class="oc-icon"><i class="fas fa-calendar-plus"></i></div>
+                        <div class="oc-label">جدولة لوقت لاحق</div>
+                    </label>
+                </div>
+
+                <div class="schedule-field" id="schedule-field">
+                    <label class="field-label" for="id_scheduled_at">ميعاد اللايف</label>
+                    <input type="datetime-local" name="scheduled_at" id="id_scheduled_at" class="field-datetime">
+                    <div class="field-hint">هيتحفظ اللايف كـ "مجدول" وهيظهر في قايمة الجلسات القادمة للجروب.</div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-satellite-dish"></i> ابدأ / جدول اللايف
+            </button>
+        </form>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-logo">Eduvia</div>
+    <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
+
+<script>
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+function toggleLang() {
+    const html = document.getElementById('html-root');
+    const lang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    localStorage.setItem('language', lang);
+}
+function toggleMenu() { document.getElementById('nav-links').classList.toggle('open'); }
+
+function updateScheduleVisibility() {
+    const scheduleField = document.getElementById('schedule-field');
+    const isSchedule = document.getElementById('choice-schedule').checked;
+    scheduleField.classList.toggle('visible', isSchedule);
+    document.getElementById('id_scheduled_at').required = isSchedule;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    const lang = localStorage.getItem('language') || 'en';
+    const html = document.getElementById('html-root');
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+    document.getElementById('choice-now').addEventListener('change', updateScheduleVisibility);
+    document.getElementById('choice-schedule').addEventListener('change', updateScheduleVisibility);
+    updateScheduleVisibility();
+});
+</script>
+</body>
+</html>
