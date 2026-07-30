@@ -3,29 +3,32 @@ import sys
 import os
 from decouple import config
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-hfxyoz#%!ei3v1zfmj5km20vkx$$tvm$)7$0r_79h2k+wbuki^')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '*.fly.dev',
-    'eduvia-ai.fly.dev',
-    '75727303c9c8.ngrok-free.app',
+    'eduvia-learn.online',
+    'www.eduvia-learn.online',
+    '168.231.80.180',
 ]
+
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
-    'https://*.fly.dev',
-    'https://eduvia-ai.fly.dev',
-    'https://75727303c9c8.ngrok-free.app',
+    'https://eduvia-learn.online',
+    'https://www.eduvia-learn.online',
 ]
+
+PAYMOB_API_KEY = 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRBMk5UWTVPQ3dpYm1GdFpTSTZJbWx1YVhScFlXd2lmUS4tSmszLXpWN2U0VWJSWlJXbUoxTDVnZEl3LVRQVjhsTVEzWGYyWk1XbnlyM0cwdXNSdGNKSnlUbHRzeGhsVFdRSU5sZTh5bW5IcjFqaGlfSlNoY0FEQQ=='
+PAYMOB_MERCHANT_ID = '1065698'
+PAYMOB_INTEGRATION_ID = '5225414'
+PAYMOB_API_BASE_URL = 'https://accept.paymob.com/api'
+PAYMOB_IFRAME_ID = '945991'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,8 +51,8 @@ INSTALLED_APPS = [
     'mentorship',
     'workshops',
     'widget_tweaks',
-    'rest_framework',
-    'marketplace.apps.MarketplaceConfig',
+    'rest_framework',                          # ✅ جديد
+    'marketplace.apps.MarketplaceConfig',      # ✅ جديد
 ]
 
 ASGI_APPLICATION = 'Eduvia.asgi.application'
@@ -71,7 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'marketplace.middleware.StudentAccessMiddleware',
+    'marketplace.middleware.StudentAccessMiddleware',  # ✅ جديد
 ]
 
 ROOT_URLCONF = 'Eduvia.urls'
@@ -107,10 +110,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Eduvia.wsgi.application'
 
+# ✅ PostgreSQL — زي ما هو على الـ VPS
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': config('DATABASE_PATH', default=str(BASE_DIR / 'db.sqlite3')),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 
@@ -153,7 +161,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='creativitycode78@gmail.com'
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Creativity Code <creativitycode78@gmail.com>')
 
-
+# ✅ جديد — encoding fix
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')
 if hasattr(sys.stderr, 'reconfigure'):
@@ -165,7 +173,7 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'stream': 'ext://sys.stdout',
+            'stream': 'ext://sys.stdout',  # ✅ جديد
         },
         'file': {
             'class': 'logging.FileHandler',
