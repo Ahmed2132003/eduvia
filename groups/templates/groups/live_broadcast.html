@@ -1,0 +1,285 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البث المباشر - {{ session.title }} - Eduvia</title>
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!--
+        Part 23/24 — LiveKit JS Client SDK (UMD build, exposes global
+        `LivekitClient` object: Room, RoomEvent, Track, إلخ). ده الجزء اللي
+        بيتصل فعليًا بسيرفر LiveKit وينشر الكاميرا/الشاشة — الـ Django
+        backend دوره خلص عند توليد التوكن بس (live_provider.py).
+
+        ⚠️ لسه معملش verify فعلي مقابل سيرفر LiveKit حقيقي (نفس التحذير
+        الموثق في PROGRESS_PART22.md لـ Part 23) — الكود هنا مكتوب حسب
+        توثيق livekit-client الرسمي (Room.connect, localParticipant.
+        setCameraEnabled/setMicrophoneEnabled/setScreenShareEnabled) لكن
+        محتاج تجربة فعلية على متصفح حقيقي مع سيرفر LiveKit شغال.
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base: #080b14; --bg-panel: #0d1120; --bg-card: #131929; --bg-card-2: #1a2236;
+  --bg-hover: #1e2840; --border: rgba(120,130,180,.12); --border-glow: rgba(139,92,246,.25);
+  --violet-400: #a78bfa; --violet-500: #8b5cf6; --violet-600: #7c3aed; --violet-glow: rgba(139,92,246,.18);
+  --gold-400: #fbbf24; --emerald-400: #34d399; --emerald-500: #10b981; --rose-400: #fb7185; --sky-400: #38bdf8;
+  --text-h: #f1f5ff; --text-p: #94a3c4; --text-muted: #5a6585;
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 18px; --topbar-h: 62px;
+  --trans: all .22s cubic-bezier(.4,0,.2,1);
+  --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif; --font-arabic: 'Cairo', sans-serif;
+}
+[data-theme="light"] {
+  --bg-base: #f4f6fc; --bg-panel: #ffffff; --bg-card: #f8faff; --bg-card-2: #eef2fc; --bg-hover: #e8ecf8;
+  --border: rgba(100,110,160,.14); --text-h: #0f172a; --text-p: #374365; --text-muted: #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body); background: var(--bg-base); color: var(--text-p);
+  min-height: 100vh; overflow-x: hidden; transition: background .35s, color .35s; margin-top: var(--topbar-h);
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600; height: var(--topbar-h);
+  display: flex; align-items: center; gap: 18px; padding: 0 28px;
+  background: rgba(8,11,20,.88); backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--text-h); text-decoration: none; }
+.topbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; flex-wrap: wrap; }
+.nav-link { font-size: 13.5px; font-weight: 500; color: var(--text-p); text-decoration: none; padding: 8px 12px; border-radius: var(--radius-sm); transition: var(--trans); }
+.nav-link:hover { background: var(--bg-hover); color: var(--text-h); }
+.hamburger { display: none; }
+@media (max-width: 900px) {
+  .nav-links { display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 10px; gap: 2px; }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 14px; }
+  .hamburger { display: flex; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); align-items: center; justify-content: center; cursor: pointer; margin-left: auto; }
+}
+
+.content-wrap { max-width: 900px; margin: 0 auto; padding: 30px 24px 80px; }
+
+.breadcrumb-link {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+  color: var(--text-p); text-decoration: none; margin-bottom: 16px; transition: var(--trans);
+}
+.breadcrumb-link:hover { color: var(--text-h); }
+
+.broadcast-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+.broadcast-title { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--text-h); }
+.live-pill {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px;
+  background: rgba(52,211,153,.15); color: var(--emerald-400); font-size: 12px; font-weight: 700;
+}
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--emerald-400); display: inline-block; animation: pulse-dot 1.4s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+.stage {
+  background: #000; border: 1px solid var(--border); border-radius: var(--radius-lg);
+  aspect-ratio: 16/9; width: 100%; position: relative; overflow: hidden; margin-bottom: 16px;
+}
+.stage video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+.stage-placeholder {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 10px; color: var(--text-muted); font-size: 13px;
+}
+.stage-placeholder i { font-size: 30px; color: var(--violet-400); }
+
+.controls-bar {
+  display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px; margin-bottom: 16px;
+}
+.ctrl-toggle {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-md);
+  background: var(--bg-card-2); border: 1px solid var(--border); color: var(--text-p);
+  font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--trans);
+}
+.ctrl-toggle.on { background: var(--violet-glow); border-color: var(--violet-500); color: var(--violet-400); }
+.end-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-md);
+  background: var(--rose-400); border: none; color: #1a0508; font-size: 13px; font-weight: 800; cursor: pointer;
+}
+.end-btn:hover { filter: brightness(1.08); }
+
+.status-line { text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+.status-line.error { color: var(--rose-400); }
+
+.footer { text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
+.footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--text-h); margin-bottom: 8px; font-size: 16px; }
+
+/* Part 37: شريط التابات الموحّد داخل الجروب (نفس CSS بالحرف عبر كل صفحات المرحلة الثانية) */
+.group-tabs {
+  display: flex; gap: 4px; overflow-x: auto; margin-bottom: 22px; padding-bottom: 2px;
+  border-bottom: 1px solid var(--border);
+}
+.group-tabs::-webkit-scrollbar { height: 4px; }
+.group-tabs::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+.group-tab {
+  display: inline-flex; align-items: center; gap: 7px; padding: 10px 14px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0; font-size: 12.5px; font-weight: 700;
+  color: var(--text-muted); text-decoration: none; white-space: nowrap; transition: var(--trans);
+  border-bottom: 2px solid transparent; flex-shrink: 0;
+}
+.group-tab:hover { color: var(--text-h); background: var(--bg-hover); }
+.group-tab.active { color: var(--violet-400); border-bottom-color: var(--violet-500); background: var(--violet-glow); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+    <nav class="nav-links" id="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="{% url 'groups:group_detail' group_id=group.id %}" class="nav-link">صفحة الجروب</a>
+    </nav>
+    <button class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+</header>
+
+<div class="content-wrap">
+    <a href="{% url 'groups:group_detail' group_id=group.id %}" class="breadcrumb-link">
+        <i class="fas fa-arrow-right"></i> رجوع لصفحة الجروب
+    </a>
+
+    {% include 'groups/_group_tabs.html' %}
+
+    <div class="broadcast-header">
+        <div class="broadcast-title">{{ session.title }}</div>
+        <span class="live-pill"><span class="live-dot"></span> بث مباشر</span>
+    </div>
+
+    <div class="stage" id="stage">
+        <video id="local-preview" autoplay muted playsinline></video>
+        <div class="stage-placeholder" id="stage-placeholder">
+            <i class="fas fa-satellite-dish"></i>
+            <div>جاري الاتصال بخدمة البث...</div>
+        </div>
+    </div>
+
+    <div class="status-line" id="status-line">جاري تجهيز البث...</div>
+
+    <div class="controls-bar">
+        {% if session.mode == 'camera' or session.mode == 'both' %}
+        <button class="ctrl-toggle" id="camera-toggle" type="button">
+            <i class="fas fa-video"></i> الكاميرا
+        </button>
+        <button class="ctrl-toggle" id="mic-toggle" type="button">
+            <i class="fas fa-microphone"></i> الميكروفون
+        </button>
+        {% endif %}
+        {% if session.mode == 'screen_share' or session.mode == 'both' %}
+        <button class="ctrl-toggle" id="screen-toggle" type="button">
+            <i class="fas fa-desktop"></i> مشاركة الشاشة
+        </button>
+        {% endif %}
+
+        <form method="post" action="{% url 'groups:end_live_session' group_id=group.id session_id=session.id %}"
+              onsubmit="return confirm('متأكد إنك عايز تنهي البث؟');">
+            {% csrf_token %}
+            <button type="submit" class="end-btn">
+                <i class="fas fa-stop-circle"></i> إنهاء البث
+            </button>
+        </form>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-logo">Eduvia</div>
+    <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
+
+<script>
+function toggleMenu() { document.getElementById('nav-links').classList.toggle('open'); }
+
+// ── Part 24: LiveKit connect + publish (المدرس/المضيف) ──────────────────
+(async function initBroadcast() {
+    const statusLine = document.getElementById('status-line');
+    const placeholder = document.getElementById('stage-placeholder');
+    const localVideoEl = document.getElementById('local-preview');
+    const mode = "{{ session.mode }}";
+    const livekitUrl = "{{ livekit_url|escapejs }}";
+    const token = "{{ livekit_token|escapejs }}";
+
+    if (typeof LivekitClient === 'undefined') {
+        statusLine.textContent = 'تعذر تحميل مكتبة البث (LiveKit Client SDK) — تأكد من الاتصال بالإنترنت.';
+        statusLine.classList.add('error');
+        return;
+    }
+
+    const room = new LivekitClient.Room({ adaptiveStream: true, dynacast: true });
+
+    try {
+        await room.connect(livekitUrl, token);
+        statusLine.textContent = 'متصل بالبث بنجاح.';
+        placeholder.style.display = 'none';
+
+        if (mode === 'camera' || mode === 'both') {
+            await room.localParticipant.setCameraEnabled(true);
+            await room.localParticipant.setMicrophoneEnabled(true);
+            document.getElementById('camera-toggle')?.classList.add('on');
+            document.getElementById('mic-toggle')?.classList.add('on');
+        }
+        if (mode === 'screen_share') {
+            await room.localParticipant.setScreenShareEnabled(true);
+            document.getElementById('screen-toggle')?.classList.add('on');
+        }
+
+        // نعرض أول فيديو (كاميرا أو شاشة) بتاعنا في المعاينة المحلية.
+        room.localParticipant.videoTrackPublications.forEach((pub) => {
+            if (pub.track) pub.track.attach(localVideoEl);
+        });
+        room.on(LivekitClient.RoomEvent.LocalTrackPublished, (pub) => {
+            if (pub.track && pub.track.kind === 'video') pub.track.attach(localVideoEl);
+        });
+
+        // أزرار التحكم
+        const cameraBtn = document.getElementById('camera-toggle');
+        if (cameraBtn) {
+            cameraBtn.addEventListener('click', async () => {
+                const enabled = !room.localParticipant.isCameraEnabled;
+                await room.localParticipant.setCameraEnabled(enabled);
+                cameraBtn.classList.toggle('on', enabled);
+            });
+        }
+        const micBtn = document.getElementById('mic-toggle');
+        if (micBtn) {
+            micBtn.addEventListener('click', async () => {
+                const enabled = !room.localParticipant.isMicrophoneEnabled;
+                await room.localParticipant.setMicrophoneEnabled(enabled);
+                micBtn.classList.toggle('on', enabled);
+            });
+        }
+        const screenBtn = document.getElementById('screen-toggle');
+        if (screenBtn) {
+            screenBtn.addEventListener('click', async () => {
+                const enabled = !room.localParticipant.isScreenShareEnabled;
+                await room.localParticipant.setScreenShareEnabled(enabled);
+                screenBtn.classList.toggle('on', enabled);
+            });
+        }
+
+        window.addEventListener('beforeunload', () => {
+            room.disconnect();
+        });
+    } catch (err) {
+        console.error('LiveKit connect/publish error:', err);
+        statusLine.textContent = 'حصل خطأ أثناء الاتصال بخدمة البث. جرب تعيد تحميل الصفحة، ولو المشكلة استمرت راجع إعدادات LiveKit.';
+        statusLine.classList.add('error');
+    }
+})();
+</script>
+</body>
+</html>

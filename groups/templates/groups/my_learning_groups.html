@@ -233,6 +233,63 @@ body { margin-top: var(--topbar-h); }
 }
 .enter-btn:hover { color:#fff; transform:translateY(-1px); box-shadow:0 6px 20px rgba(108,52,131,.45); }
 
+/* ═══ Part 25: زرار "لايف دلوقتي" — بيظهر بس لو فيه GroupLiveSession
+   status='live' شغالة على الجروب ده. أخضر (emerald) عشان يتفرق بصريًا
+   عن زرار "دخول" العادي البنفسجي، بنفس نبضة .live-dot المستخدمة في
+   group_detail.html (Part 24). ═══ */
+@keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.live-now-btn {
+  background: linear-gradient(135deg, var(--emerald-500), #059669);
+  box-shadow: 0 4px 14px rgba(16,185,129,.35);
+}
+.live-now-btn:hover { box-shadow: 0 6px 20px rgba(16,185,129,.45); }
+.live-now-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #fff; display: inline-block;
+  animation: livePulse 1.4s infinite;
+}
+
+/* ═══ Part 32 (المرحلة الثانية): ودجت "الجدول القادم" ═══════════════
+   مجمّع من كل جروبات الطالب النشطة مع بعض (لايفات مجدولة + دروس مجدولة)،
+   نفس مكوّن .schedule-row المستخدم في group_schedule.html بالظبط، بس
+   بإضافة اسم الجروب (لأن الودجت هنا بيجمع أكتر من جروب في قايمة واحدة). */
+/* Part 34 (المرحلة الثانية): بادچ "واجبات معلّقة" جنب كل جروب — تنبيه
+   بسيط للطالب (عدد الواجبات اللي لسه ملهاش تسليم في الجروب ده)، بنفس
+   روح .pill-gold لكن بشكل رابط قابل للضغط يودّي مباشرة لقايمة الواجبات. */
+.pending-assignments-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; margin-top: 6px;
+  border-radius: 99px; font-size: 11.5px; font-weight: 700; text-decoration: none;
+  background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.22);
+  transition: var(--trans);
+}
+.pending-assignments-badge:hover { background: rgba(251,191,36,.18); }
+
+.schedule-widget { margin-bottom: 26px; }
+.schedule-widget-title {
+  display: flex; align-items: center; gap: 8px; font-family: var(--font-display);
+  font-weight: 700; font-size: 15px; color: var(--text-h); margin-bottom: 12px;
+}
+.schedule-row {
+  display: flex; align-items: center; gap: 14px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 12px 16px; margin-bottom: 8px; animation: fadeUp .35s ease both;
+}
+.schedule-row .sc-icon {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sc-icon.live { background: rgba(56,189,248,.15); color: var(--sky-400); }
+.sc-icon.lesson { background: rgba(251,191,36,.15); color: var(--gold-400); }
+.schedule-row .sc-body { flex: 1; min-width: 0; }
+.schedule-row .sc-title { font-size: 13.5px; font-weight: 700; color: var(--text-h); margin-bottom: 2px; }
+.schedule-row .sc-meta { font-size: 11.5px; color: var(--text-muted); }
+.sc-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+  border-radius: var(--radius-sm); font-size: 12px; font-weight: 700;
+  text-decoration: none; border: 1px solid var(--border); background: var(--bg-card-2);
+  color: var(--text-p); transition: var(--trans); flex-shrink: 0;
+}
+.sc-btn:hover { border-color: var(--violet-500); color: var(--violet-400); }
+
 /* ═══ EMPTY STATE ═══════════════════════════════════════════════ */
 .empty-state {
   text-align: center; padding: 60px 24px; background: var(--bg-card); border: 1px dashed var(--border);
@@ -266,6 +323,7 @@ body { margin-top: var(--topbar-h); }
         <a href="/about/" class="nav-link">About Us</a>
         <a href="/contact_us/" class="nav-link">Contact Us</a>
         {% if user.is_authenticated %}
+            <a href="{% url 'groups:my_todo_list' %}" class="nav-link">My Tasks</a>
             <a href="/accounts/profile/" class="nav-link">Profile</a>
             <a href="/accounts/logout/" class="nav-link">Logout</a>
         {% else %}
@@ -312,6 +370,36 @@ body { margin-top: var(--topbar-h); }
     </ul>
     {% endif %}
 
+    <!-- Part 32 (المرحلة الثانية): ودجت "الجدول القادم" — مجمّع من كل
+         جروبات الطالب النشطة (لايفات مجدولة + دروس مجدولة)، مرتب
+         بالتاريخ (الأقرب أول)، آخر 8 عناصر بس (upcoming_schedule_items
+         محسوبة ومقصوصة من الـ view، تفاصيل في PROGRESS). لو فاضية، مفيش
+         أي ودجت هيظهر خالص (مش empty state منفصل — الصفحة أصلًا فيها
+         empty state لقايمة الجروبات نفسها لو مفيش جروبات من الأساس). -->
+    {% if upcoming_schedule_items %}
+    <div class="schedule-widget">
+        <div class="schedule-widget-title">
+            <i class="fas fa-calendar-days" style="color:var(--gold-400)"></i> الجدول القادم
+        </div>
+        {% for item in upcoming_schedule_items %}
+        <div class="schedule-row">
+            <div class="sc-icon {{ item.kind }}">
+                <i class="fas {% if item.kind == 'live' %}fa-satellite-dish{% else %}fa-book-open{% endif %}"></i>
+            </div>
+            <div class="sc-body">
+                <div class="sc-title">{{ item.title }}</div>
+                <div class="sc-meta">{{ item.group.category }} — {{ item.when|date:"M d, Y — H:i" }}</div>
+            </div>
+            {% if item.kind == 'live' %}
+            <a href="{% url 'groups:join_live_session' session_id=item.obj.id %}" class="sc-btn">
+                <i class="fas fa-info-circle"></i> الميعاد
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     {% if rows %}
     <div class="groups-list">
         {% for row in rows %}
@@ -329,11 +417,28 @@ body { margin-top: var(--topbar-h); }
                         <span class="pill pill-sky"><i class="fas fa-layer-group"></i> {{ row.category.stage }}</span>
                         <span class="pill pill-gold"><i class="fas fa-graduation-cap"></i> {{ row.category.grade }}</span>
                     </div>
+                    {% if row.pending_assignments_count %}
+                    <!-- Part 34 (المرحلة الثانية): تنبيه بسيط بعدد الواجبات
+                         المعلّقة (لسه ملهاش تسليم) — بيودّي مباشرة لقايمة
+                         واجبات الجروب ده. -->
+                    <a href="{% url 'groups:group_assignments_list' group_id=row.group.id %}" class="pending-assignments-badge">
+                        <i class="fas fa-clipboard-list"></i>
+                        {{ row.pending_assignments_count }} واجب{% if row.pending_assignments_count > 1 %}ات{% endif %} محتاج{% if row.pending_assignments_count == 1 %}{% else %}ين{% endif %} تسليم
+                    </a>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="mygroup-actions">
                 {% if row.is_active %}
+                {% if row.live_session %}
+                <!-- Part 25: يودّي مباشرة لصفحة مشاهدة اللايف الشغال دلوقتي
+                     (join_live_session)، بدل ما الطالب يعدّي بصفحة الجروب
+                     الأول. -->
+                <a href="{% url 'groups:join_live_session' session_id=row.live_session.id %}" class="enter-btn live-now-btn">
+                    <span class="live-now-dot"></span> لايف دلوقتي
+                </a>
+                {% endif %}
                 <span class="status-badge status-active"><i class="fas fa-circle-check"></i> نشط</span>
                 <a href="{% url 'groups:group_detail' row.group.id %}" class="enter-btn">
                     <i class="fas fa-arrow-left"></i> دخول

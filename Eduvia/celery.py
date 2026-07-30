@@ -35,4 +35,27 @@ app.conf.beat_schedule = {
         'task': 'groups.tasks.send_subscription_expiry_reminders',
         'schedule': crontab(hour=9, minute=0),
     },
+    # Part 31 (المرحلة الثانية) — نظام جروبات المناهج (Eduvia):
+    # بتشتغل كل 5 دقايق (رقم اخترته بنفسي، مفيش تحديد صريح في الطلب
+    # الأصلي غير "مثلاً كل 5 دقايق" — سهل التعديل هنا لو Ahmed عايز فترة
+    # مختلفة). بتدور على كل GroupLesson لسه is_published=False ووصل معاد
+    # publish_at بتاعه، وتنشره تلقائيًا وتبعت إشعار لأعضاء الجروب — تفاصيل
+    # المنطق الكامل في groups/tasks.py::publish_scheduled_group_lessons.
+    # الفترة القصيرة (5 دقايق) مقصودة هنا (بعكس تاسكات التجميد/التنبيهات
+    # اليومية) عشان الدرس المجدول ينشر بأقرب وقت ممكن من معاده الفعلي، مش
+    # يتأخر لحد الصبح.
+    'publish-scheduled-group-lessons': {
+        'task': 'groups.tasks.publish_scheduled_group_lessons',
+        'schedule': crontab(minute='*/5'),
+    },
+    # Part 36 (المرحلة الثانية) — نظام جروبات المناهج (Eduvia):
+    # بتشتغل كل 10 دقايق (رقم اخترته بنفسي، مفيش تحديد صريح في الطلب
+    # الأصلي غير "خلال ساعة مثلاً" لنافذة التذكير نفسها). بتدور على كل
+    # GroupTodoItem لسه is_done=False وreminder_sent=False ومعادها
+    # (due_at) هيجي خلال ساعة، وتبعت تذكير لصاحب المهمة بالإيميل — تفاصيل
+    # المنطق الكامل في groups/tasks.py::send_todo_reminders.
+    'send-todo-reminders': {
+        'task': 'groups.tasks.send_todo_reminders',
+        'schedule': crontab(minute='*/10'),
+    },
 }

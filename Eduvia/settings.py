@@ -154,6 +154,52 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='creativitycode78@gmail.com'
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Creativity Code <creativitycode78@gmail.com>')
 
+# ---------------------------------------------------------------------------
+# Part 23 (المرحلة الثانية — البث المباشر): إعدادات مزود الـ WebRTC
+# (LiveKit). القرار المعماري الكامل لاختيار LiveKit تحديدًا موثق في
+# PROGRESS_PART22.md (Part 22).
+#
+# قرار: استخدمت نفس أسلوب config() من python-decouple المستخدم في كل
+# سطر حساس تاني في الملف ده (SECRET_KEY، REDIS_URL، EMAIL_HOST_PASSWORD
+# فوق)، بدل os.environ.get المباشرة المقترحة حرفيًا في نص خطة المرحلة
+# الثانية — عشان الاتساق مع الملف ده بالكامل أهم من اتباع الصياغة
+# الحرفية، ونفس السلوك العملي (قراءة من متغير بيئة + قيمة افتراضية) بيتحقق
+# بالظبط بالطريقتين.
+#
+# القيم الافتراضية فاضية عمدًا — مفيش أي مفتاح/سيكرت حقيقي مكتوب هنا في
+# الكود. لازم تتظبط فعليًا كمتغيرات بيئة (.env محليًا، أو إعدادات
+# السيرفر/الاستضافة) قبل ما groups/live_provider.py يقدر يشتغل فعليًا —
+# لو مش متظبطة، الدوال هناك بترمي LiveProviderError واضح بدل ما تفشل
+# بغموض.
+#
+# LIVEKIT_URL بيختلف حسب قرار الاستضافة (self-hosted بـ Docker أو
+# LiveKit Cloud) — القرار ده تشغيلي بحت (Ahmed هو اللي هيحدده وقت
+# النشر الفعلي)، وكود groups/live_provider.py نفسه مبيتغيرش في الحالتين،
+# الفرق كله في قيمة اللينك ده بس:
+#   - self-hosted (Docker):  LIVEKIT_URL=ws://localhost:7880  (أو
+#     العنوان الداخلي لكونتينر LiveKit على السيرفر)
+#   - LiveKit Cloud:         LIVEKIT_URL=wss://<project>.livekit.cloud
+LIVEKIT_URL = config('LIVEKIT_URL', default='')
+LIVEKIT_API_KEY = config('LIVEKIT_API_KEY', default='')
+LIVEKIT_API_SECRET = config('LIVEKIT_API_SECRET', default='')
+
+# ---------------------------------------------------------------------------
+# Part 26 (نسخة معدّلة — Manual Recording Upload): كان هنا 6 إعدادات
+# S3-compatible مخصصة لـ LiveKit Egress (LIVEKIT_EGRESS_S3_*) — اتشالت
+# بالكامل لإن نظام التسجيل التلقائي (Egress -> S3) اتلغى تمامًا. التسجيل
+# بقى بيتم برفع يدوي من المدرس، باستخدام نفس Storage المحلي المظبوط فوق
+# (DEFAULT_FILE_STORAGE / MEDIA_ROOT) — بدون أي مخزن S3 منفصل.
+#
+# الحد الأقصى لحجم فيديو التسجيل اللي المدرس بيرفعه يدويًا بعد ما اللايف
+# يخلص (groups/views.py::upload_group_recording). نفس أسلوب config()
+# زي باقي الإعدادات في الملف ده. القيمة بالميجابايت (أسهل للقراءة/التعديل)
+# وبتتحول لبايت وقت التحقق الفعلي في groups/views.py. 1024 ميجا (1 جيجا)
+# قيمة افتراضية معقولة اخترتها بنفسي — الطلب الأصلي قال "حسب إعدادات
+# المشروع" من غير رقم محدد، فسهل تتغير من هنا لو Ahmed عايز حد مختلف.
+GROUP_LIVE_RECORDING_MAX_UPLOAD_MB = config(
+    'GROUP_LIVE_RECORDING_MAX_UPLOAD_MB', default=1024, cast=int,
+)
+
 
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')

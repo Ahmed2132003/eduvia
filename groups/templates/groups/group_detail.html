@@ -13,7 +13,11 @@
 
 <style>
 /* نفس نظام "Obsidian Academy" — Part 13 ضافت أقسام جلسات اللايف
-   (active/upcoming + إدارة المدرس)، الشات الجماعي هيتضاف في Part 14. */
+   (active/upcoming + إدارة المدرس)، الشات الجماعي اتضاف في Part 14،
+   ووضع "الإذاعة" في الشات (Part 29 — المرحلة الثانية) اتضاف فوق كده.
+   Part 34 (المرحلة الثانية): إضافة بسيطة — رابط "الواجبات" (نفس نمط
+   رابطي مكتبة التسجيلات/الدروس المسجلة/الجدول القادم بالظبط، من غير
+   أي تعديل Python على group_detail() نفسها). */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -66,7 +70,7 @@ body {
   .session-row { flex-wrap: wrap; }
   .session-row .sess-btn { width: 100%; justify-content: center; }
   .manage-row { flex-wrap: wrap; gap: 8px; }
-  .chat-form { flex-direction: column; align-items: stretch; }
+  .chat-form-row { flex-direction: column; align-items: stretch; }
   .chat-send-btn { width: 100%; justify-content: center; }
   .chat-bubble { max-width: 88%; }
 }
@@ -229,7 +233,31 @@ body {
 .chat-time { font-size: 10px; opacity: .65; margin-top: 4px; }
 .chat-bubble-row.mine .chat-time { text-align: right; opacity: .8; }
 .chat-bubble-row.theirs .chat-time { text-align: left; }
-.chat-form { display: flex; gap: 10px; align-items: flex-end; }
+/* ── Part 29: وضع "الإذاعة" في الشات ── */
+.chat-section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.chat-section-header .section-title { margin-bottom: 0; }
+.chat-mode-toggle-form { display: inline-flex; }
+.chat-mode-toggle-btn {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px;
+  border-radius: 99px; font-size: 12px; font-weight: 700; cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-card-2); color: var(--text-p);
+  transition: var(--trans);
+}
+.chat-mode-toggle-btn:hover { border-color: var(--border-glow); color: var(--text-h); }
+.chat-mode-toggle-btn.is-broadcast {
+  background: rgba(251,191,36,.12); color: var(--gold-400); border-color: rgba(251,191,36,.35);
+}
+.chat-mode-banner {
+  display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+  border-radius: var(--radius-md); font-size: 12.5px; font-weight: 600;
+  background: rgba(251,191,36,.1); color: var(--gold-400); border: 1px solid rgba(251,191,36,.25);
+  margin-bottom: 12px;
+}
+.chat-form { display: flex; flex-direction: column; gap: 8px; }
+.chat-form-row { display: flex; gap: 10px; align-items: flex-end; }
 .chat-input {
   flex: 1; resize: vertical; min-height: 44px; max-height: 140px; padding: 10px 14px;
   border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-panel);
@@ -238,8 +266,102 @@ body {
 .chat-input:focus { outline: none; border-color: var(--violet-500); }
 .chat-send-btn { flex-shrink: 0; }
 
+/* ── Part 30: إرفاق صور وملفات في الشات ── */
+.chat-attach-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.chat-attach-label {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+  border-radius: 99px; font-size: 11.5px; font-weight: 700; cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-card-2); color: var(--text-muted);
+  transition: var(--trans);
+}
+.chat-attach-label:hover { border-color: var(--border-glow); color: var(--text-h); }
+.chat-attach-label input[type="file"] { display: none; }
+.chat-attach-hint { font-size: 10.5px; color: var(--text-muted); opacity: .8; }
+.chat-attach-filename {
+  font-size: 11px; color: var(--violet-400); font-weight: 700; max-width: 220px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* صورة داخل فقاعة الرسالة */
+.chat-attachment-image {
+  display: block; max-width: 220px; max-height: 220px; border-radius: var(--radius-md);
+  margin-top: 4px; cursor: zoom-in; border: 1px solid var(--border);
+}
+/* بطاقة ملف داخل فقاعة الرسالة */
+.chat-attachment-file {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-top: 4px;
+  border-radius: var(--radius-md); border: 1px solid var(--border);
+  background: rgba(255,255,255,.04); text-decoration: none; color: inherit;
+}
+.chat-bubble-row.mine .chat-attachment-file { border-color: rgba(255,255,255,.3); }
+.chat-attachment-file-icon {
+  width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+  background: var(--violet-glow); color: var(--violet-400);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.chat-attachment-file-info { min-width: 0; }
+.chat-attachment-file-name {
+  font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; max-width: 170px;
+}
+.chat-attachment-file-download { font-size: 10.5px; opacity: .75; }
+
 .footer { text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
 .footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--text-h); margin-bottom: 8px; font-size: 16px; }
+
+/* ── Part 24 (المرحلة الثانية): البث المباشر الجديد (GroupLiveSession/LiveKit) ──
+   منفصل تمامًا عن قسم "جلسات لايف" القديم فوق (workshops.LiveSession،
+   Google Meet). كارت مميز (hero) عشان يبان واضح إنه نظام مختلف. */
+.live-hero {
+  background: linear-gradient(135deg, rgba(139,92,246,.14), var(--bg-card));
+  border: 1px solid var(--border-glow); border-radius: var(--radius-lg);
+  padding: 22px 24px; margin-bottom: 22px; display: flex; align-items: center;
+  justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.live-hero.is-live { border-color: rgba(52,211,153,.4); background: linear-gradient(135deg, rgba(52,211,153,.12), var(--bg-card)); }
+.live-hero-info { flex: 1; min-width: 200px; }
+.live-hero-title { font-family: var(--font-display); font-weight: 800; font-size: 16px; color: var(--text-h); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.live-hero-sub { font-size: 12.5px; color: var(--text-muted); }
+.live-hero-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: var(--radius-md);
+  font-size: 13.5px; font-weight: 800; text-decoration: none; border: none; cursor: pointer; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600)); color: #fff; transition: var(--trans);
+}
+.live-hero-btn.is-live { background: linear-gradient(135deg, var(--emerald-500), #059669); }
+.live-hero-btn:hover { filter: brightness(1.08); }
+
+.scheduled-live-list { margin-bottom: 22px; }
+.scheduled-live-row {
+  display: flex; align-items: center; gap: 12px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 8px;
+}
+.scheduled-live-row .sl-icon { color: var(--gold-400); font-size: 15px; }
+.scheduled-live-row .sl-body { flex: 1; min-width: 0; }
+.scheduled-live-row .sl-title { font-size: 13.5px; font-weight: 700; color: var(--text-h); }
+.scheduled-live-row .sl-time { font-size: 11.5px; color: var(--text-muted); }
+
+/* ── Part 37 (المرحلة الثانية): مركز تنقل موحّد داخل الجروب (_group_tabs.html) ──
+   شريط تابات أفقي قابل للسكرول على الموبايل، بنفس نظام "Obsidian Academy".
+   مفيش نمط تابات/سايدبار جاهز في المشروع (راجعنا course_details.html و
+   course_curriculum.html قبل التصميم — مفيهمش أي حاجة مشابهة)، فده
+   كومبوننت جديد اتصمم بنفس الـ CSS variables الموجودة، موثّق كقرار في
+   PROGRESS بدل ما يتفرض بصمت. */
+.group-tabs {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 22px;
+  scrollbar-width: thin;
+}
+.group-tabs::-webkit-scrollbar { height: 5px; }
+.group-tabs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+.group-tab {
+  display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; flex-shrink: 0;
+  border-radius: 99px; font-size: 12.5px; font-weight: 700; white-space: nowrap;
+  text-decoration: none; border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-p); transition: var(--trans);
+}
+.group-tab:hover { border-color: var(--border-glow); color: var(--text-h); }
+.group-tab.active {
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  color: #fff; border-color: transparent;
+}
 </style>
 </head>
 <body>
@@ -299,6 +421,8 @@ body {
         {% endif %}
     </div>
 
+    {% include 'groups/_group_tabs.html' %}
+
     {% if messages %}
     <ul class="messages">
         {% for message in messages %}
@@ -310,7 +434,131 @@ body {
     </ul>
     {% endif %}
 
-    <!-- ── جلسات لايف شغالة دلوقتي ── -->
+    <!-- ── Part 24: البث المباشر الجديد (GroupLiveSession / LiveKit) ──
+         منفصل تمامًا عن قسم "جلسات لايف" القديم تحت (workshops.LiveSession،
+         Google Meet من Part 13).
+         id="live-section" — Part 37: نقطة الوصول لتاب "اللايف" في شريط
+         التابات الموحّد (يشمل هنا: حالة البث الحالي/المجدول + مكتبة
+         التسجيلات، لإنهم كلهم جزء من نفس سياق "اللايف" للجروب ده). ── -->
+    <div id="live-section">
+    {% if is_owner %}
+        {% if current_live_session %}
+        <div class="live-hero is-live">
+            <div class="live-hero-info">
+                <div class="live-hero-title"><span class="live-dot"></span> البث شغال دلوقتي — {{ current_live_session.title }}</div>
+                <div class="live-hero-sub">بدأ الساعة {{ current_live_session.started_at|date:"H:i" }}</div>
+            </div>
+            <a href="{% url 'groups:live_broadcast' group_id=group.id session_id=current_live_session.id %}" class="live-hero-btn is-live">
+                <i class="fas fa-satellite-dish"></i> أدخل البث
+            </a>
+        </div>
+        {% else %}
+        <div class="live-hero">
+            <div class="live-hero-info">
+                <div class="live-hero-title"><i class="fas fa-satellite-dish" style="color:var(--violet-400)"></i> البث المباشر</div>
+                <div class="live-hero-sub">ابدأ بث مباشر دلوقتي، أو جدوله لوقت لاحق.</div>
+            </div>
+            <a href="{% url 'groups:create_live_session' group_id=group.id %}" class="live-hero-btn">
+                <i class="fas fa-plus"></i> ابدأ بث مباشر
+            </a>
+        </div>
+        {% endif %}
+    {% elif current_live_session %}
+        <!-- Part 25: بدل رسالة "هتتفعّل قريبًا" — دلوقتي فيه صفحة مشاهدة
+             فعلية (join_live_session)، فالطالب العضو يقدر يدخل مباشرة. -->
+        <div class="live-hero is-live">
+            <div class="live-hero-info">
+                <div class="live-hero-title"><span class="live-dot"></span> فيه بث مباشر شغال دلوقتي — {{ current_live_session.title }}</div>
+                <div class="live-hero-sub">ادخل دلوقتي وشوف بث المدرس مباشرة.</div>
+            </div>
+            <a href="{% url 'groups:join_live_session' session_id=current_live_session.id %}" class="live-hero-btn is-live">
+                <i class="fas fa-play-circle"></i> ادخل اللايف
+            </a>
+        </div>
+    {% endif %}
+
+    {% if upcoming_group_live_sessions %}
+    <div class="scheduled-live-list">
+        <div class="section-title">
+            <i class="fas fa-calendar-alt" style="color:var(--gold-400)"></i> لايفات مجدولة قادمة
+            <span class="count">({{ upcoming_group_live_sessions|length }})</span>
+        </div>
+        {% for sched in upcoming_group_live_sessions %}
+        <div class="scheduled-live-row">
+            <i class="fas fa-clock sl-icon"></i>
+            <div class="sl-body">
+                <div class="sl-title">{{ sched.title }}</div>
+                <div class="sl-time">{{ sched.scheduled_at|date:"M d, Y — H:i" }}</div>
+            </div>
+            {% if not is_owner %}
+            <!-- Part 25: زرار بسيط يودّي لشاشة الانتظار (join_live_session
+                 بيتعامل مع status='scheduled' بعرض الميعاد). مش ظاهر
+                 للمدرس صاحب الجروب لإن join_live_session محمية بـ
+                 student_required فقط (تفاصيل في PROGRESS، Part 25). -->
+            <a href="{% url 'groups:join_live_session' session_id=sched.id %}" class="sess-btn sess-btn-ghost">
+                <i class="fas fa-info-circle"></i> الميعاد
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Part 26: رابط بسيط لمكتبة التسجيلات (VOD) — ظاهر دايمًا (للمدرس
+         والطالب العضو) بغض النظر عن وجود لايف شغال دلوقتي أو لأ. لو
+         مفيش أي تسجيل لسه، group_recordings.html بيعرض empty state بدل
+         قايمة فاضية. -->
+    <div class="scheduled-live-list">
+        <a href="{% url 'groups:group_recordings' group_id=group.id %}" class="sess-btn sess-btn-ghost" style="width:100%; justify-content:center;">
+            <i class="fas fa-clapperboard"></i> مكتبة التسجيلات
+        </a>
+    </div>
+
+    <!-- Part 37 (المرحلة الثانية): روابط "الدروس المسجلة" و"الجدول القادم"
+         و"الواجبات" (اللي كانت هنا كأزرار أشباح منفصلة من Part 28/32/34)
+         اتشالت من هنا — بقت مغطاة بالكامل بتابات "الدروس المسجلة"/
+         "الجدول القادم"/"الواجبات" في شريط التنقل الموحّد فوق
+         (_group_tabs.html)، فمفيش داعي لتكرار نفس الرابط مرتين في نفس
+         الصفحة. الروابط الفعلية (URL names) نفسها زي ما هي بالظبط —
+         التعديل ده تنظيف بصري بحت، مفيش أي مسار اتشال أو اتغيّر. -->
+
+    {% if is_owner and recent_ended_live_sessions %}
+    <!-- Part 26 (نسخة معدّلة — Manual Recording Upload): آخر اللايفات
+         المنتهية للجروب ده — للمدرس بس. لكل واحدة: زرار "ارفع التسجيل"
+         لو recording_file لسه فاضي، أو "شاهد التسجيل" لو موجود بالفعل.
+         الطالب مايشوفش القسم ده خالص (مفيش أي زرار رفع يظهرله إطلاقًا). -->
+    <div class="scheduled-live-list">
+        <div class="section-title">
+            <i class="fas fa-video" style="color:var(--rose-400)"></i> لايفات محتاجة رفع تسجيل
+            <span class="count">({{ recent_ended_live_sessions|length }})</span>
+        </div>
+        {% for ended_session in recent_ended_live_sessions %}
+        <div class="scheduled-live-row">
+            <i class="fas {% if ended_session.recording_file %}fa-circle-check{% else %}fa-clock{% endif %} sl-icon"
+               style="color:{% if ended_session.recording_file %}var(--emerald-400){% else %}var(--rose-400){% endif %}"></i>
+            <div class="sl-body">
+                <div class="sl-title">{{ ended_session.title }}</div>
+                <div class="sl-time">
+                    خلص {{ ended_session.ended_at|date:"M d, Y — H:i" }}
+                    {% if ended_session.recording_file %} — التسجيل متاح{% else %} — لسه محتاج رفع{% endif %}
+                </div>
+            </div>
+            {% if ended_session.recording_file %}
+            <a href="{% url 'groups:watch_group_recording' session_id=ended_session.id %}" class="sess-btn sess-btn-primary">
+                <i class="fas fa-play-circle"></i> شاهد التسجيل
+            </a>
+            {% else %}
+            <a href="{% url 'groups:upload_group_recording' session_id=ended_session.id %}" class="sess-btn sess-btn-ghost">
+                <i class="fas fa-upload"></i> ارفع التسجيل
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    </div><!-- /#live-section -->
+
+    <!-- ── جلسات لايف شغالة دلوقتي (النظام القديم — workshops.LiveSession / Google Meet) ── -->
     <div class="section-block">
         <div class="section-title">
             <span class="live-dot"></span> جلسات لايف شغالة دلوقتي
@@ -409,12 +657,41 @@ body {
     </div>
     {% endif %}
 
-    <!-- ── الشات الجماعي (Part 14) ── -->
-    <div class="section-block">
-        <div class="section-title">
-            <i class="fas fa-comments" style="color:var(--violet-400)"></i> الشات الجماعي
-            <span class="count">({{ chat_messages|length }})</span>
+    <!-- ── الشات الجماعي (Part 14 + وضع الإذاعة من Part 29) ──
+         id="chat-section" — Part 37: نقطة الوصول لتاب "الشات" في شريط
+         التابات الموحّد. ── -->
+    <div class="section-block" id="chat-section">
+        <div class="chat-section-header">
+            <div class="section-title">
+                <i class="fas fa-comments" style="color:var(--violet-400)"></i> الشات الجماعي
+                <span class="count">({{ chat_messages|length }})</span>
+            </div>
+            {% if is_owner %}
+            <!-- Part 29: زرار/سويتش ظاهر للمدرس بس، بيبدّل chat_mode عن
+                 طريق view مستقلة (toggle_chat_mode)، POST بس. -->
+            <form method="post" action="{% url 'groups:toggle_chat_mode' group_id=group.id %}" class="chat-mode-toggle-form">
+                {% csrf_token %}
+                <button type="submit" class="chat-mode-toggle-btn {% if group.chat_mode == 'broadcast_only' %}is-broadcast{% endif %}">
+                    {% if group.chat_mode == 'broadcast_only' %}
+                        <i class="fas fa-lock"></i> وضع الإذاعة (اضغط للفتح)
+                    {% else %}
+                        <i class="fas fa-lock-open"></i> الشات مفتوح (اضغط للقفل)
+                    {% endif %}
+                </button>
+            </form>
+            {% endif %}
         </div>
+
+        {% if group.chat_mode == 'broadcast_only' %}
+        <div class="chat-mode-banner">
+            <i class="fas fa-bullhorn"></i>
+            {% if is_owner %}
+                الشات في وضع الإذاعة — إنت بس اللي هتقدر تبعت رسائل، الطلاب هيقدروا يقروا بس.
+            {% else %}
+                المدرس قافل الشات على وضع الإذاعة دلوقتي — بس هو اللي يقدر يبعت رسائل.
+            {% endif %}
+        </div>
+        {% endif %}
 
         <div class="chat-box" id="chat-box">
             {% if chat_messages %}
@@ -430,7 +707,22 @@ body {
                             {% if msg.sender_id == group.teacher_id %}<span class="chat-sender-badge">مدرس</span>{% endif %}
                         </div>
                         {% endif %}
+                        {% if msg.content %}
                         <div class="chat-content">{{ msg.content|linebreaksbr }}</div>
+                        {% endif %}
+                        {% if msg.message_type == 'image' and msg.attachment_image %}
+                        <a href="{{ msg.attachment_image.url }}" target="_blank" rel="noopener">
+                            <img src="{{ msg.attachment_image.url }}" alt="صورة مرفقة" class="chat-attachment-image">
+                        </a>
+                        {% elif msg.message_type == 'file' and msg.attachment_file %}
+                        <a href="{{ msg.attachment_file.url }}" target="_blank" rel="noopener" class="chat-attachment-file">
+                            <div class="chat-attachment-file-icon"><i class="fas fa-file-arrow-down"></i></div>
+                            <div class="chat-attachment-file-info">
+                                <div class="chat-attachment-file-name">{{ msg.attachment_file_name }}</div>
+                                <div class="chat-attachment-file-download">اضغط للتحميل</div>
+                            </div>
+                        </a>
+                        {% endif %}
                         <div class="chat-time">{{ msg.sent_at|date:"H:i" }}</div>
                     </div>
                 </div>
@@ -440,14 +732,34 @@ body {
             {% endif %}
         </div>
 
-        <form method="post" class="chat-form">
+        {% if is_owner or group.chat_mode != 'broadcast_only' %}
+        <form method="post" class="chat-form" enctype="multipart/form-data" id="chat-send-form">
             {% csrf_token %}
             <input type="hidden" name="action" value="send_message">
-            <textarea name="content" class="chat-input" placeholder="اكتب رسالتك هنا..." required maxlength="2000"></textarea>
-            <button type="submit" class="sess-btn sess-btn-primary chat-send-btn">
-                <i class="fas fa-paper-plane"></i> إرسال
-            </button>
+            <!-- Part 30: صف الإرفاق — صورة أو ملف، الاتنين اختياريين ومش
+                 مسموح تختار الاتنين مع بعض (نفس الفحص على السيرفر). -->
+            <div class="chat-attach-row">
+                <label class="chat-attach-label" for="chat-attach-image">
+                    <i class="fas fa-image"></i> صورة
+                    <input type="file" id="chat-attach-image" name="attachment_image" accept="image/*">
+                </label>
+                <label class="chat-attach-label" for="chat-attach-file">
+                    <i class="fas fa-paperclip"></i> ملف
+                    <input type="file" id="chat-attach-file" name="attachment_file">
+                </label>
+                <span class="chat-attach-filename" id="chat-attach-filename"></span>
+                <span class="chat-attach-hint">صورة حتى 5MB، ملف حتى 15MB</span>
+            </div>
+            <div class="chat-form-row">
+                <textarea name="content" class="chat-input" placeholder="اكتب رسالتك هنا (اختياري لو مرفق صورة/ملف)..." maxlength="2000"></textarea>
+                <button type="submit" class="sess-btn sess-btn-primary chat-send-btn">
+                    <i class="fas fa-paper-plane"></i> إرسال
+                </button>
+            </div>
         </form>
+        {% endif %}
+        <!-- Part 29: حقل الكتابة مش موجود خالص في الـ HTML للطالب لو الشات
+             في وضع الإذاعة (مش بس disabled) — نفس تعليمات الجزء بالحرف. -->
     </div>
 </div>
 
@@ -485,6 +797,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // Part 14: نزّل سكرول الشات لآخر رسالة أول ما الصفحة تتحمل.
     const chatBox = document.getElementById('chat-box');
     if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Part 30: صورة/ملف مش مسموح الاتنين مع بعض في نفس الرسالة — لو
+    // المستخدم اختار صورة وبعدين اختار ملف (أو العكس)، بنمسح الاختيار
+    // الأول تلقائيًا (تحسين UX بسيط، الفحص الحقيقي لسه في الـ view).
+    const imageInput = document.getElementById('chat-attach-image');
+    const fileInput = document.getElementById('chat-attach-file');
+    const filenameLabel = document.getElementById('chat-attach-filename');
+    function updateAttachPreview() {
+        if (!filenameLabel) return;
+        if (imageInput && imageInput.files.length) {
+            filenameLabel.textContent = '📷 ' + imageInput.files[0].name;
+        } else if (fileInput && fileInput.files.length) {
+            filenameLabel.textContent = '📎 ' + fileInput.files[0].name;
+        } else {
+            filenameLabel.textContent = '';
+        }
+    }
+    if (imageInput) {
+        imageInput.addEventListener('change', () => {
+            if (imageInput.files.length && fileInput) fileInput.value = '';
+            updateAttachPreview();
+        });
+    }
+    if (fileInput) {
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length && imageInput) imageInput.value = '';
+            updateAttachPreview();
+        });
+    }
 });
 </script>
 </body>

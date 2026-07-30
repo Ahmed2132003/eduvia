@@ -208,9 +208,14 @@ body { margin-top: var(--topbar-h); }
 
 .group-card {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-  padding: 20px 22px; transition: var(--trans);
+  padding: 20px 22px; transition: var(--trans); position: relative; cursor: pointer;
 }
 .group-card:hover { border-color: var(--border-glow); }
+/* Stretched-link overlay: makes the whole card clickable → group_detail,
+   while sitting below any real button inside the card (z-index:2 there)
+   so nested actions like "Upgrade Capacity" stay independently clickable. */
+.group-card-link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.group-card-body .action-btn-outline { position: relative; z-index: 2; }
 
 .group-card-header {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
@@ -269,6 +274,33 @@ body { margin-top: var(--topbar-h); }
 }
 .action-btn-outline:hover { color: var(--violet-300, var(--violet-400)); background: var(--violet-glow); border-color: var(--violet-500); transform: translateY(-1px); }
 
+/* ═══ Part 32 (المرحلة الثانية): ودجت "الجدول القادم" ═══════════════
+   مجمّع من كل جروبات المدرس مع بعض (لايفات مجدولة + دروس مجدولة)، نفس
+   مكوّن schedule-row المستخدم في group_schedule.html/my_learning_groups.html
+   بإضافة اسم الجروب لكل عنصر. */
+.schedule-widget { margin-bottom: 30px; }
+.schedule-row {
+  display: flex; align-items: center; gap: 14px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 12px 16px; margin-bottom: 8px; animation: fadeUp .35s ease both;
+}
+.schedule-row .sc-icon {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sc-icon.live { background: rgba(56,189,248,.15); color: var(--sky-400); }
+.sc-icon.lesson { background: rgba(251,191,36,.15); color: var(--gold-400); }
+.schedule-row .sc-body { flex: 1; min-width: 0; }
+.schedule-row .sc-title { font-size: 13.5px; font-weight: 700; color: var(--text-h); margin-bottom: 2px; }
+.schedule-row .sc-meta { font-size: 11.5px; color: var(--text-muted); }
+.sc-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+  border-radius: var(--radius-sm); font-size: 12px; font-weight: 700;
+  text-decoration: none; border: 1px solid var(--border); background: var(--bg-card-2);
+  color: var(--text-p); transition: var(--trans); flex-shrink: 0;
+}
+.sc-btn:hover { border-color: var(--violet-500); color: var(--violet-400); }
+
 /* ═══ EMPTY STATE ═══════════════════════════════════════════════ */
 .empty-state {
   text-align: center; padding: 60px 24px; background: var(--bg-card); border: 1px dashed var(--border);
@@ -313,6 +345,7 @@ body { margin-top: var(--topbar-h); }
                 <a href="{% url 'courses:instructor_dashboard' %}" class="nav-link">Courses Dashboard</a>
             {% endif %}
             <a href="{% url 'groups:teacher_dashboard' %}" class="nav-link active">Groups</a>
+            <a href="{% url 'groups:my_todo_list' %}" class="nav-link">My Tasks</a>
             <a href="/accounts/profile/" class="nav-link">Profile</a>
             <a href="/accounts/logout/" class="nav-link">Logout</a>
         {% else %}
@@ -369,6 +402,42 @@ body { margin-top: var(--topbar-h); }
         </div>
     </div>
 
+    <!-- Part 32 (المرحلة الثانية): ودجت "الجدول القادم" — مجمّع من كل
+         جروبات المدرس مع بعض (لايفات مجدولة + دروس مجدولة)، مرتب
+         بالتاريخ (الأقرب أول)، آخر 8 عناصر بس. عناصر اللايف بتودّي
+         لصفحة الجروب نفسها (join_live_session محمية بـ student_required
+         فقط، فمش بتظهر هنا للمدرس) وعناصر الدرس بتودّي مباشرة لمعاينة
+         الدرس (المدرس صاحب الجروب يقدر يفتح درس لسه مش منشور). -->
+    {% if upcoming_schedule_items %}
+    <div class="schedule-widget">
+        <div class="section-header" style="margin-bottom: 12px;">
+            <div class="section-title">
+                <i class="fas fa-calendar-days"></i> الجدول القادم
+            </div>
+        </div>
+        {% for item in upcoming_schedule_items %}
+        <div class="schedule-row">
+            <div class="sc-icon {{ item.kind }}">
+                <i class="fas {% if item.kind == 'live' %}fa-satellite-dish{% else %}fa-book-open{% endif %}"></i>
+            </div>
+            <div class="sc-body">
+                <div class="sc-title">{{ item.title }}</div>
+                <div class="sc-meta">{{ item.group.category }} — {{ item.when|date:"M d, Y — H:i" }}</div>
+            </div>
+            {% if item.kind == 'lesson' %}
+            <a href="{% url 'groups:watch_group_lesson' lesson_id=item.obj.id %}" class="sc-btn">
+                <i class="fas fa-eye"></i> معاينة
+            </a>
+            {% else %}
+            <a href="{% url 'groups:group_detail' item.group.id %}" class="sc-btn">
+                <i class="fas fa-arrow-left"></i> الجروب
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <!-- Groups Section -->
     <div class="section-header">
         <div class="section-title">
@@ -384,6 +453,7 @@ body { margin-top: var(--topbar-h); }
         {% for row in groups_data %}
         {% with group=row.group subscription=row.subscription %}
         <div class="group-card">
+            <a href="{% url 'groups:group_detail' group.id %}" class="group-card-link" aria-label="View group details"></a>
 
             <div class="group-card-header">
                 <div class="group-title-wrap">

@@ -8,6 +8,14 @@ Part 10 — نفس action القبول (accept_payment_action) بقى بيراع
           upgrade_mode المختار بدل ما يطبق دايمًا +30 يوم من دلوقتي.
 Part 14 — تسجيل GroupChatMessage (للمراجعة/الإشراف بس؛ الإرسال والعرض
           الفعليين للطلاب/المدرسين بيتم من groups/views.py::group_detail).
+Part 21 — badges ملوّنة لحالة الاشتراك في لوحة الأدمن + صفحة رفض منسّقة.
+Part 22 — تسجيل GroupLiveSession (المرحلة الثانية: البث المباشر).
+Part 27 — تسجيل GroupLesson (المرحلة الثانية: الدروس المسجلة).
+Part 29 — إضافة chat_mode لـ TeacherGroupAdmin (list_display + list_filter)
+          (المرحلة الثانية: وضع الإذاعة في الشات الجماعي).
+Part 33 — تسجيل GroupAssignment و GroupAssignmentSubmission (المرحلة
+          الثانية: الواجبات — للمراجعة/الإشراف بس؛ التصحيح الفعلي
+          هيتم من view مخصص في Part 34، مش من هنا).
 """
 
 from datetime import timedelta
@@ -28,6 +36,11 @@ from .models import (
     GroupMembership,
     GroupUpgrade,
     GroupChatMessage,
+    GroupLiveSession,
+    GroupLesson,
+    GroupAssignment,
+    GroupAssignmentSubmission,
+    GroupTodoItem,
 )
 
 
@@ -41,6 +54,12 @@ _STATUS_BADGE_COLORS = {
     'pending_payment': ('#fbbf24', 'rgba(251,191,36,.12)'),
     'expired': ('#fb7185', 'rgba(251,113,133,.12)'),
     'rejected': ('#fb7185', 'rgba(251,113,133,.12)'),
+    # Part 22: نفس منطق الألوان اتستخدم لحالات GroupLiveSession كمان
+    # (نفس الروح: أخضر = شغال دلوقتي، ذهبي = مجدول لسه، رمادي/وردي = خلص/اتلغى).
+    'live': ('#34d399', 'rgba(52,211,153,.12)'),
+    'scheduled': ('#fbbf24', 'rgba(251,191,36,.12)'),
+    'ended': ('#94a3c4', 'rgba(148,163,196,.12)'),
+    'canceled': ('#fb7185', 'rgba(251,113,133,.12)'),
 }
 
 
@@ -69,8 +88,14 @@ class GroupCapacityPlanAdmin(admin.ModelAdmin):
 
 @admin.register(TeacherGroup)
 class TeacherGroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'teacher', 'category', 'current_plan', 'is_active', 'join_code', 'created_at')
-    list_filter = ('is_active', 'category', 'current_plan')
+    # Part 29 (المرحلة الثانية): chat_mode في list_display + list_filter
+    # عشان الأدمن يقدر يشوف/يفلتر الجروبات القافلة شاتها على وضع الإذاعة،
+    # نفس نمط باقي الحقول البسيطة في الموديل ده.
+    list_display = (
+        'name', 'teacher', 'category', 'current_plan', 'is_active',
+        'chat_mode', 'join_code', 'created_at',
+    )
+    list_filter = ('is_active', 'category', 'current_plan', 'chat_mode')
     search_fields = ('name', 'teacher__username', 'teacher__email', 'join_code')
     readonly_fields = ('join_code',)
 
@@ -310,8 +335,12 @@ class GroupUpgradeAdmin(admin.ModelAdmin):
 
 @admin.register(GroupChatMessage)
 class GroupChatMessageAdmin(admin.ModelAdmin):
-    list_display = ('group', 'sender', 'short_content', 'sent_at')
-    list_filter = ('group__category',)
+    # Part 30: ضفت message_type في list_display/list_filter عشان الأدمن
+    # يقدر يميّز بسهولة الرسائل النصية عن الصور/الملفات، وضفت الحقلين
+    # الجدد (attachment_image, attachment_file) في readonly_fields بنفس
+    # فلسفة باقي الحقول هنا (المراجعة/الإشراف بس، مفيش تعديل من الأدمن).
+    list_display = ('group', 'sender', 'message_type', 'short_content', 'sent_at')
+    list_filter = ('message_type', 'group__category')
     search_fields = (
         'content',
         'sender__username',
@@ -319,8 +348,201 @@ class GroupChatMessageAdmin(admin.ModelAdmin):
         'group__name',
         'group__teacher__username',
     )
-    readonly_fields = ('group', 'sender', 'content', 'sent_at')
+    readonly_fields = (
+        'group', 'sender', 'message_type', 'content',
+        'attachment_image', 'attachment_file', 'sent_at',
+    )
 
     def short_content(self, obj):
-        return obj.content if len(obj.content) <= 60 else obj.content[:57] + '...'
+        # Part 30: الرسالة ممكن تبقى صورة/ملف من غير أي نص خالص
+        # (content فاضي) — بدل ما يظهر فاضي في القايمة، بنعرض وصف
+        # مختصر للمرفق نفسه في الحالة دي.
+        if obj.content:
+            return obj.content if len(obj.content) <= 60 else obj.content[:57] + '...'
+        if obj.message_type == 'image' and obj.attachment_image:
+            return '📷 صورة'
+        if obj.message_type == 'file' and obj.attachment_file:
+            return f'📎 {obj.attachment_file_name}'
+        return '—'
     short_content.short_description = 'الرسالة'
+
+
+# ---------------------------------------------------------------------------
+# Part 22: تسجيل GroupLiveSession (المرحلة الثانية — البث المباشر).
+# نفس نمط التسجيل المتبع في كل موديلات groups (list_display بسيط +
+# list_filter + search_fields)، مع badge ملوّن لحالة الجلسة بنفس أسلوب
+# _status_badge المستخدم فوق لحالة الاشتراك (Part 21)، عشان الأدمن يقدر
+# يتابع الجلسات الشغالة دلوقتي بنظرة واحدة.
+# ---------------------------------------------------------------------------
+
+@admin.register(GroupLiveSession)
+class GroupLiveSessionAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'group',
+        'host',
+        'mode',
+        'status_badge',
+        'scheduled_at',
+        'started_at',
+        'ended_at',
+        'created_at',
+    )
+    list_filter = ('status', 'mode', 'group__category')
+    search_fields = (
+        'title',
+        'group__name',
+        'group__teacher__username',
+        'host__username',
+        'room_identifier',
+    )
+    # Part 26 (نسخة معدّلة — Manual Recording Upload): recording_url
+    # (الحقل القديم بتاع نظام الإيجرس التلقائي) اتشال من الموديل.
+    # بدله recording_file (المدرس بيرفعه بنفسه) وrecording_uploaded_at —
+    # الاتنين readonly هنا برضه (بيتحدثوا من upload_group_recording view
+    # بس، مش من فورم تعديل الأدمن اليدوي).
+    readonly_fields = (
+        'room_identifier', 'recording_file', 'recording_uploaded_at',
+        'started_at', 'ended_at',
+    )
+
+    def status_badge(self, obj):
+        return _status_badge(obj.status, obj.get_status_display())
+    status_badge.short_description = 'الحالة'
+    status_badge.admin_order_field = 'status'
+
+
+# ---------------------------------------------------------------------------
+# Part 27: تسجيل GroupLesson (المرحلة الثانية — الدروس المسجلة).
+# نفس نمط التسجيل البسيط المتبع في باقي موديلات groups. is_published
+# وorder اتحطوا list_editable (نفس أسلوب Part 18 مع
+# workshops.LiveRecordingAdmin.is_free_preview) عشان المدرس/الأدمن يقدر
+# يرتب الدروس أو ينشر/يخفي درس مباشرة من قايمة الأدمن من غير ما يفتح كل
+# سجل لوحده. ضفت action جماعي (toggle_publish) بنفس فلسفة
+# toggle_free_preview من Part 18 لتبديل حالة أكتر من درس مختار مرة واحدة.
+# ---------------------------------------------------------------------------
+
+@admin.register(GroupLesson)
+class GroupLessonAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'group',
+        'order',
+        'is_published',
+        'publish_at',
+        'video_duration',
+        'created_at',
+    )
+    list_filter = ('is_published', 'group__category')
+    search_fields = (
+        'title',
+        'description',
+        'group__name',
+        'group__teacher__username',
+    )
+    list_editable = ('order', 'is_published')
+    actions = ['toggle_publish']
+
+    @admin.action(description='تبديل حالة النشر (منشور/مخفي) للدروس المحددة')
+    def toggle_publish(self, request, queryset):
+        published_count = 0
+        hidden_count = 0
+        for lesson in queryset:
+            lesson.is_published = not lesson.is_published
+            lesson.save(update_fields=['is_published'])
+            if lesson.is_published:
+                published_count += 1
+            else:
+                hidden_count += 1
+
+        if published_count:
+            self.message_user(
+                request,
+                f'تم نشر {published_count} درس.',
+                level=messages.SUCCESS,
+            )
+        if hidden_count:
+            self.message_user(
+                request,
+                f'تم إخفاء {hidden_count} درس.',
+                level=messages.WARNING,
+            )
+
+
+# ---------------------------------------------------------------------------
+# Part 33: تسجيل GroupAssignment و GroupAssignmentSubmission (المرحلة
+# الثانية — الواجبات). التسجيل هنا لأغراض المراجعة/الإشراف بس، بنفس
+# فلسفة GroupChatMessageAdmin (Part 14) — التصحيح الفعلي (درجة+ملاحظة)
+# هيتم من view مخصص للمدرس هيتبنى في Part 34، مش من لوحة الأدمن.
+# ---------------------------------------------------------------------------
+
+@admin.register(GroupAssignment)
+class GroupAssignmentAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'group',
+        'due_date',
+        'max_grade',
+        'submissions_count_display',
+        'created_at',
+    )
+    list_filter = ('group__category',)
+    search_fields = ('title', 'description', 'group__name', 'group__teacher__username')
+
+    def submissions_count_display(self, obj):
+        return obj.submissions_count
+    submissions_count_display.short_description = 'عدد التسليمات'
+
+
+@admin.register(GroupAssignmentSubmission)
+class GroupAssignmentSubmissionAdmin(admin.ModelAdmin):
+    # كل الحقول readonly هنا (زي GroupChatMessageAdmin من Part 14 بالظبط)
+    # — التسليم والتصحيح الفعليين بيتم بالكامل من الواجهة (Part 34)، مش
+    # من لوحة الأدمن، فمفيش داعي إن الأدمن "يعدّل" تسليم أو درجة من هنا.
+    list_display = (
+        'assignment',
+        'student',
+        'grade_badge',
+        'submitted_at',
+        'graded_by',
+        'graded_at',
+    )
+    list_filter = ('assignment__group__category',)
+    search_fields = (
+        'assignment__title',
+        'student__username',
+        'student__email',
+        'assignment__group__name',
+        'assignment__group__teacher__username',
+    )
+    readonly_fields = (
+        'assignment', 'student', 'content', 'attachment', 'submitted_at',
+        'grade', 'feedback', 'graded_by', 'graded_at',
+    )
+
+    def grade_badge(self, obj):
+        if obj.grade is None:
+            return _status_badge('pending_payment', 'لسه ما اتصححش')
+        return _status_badge('active', f'{obj.grade} / {obj.assignment.max_grade}')
+    grade_badge.short_description = 'الدرجة'
+    grade_badge.admin_order_field = 'grade'
+
+
+# ---------------------------------------------------------------------------
+# Part 35: تسجيل GroupTodoItem (المرحلة الثانية — المهام اليومية). نفس
+# نمط التسجيل البسيط المتبع في باقي موديلات groups. is_done اتحطت
+# list_editable (نفس فلسفة GroupLessonAdmin.is_published من Part 27)
+# عشان الأدمن يقدر يعلّم مهمة "تمت" مباشرة من قايمة الأدمن من غير ما يفتح
+# كل سجل لوحده — الاستخدام الفعلي اليومي (تحديد "تم") بيتم من my_todo_list
+# (AJAX) مش من هنا، ده بس تسهيل إضافي للمراجعة/الإشراف.
+# ---------------------------------------------------------------------------
+
+# Part 36: ضفنا reminder_sent في list_display/list_filter (بنفس فلسفة
+# إضافة chat_mode/message_type في أجزاء سابقة) عشان الأدمن يقدر يراجع
+# بسهولة أي مهام اتبعتلها تذكير بالفعل ولسه معلّقة.
+@admin.register(GroupTodoItem)
+class GroupTodoItemAdmin(admin.ModelAdmin):
+    list_display = ('title', 'owner', 'group', 'due_at', 'is_done', 'reminder_sent', 'created_at')
+    list_filter = ('is_done', 'reminder_sent', 'group__category')
+    search_fields = ('title', 'notes', 'owner__username', 'group__name')
+    list_editable = ('is_done',)

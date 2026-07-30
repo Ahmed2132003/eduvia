@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lesson.title }} - {{ group.category }} - Eduvia</title>
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <link rel="icon" href="https://i.postimg.cc/pLFTCC2z/logo-eduvia1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* نفس نظام "Obsidian Academy" — Part 28 (المرحلة الثانية): تشغيل درس واحد.
+   .video-shell/.video-empty-state منسوخين بالحرف من courses/lesson_view.html
+   (نفس مشغل الفيديو ونفس منطق دعم YouTube/Vimeo/Google Drive/رابط مباشر)،
+   زي ما اتطلب بالظبط في نص الجزء. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base: #080b14; --bg-panel: #0d1120; --bg-card: #131929; --bg-card-2: #1a2236;
+  --bg-hover: #1e2840; --border: rgba(120,130,180,.12); --border-glow: rgba(139,92,246,.25);
+  --violet-400: #a78bfa; --violet-500: #8b5cf6; --violet-600: #7c3aed; --violet-glow: rgba(139,92,246,.18);
+  --gold-400: #fbbf24; --emerald-400: #34d399; --emerald-500: #10b981; --rose-400: #fb7185; --sky-400: #38bdf8;
+  --text-h: #f1f5ff; --text-p: #94a3c4; --text-muted: #5a6585;
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 18px; --topbar-h: 62px;
+  --trans: all .22s cubic-bezier(.4,0,.2,1);
+  --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif; --font-arabic: 'Cairo', sans-serif;
+}
+[data-theme="light"] {
+  --bg-base: #f4f6fc; --bg-panel: #ffffff; --bg-card: #f8faff; --bg-card-2: #eef2fc; --bg-hover: #e8ecf8;
+  --border: rgba(100,110,160,.14); --text-h: #0f172a; --text-p: #374365; --text-muted: #8896b3;
+  --violet-glow: rgba(139,92,246,.1);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body); background: var(--bg-base); color: var(--text-p);
+  min-height: 100vh; overflow-x: hidden; transition: background .35s, color .35s; margin-top: var(--topbar-h);
+}
+[lang="ar"] body, [lang="ar"] * { font-family: var(--font-arabic), sans-serif !important; }
+[lang="ar"] { direction: rtl; }
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600; height: var(--topbar-h);
+  display: flex; align-items: center; gap: 18px; padding: 0 28px;
+  background: rgba(8,11,20,.88); backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid var(--border);
+}
+[data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--text-h); text-decoration: none; }
+.topbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; flex-wrap: wrap; }
+.nav-link { font-size: 13.5px; font-weight: 500; color: var(--text-p); text-decoration: none; padding: 8px 12px; border-radius: var(--radius-sm); transition: var(--trans); }
+.nav-link:hover { background: var(--bg-hover); color: var(--text-h); }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.ctrl-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--trans); }
+.ctrl-btn:hover { background: var(--bg-hover); color: var(--text-h); }
+.hamburger { display: none; }
+@media (max-width: 900px) {
+  .nav-links { display: none; position: fixed; top: var(--topbar-h); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 10px; gap: 2px; }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 14px; }
+  .topbar-sep { display: none; }
+  .hamburger { display: flex; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-p); align-items: center; justify-content: center; cursor: pointer; margin-left: auto; }
+}
+
+/* ═══ VIDEO PLAYER — نفس CSS بالحرف من courses/lesson_view.html ═══ */
+.video-shell {
+  background: #000; position: relative;
+  width: 100%; aspect-ratio: 16/9; max-height: 60vh;
+  flex-shrink: 0;
+}
+.video-shell iframe,
+.video-shell video {
+  width: 100%; height: 100%; border: none; display: block;
+}
+.video-empty-state {
+  width: 100%; height: 100%; min-height: 260px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 10px;
+  background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+  color: var(--text-muted);
+}
+.video-empty-state i { font-size: 48px; opacity: .3; }
+
+.content-wrap { max-width: 860px; margin: 0 auto; padding: 24px 24px 80px; }
+
+.breadcrumb-link {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+  color: var(--text-p); text-decoration: none; margin-bottom: 18px; transition: var(--trans);
+}
+.breadcrumb-link:hover { color: var(--text-h); }
+
+.lesson-info-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 24px; margin-top: 18px;
+}
+.lesson-info-card h1 { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--text-h); margin-bottom: 8px; }
+.lesson-meta-line { font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.lesson-desc { font-size: 13.5px; color: var(--text-p); line-height: 1.7; white-space: pre-wrap; }
+
+.unpublished-badge {
+  display: inline-flex; align-items: center; gap: 6px; margin-bottom: 14px;
+  padding: 5px 12px; border-radius: 99px; font-size: 11.5px; font-weight: 700;
+  background: rgba(251,191,36,.15); color: var(--gold-400); border: 1px solid rgba(251,191,36,.3);
+}
+
+.footer { text-align: center; padding: 32px 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
+.footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--text-h); margin-bottom: 8px; font-size: 16px; }
+
+/* Part 37: شريط التابات الموحّد داخل الجروب (نفس CSS بالحرف عبر كل صفحات المرحلة الثانية) */
+.group-tabs {
+  display: flex; gap: 4px; overflow-x: auto; margin-bottom: 22px; padding-bottom: 2px;
+  border-bottom: 1px solid var(--border);
+}
+.group-tabs::-webkit-scrollbar { height: 4px; }
+.group-tabs::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 99px; }
+.group-tab {
+  display: inline-flex; align-items: center; gap: 7px; padding: 10px 14px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0; font-size: 12.5px; font-weight: 700;
+  color: var(--text-muted); text-decoration: none; white-space: nowrap; transition: var(--trans);
+  border-bottom: 2px solid transparent; flex-shrink: 0;
+}
+.group-tab:hover { color: var(--text-h); background: var(--bg-hover); }
+.group-tab.active { color: var(--violet-400); border-bottom-color: var(--violet-500); background: var(--violet-glow); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="/" class="topbar-logo">Eduvia</a>
+    <div class="topbar-sep"></div>
+    <nav class="nav-links" id="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        {% if is_owner %}
+            <a href="{% url 'groups:teacher_dashboard' %}" class="nav-link">Groups Dashboard</a>
+        {% else %}
+            <a href="{% url 'groups:my_learning_groups' %}" class="nav-link">My Groups</a>
+        {% endif %}
+        <a href="{% url 'groups:group_detail' group_id=group.id %}" class="nav-link">صفحة الجروب</a>
+    </nav>
+    <div class="topbar-right">
+        <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="ctrl-btn" onclick="toggleLang()" title="Toggle language">
+            <i class="fas fa-globe"></i>
+        </button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+</header>
+
+{# ── Video Player — نفس منطق courses/lesson_view.html بالحرف ── #}
+<div class="video-shell" id="video-shell">
+  {% if lesson.video_url %}
+    {% with url=lesson.video_url %}
+    {% if 'drive.google.com' in url %}
+      <iframe src="{{ url|cut:'view'|add:'preview' }}" allowfullscreen allow="autoplay" id="lesson-iframe"></iframe>
+    {% elif 'vimeo.com' in url %}
+      {% with vid=url|cut:"https://vimeo.com/"|cut:"https://player.vimeo.com/video/" %}
+      <iframe src="https://player.vimeo.com/video/{{ vid }}?autoplay=0&title=0&byline=0" allowfullscreen allow="autoplay; fullscreen" id="lesson-iframe"></iframe>
+      {% endwith %}
+    {% elif 'youtube.com' in url or 'youtu.be' in url %}
+      {% if 'youtu.be' in url %}
+        <iframe src="https://www.youtube.com/embed/{{ url|cut:'https://youtu.be/' }}" allowfullscreen allow="autoplay; fullscreen" id="lesson-iframe"></iframe>
+      {% else %}
+        <iframe src="https://www.youtube.com/embed/{{ url|cut:'https://www.youtube.com/watch?v=' }}" allowfullscreen allow="autoplay; fullscreen" id="lesson-iframe"></iframe>
+      {% endif %}
+    {% else %}
+      <video id="lesson-video" controls preload="metadata" style="width:100%;height:100%;background:#000;">
+        <source src="{{ url }}">
+      </video>
+    {% endif %}
+    {% endwith %}
+  {% else %}
+    <div class="video-empty-state">
+      <i class="fas fa-video-slash"></i>
+      <p>فيديو الدرس مش متاح.</p>
+    </div>
+  {% endif %}
+</div>
+
+<div class="content-wrap">
+    <a href="{% url 'groups:group_lessons_list' group_id=group.id %}" class="breadcrumb-link">
+        <i class="fas fa-arrow-right"></i> رجوع لدروس الجروب
+    </a>
+
+    {% include 'groups/_group_tabs.html' %}
+
+    <div class="lesson-info-card">
+        {% if not lesson.is_published %}
+        <div class="unpublished-badge">
+            <i class="fas fa-clock"></i>
+            {% if lesson.publish_at %}الدرس ده مجدول ينزل يوم {{ lesson.publish_at|date:"M d, Y — H:i" }} — إنت شايفه لإنك صاحب الجروب{% else %}الدرس ده لسه مش منشور — إنت شايفه لإنك صاحب الجروب{% endif %}
+        </div>
+        {% endif %}
+        <h1>{{ lesson.title }}</h1>
+        <div class="lesson-meta-line">
+            {% if lesson.video_duration %}<span><i class="fas fa-clock"></i> {{ lesson.video_duration }} دقيقة</span>{% endif %}
+            <span><i class="fas fa-chalkboard-user"></i> {{ group.teacher.get_full_name|default:group.teacher.username }}</span>
+        </div>
+        {% if lesson.description %}
+        <div class="lesson-desc">{{ lesson.description|linebreaksbr }}</div>
+        {% endif %}
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-logo">Eduvia</div>
+    <p>© 2025 Eduvia and creativitycode. All rights reserved.</p>
+</footer>
+
+<script>
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', theme);
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+function toggleLang() {
+    const html = document.getElementById('html-root');
+    const lang = html.getAttribute('lang') === 'en' ? 'ar' : 'en';
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    localStorage.setItem('language', lang);
+}
+function toggleMenu() { document.getElementById('nav-links').classList.toggle('open'); }
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    const lang = localStorage.getItem('language') || 'en';
+    const html = document.getElementById('html-root');
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% comment %}
+Part 35 — صف مهمة واحدة (todo-row)، متضمّن جوه my_todo_list.html مرتين
+(قسم المعلّقة وقسم المخلّصة) عشان مفيش تكرار للـ markup، وعشان
+toggleTodo() في الـ JS تقدر تبني نفس الشكل بالظبط لما تنقل صف بين
+القسمين بدون reload.
+{% endcomment %}
+<div class="todo-row {% if todo.is_done %}is-done{% endif %} {% if not todo.is_done and todo.due_at and todo.due_at < now %}is-overdue{% endif %}" data-todo-id="{{ todo.id }}">
+    <button type="button" class="todo-check-btn" onclick="toggleTodo({{ todo.id }}, this)"
+            title="{% if todo.is_done %}ارجعها معلّقة{% else %}حدد كـ تم{% endif %}">
+        <i class="fas fa-check"></i>
+    </button>
+    <div class="todo-body">
+        <div class="todo-title">{{ todo.title }}</div>
+        <div class="todo-meta">
+            {% if todo.due_at %}
+                {% if not todo.is_done and todo.due_at < now %}
+                <span class="overdue-tag"><i class="fas fa-triangle-exclamation"></i> فات معادها — {{ todo.due_at|date:"M d, Y — H:i" }}</span>
+                {% else %}
+                <span><i class="fas fa-clock"></i> {{ todo.due_at|date:"M d, Y — H:i" }}</span>
+                {% endif %}
+            {% else %}
+                <span>بدون ميعاد محدد</span>
+            {% endif %}
+            {% if todo.group %}
+                <span class="todo-group-pill">{{ todo.group }}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
